@@ -40,7 +40,10 @@ code_property
 code_call
 ```
 
+## Setup
 
+1. setup Antlr: `brew install antlr`
+2. run compile: `./scripts/compile-antlr.sh`
 
 License
 ---
