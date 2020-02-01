@@ -1,4 +1,4 @@
-package domain
+package domain.core
 
 data class AnnotationKeyValue(val Key: String = "", val Value: String = "") {}
 
