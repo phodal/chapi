@@ -1,0 +1,40 @@
+# Config file to set up TestFX correctly.
+# Adapted from https://github.com/TestFX/TestFX/wiki/Travis-CI
+
+# NOTE When updating, update https://stackoverflow.com/a/49116679/4126843 too
+# and the one from java-template-project
+
+language: java
+
+jdk: openjdk8
+
+services:
+  - xvfb
+
+before_install:
+  - sudo apt update
+  - sudo apt install openjfx
+  - chmod +x ./gradlew
+  - export DISPLAY=:99.0
+
+install: true
+
+script:
+  - ./gradlew check
+
+after_success:
+  # Generate coverage report and upload to coveralls
+  - ./gradlew check jacocoTestReport coveralls
+  # Also upload to codecov
+  - bash <(curl -s https://codecov.io/bash)
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.bin
+  - rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.lock
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
