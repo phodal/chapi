@@ -1,8 +1,8 @@
 package domain.core
 
-data class AnnotationKeyValue(val Key: String = "", val Value: String = "") {}
+data class AnnotationKeyValue(var Key: String = "", var Value: String = "") {}
 
-open class CodeAnnotation(val Name: String = "", var KeyValues: Array<AnnotationKeyValue>) {
+open class CodeAnnotation(var Name: String = "", var KeyValues: Array<AnnotationKeyValue>) {
     open fun isComponentOrRepository(): Boolean {
         return this.Name == "Component" || this.Name == "Repository"
     }
