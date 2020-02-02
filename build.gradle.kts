@@ -4,7 +4,7 @@ version = "1.0-SNAPSHOT"
 plugins {
     val kotlinVersion = "1.3.61"
 
-    application
+//    application
     kotlin("jvm") version kotlinVersion
     java // Required by at least JUnit.
 

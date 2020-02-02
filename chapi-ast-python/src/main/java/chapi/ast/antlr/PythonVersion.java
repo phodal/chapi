@@ -1,4 +1,4 @@
-package PythonParseTree;
+package chapi.ast.antlr;
 
 public enum PythonVersion {
     Autodetect(0),

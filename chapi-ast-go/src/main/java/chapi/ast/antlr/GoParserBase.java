@@ -1,4 +1,4 @@
-package GoParseTree;
+package chapi.ast.antlr;
 
 import java.util.List;
 import org.antlr.v4.runtime.*;
