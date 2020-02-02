@@ -31,4 +31,30 @@ open class CodeFunction(
     fun isGetterSetter(): Boolean {
         return this.Name.startsWith("set") || this.Name.startsWith("get")
     }
+
+    fun buildFullMethodName(node: CodeDataStruct): String {
+        return node.Package + "." + node.NodeName + "." + this.Name
+    }
+
+
+    fun getAllCallString(): Array<String> {
+        var calls = arrayOf<String>()
+        for (codeCall in this.FunctionCalls) {
+            if (codeCall.NodeName != "") {
+                calls += codeCall.buildClassFullName()
+            }
+        }
+
+        return calls
+    }
+
+    fun isJUnitTest(): Boolean {
+        var isTest = false
+        for (annotation in this.Annotations) {
+            if (annotation.isIgnoreOrTest()) {
+                return true
+            }
+        }
+        return false
+    }
 }
