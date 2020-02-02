@@ -9,7 +9,7 @@ open class CodeDataStruct<Any>(
     var MultipleExtend: Array<String> = arrayOf<String>(),
     var Implements: Array<String> = arrayOf<String>(),
     var Extend: String = "",
-    var Functions: Array<CodeFunction> = arrayOf<CodeFunction>(),
+    var Functions: Array<CodeFunction<Any>> = arrayOf<CodeFunction<Any>>(),
     var InnerStructures: Array<CodeDataStruct<Any>> = arrayOf<CodeDataStruct<Any>>(),
     var Annotations: Array<CodeAnnotation> = arrayOf<CodeAnnotation>(),
     var FunctionCalls: Array<CodeCall> = arrayOf<CodeCall>(),
