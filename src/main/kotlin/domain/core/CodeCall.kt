@@ -1,5 +1,7 @@
 package domain.core
 
+import domain.DomainConstants
+
 open class CodeCall(
     var Package: String = "",
     var Type: String = "",

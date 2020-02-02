@@ -1,4 +1,4 @@
-package domain.core
+package domain
 
 public class DomainConstants {
     companion object {
