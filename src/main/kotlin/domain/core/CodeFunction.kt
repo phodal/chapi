@@ -52,9 +52,9 @@ open class CodeFunction(
         var isTest = false
         for (annotation in this.Annotations) {
             if (annotation.isIgnoreOrTest()) {
-                return true
+                isTest = true
             }
         }
-        return false
+        return isTest
     }
 }
