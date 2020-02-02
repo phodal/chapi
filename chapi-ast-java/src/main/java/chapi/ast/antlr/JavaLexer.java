@@ -1,6 +1,5 @@
 // Generated from JavaLexer.g4 by ANTLR 4.8
 package chapi.ast.antlr;
-
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
