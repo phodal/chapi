@@ -25,3 +25,9 @@ cd grammars/python
 
 antlr -Dlanguage=Java -listener PythonLexer.g4 -o  ../../chapi-ast-python/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
 antlr -Dlanguage=Java -listener PythonParser.g4 -o ../../chapi-ast-python/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+
+cd ../..
+
+cd grammars/c
+
+antlr -Dlanguage=Java -listener C.g4 -o ../../chapi-ast-c/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
