@@ -31,3 +31,7 @@ cd ../..
 cd grammars/c
 
 antlr -Dlanguage=Java -listener C.g4 -o ../../chapi-ast-c/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+
+cd ..
+
+antlr -Dlanguage=Java -listener CommentLexer.g4 -o ../chapi-ast-comments/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
