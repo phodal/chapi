@@ -1,6 +1,6 @@
 package domain.core
 
-open class CodeDataStruct<Any>(
+open class CodeDataStruct(
     var NodeName: String = "",
     var Type: String = "",
     var Package: String = "",
@@ -9,8 +9,8 @@ open class CodeDataStruct<Any>(
     var MultipleExtend: Array<String> = arrayOf<String>(),
     var Implements: Array<String> = arrayOf<String>(),
     var Extend: String = "",
-    var Functions: Array<CodeFunction<Any>> = arrayOf<CodeFunction<Any>>(),
-    var InnerStructures: Array<CodeDataStruct<Any>> = arrayOf<CodeDataStruct<Any>>(),
+    var Functions: Array<CodeFunction> = arrayOf<CodeFunction>(),
+    var InnerStructures: Array<CodeDataStruct> = arrayOf<CodeDataStruct>(),
     var Annotations: Array<CodeAnnotation> = arrayOf<CodeAnnotation>(),
     var FunctionCalls: Array<CodeCall> = arrayOf<CodeCall>(),
     var InOutProperties: Array<CodeProperty> = arrayOf<CodeProperty>(),
