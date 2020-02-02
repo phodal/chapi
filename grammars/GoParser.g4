@@ -471,7 +471,7 @@ structType
     ;
 
 fieldDecl
-    : ({p.noTerminatorBetween(2)}? identifierList type_ | anonymousField) string_?
+    : ({noTerminatorBetween(2)}? identifierList type_ | anonymousField) string_?
     ;
 
 string_
@@ -515,7 +515,6 @@ receiverType
 eos
     : ';'
     | EOF
-    | {p.lineTerminatorAhead()}?
-    | {p.checkPreviousTokenText("}")}?
+    | {lineTerminatorAhead()}?
+    | {checkPreviousTokenText("}")}?
     ;
-

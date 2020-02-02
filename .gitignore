@@ -26,4 +26,5 @@ build
 .gradle
 *.iml
 !gradle-wrapper.jar
+**/gen
 

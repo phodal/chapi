@@ -7,17 +7,16 @@ options {
 }
 
 
-HashBangLine:                   { p.IsStartOfFile()}? '#!' ~[\r\n\u2028\u2029]*; // only allowed at start
 MultiLineComment:               '/*' .*? '*/'             -> channel(HIDDEN);
 SingleLineComment:              '//' ~[\r\n\u2028\u2029]* -> channel(HIDDEN);
-RegularExpressionLiteral:       '/' RegularExpressionFirstChar RegularExpressionChar* {p.IsRegexPossible()}? '/' IdentifierPart*;
+RegularExpressionLiteral:       '/' RegularExpressionFirstChar RegularExpressionChar* {this.IsRegexPossible()}? '/' IdentifierPart*;
 
 OpenBracket:                    '[';
 CloseBracket:                   ']';
 OpenParen:                      '(';
 CloseParen:                     ')';
-OpenBrace:                      '{' {l.ProcessOpenBrace();};
-CloseBrace:                     '}' {l.ProcessCloseBrace();};
+OpenBrace:                      '{' {this.ProcessOpenBrace();};
+CloseBrace:                     '}' {this.ProcessCloseBrace();};
 SemiColon:                      ';';
 Comma:                          ',';
 Assign:                         '=';
@@ -32,13 +31,8 @@ Minus:                          '-';
 BitNot:                         '~';
 Not:                            '!';
 Multiply:                       '*';
-Lodash:                         '_';
-Dollar:                         '$';
 Divide:                         '/';
 Modulus:                        '%';
-Power:                          '**';
-NullCoalesce:                   '??';
-Hashtag:                        '#';
 RightShiftArithmetic:           '>>';
 LeftShiftArithmetic:            '<<';
 RightShiftLogical:              '>>>';
@@ -67,7 +61,6 @@ BitAndAssign:                   '&=';
 BitXorAssign:                   '^=';
 BitOrAssign:                    '|=';
 ARROW:                          '=>';
-PowerAssign:                    '**=';
 
 /// Null Literals
 
@@ -88,7 +81,7 @@ DecimalLiteral:                 DecimalIntegerLiteral '.' [0-9]* ExponentPart?
 /// Numeric Literals
 
 HexIntegerLiteral:              '0' [xX] HexDigit+;
-OctalIntegerLiteral:            '0' [0-7]+ {!p.IsStrictMode()}?;
+OctalIntegerLiteral:            '0' [0-7]+ {!this.IsStrictMode()}?;
 OctalIntegerLiteral2:           '0' [oO] [0-7]+;
 BinaryIntegerLiteral:           '0' [bB] [01]+;
 
@@ -135,8 +128,6 @@ Const:                          'const';
 Export:                         'export';
 Import:                         'import';
 
-Await:                          'await';
-
 /// The following tokens are also considered to be FutureReservedWords
 /// when parsing strict mode
 
@@ -152,11 +143,11 @@ Yield:                          'yield' ;
 
 //keywords:
 
-ANY : 'any';
-NUMBER: 'number';
-BOOLEAN: 'boolean';
-STRING: 'string';
-SYMBOL: 'symbol';
+Any : 'any';
+Number: 'number';
+Boolean: 'boolean';
+String: 'string';
+Symbol: 'symbol';
 
 
 Type: 'type';
@@ -185,7 +176,7 @@ Identifier:                     IdentifierStart IdentifierPart*;
 
 /// String Literals
 StringLiteral:                 ('"' DoubleStringCharacter* '"'
-             |                  '\'' SingleStringCharacter* '\'') {l.ProcessStringLiteral();}
+             |                  '\'' SingleStringCharacter* '\'') {this.ProcessStringLiteral();}
              ;
 
 TemplateStringLiteral:          '`' ('\\`' | ~'`')* '`';
@@ -704,4 +695,3 @@ fragment RegularExpressionClassChar
 fragment RegularExpressionBackslashSequence
     : '\\' ~[\r\n\u2028\u2029]
     ;
-

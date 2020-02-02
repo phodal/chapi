@@ -96,7 +96,7 @@ primaryType
     | predefinedType                                #PredefinedPrimType
     | typeReference                                 #ReferencePrimType
     | objectType                                    #ObjectPrimType
-    | primaryType {p.notLineTerminator()}? '[' ']'    #ArrayPrimType
+    | primaryType {notLineTerminator()}? '[' ']'    #ArrayPrimType
     | '[' tupleElementTypes ']'                     #TuplePrimType
     | typeQuery                                     #QueryPrimType
     | This                                          #ThisPrimType
@@ -104,11 +104,11 @@ primaryType
     ;
 
 predefinedType
-    : ANY
-    | NUMBER
-    | BOOLEAN
-    | STRING
-    | SYMBOL
+    : Any
+    | Number
+    | Boolean
+    | String
+    | Symbol
     | Void
     ;
 
@@ -149,7 +149,7 @@ typeMemberList
     ;
 
 typeMember
-    : propertySignature
+    : propertySignatur
     | callSignature
     | constructSignature
     | indexSignature
@@ -157,7 +157,7 @@ typeMember
     ;
 
 arrayType
-    : primaryType {p.notLineTerminator()}? '[' ']'
+    : primaryType {notLineTerminator()}? '[' ']'
     ;
 
 tupleType
@@ -185,7 +185,7 @@ typeQueryExpression
     | (identifierName '.')+ identifierName
     ;
 
-propertySignature
+propertySignatur
     : ReadOnly? propertyName '?'? typeAnnotation? ('=>' type_)?
     ;
 
@@ -231,10 +231,8 @@ optionalParameter
     : decoratorList? ( accessibilityModifier? identifierOrPattern ('?' typeAnnotation? | typeAnnotation? initializer))
     ;
 
-// todo: align typescript grammers
 restParameter
-    : '...' requiredParameter
-    | '...' singleExpression
+    : '...' singleExpression
     ;
 
 constructSignature
@@ -242,7 +240,7 @@ constructSignature
     ;
 
 indexSignature
-    : '[' Identifier ':' (NUMBER|STRING) ']' typeAnnotation
+    : '[' Identifier ':' (Number|String) ']' typeAnnotation
     ;
 
 methodSignature
@@ -301,11 +299,6 @@ namespaceName
 
 importAliasDeclaration
     : Identifier '=' namespaceName SemiColon
-    | Identifier '=' 'require' '(' StringLiteral ')' SemiColon
-    ;
-
-importAll
-    : StringLiteral
     ;
 
 // Ext.2 Additions to 1.8: Decorators
@@ -340,7 +333,7 @@ statement
     | variableStatement
     | importStatement
     | exportStatement
-    | emptyStatement_
+    | emptyStatement
     | abstractDeclaration //ADDED
     | classDeclaration
     | interfaceDeclaration //ADDED
@@ -379,11 +372,11 @@ abstractDeclaration
     ;
 
 importStatement
-    : Import (importFromBlock | importAliasDeclaration | importAll) eos
+    : Import (fromBlock | importAliasDeclaration)
     ;
 
-importFromBlock
-    : (Dollar | Lodash | Multiply | multipleImportStatement | identifierName) (As identifierName)? From StringLiteral
+fromBlock
+    : (Multiply | multipleImportStatement) (As identifierName)? From StringLiteral eos
     ;
 
 multipleImportStatement
@@ -391,7 +384,7 @@ multipleImportStatement
     ;
 
 exportStatement
-    : Export Default? (importFromBlock | statement)
+    : Export Default? (fromBlock | statement)
     ;
 
 variableStatement
@@ -404,15 +397,15 @@ variableDeclarationList
     ;
 
 variableDeclaration
-    : assignable typeAnnotation? singleExpression? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    : ( Identifier | arrayLiteral | objectLiteral) typeAnnotation? singleExpression? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
     ;
 
-emptyStatement_
+emptyStatement
     : SemiColon
     ;
 
 expressionStatement
-    : {p.notOpenBraceAndNotFunction()}? expressionSequence SemiColon?
+    : {this.notOpenBraceAndNotFunction()}? expressionSequence SemiColon?
     ;
 
 ifStatement
@@ -425,10 +418,9 @@ iterationStatement
     | While '(' expressionSequence ')' statement                                                                # WhileStatement
     | For '(' expressionSequence? SemiColon expressionSequence? SemiColon expressionSequence? ')' statement     # ForStatement
     | For '(' varModifier variableDeclarationList SemiColon expressionSequence? SemiColon expressionSequence? ')'
-statement                                                                                             # ForVarStatement
-    | For Await? '(' singleExpression (In | Identifier{p.p("of")}?) expressionSequence ')' statement                # ForInStatement
-    | For Await? '(' varModifier variableDeclaration (In | Identifier{p.p("of")}?) expressionSequence ')' statement # ForVarInStatement
-    // strange, 'of' is an identifier. and p.p("of") not work in sometime.
+          statement                                                                                             # ForVarStatement
+    | For '(' singleExpression (In | Identifier{this.p("of")}?) expressionSequence ')' statement                # ForInStatement
+    | For '(' varModifier variableDeclaration (In | Identifier{this.p("of")}?) expressionSequence ')' statement # ForVarInStatement
     ;
 
 varModifier
@@ -438,19 +430,19 @@ varModifier
     ;
 
 continueStatement
-    : Continue ({p.notLineTerminator()}? Identifier)? eos
+    : Continue ({this.notLineTerminator()}? Identifier)? eos
     ;
 
 breakStatement
-    : Break ({p.notLineTerminator()}? Identifier)? eos
+    : Break ({this.notLineTerminator()}? Identifier)? eos
     ;
 
 returnStatement
-    : Return ({p.notLineTerminator()}? expressionSequence)? eos
+    : Return ({this.notLineTerminator()}? expressionSequence)? eos
     ;
 
 yieldStatement
-    : Yield ({p.notLineTerminator()}? expressionSequence)? eos
+    : Yield ({this.notLineTerminator()}? expressionSequence)? eos
     ;
 
 withStatement
@@ -482,7 +474,7 @@ labelledStatement
     ;
 
 throwStatement
-    : Throw {p.notLineTerminator()}? expressionSequence eos
+    : Throw {this.notLineTerminator()}? expressionSequence eos
     ;
 
 tryStatement
@@ -490,13 +482,7 @@ tryStatement
     ;
 
 catchProduction
-    : Catch ('(' assignable? ')')? block
-    ;
-
-assignable
-    : Identifier
-    | arrayLiteral
-    | objectLiteral
+    : Catch '(' Identifier ')' block
     ;
 
 finallyProduction
@@ -508,7 +494,7 @@ debuggerStatement
     ;
 
 functionDeclaration
-    : Async? Function '*'?  Identifier callSignature ( ('{' functionBody '}') | SemiColon)
+    : Function Identifier callSignature ( ('{' functionBody '}') | SemiColon)
     ;
 
 //Ovveride ECMA
@@ -541,9 +527,9 @@ classElement
     ;
 
 propertyMemberDeclaration
-    : propertyMemberBase '*'? '#'?  propertyName typeAnnotation? initializer? SemiColon
-    | propertyMemberBase '*'? '#'?  propertyName callSignature ( ('{' functionBody '}') | SemiColon)
-    | propertyMemberBase '*'? '#'?  (getAccessor | setAccessor)
+    : propertyMemberBase propertyName typeAnnotation? initializer? SemiColon
+    | propertyMemberBase propertyName callSignature ( ('{' functionBody '}') | SemiColon)
+    | propertyMemberBase (getAccessor | setAccessor)
     | abstractDeclaration
     ;
 
@@ -623,7 +609,6 @@ objectLiteral
 propertyAssignment
     : propertyName (':' |'=') singleExpression                # PropertyExpressionAssignment
     | '[' singleExpression ']' ':' singleExpression           # ComputedPropertyExpressionAssignment
-    | Async? '*'? propertyName '(' formalParameterList?  ')'  '{' functionBody '}'  # FunctionProperty
     | getAccessor                                             # PropertyGetter
     | setAccessor                                             # PropertySetter
     | generatorMethod                                         # MethodProperty
@@ -643,11 +628,13 @@ propertyName
     : identifierName
     | StringLiteral
     | numericLiteral
-    | '[' singleExpression ']'
     ;
 
 arguments
-    : '('(singleExpression (',' singleExpression)* (',' lastArgument)? | lastArgument)?')'
+    : '('(
+          singleExpression (',' singleExpression)* (',' lastArgument)? |
+          lastArgument
+       )?')'
     ;
 
 lastArgument                                  // ECMAScript 6: Spread Operator
@@ -655,11 +642,11 @@ lastArgument                                  // ECMAScript 6: Spread Operator
     ;
 
 expressionSequence
-    : singleExpression (',' singleExpression)* ','?
+    : singleExpression (',' singleExpression)*
     ;
 
 functionExpressionDeclaration
-    : Async? Function Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
+    : Function Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
     ;
 
 singleExpression
@@ -667,11 +654,11 @@ singleExpression
     | arrowFunctionDeclaration                                               # ArrowFunctionExpression   // ECMAScript 6
     | Class Identifier? classTail                                            # ClassExpression
     | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
-    | singleExpression '?'? '.' '#'? identifierName                          # MemberDotExpression
+    | singleExpression '.' identifierName                                    # MemberDotExpression
     | singleExpression arguments                                             # ArgumentsExpression
     | New singleExpression typeArguments? arguments?                         # NewExpression
-    | singleExpression {p.notLineTerminator()}? '++'                         # PostIncrementExpression
-    | singleExpression {p.notLineTerminator()}? '--'                         # PostDecreaseExpression
+    | singleExpression {this.notLineTerminator()}? '++'                      # PostIncrementExpression
+    | singleExpression {this.notLineTerminator()}? '--'                      # PostDecreaseExpression
     | Delete singleExpression                                                # DeleteExpression
     | Void singleExpression                                                  # VoidExpression
     | Typeof singleExpression                                                # TypeofExpression
@@ -681,8 +668,6 @@ singleExpression
     | '-' singleExpression                                                   # UnaryMinusExpression
     | '~' singleExpression                                                   # BitNotExpression
     | '!' singleExpression                                                   # NotExpression
-    | Await singleExpression                                                 # AwaitExpression
-    | <assoc=right> singleExpression '**' singleExpression                   # PowerExpression
     | singleExpression ('*' | '/' | '%') singleExpression                    # MultiplicativeExpression
     | singleExpression ('+' | '-') singleExpression                          # AdditiveExpression
     | singleExpression ('<<' | '>>' | '>>>') singleExpression                # BitShiftExpression
@@ -696,9 +681,8 @@ singleExpression
     | singleExpression '&&' singleExpression                                 # LogicalAndExpression
     | singleExpression '||' singleExpression                                 # LogicalOrExpression
     | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
-    | singleExpression '??' singleExpression                                 # CoalesceExpression
-    | <assoc=right> singleExpression '=' singleExpression                    # AssignmentExpression
-    | <assoc=right> singleExpression assignmentOperator singleExpression     # AssignmentOperatorExpression
+    | singleExpression '=' singleExpression                                  # AssignmentExpression
+    | singleExpression assignmentOperator singleExpression                   # AssignmentOperatorExpression
     | singleExpression TemplateStringLiteral                                 # TemplateStringExpression  // ECMAScript 6
     | iteratorBlock                                                          # IteratorsExpression // ECMAScript 6
     | generatorBlock                                                         # GeneratorsExpression // ECMAScript 6
@@ -740,7 +724,6 @@ assignmentOperator
     | '&='
     | '^='
     | '|='
-    | '**='
     ;
 
 literal
@@ -818,22 +801,20 @@ keyword
     | Protected
     | Static
     | Yield
-    | Await
-    | From
-    | As
     ;
 
 getter
-    : Identifier{p.p("get")}? propertyName
+    : Identifier{this.p("get")}? propertyName
     ;
 
 setter
-    : Identifier{p.p("set")}? propertyName
+    : Identifier{this.p("set")}? propertyName
     ;
 
 eos
     : SemiColon
     | EOF
-    | {p.lineTerminatorAhead()}?
-    | {p.closeBrace()}?
+    | {this.lineTerminatorAhead()}?
+    | {this.closeBrace()}?
     ;
+
