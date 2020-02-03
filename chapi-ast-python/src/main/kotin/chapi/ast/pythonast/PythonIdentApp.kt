@@ -1,26 +1,26 @@
-package chapi.ast.kotlinast
+package chapi.ast.pythonast
 
-import chapi.ast.antlr.KotlinLexer
-import chapi.ast.antlr.KotlinParser
+import chapi.ast.antlr.PythonLexer
+import chapi.ast.antlr.PythonParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class KotlinIdentApp {
+open class PythonIdentApp {
     open fun analysis(str: String) {
-        val context = this.parse(str).kotlinFile()
-        val listener = KotlinIdentListener()
+        val context = this.parse(str).root()
+        val listener = PythonIdentListener()
 
         ParseTreeWalker().walk(listener, context)
 
         listener.getNodeInfo()
     }
 
-    open fun parse(str: String): KotlinParser {
+    private fun parse(str: String): PythonParser {
         val fromString = CharStreams.fromString(str)
-        val lexer = KotlinLexer(fromString)
+        val lexer = PythonLexer (fromString)
         val tokenStream = CommonTokenStream(lexer)
-        val parser = KotlinParser(tokenStream)
+        val parser = PythonParser(tokenStream)
         return parser
     }
 }

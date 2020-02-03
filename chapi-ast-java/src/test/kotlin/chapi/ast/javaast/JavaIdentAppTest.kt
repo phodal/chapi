@@ -10,6 +10,6 @@ package chapi.ast.javaast;
 
 import org.junit.Test;
 """
-        JavaIdentApp().Analysis(code)
+        JavaIdentApp().analysis(code)
     }
 }

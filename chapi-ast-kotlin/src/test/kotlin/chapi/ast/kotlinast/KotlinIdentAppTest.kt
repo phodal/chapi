@@ -1,6 +1,5 @@
 package chapi.ast.kotlinast
 
-import chapi.ast.goast.KotlinIdentApp
 import org.junit.jupiter.api.Test
 
 internal class KotlinIdentAppTest {
@@ -11,6 +10,6 @@ fun main(args : Array<String>) {
     println("Hello, World!")
 }
 """
-        KotlinIdentApp().Analysis(helloworld)
+        KotlinIdentApp().analysis(helloworld)
     }
 }

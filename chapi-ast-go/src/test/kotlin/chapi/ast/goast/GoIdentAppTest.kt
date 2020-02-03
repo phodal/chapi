@@ -2,8 +2,6 @@ package chapi.ast.goast
 
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-
 internal class GoIdentAppTest {
     @Test
     fun analysis() {
@@ -14,6 +12,6 @@ func main() {
     fmt.Println("hello world")
 }
 """
-        GoIdentApp().Analysis(helloworld)
+        GoIdentApp().analysis(helloworld)
     }
 }

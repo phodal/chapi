@@ -7,8 +7,8 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class JavaIdentApp {
-    open fun Analysis(Str: String) {
-        val context = this.Parse(Str).compilationUnit()
+    open fun analysis(str: String) {
+        val context = this.parse(str).compilationUnit()
         val listener = JavaIdentListener()
 
         ParseTreeWalker().walk(listener, context)
@@ -16,8 +16,8 @@ open class JavaIdentApp {
         listener.getNodeInfo()
     }
 
-    open fun Parse(Str: String): JavaParser {
-        val fromString = CharStreams.fromString(Str)
+    open fun parse(str: String): JavaParser {
+        val fromString = CharStreams.fromString(str)
         val lexer: JavaLexer = JavaLexer (fromString)
         val tokenStream = CommonTokenStream(lexer)
         val javaParser = JavaParser(tokenStream)

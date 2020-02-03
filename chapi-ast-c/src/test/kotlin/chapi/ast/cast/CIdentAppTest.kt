@@ -2,8 +2,6 @@ package chapi.ast.cast
 
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-
 internal class CIdentAppTest {
     @Test
     fun shouldAnalysis() {
@@ -13,6 +11,6 @@ main()
     printf("Hello World");
 }
 """
-        CIdentApp().Analysis(helloWorld)
+        CIdentApp().analysis(helloWorld)
     }
 }
