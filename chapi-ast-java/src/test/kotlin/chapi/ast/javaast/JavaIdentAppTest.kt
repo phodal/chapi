@@ -1,6 +1,7 @@
 package chapi.ast.javaast
 
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 internal class JavaIdentAppTest {
     @Test
@@ -10,6 +11,8 @@ package chapi.ast.javaast;
 
 import org.junit.Test;
 """
-        JavaIdentApp().analysis(code)
+        val fileName = "import-demo.java"
+        val codeFile = JavaIdentApp().analysis(code, fileName)
+        assertEquals(codeFile.FullName, fileName)
     }
 }

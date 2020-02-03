@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    // project deps
     implementation(project(":chapi-domain"))
 
     implementation(kotlin("stdlib-jdk8"))

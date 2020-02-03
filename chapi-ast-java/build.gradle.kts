@@ -13,6 +13,9 @@ repositories {
 }
 
 dependencies {
+    // project deps
+    implementation(project(":chapi-domain"))
+
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     // Kotlin reflection.
