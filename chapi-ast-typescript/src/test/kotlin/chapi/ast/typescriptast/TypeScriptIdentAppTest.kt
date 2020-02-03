@@ -10,6 +10,6 @@ interface IPerson {
     name: string;
 }            
 """
-        TypeScriptIdentApp().Analysis(code)
+        TypeScriptIdentApp().analysis(code)
     }
 }
