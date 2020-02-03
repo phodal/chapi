@@ -133,8 +133,46 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun buildExtend(currentClzExtend: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private fun buildExtend(extendName: String) {
+        val target: String = this.warpTargetFullType(extendName)
+        if (target != "") {
+            currentNode.Extend = target
+        }
+    }
+
+    private fun warpTargetFullType(targetType: String): String {
+        var callType = ""
+        if (currentClz == targetType) {
+            callType = "self"
+            return codeFile.PackageName + "." + targetType
+        }
+
+        val split = targetType.split(".")
+        var first = split[0]
+        val pureTargetType = first.replace("[", "").replace("]", "")
+
+        if (pureTargetType != "") {
+            for (imp in imports) {
+                if (imp.Source.endsWith(pureTargetType)) {
+                    callType = "chain"
+                    return imp.Source
+                }
+            }
+        }
+
+        // todo: add ident clzs
+
+        if (pureTargetType == "super" || pureTargetType == "this") {
+            for (imp in imports) {
+                if (imp.Source.endsWith(currentClzExtend)) {
+                    callType = "super"
+                    return imp.Source
+                }
+            }
+        }
+
+        // todo: add identMap
+        return ""
     }
 
     fun getNodeInfo(): CodeFile {
