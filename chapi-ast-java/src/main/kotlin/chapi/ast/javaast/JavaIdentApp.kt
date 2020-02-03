@@ -19,9 +19,9 @@ open class JavaIdentApp {
 
     open fun parse(str: String): JavaParser {
         val fromString = CharStreams.fromString(str)
-        val lexer: JavaLexer = JavaLexer (fromString)
+        val lexer = JavaLexer(fromString)
         val tokenStream = CommonTokenStream(lexer)
-        val javaParser = JavaParser(tokenStream)
-        return javaParser
+        val parser = JavaParser(tokenStream)
+        return parser
     }
 }
