@@ -1,6 +1,7 @@
 package chapi.ast.cast
 
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 internal class CIdentAppTest {
     @Test
@@ -11,6 +12,16 @@ main()
     printf("Hello World");
 }
 """
-        CIdentApp().analysis(helloWorld)
+        CIdentApp().analysis(helloWorld, "")
+    }
+
+    @Test
+    internal fun shouldGetCodeFileName() {
+        val code = this::class.java.getResource("/_fixtures/examples/1-helloworld.c").readText()
+        val fileName = "helloworld.c"
+
+        val codeFile = CIdentApp().analysis(code, fileName)
+
+        assertEquals(codeFile.FullName, fileName)
     }
 }

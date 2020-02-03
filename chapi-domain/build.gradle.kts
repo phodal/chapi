@@ -13,8 +13,6 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":chapi-domain"))
-
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     // Kotlin reflection.
@@ -25,9 +23,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
     testRuntimeOnly("org.junit.platform:junit-platform-console:1.6.0")
-
-    implementation("org.antlr:antlr4:4.8-1")
-    implementation("org.antlr:antlr4-runtime:4.8-1")
 }
 
 configure<JavaPluginConvention> {
