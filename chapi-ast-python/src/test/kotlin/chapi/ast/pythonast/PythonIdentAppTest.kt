@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 
 internal class PythonIdentAppTest {
     @Test
-    fun shouldAnalysisPython2() {
+    internal fun shouldAnalysisPython2() {
         val python2HelloWorld = """
 print("Hello, World!")
         """
@@ -13,7 +13,7 @@ print("Hello, World!")
     }
 
     @Test
-    fun shouldAnalysisPython3() {
+    internal fun shouldAnalysisPython3() {
         val py3HelloWorld = """
 print "Hello, World!"
         """

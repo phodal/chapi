@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class PythonIdentApp {
+open class PythonIdentApp() {
     open fun analysis(str: String) {
         val context = this.parse(str).root()
         val listener = PythonIdentListener()
@@ -18,7 +18,7 @@ open class PythonIdentApp {
 
     private fun parse(str: String): PythonParser {
         val fromString = CharStreams.fromString(str)
-        val lexer = PythonLexer (fromString)
+        val lexer = PythonLexer(fromString)
         val tokenStream = CommonTokenStream(lexer)
         val parser = PythonParser(tokenStream)
         return parser
