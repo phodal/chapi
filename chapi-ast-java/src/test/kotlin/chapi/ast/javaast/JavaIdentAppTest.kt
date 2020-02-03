@@ -50,4 +50,18 @@ public class HelloWorld {
         val codeFile = JavaIdentApp().analysis(code, "")
         assertEquals(codeFile.DataStructures[0].NodeName, "HelloWorld")
     }
+
+    @Test
+    internal fun shouldGetDataStructureMethodName() {
+        val code = """
+public class HelloWorld {
+    public static void main(String []args) {
+       System.out.println("Hello World");
+    }
+}
+"""
+        val codeFile = JavaIdentApp().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "main")
+    }
 }

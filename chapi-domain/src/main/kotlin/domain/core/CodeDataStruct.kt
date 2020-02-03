@@ -21,4 +21,13 @@ open class CodeDataStruct(
         return this.NodeName.toLowerCase().contains("util") ||
                 this.NodeName.toLowerCase().contains("utils")
     }
+
+    fun setMethodFromMap(methodMap: java.util.HashMap<String, CodeFunction>) {
+        var methodsArray : Array<CodeFunction> = arrayOf()
+        for (entry in methodMap) {
+            methodsArray += entry.value
+        }
+
+        this.Functions = methodsArray
+    }
 }
