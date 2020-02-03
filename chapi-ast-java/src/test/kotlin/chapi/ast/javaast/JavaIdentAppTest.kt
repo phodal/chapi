@@ -37,4 +37,17 @@ import org.junit.Test;
         val codeFile = JavaIdentApp().analysis(code, "")
         assertEquals(codeFile.Imports[0].Source, "org.junit.Test")
     }
+
+    @Test
+    internal fun shouldGetDataStructureName() {
+        val code = """
+public class HelloWorld {
+    public static void main(String []args) {
+       System.out.println("Hello World");
+    }
+}
+"""
+        val codeFile = JavaIdentApp().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].NodeName, "HelloWorld")
+    }
 }

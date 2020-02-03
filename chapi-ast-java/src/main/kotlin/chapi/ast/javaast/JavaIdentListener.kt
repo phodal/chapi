@@ -8,10 +8,19 @@ import domain.core.CodeFunction
 import domain.core.CodeImport
 
 class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
-    private var nodes : Array<CodeDataStruct> = arrayOf()
-    private var imports : Array<CodeImport> = arrayOf()
+    private var currentClz: String = ""
+    private var currentClzExtend: String = ""
+    private var hasEnterClass: Boolean = false
+
+    private var classNodes: Array<CodeDataStruct> = arrayOf()
+    private var classNodeQueue: Array<CodeDataStruct> = arrayOf()
+
+    private var imports: Array<CodeImport> = arrayOf()
+
     private var currentNode = CodeDataStruct()
     private var currentFunction = CodeFunction()
+    private var currentType: String = ""
+
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
@@ -27,7 +36,60 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         codeFile.Imports += codeImport
     }
 
+    override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
+        super.enterClassDeclaration(ctx)
+
+        if (currentNode.NodeName != "") {
+            classNodeQueue += currentNode
+            currentType = "InnerStructures"
+        } else {
+            currentType = "NodeName"
+        }
+
+        hasEnterClass = true
+        currentClzExtend = ""
+
+        if (ctx!!.IDENTIFIER() != null) {
+            currentClz = ctx.IDENTIFIER().text
+            currentNode.NodeName = currentClz
+        }
+
+        if (ctx.EXTENDS() != null) {
+            currentClzExtend = ctx.IDENTIFIER().text
+            this.buildExtend(currentClzExtend)
+        }
+
+        if (ctx!!.IMPLEMENTS() != null) {
+            for (_type in ctx.typeList().typeType()) {
+                val typeText = _type.text
+                this.buildImplement(typeText)
+            }
+        }
+
+        currentNode.Type = currentType
+    }
+
+    override fun exitClassBody(ctx: JavaParser.ClassBodyContext?) {
+        super.exitClassBody(ctx)
+
+        hasEnterClass = false
+        this.exitBodyAction()
+    }
+
+    private fun exitBodyAction() {
+        classNodes += currentNode
+    }
+
+    private fun buildImplement(typeText: String?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun buildExtend(currentClzExtend: String?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     fun getNodeInfo(): CodeFile {
+        codeFile.DataStructures = classNodes
         return codeFile
     }
 }
