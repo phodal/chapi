@@ -55,7 +55,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         }
 
         if (ctx.EXTENDS() != null) {
-            currentClzExtend = ctx.IDENTIFIER().text
+            currentClzExtend = ctx.typeType().text
             this.buildExtend(currentClzExtend)
         }
 
@@ -137,6 +137,8 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         val target: String = this.warpTargetFullType(extendName)
         if (target != "") {
             currentNode.Extend = target
+        } else {
+            currentNode.Extend = extendName
         }
     }
 

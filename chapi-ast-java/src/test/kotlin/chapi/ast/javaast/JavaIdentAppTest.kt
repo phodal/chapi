@@ -66,9 +66,23 @@ public class HelloWorld {
     }
 
     @Test
+    internal fun shouldGetExtendsName() {
+        val code = """
+  class Inner extends HasStatic {
+    static final int x = 3;
+    static int y = 4;
+    public static void pr() {
+
+    }
+  }
+"""
+        val codeFile = JavaIdentApp().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Extend, "HasStatic")
+    }
+
+    @Test
     internal fun shouldGetInnerStructureName() {
         val code = """
-
 public class Outer {
   final int z=10;
 
