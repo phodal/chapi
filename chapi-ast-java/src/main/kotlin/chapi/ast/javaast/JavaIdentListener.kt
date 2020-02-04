@@ -156,9 +156,21 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
         buildMethodCallLocation(codeCall, ctx, callee)
         buildMethodCallMethod(codeCall, callee, targetType, ctx)
-//        buildMethodCallParameters(codeCall, ctx)
+        buildMethodCallParameters(codeCall, ctx)
 
         sendResultToMethodCallMap(codeCall)
+    }
+
+    private fun buildMethodCallParameters(codeCall: CodeCall, ctx: JavaParser.MethodCallContext) {
+        if (ctx.expressionList() != null) {
+            var parameters = arrayOf<CodeProperty>()
+            for (exprCtx in ctx.expressionList().expression()) {
+                val parameter = CodeProperty(TypeType = "", TypeValue = exprCtx.text)
+                parameters += parameter
+            }
+
+            codeCall.Parameters = parameters
+        }
     }
 
     private fun buildMethodCallLocation(codeCall: CodeCall, ctx: JavaParser.MethodCallContext, callee: String?) {
