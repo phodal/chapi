@@ -84,9 +84,8 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
         super.enterMethodDeclaration(ctx)
-
-        var name = ctx!!.IDENTIFIER().text
-        var typeType = ctx.typeTypeOrVoid().text
+        val name = ctx!!.IDENTIFIER().text
+        val typeType = ctx.typeTypeOrVoid().text
 
         val codePosition = CodePosition(
             StartLine = ctx.start.line,
@@ -123,7 +122,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             val paramValue = paramCtx.variableDeclaratorId().IDENTIFIER().text
             localVars[paramValue] = paramType
 
-            var parameter = CodeProperty(TypeValue = paramValue, TypeType = paramType)
+            val parameter = CodeProperty(TypeValue = paramValue, TypeType = paramType)
 
             methodParams += parameter
         }
@@ -154,8 +153,8 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
         val callee = ctx.getChild(0).text
 
-        buildMethodCallLocation(codeCall, ctx, callee)
-        buildMethodCallMethod(codeCall, callee, targetType, ctx)
+        buildMethodCallLocation(codeCall, ctx)
+        buildMethodCallMethodInformation(codeCall, callee, targetType)
         buildMethodCallParameters(codeCall, ctx)
 
         sendResultToMethodCallMap(codeCall)
@@ -173,7 +172,10 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         }
     }
 
-    private fun buildMethodCallLocation(codeCall: CodeCall, ctx: JavaParser.MethodCallContext, callee: String?) {
+    private fun buildMethodCallLocation(
+        codeCall: CodeCall,
+        ctx: JavaParser.MethodCallContext
+    ) {
         codeCall.Position.StartLine = ctx.start.line
         codeCall.Position.StartLinePosition = ctx.start.charPositionInLine
         codeCall.Position.StopLine = ctx.stop.line
@@ -183,24 +185,18 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     private fun sendResultToMethodCallMap(codeCall: CodeCall) {
         methodCalls += codeCall
         val currentMethodName = getMethodMapName(currentFunction)
-        var method = methodMap[currentMethodName]
+        val method = methodMap[currentMethodName]
         if (method != null) {
             method.FunctionCalls += codeCall
             methodMap[currentMethodName] = method
         }
     }
 
-    private fun buildMethodCallMethod(
-        codeCall: CodeCall,
-        callee: String = "",
-        targetType: String?,
-        ctx: JavaParser.MethodCallContext
-    ) {
-        var packageName = codeFile.PackageName
-        var methodName = callee
+    private fun buildMethodCallMethodInformation(codeCall: CodeCall, callee: String = "", targetType: String?) {
+        val packageName = codeFile.PackageName
 
         codeCall.Package = packageName
-        codeCall.FunctionName = methodName
+        codeCall.FunctionName = callee
         codeCall.NodeName = targetType ?: ""
     }
 
