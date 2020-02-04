@@ -5,6 +5,7 @@ import chapi.ast.antlr.JavaParserBaseListener
 import domain.core.*
 
 class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
+    private val localVars: HashMap<String, String> = HashMap<String, String>()
     private val methodMap: HashMap<String, CodeFunction> = HashMap<String, CodeFunction>()
     private var currentClz: String = ""
     private var currentClzExtend: String = ""
@@ -101,11 +102,34 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             Position = codePosition
         )
 
-        if (ctx.formalParameters() != null) {
-            //
+        val params = ctx.formalParameters()
+        if (params != null) {
+            if (params.getChild(0) == null || params.text == "()" || params.getChild(0) == null) {
+                this.updateCodeFunction(codeFunction)
+                return
+            }
+
+            codeFunction.Parameters = this.buildMethodParameters(params)
         }
 
         this.updateCodeFunction(codeFunction)
+    }
+
+    private fun buildMethodParameters(params: JavaParser.FormalParametersContext?): Array<CodeProperty> {
+        var methodParams = arrayOf<CodeProperty>()
+        val parameterList = params!!.getChild(1) as JavaParser.FormalParameterListContext
+        for (param in parameterList.formalParameter()) {
+            val paramCtx = param as JavaParser.FormalParameterContext
+            val paramType = paramCtx.typeType().text
+            val paramValue = paramCtx.variableDeclaratorId().IDENTIFIER().text
+            localVars[paramValue] = paramType
+
+            var parameter = CodeProperty(TypeValue = paramValue, TypeType = paramType)
+
+            methodParams += parameter
+        }
+
+        return methodParams
     }
 
     override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {

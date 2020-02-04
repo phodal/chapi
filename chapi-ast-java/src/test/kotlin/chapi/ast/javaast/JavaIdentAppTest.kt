@@ -52,6 +52,21 @@ public class HelloWorld {
     }
 
     @Test
+    internal fun shouldGetFunctionParameters() {
+        val code = """
+public class HelloWorld {
+    public static void main(String []args) {
+       System.out.println("Hello World");
+    }
+}
+"""
+        val codeFile = JavaIdentApp().analysis(code, "")
+        val firstParameter = codeFile.DataStructures[0].Functions[0].Parameters[0]
+        assertEquals(firstParameter.TypeType, "String[]")
+        assertEquals(firstParameter.TypeValue, "args")
+    }
+
+    @Test
     internal fun shouldGetDataStructureMethodName() {
         val code = """
 public class HelloWorld {
