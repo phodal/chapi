@@ -14,7 +14,7 @@ open class CodeDataStruct(
     var Annotations: Array<CodeAnnotation> = arrayOf<CodeAnnotation>(),
     var FunctionCalls: Array<CodeCall> = arrayOf<CodeCall>(),
     var InOutProperties: Array<CodeProperty> = arrayOf<CodeProperty>(),
-    var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
+//    var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
     var Extension: Any? = null
 ) {
     open fun isUtilClass(): Boolean {

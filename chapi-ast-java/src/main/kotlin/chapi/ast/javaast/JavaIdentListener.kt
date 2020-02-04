@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 
 class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
+    private var isOverrideMethod: Boolean = false
     private var fields = arrayOf<CodeField>()
     private var methodCalls = arrayOf<CodeCall>()
     private var methodMap = mutableMapOf<String, CodeFunction>()
@@ -46,9 +47,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
-        println("enterClassDeclaration")
-        super.enterClassDeclaration(ctx)
-
         if (currentNode.NodeName != "") {
             classNodeQueue += currentNode
             currentType = "InnerStructures"
@@ -79,8 +77,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitClassBody(ctx: JavaParser.ClassBodyContext?) {
-        super.exitClassBody(ctx)
-
         hasEnterClass = false
         this.exitBody()
     }
@@ -91,7 +87,44 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             currentNode.setMethodsFromMap(methodMap)
         }
 
-        classNodes += currentNode
+        //todo: handle creator class
+        if (currentNode.NodeName == "") {
+            currentNode = CodeDataStruct()
+            initClass()
+            return
+        }
+
+        if (currentNode.Type == "InnerStructures" && classNodeQueue.size >= 1) {
+            classNodeQueue[0].InnerStructures += currentNode
+        } else {
+            classNodes += currentNode
+        }
+
+        if (classNodeQueue.size >= 1) {
+            if (classNodeQueue.size == 1) {
+                currentNode = classNodeQueue[0]
+            } else {
+                classNodeQueue = classNodeQueue.dropLast(1).toTypedArray()
+                currentNode = classNodeQueue.last()
+            }
+        } else {
+            currentNode = CodeDataStruct()
+        }
+
+//        classNodes += currentNode
+        initClass()
+    }
+
+    private fun initClass() {
+        currentClz = ""
+        currentClzExtend = ""
+        currentFunction = CodeFunction()
+        currentNode.FunctionCalls = arrayOf()
+
+        methodMap = mutableMapOf<String, CodeFunction>()
+        methodCalls = arrayOf<CodeCall>()
+        fields = arrayOf<CodeField>()
+        isOverrideMethod = false
     }
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
