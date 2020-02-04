@@ -145,7 +145,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
         if (targetCtx.getChild(0) != null) {
             val currentCtx = targetCtx.getChild(0)
-            when(currentCtx::class.simpleName) {
+            when (currentCtx::class.simpleName) {
                 "MethodCallContext" -> {
                     targetType = (currentCtx as JavaParser.MethodCallContext).IDENTIFIER().text
                 }
@@ -154,11 +154,18 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
         val callee = ctx.getChild(0).text
 
-//        buildMethodCallLocation(codeCall, ctx, callee)
+        buildMethodCallLocation(codeCall, ctx, callee)
         buildMethodCallMethod(codeCall, callee, targetType, ctx)
 //        buildMethodCallParameters(codeCall, ctx)
 
-        this.sendResultToMethodCallMap(codeCall)
+        sendResultToMethodCallMap(codeCall)
+    }
+
+    private fun buildMethodCallLocation(codeCall: CodeCall, ctx: JavaParser.MethodCallContext, callee: String?) {
+        codeCall.Position.StartLine = ctx.start.line
+        codeCall.Position.StartLinePosition = ctx.start.charPositionInLine
+        codeCall.Position.StopLine = ctx.stop.line
+        codeCall.Position.StopLinePosition = ctx.stop.charPositionInLine
     }
 
     private fun sendResultToMethodCallMap(codeCall: CodeCall) {

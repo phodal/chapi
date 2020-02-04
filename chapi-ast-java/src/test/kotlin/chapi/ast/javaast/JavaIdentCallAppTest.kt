@@ -20,4 +20,22 @@ public class HelloWorld {
         assertEquals(codeCalls[0].NodeName, "System.out")
         assertEquals(codeCalls[0].FunctionName, "println")
     }
+
+    @Test
+    internal fun shouldIdentifyFunctionCallPosition() {
+        val code = """
+public class HelloWorld {
+    public static void main(String []args) {
+       System.out.println("Hello World");
+    }
+}
+"""
+        val codeFile = JavaIdentApp().analysis(code, "")
+        val firstCall = codeFile.DataStructures[0].Functions[0].FunctionCalls[0]
+
+        assertEquals(firstCall.Position.StartLine, 4)
+        assertEquals(firstCall.Position.StartLinePosition, 18)
+        assertEquals(firstCall.Position.StopLine, 4)
+        assertEquals(firstCall.Position.StopLinePosition, 39)
+    }
 }
