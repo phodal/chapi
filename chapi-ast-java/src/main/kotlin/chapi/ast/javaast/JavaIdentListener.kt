@@ -6,8 +6,8 @@ import domain.core.*
 
 class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     private var methodCalls = arrayOf<CodeCall>()
-    private var localVars: HashMap<String, String> = HashMap<String, String>()
-    private var methodMap: MutableMap<String, CodeFunction> = mutableMapOf<String, CodeFunction>()
+    private var localVars = mutableMapOf<String, String>()
+    private var methodMap = mutableMapOf<String, CodeFunction>()
     private var currentClz: String = ""
     private var currentClzExtend: String = ""
     private var hasEnterClass: Boolean = false

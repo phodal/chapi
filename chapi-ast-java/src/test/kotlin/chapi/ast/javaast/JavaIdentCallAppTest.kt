@@ -43,6 +43,6 @@ public class HelloWorld {
         val parameters = firstCall.Parameters
 
         assertEquals(parameters.size, 1)
-        assertEquals(parameters[0].TypeValue, "Hello World")
+        assertEquals(parameters[0].TypeValue, "\"Hello World\"")
     }
 }
