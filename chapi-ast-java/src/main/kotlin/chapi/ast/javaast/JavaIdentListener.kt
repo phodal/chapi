@@ -62,8 +62,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
         if (ctx.IMPLEMENTS() != null) {
             for (_type in ctx.typeList().typeType()) {
-                val typeText = _type.text
-                this.buildImplement(typeText)
+                this.buildImplement(_type.text)
             }
         }
 
@@ -153,8 +152,12 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         return codeFile.PackageName + "." + currentClz + "." + name + ":" + function.Position.StartLine.toString()
     }
 
-    private fun buildImplement(typeText: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private fun buildImplement(typeText: String) {
+        var target = this.warpTargetFullType(typeText)
+        if (target == "") {
+            target = typeText
+        }
+        currentNode.Implements += target
     }
 
     private fun buildExtend(extendName: String) {

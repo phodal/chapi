@@ -96,6 +96,22 @@ public class HelloWorld {
     }
 
     @Test
+    internal fun shouldGetImplementName() {
+        val code = """
+class Pig implements Animal {
+  public void animalSound() {
+    System.out.println("The pig says: wee wee");
+  }
+  public void sleep() {
+    System.out.println("Zzz");
+  }
+}
+"""
+        val codeFile = JavaIdentApp().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Implements[0], "Animal")
+    }
+
+    @Test
     internal fun shouldGetInnerStructureName() {
         val code = """
 public class Outer {
