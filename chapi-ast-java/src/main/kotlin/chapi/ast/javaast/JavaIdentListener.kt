@@ -2,7 +2,6 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
 import chapi.ast.antlr.JavaParserBaseListener
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister
 import domain.core.*
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
@@ -83,14 +82,14 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         super.exitClassBody(ctx)
 
         hasEnterClass = false
-        this.exitBodyAction()
+        this.exitBody()
     }
 
-    private fun exitBodyAction() {
-//        if (currentNode.NodeName != "") {
+    private fun exitBody() {
+        if (currentNode.NodeName != "") {
             currentNode.Fields = fields
             currentNode.setMethodsFromMap(methodMap)
-//        }
+        }
 
         classNodes += currentNode
     }
