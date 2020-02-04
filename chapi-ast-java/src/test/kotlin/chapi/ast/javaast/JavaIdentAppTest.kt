@@ -84,6 +84,28 @@ public class HelloWorld {
     }
 
     @Test
+    internal fun shouldIdentifyFields() {
+        val code = """
+package hello;
+
+public class JavaCallApp {
+    private JavaDaoParser daoParser;
+
+    public daoCall() {
+        daoParser.Call();
+    }
+}
+
+"""
+        val codeFile = JavaIdentApp().analysis(code, "")
+        println(codeFile.DataStructures[0].Fields.size)
+
+        assertEquals(codeFile.DataStructures[0].Fields.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "JavaDaoParser")
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "daoParser")
+    }
+
+    @Test
     internal fun shouldIdentifyImplementName() {
         val code = """
 class Pig implements Animal {

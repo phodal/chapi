@@ -2,9 +2,13 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
 import chapi.ast.antlr.JavaParserBaseListener
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister
 import domain.core.*
+import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.tree.ParseTree
 
 class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
+    private var fields = arrayOf<CodeField>()
     private var methodCalls = arrayOf<CodeCall>()
     private var methodMap = mutableMapOf<String, CodeFunction>()
 
@@ -43,6 +47,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
+        println("enterClassDeclaration")
         super.enterClassDeclaration(ctx)
 
         if (currentNode.NodeName != "") {
@@ -82,7 +87,11 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     private fun exitBodyAction() {
-        currentNode.setMethodsFromMap(methodMap)
+//        if (currentNode.NodeName != "") {
+            currentNode.Fields = fields
+            currentNode.setMethodsFromMap(methodMap)
+//        }
+
         classNodes += currentNode
     }
 
@@ -180,10 +189,16 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         codeCall: CodeCall,
         ctx: JavaParser.MethodCallContext
     ) {
-        codeCall.Position.StartLine = ctx.start.line
-        codeCall.Position.StartLinePosition = ctx.start.charPositionInLine
-        codeCall.Position.StopLine = ctx.stop.line
-        codeCall.Position.StopLinePosition = ctx.stop.charPositionInLine
+        codeCall.Position = buildPosition(ctx)
+    }
+
+    private fun buildPosition(ctx: ParserRuleContext): CodePosition {
+        val position = CodePosition()
+        position.StartLine = ctx.start.line
+        position.StartLinePosition = ctx.start.charPositionInLine
+        position.StopLine = ctx.stop.line
+        position.StopLinePosition = ctx.stop.charPositionInLine
+        return position
     }
 
     private fun sendResultToMethodCallMap(codeCall: CodeCall) {
@@ -290,6 +305,64 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         super.exitFormalParameter(ctx)
         val paramKey = ctx!!.variableDeclaratorId().IDENTIFIER().text
         formalParameters[paramKey] = ctx.typeType().text
+    }
+
+    override fun enterFieldDeclaration(ctx: JavaParser.FieldDeclarationContext?) {
+        super.enterFieldDeclaration(ctx)
+
+        val declarators = ctx!!.variableDeclarators()
+        val typeType = declarators.parent.getChild(0)
+
+        for (declCtx in declarators.variableDeclarator()) {
+            var typeCtx: JavaParser.ClassOrInterfaceTypeContext? = buildTypeCtxByIndex(typeType, null, 0)
+            if (typeType!!.childCount > 1) {
+                typeCtx = buildTypeCtxByIndex(typeType, typeCtx, 1)
+            }
+
+            if (typeCtx == null) {
+                continue
+            }
+
+            val typeType = typeCtx.IDENTIFIER(0).text
+            val typeValue = declCtx.variableDeclaratorId().IDENTIFIER().text
+            fieldsMap[typeValue] = typeType
+
+            val field = CodeField(typeType, typeValue, arrayOf<String>())
+            fields += field
+
+            buildFieldCall(typeType, ctx)
+        }
+    }
+
+    private fun buildFieldCall(typeType: String, ctx: JavaParser.FieldDeclarationContext) {
+        val target = warpTargetFullType(typeType)
+        if (target != "") {
+            val position = buildPosition(ctx as ParserRuleContext)
+            val methodCall = CodeCall(
+                Package = "", // todo: add really package
+                Type = "field",
+                NodeName = typeType,
+                Position = position
+            )
+
+            currentNode.FunctionCalls += methodCall
+        }
+    }
+
+    private fun buildTypeCtxByIndex(
+        typeType: ParseTree,
+        typeCtx: JavaParser.ClassOrInterfaceTypeContext?,
+        index: Int
+    ): JavaParser.ClassOrInterfaceTypeContext? {
+        var newTypeCtx = typeCtx
+        var child = typeType.getChild(index)
+        when (child::class.simpleName) {
+            "ClassOrInterfaceTypeContext" -> {
+                newTypeCtx = child as JavaParser.ClassOrInterfaceTypeContext
+            }
+        }
+
+        return newTypeCtx
     }
 
     fun getNodeInfo(): CodeFile {
