@@ -5,19 +5,7 @@ import kotlin.test.assertEquals
 
 internal class JavaIdentAppTest {
     @Test
-    internal fun shouldAnalysis() {
-        val code = """
-package chapi.ast.javaast;
-
-import org.junit.Test;
-"""
-        val fileName = "import-demo.java"
-        val codeFile = JavaIdentApp().analysis(code, fileName)
-        assertEquals(codeFile.FullName, fileName)
-    }
-
-    @Test
-    internal fun shouldGetFilePackageName() {
+    internal fun shouldIdentifyFilePackageName() {
         val code = """
 package chapi.ast.javaast;
 
@@ -28,7 +16,7 @@ import org.junit.Test;
     }
 
     @Test
-    internal fun shouldGetFileImports() {
+    internal fun shouldIdentifyFileImports() {
         val code = """
 package chapi.ast.javaast;
 
@@ -39,7 +27,7 @@ import org.junit.Test;
     }
 
     @Test
-    internal fun shouldGetDataStructureName() {
+    internal fun shouldIdentifyDataStructureName() {
         val code = """
 public class HelloWorld {
     public static void main(String []args) {
@@ -52,7 +40,7 @@ public class HelloWorld {
     }
 
     @Test
-    internal fun shouldGetFunctionParameters() {
+    internal fun shouldIdentifyFunctionParameters() {
         val code = """
 public class HelloWorld {
     public static void main(String []args) {
@@ -67,7 +55,7 @@ public class HelloWorld {
     }
 
     @Test
-    internal fun shouldGetDataStructureMethodName() {
+    internal fun shouldIdentifyDataStructureMethodName() {
         val code = """
 public class HelloWorld {
     public static void main(String []args) {
@@ -81,7 +69,7 @@ public class HelloWorld {
     }
 
     @Test
-    internal fun shouldGetExtendsName() {
+    internal fun shouldIdentifyExtendsName() {
         val code = """
   class Inner extends HasStatic {
     static final int x = 3;
@@ -96,7 +84,7 @@ public class HelloWorld {
     }
 
     @Test
-    internal fun shouldGetImplementName() {
+    internal fun shouldIdentifyImplementName() {
         val code = """
 class Pig implements Animal {
   public void animalSound() {
@@ -112,7 +100,7 @@ class Pig implements Animal {
     }
 
     @Test
-    internal fun shouldGetInnerStructureName() {
+    internal fun shouldIdentifyInnerStructureName() {
         val code = """
 public class Outer {
   final int z=10;
