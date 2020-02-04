@@ -6,8 +6,12 @@ import domain.core.*
 
 class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     private var methodCalls = arrayOf<CodeCall>()
-    private var localVars = mutableMapOf<String, String>()
     private var methodMap = mutableMapOf<String, CodeFunction>()
+
+    private var localVars = mutableMapOf<String, String>()
+    private var fieldsMap = mutableMapOf<String, String>()
+    private var formalParameters = mutableMapOf<String, String>()
+
     private var currentClz: String = ""
     private var currentClzExtend: String = ""
     private var hasEnterClass: Boolean = false
@@ -200,7 +204,18 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         codeCall.NodeName = targetType ?: ""
     }
 
-    private fun parseTargetType(targetType: String?): String? {
+    private fun parseTargetType(target: String?): String? {
+        var targetType = target
+
+        val formalType = formalParameters[targetType]
+        val localVarType = localVars[targetType]
+
+        if (formalType != null && formalType != "") {
+            targetType = formalType
+        } else if (localVarType != null && localVarType != "") {
+            targetType = localVarType
+        }
+
         return targetType
     }
 
@@ -269,6 +284,12 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
         // todo: add identMap
         return ""
+    }
+
+    override fun exitFormalParameter(ctx: JavaParser.FormalParameterContext?) {
+        super.exitFormalParameter(ctx)
+        val paramKey = ctx!!.variableDeclaratorId().IDENTIFIER().text
+        formalParameters[paramKey] = ctx.typeType().text
     }
 
     fun getNodeInfo(): CodeFile {
