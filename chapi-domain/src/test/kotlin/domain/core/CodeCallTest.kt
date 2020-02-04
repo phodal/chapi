@@ -13,7 +13,7 @@ internal class CodeCallTest {
     @Test
     internal fun shouldBuildFullMethodName_WhenIsConstructor() {
         val fullMethodName =
-            CodeCall(Package = "package", NodeName = "nodeName", MethodName = "").buildFullMethodName()
+            CodeCall(Package = "package", NodeName = "nodeName", FunctionName = "").buildFullMethodName()
 
         assertEquals(fullMethodName, "package.nodeName")
     }
@@ -21,28 +21,28 @@ internal class CodeCallTest {
     @Test
     internal fun shouldBuildFullMethodName_WhenIsNormalMethod() {
         val fullMethodName =
-            CodeCall(Package = "package", NodeName = "nodeName", MethodName = "method").buildFullMethodName()
+            CodeCall(Package = "package", NodeName = "nodeName", FunctionName = "method").buildFullMethodName()
 
         assertEquals(fullMethodName, "package.nodeName.method")
     }
 
     @Test
     internal fun shouldHandleSystemOutput() {
-        val isSystemOutput = CodeCall(NodeName = "System.out", MethodName = "println").isSystemOutput()
+        val isSystemOutput = CodeCall(NodeName = "System.out", FunctionName = "println").isSystemOutput()
 
         assertEquals(isSystemOutput, true)
     }
 
     @Test
     internal fun shouldHandleSleep() {
-        val isSleep = CodeCall(NodeName = "Thread", MethodName = "sleep").isThreadSleep()
+        val isSleep = CodeCall(NodeName = "Thread", FunctionName = "sleep").isThreadSleep()
 
         assertEquals(isSleep, true)
     }
 
     @Test
     internal fun shouldHandleHasAssertion() {
-        assertEquals(CodeCall(MethodName = "assertEquals").hasAssertion(), true)
-        assertEquals(CodeCall(MethodName = "should").hasAssertion(), true)
+        assertEquals(CodeCall(FunctionName = "assertEquals").hasAssertion(), true)
+        assertEquals(CodeCall(FunctionName = "should").hasAssertion(), true)
     }
 }

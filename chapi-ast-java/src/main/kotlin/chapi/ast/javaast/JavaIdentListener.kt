@@ -5,8 +5,9 @@ import chapi.ast.antlr.JavaParserBaseListener
 import domain.core.*
 
 class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
-    private val localVars: HashMap<String, String> = HashMap<String, String>()
-    private val methodMap: HashMap<String, CodeFunction> = HashMap<String, CodeFunction>()
+    private var methodCalls = arrayOf<CodeCall>()
+    private var localVars: HashMap<String, String> = HashMap<String, String>()
+    private var methodMap: MutableMap<String, CodeFunction> = mutableMapOf<String, CodeFunction>()
     private var currentClz: String = ""
     private var currentClzExtend: String = ""
     private var hasEnterClass: Boolean = false
@@ -77,8 +78,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     private fun exitBodyAction() {
-        currentNode.setMethodFromMap(methodMap)
-
+        currentNode.setMethodsFromMap(methodMap)
         classNodes += currentNode
     }
 
@@ -135,6 +135,58 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         super.exitMethodDeclaration(ctx)
 
         currentFunction = CodeFunction()
+    }
+
+    override fun enterMethodCall(ctx: JavaParser.MethodCallContext?) {
+        val codeCall = CodeCall()
+
+        val targetCtx = ctx!!.parent.getChild(0)
+        var targetType = this.parseTargetType(targetCtx.text)
+
+        if (targetCtx.getChild(0) != null) {
+            val currentCtx = targetCtx.getChild(0)
+            when(currentCtx::class.simpleName) {
+                "MethodCallContext" -> {
+                    targetType = (currentCtx as JavaParser.MethodCallContext).IDENTIFIER().text
+                }
+            }
+        }
+
+        val callee = ctx.getChild(0).text
+
+//        buildMethodCallLocation(codeCall, ctx, callee)
+        buildMethodCallMethod(codeCall, callee, targetType, ctx)
+//        buildMethodCallParameters(codeCall, ctx)
+
+        this.sendResultToMethodCallMap(codeCall)
+    }
+
+    private fun sendResultToMethodCallMap(codeCall: CodeCall) {
+        methodCalls += codeCall
+        val currentMethodName = getMethodMapName(currentFunction)
+        var method = methodMap[currentMethodName]
+        if (method != null) {
+            method.FunctionCalls += codeCall
+            methodMap[currentMethodName] = method
+        }
+    }
+
+    private fun buildMethodCallMethod(
+        codeCall: CodeCall,
+        callee: String = "",
+        targetType: String?,
+        ctx: JavaParser.MethodCallContext
+    ) {
+        var packageName = codeFile.PackageName
+        var methodName = callee
+
+        codeCall.Package = packageName
+        codeCall.FunctionName = methodName
+        codeCall.NodeName = targetType ?: ""
+    }
+
+    private fun parseTargetType(targetType: String?): String? {
+        return targetType
     }
 
     private fun updateCodeFunction(codeFunction: CodeFunction) {

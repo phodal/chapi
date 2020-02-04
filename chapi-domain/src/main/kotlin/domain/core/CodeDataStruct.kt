@@ -22,7 +22,7 @@ open class CodeDataStruct(
                 this.NodeName.toLowerCase().contains("utils")
     }
 
-    fun setMethodFromMap(methodMap: java.util.HashMap<String, CodeFunction>) {
+    fun setMethodsFromMap(methodMap: MutableMap<String, CodeFunction>) {
         var methodsArray : Array<CodeFunction> = arrayOf()
         for (entry in methodMap) {
             methodsArray += entry.value
