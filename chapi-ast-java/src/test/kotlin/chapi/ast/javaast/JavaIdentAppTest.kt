@@ -121,31 +121,40 @@ class Pig implements Animal {
         assertEquals(codeFile.DataStructures[0].Implements[0], "Animal")
     }
 
+    private val innerCode = """
+    public class Outer {
+      final int z=10;
+    
+      class Inner extends HasStatic {
+        static final int x = 3;
+        static int y = 4;
+        public static void pr() {
+    
+        }
+      }
+    
+      public static void main(String[] args) {
+        Outer outer = new Outer();
+        System.out.println(outer.new Inner().y);
+      }
+    }
+    """
+
     @Test
     fun shouldIdentifyInnerStructureName() {
-        val code = """
-public class Outer {
-  final int z=10;
+        val codeFile = JavaIdentApp().analysis(innerCode, "")
 
-  class Inner extends HasStatic {
-    static final int x = 3;
-    static int y = 4;
-    public static void pr() {
-
-    }
-  }
-
-  public static void main(String[] args) {
-    Outer outer = new Outer();
-    System.out.println(outer.new Inner().y);
-  }
-}
-"""
-        val codeFile = JavaIdentApp().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "Outer")
-//        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "Outer")
         assertEquals(codeFile.DataStructures[0].InnerStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].InnerStructures[0].NodeName, "Inner")
+    }
+
+    @Test
+    fun shouldIdentifyInnerStructureFunction() {
+        val codeFile = JavaIdentApp().analysis(innerCode, "")
+
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "main")
+        assertEquals(codeFile.DataStructures[0].InnerStructures[0].Functions[0].Name, "pr")
     }
 }

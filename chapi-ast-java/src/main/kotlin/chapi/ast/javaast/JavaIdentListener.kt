@@ -55,6 +55,8 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         println("enterClassDeclaration")
         val isInnerNode = currentNode.NodeName != ""
         if (isInnerNode) {
+            updateStructMethods()
+
             innerNode = CodeDataStruct()
 
             currentType = "InnerStructures"
@@ -63,6 +65,9 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             buildClassExtension(ctx, innerNode)
 
             classNodeStack.push(innerNode)
+
+            lastNode.InnerStructures += innerNode
+            lastNode = innerNode
         } else {
             currentType = "Class"
             currentNode.Type = currentType
@@ -73,6 +78,11 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             lastNode = currentNode
             classNodeStack.push(currentNode)
         }
+    }
+
+    private fun updateStructMethods() {
+        lastNode.setMethodsFromMap(methodMap)
+        methodMap = mutableMapOf<String, CodeFunction>()
     }
 
     private fun buildClassExtension(ctx: JavaParser.ClassDeclarationContext?, classNode: CodeDataStruct) {
@@ -110,11 +120,10 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     override fun exitClassBody(ctx: JavaParser.ClassBodyContext?) {
         classNodeStack.pop()
-        if(classNodeStack.count() == 0) {
+        if (classNodeStack.count() == 0) {
             this.exitBody()
         } else {
-            lastNode.InnerStructures += innerNode
-            lastNode = innerNode
+            updateStructMethods()
         }
     }
 
@@ -226,10 +235,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         }
     }
 
-    private fun buildMethodCallLocation(
-        codeCall: CodeCall,
-        ctx: JavaParser.MethodCallContext
-    ) {
+    private fun buildMethodCallLocation(codeCall: CodeCall, ctx: JavaParser.MethodCallContext) {
         codeCall.Position = buildPosition(ctx)
     }
 
