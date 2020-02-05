@@ -52,7 +52,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
-        println("enterClassDeclaration")
         val isInnerNode = currentNode.NodeName != ""
         if (isInnerNode) {
             updateStructMethods()
@@ -112,10 +111,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             implements += target
         }
         return implements
-    }
-
-    override fun exitClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
-        println("exitClassDeclaration")
     }
 
     override fun exitClassBody(ctx: JavaParser.ClassBodyContext?) {
@@ -422,6 +417,41 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     override fun exitInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
         this.exitBody()
+    }
+
+    override fun enterAnnotation(ctx: JavaParser.AnnotationContext?) {
+        val annotationName = ctx!!.qualifiedName().text
+        isOverrideMethod = annotationName == "Override"
+
+        if (!hasEnterClass) {
+            val annotation = this.buildAnnotation(ctx)
+
+            if (currentType == "CreatorClass") {
+                currentNode.Annotations += annotation
+            } else {
+                currentNode.Annotations += annotation
+            }
+        }
+    }
+
+    private fun buildAnnotation(ctx: JavaParser.AnnotationContext): CodeAnnotation {
+        var annotationName = ctx.qualifiedName().text
+        val codeAnnotation = CodeAnnotation(
+            Name = annotationName
+        )
+        if (ctx.elementValuePairs() != null) {
+            for (pairContext in ctx.elementValuePairs().elementValuePair()) {
+                val key = pairContext.IDENTIFIER().text
+                val value = pairContext.elementValue().text
+
+                codeAnnotation.KeyValues += AnnotationKeyValue(key, value)
+            }
+        } else if (ctx.elementValue() != null) {
+            val value = ctx.elementValue().text
+            codeAnnotation.KeyValues += AnnotationKeyValue(value, value)
+        }
+
+        return codeAnnotation
     }
 
     fun getNodeInfo(): CodeFile {

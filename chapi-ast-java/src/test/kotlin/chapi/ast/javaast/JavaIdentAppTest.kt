@@ -171,4 +171,27 @@ interface AnotherInterface extends Runnable { // local interface
         assertEquals(codeFile.DataStructures[0].NodeName, "AnotherInterface")
         assertEquals(codeFile.DataStructures[0].Extend, "Runnable")
     }
+
+    @Test
+    fun shouldIdentifyAnnotation() {
+        var code = """
+package adapters.outbound.persistence.blog;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+public class BlogPO implements PersistenceObject<Blog> {
+
+}
+        """
+
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        assertEquals(codeFile.DataStructures[0].Annotations.size, 3)
+        assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "NoArgsConstructor")
+        assertEquals(codeFile.DataStructures[0].Annotations[0].KeyValues[0].Key, "access")
+        assertEquals(codeFile.DataStructures[0].Annotations[0].KeyValues[0].Value, "AccessLevel.PROTECTED")
+        assertEquals(codeFile.DataStructures[0].Annotations[1].Name, "AllArgsConstructor")
+        assertEquals(codeFile.DataStructures[0].Annotations[2].Name, "Getter")
+    }
 }
