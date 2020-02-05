@@ -11,6 +11,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     private var fields = arrayOf<CodeField>()
     private var methodCalls = arrayOf<CodeCall>()
     private var methodMap = mutableMapOf<String, CodeFunction>()
+    private var creatorMethodMap = mutableMapOf<String, CodeFunction>()
 
     private var localVars = mutableMapOf<String, String>()
     private var fieldsMap = mutableMapOf<String, String>()
@@ -76,6 +77,10 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         currentNode.Type = currentType
     }
 
+    override fun exitClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
+        println("exitClassDeclaration")
+    }
+
     override fun exitClassBody(ctx: JavaParser.ClassBodyContext?) {
         hasEnterClass = false
         this.exitBody()
@@ -88,6 +93,11 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         }
 
         //todo: handle creator class
+        if (currentType == "CreatorClass") {
+            currentNode.setMethodsFromMap(creatorMethodMap)
+            return
+        }
+
         if (currentNode.NodeName == "") {
             currentNode = CodeDataStruct()
             initClass()
@@ -177,8 +187,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-        super.exitMethodDeclaration(ctx)
-
         currentFunction = CodeFunction()
     }
 
