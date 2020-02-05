@@ -1,6 +1,7 @@
 package chapi.ast.typescriptast
 
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 internal class TypeScriptIdentAppTest {
     @Test
@@ -16,10 +17,13 @@ interface IPerson {
     @Test
     internal fun shouldIdentifyInterfaceName() {
         var code = """
-interface IPerson {
+export interface IPerson {
     name: string;
-}            
+    gender: string;
+}
 """
-        TypeScriptIdentApp().analysis(code, "")
+        val codeFile = TypeScriptIdentApp().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "IPerson")
     }
 }
