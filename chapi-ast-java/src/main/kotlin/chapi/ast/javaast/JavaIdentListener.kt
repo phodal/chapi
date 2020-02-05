@@ -143,7 +143,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-        println("enterMethodDeclaration")
         val name = ctx!!.IDENTIFIER().text
         val typeType = ctx.typeTypeOrVoid().text
 
@@ -160,6 +159,11 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             Position = codePosition
         )
 
+        val mayModifierCtx = ctx.parent.parent.getChild(0)
+        if (mayModifierCtx::class.simpleName == "ModifierContext") {
+            this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext, codeFunction)
+        }
+
         val params = ctx.formalParameters()
         if (params != null) {
             if (params.getChild(0) == null || params.text == "()" || params.getChild(0) == null) {
@@ -171,6 +175,19 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         }
 
         this.updateCodeFunction(codeFunction)
+    }
+
+    private fun buildAnnotationForMethod(
+        modifierCtx: JavaParser.ModifierContext,
+        codeFunction: CodeFunction
+    ) {
+        if (modifierCtx.classOrInterfaceModifier() != null) {
+            val childCtx = modifierCtx.classOrInterfaceModifier().getChild(0)
+            if (childCtx::class.simpleName == "AnnotationContext") {
+                val annotation = this.buildAnnotation(childCtx as JavaParser.AnnotationContext)
+                codeFunction.Annotations += annotation
+            }
+        }
     }
 
     private fun buildMethodParameters(params: JavaParser.FormalParametersContext?): Array<CodeProperty> {

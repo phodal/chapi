@@ -173,7 +173,7 @@ interface AnotherInterface extends Runnable { // local interface
     }
 
     @Test
-    fun shouldIdentifyAnnotation() {
+    fun shouldIdentifyClassAnnotation() {
         var code = """
 package adapters.outbound.persistence.blog;
 
@@ -193,5 +193,24 @@ public class BlogPO implements PersistenceObject<Blog> {
         assertEquals(codeFile.DataStructures[0].Annotations[0].KeyValues[0].Value, "AccessLevel.PROTECTED")
         assertEquals(codeFile.DataStructures[0].Annotations[1].Name, "AllArgsConstructor")
         assertEquals(codeFile.DataStructures[0].Annotations[2].Name, "Getter")
+    }
+
+    @Test
+    fun shouldIdentifyMethodAnnotation() {
+        var code = """
+package adapters.outbound.persistence.blog;
+
+public class BlogPO implements PersistenceObject<Blog> {
+    @Override
+    public Blog toDomainModel() {
+
+    }
+}
+        """
+
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        assertEquals(codeFile.DataStructures[0].Functions[0].Annotations.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].Name, "Override")
     }
 }
