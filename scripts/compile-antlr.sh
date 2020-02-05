@@ -30,14 +30,14 @@ cd ../..
 
 cd grammars/c
 
-antlr -Dlanguage=Java -listener C.g4 -o ../../chapi-ast-c/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+antlr -Dlanguage=Java -listener -visitor C.g4 -o ../../chapi-ast-c/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
 
 cd ../..
 
 cd grammars/kotlin
 
-antlr -Dlanguage=Java -listener UnicodeClasses.g4 -o ../../chapi-ast-kotlin/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
-antlr -Dlanguage=Java -listener KotlinLexer.g4 -o ../../chapi-ast-kotlin/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
-antlr -Dlanguage=Java -listener KotlinParser.g4 -o ../../chapi-ast-kotlin/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+antlr -Dlanguage=Java -listener -visitor UnicodeClasses.g4 -o ../../chapi-ast-kotlin/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+antlr -Dlanguage=Java -listener -visitor KotlinLexer.g4 -o ../../chapi-ast-kotlin/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+antlr -Dlanguage=Java -listener -visitor KotlinParser.g4 -o ../../chapi-ast-kotlin/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
 
 cd ../..

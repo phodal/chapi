@@ -292,6 +292,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitKotlinFile(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitKotlinFile(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final KotlinFileContext kotlinFile() throws RecognitionException {
@@ -417,6 +422,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitScript(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitScript(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ScriptContext script() throws RecognitionException {
@@ -528,6 +538,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFileAnnotation(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFileAnnotation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -693,6 +708,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPackageHeader(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPackageHeader(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PackageHeaderContext packageHeader() throws RecognitionException {
@@ -756,6 +776,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitImportList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitImportList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ImportListContext importList() throws RecognitionException {
@@ -818,6 +843,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitImportHeader(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitImportHeader(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -989,6 +1019,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitImportAlias(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitImportAlias(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ImportAliasContext importAlias() throws RecognitionException {
@@ -1032,6 +1067,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTopLevelObject(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTopLevelObject(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1109,6 +1149,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitClassDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitClassDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1351,6 +1396,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPrimaryConstructor(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPrimaryConstructor(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PrimaryConstructorContext primaryConstructor() throws RecognitionException {
@@ -1437,6 +1487,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitClassParameters(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitClassParameters(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1585,6 +1640,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitClassParameter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitClassParameter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1740,6 +1800,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitDelegationSpecifiers(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitDelegationSpecifiers(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DelegationSpecifiersContext delegationSpecifiers() throws RecognitionException {
@@ -1839,6 +1904,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAnnotatedDelegationSpecifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAnnotatedDelegationSpecifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AnnotatedDelegationSpecifierContext annotatedDelegationSpecifier() throws RecognitionException {
@@ -1919,6 +1989,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitDelegationSpecifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitDelegationSpecifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DelegationSpecifierContext delegationSpecifier() throws RecognitionException {
@@ -1988,6 +2063,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitConstructorInvocation(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitConstructorInvocation(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ConstructorInvocationContext constructorInvocation() throws RecognitionException {
@@ -2039,6 +2119,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitExplicitDelegation(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitExplicitDelegation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2135,6 +2220,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitClassBody(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitClassBody(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ClassBodyContext classBody() throws RecognitionException {
@@ -2219,6 +2309,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitClassMemberDeclarations(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitClassMemberDeclarations(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ClassMemberDeclarationsContext classMemberDeclarations() throws RecognitionException {
@@ -2289,6 +2384,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitClassMemberDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitClassMemberDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2361,6 +2461,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAnonymousInitializer(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAnonymousInitializer(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AnonymousInitializerContext anonymousInitializer() throws RecognitionException {
@@ -2431,6 +2536,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSecondaryConstructor(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSecondaryConstructor(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2571,6 +2681,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitConstructorDelegationCall(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitConstructorDelegationCall(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ConstructorDelegationCallContext constructorDelegationCall() throws RecognitionException {
@@ -2667,6 +2782,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitEnumClassBody(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitEnumClassBody(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2804,6 +2924,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitEnumEntries(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitEnumEntries(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final EnumEntriesContext enumEntries() throws RecognitionException {
@@ -2929,6 +3054,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitEnumEntry(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitEnumEntry(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3069,6 +3199,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFunctionDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFunctionDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3317,6 +3452,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFunctionValueParameters(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFunctionValueParameters(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FunctionValueParametersContext functionValueParameters() throws RecognitionException {
@@ -3457,6 +3597,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFunctionValueParameter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFunctionValueParameter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FunctionValueParameterContext functionValueParameter() throws RecognitionException {
@@ -3558,6 +3703,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitParameter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitParameter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ParameterContext parameter() throws RecognitionException {
@@ -3637,6 +3787,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSetterParameter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSetterParameter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3726,6 +3881,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFunctionBody(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFunctionBody(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FunctionBodyContext functionBody() throws RecognitionException {
@@ -3813,6 +3973,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitObjectDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitObjectDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3962,6 +4127,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitCompanionObject(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitCompanionObject(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4158,6 +4328,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPropertyDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPropertyDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4606,6 +4781,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMultiVariableDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMultiVariableDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MultiVariableDeclarationContext multiVariableDeclaration() throws RecognitionException {
@@ -4743,6 +4923,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitVariableDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitVariableDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final VariableDeclarationContext variableDeclaration() throws RecognitionException {
@@ -4856,6 +5041,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPropertyDelegate(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPropertyDelegate(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PropertyDelegateContext propertyDelegate() throws RecognitionException {
@@ -4927,6 +5117,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitGetter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitGetter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5117,6 +5312,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSetter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSetter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5323,6 +5523,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeAlias(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeAlias(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeAliasContext typeAlias() throws RecognitionException {
@@ -5458,6 +5663,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeParameters(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeParameters(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeParametersContext typeParameters() throws RecognitionException {
@@ -5592,6 +5802,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeParameter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeParameter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeParameterContext typeParameter() throws RecognitionException {
@@ -5699,6 +5914,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeParameterModifiers(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeParameterModifiers(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeParameterModifiersContext typeParameterModifiers() throws RecognitionException {
@@ -5766,6 +5986,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeParameterModifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeParameterModifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5882,6 +6107,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeContext type() throws RecognitionException {
@@ -5960,6 +6190,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeModifiers(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeModifiers(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeModifiersContext typeModifiers() throws RecognitionException {
@@ -6022,6 +6257,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeModifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeModifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6105,6 +6345,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitParenthesizedType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitParenthesizedType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6190,6 +6435,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitNullableType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitNullableType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6322,6 +6572,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeReference(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeReference(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeReferenceContext typeReference() throws RecognitionException {
@@ -6385,6 +6640,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFunctionType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFunctionType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6507,6 +6767,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitReceiverType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitReceiverType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ReceiverTypeContext receiverType() throws RecognitionException {
@@ -6586,6 +6851,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitUserType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitUserType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6682,6 +6952,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitParenthesizedUserType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitParenthesizedUserType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6807,6 +7082,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSimpleUserType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSimpleUserType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final SimpleUserTypeContext simpleUserType() throws RecognitionException {
@@ -6889,6 +7169,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFunctionTypeParameters(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFunctionTypeParameters(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7051,6 +7336,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeConstraints(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeConstraints(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeConstraintsContext typeConstraints() throws RecognitionException {
@@ -7168,6 +7458,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeConstraint(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeConstraint(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeConstraintContext typeConstraint() throws RecognitionException {
@@ -7260,6 +7555,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitBlock(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitBlock(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final BlockContext block() throws RecognitionException {
@@ -7343,6 +7643,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitStatements(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitStatements(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7440,6 +7745,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7557,6 +7867,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DeclarationContext declaration() throws RecognitionException {
@@ -7643,6 +7958,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAssignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7737,6 +8057,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -7786,6 +8111,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitDisjunction(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitDisjunction(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7886,6 +8216,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitConjunction(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitConjunction(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7989,6 +8324,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitEquality(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitEquality(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final EqualityContext equality() throws RecognitionException {
@@ -8072,6 +8412,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitComparison(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitComparison(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8165,6 +8510,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitInfixOperation(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitInfixOperation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8286,6 +8636,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitElvisExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitElvisExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ElvisExpressionContext elvisExpression() throws RecognitionException {
@@ -8388,6 +8743,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitInfixFunctionCall(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitInfixFunctionCall(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final InfixFunctionCallContext infixFunctionCall() throws RecognitionException {
@@ -8472,6 +8832,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitRangeExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitRangeExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8560,6 +8925,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAdditiveExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAdditiveExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AdditiveExpressionContext additiveExpression() throws RecognitionException {
@@ -8647,6 +9017,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMultiplicativeExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMultiplicativeExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MultiplicativeExpressionContext multiplicativeExpression() throws RecognitionException {
@@ -8730,6 +9105,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAsExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAsExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8817,6 +9197,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPrefixUnaryExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPrefixUnaryExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PrefixUnaryExpressionContext prefixUnaryExpression() throws RecognitionException {
@@ -8882,6 +9267,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitUnaryPrefix(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitUnaryPrefix(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8980,6 +9370,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPostfixUnaryExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPostfixUnaryExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PostfixUnaryExpressionContext postfixUnaryExpression() throws RecognitionException {
@@ -9065,6 +9460,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPostfixUnarySuffix(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPostfixUnarySuffix(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PostfixUnarySuffixContext postfixUnarySuffix() throws RecognitionException {
@@ -9144,6 +9544,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitDirectlyAssignableExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitDirectlyAssignableExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DirectlyAssignableExpressionContext directlyAssignableExpression() throws RecognitionException {
@@ -9198,6 +9603,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAssignableExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAssignableExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AssignableExpressionContext assignableExpression() throws RecognitionException {
@@ -9242,6 +9652,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAssignableSuffix(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAssignableSuffix(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9319,6 +9734,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitIndexingSuffix(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitIndexingSuffix(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9453,6 +9873,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitNavigationSuffix(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitNavigationSuffix(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9591,6 +10016,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitCallSuffix(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitCallSuffix(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final CallSuffixContext callSuffix() throws RecognitionException {
@@ -9687,6 +10117,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAnnotatedLambda(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAnnotatedLambda(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AnnotatedLambdaContext annotatedLambda() throws RecognitionException {
@@ -9777,6 +10212,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitValueArguments(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitValueArguments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9943,6 +10383,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeArguments(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeArguments(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeArgumentsContext typeArguments() throws RecognitionException {
@@ -10066,6 +10511,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeProjection(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeProjection(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeProjectionContext typeProjection() throws RecognitionException {
@@ -10183,6 +10633,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeProjectionModifiers(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeProjectionModifiers(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeProjectionModifiersContext typeProjectionModifiers() throws RecognitionException {
@@ -10247,6 +10702,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeProjectionModifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeProjectionModifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10337,6 +10797,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitValueArgument(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitValueArgument(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10512,6 +10977,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPrimaryExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPrimaryExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PrimaryExpressionContext primaryExpression() throws RecognitionException {
@@ -10654,6 +11124,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitParenthesizedExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitParenthesizedExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ParenthesizedExpressionContext parenthesizedExpression() throws RecognitionException {
@@ -10741,6 +11216,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitCollectionLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitCollectionLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10899,6 +11379,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLiteralConstant(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLiteralConstant(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LiteralConstantContext literalConstant() throws RecognitionException {
@@ -10949,6 +11434,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitStringLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitStringLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11014,6 +11504,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLineStringLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLineStringLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11102,6 +11597,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMultiLineStringLiteral(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMultiLineStringLiteral(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MultiLineStringLiteralContext multiLineStringLiteral() throws RecognitionException {
@@ -11176,6 +11676,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLineStringContent(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLineStringContent(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LineStringContentContext lineStringContent() throws RecognitionException {
@@ -11226,6 +11731,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLineStringExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLineStringExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LineStringExpressionContext lineStringExpression() throws RecognitionException {
@@ -11268,6 +11778,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMultiLineStringContent(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMultiLineStringContent(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11322,6 +11837,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMultiLineStringExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMultiLineStringExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11407,6 +11927,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLambdaLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLambdaLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11583,6 +12108,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLambdaParameters(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLambdaParameters(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LambdaParametersContext lambdaParameters() throws RecognitionException {
@@ -11682,6 +12212,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLambdaParameter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLambdaParameter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11845,6 +12380,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAnonymousFunction(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAnonymousFunction(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12033,6 +12573,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFunctionLiteral(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFunctionLiteral(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FunctionLiteralContext functionLiteral() throws RecognitionException {
@@ -12095,6 +12640,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitObjectLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitObjectLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12223,6 +12773,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitThisExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitThisExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ThisExpressionContext thisExpression() throws RecognitionException {
@@ -12282,6 +12837,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSuperExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSuperExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12395,6 +12955,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitControlStructureBody(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitControlStructureBody(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ControlStructureBodyContext controlStructureBody() throws RecognitionException {
@@ -12461,6 +13026,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitIfExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitIfExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12759,6 +13329,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitWhenExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitWhenExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final WhenExpressionContext whenExpression() throws RecognitionException {
@@ -12928,6 +13503,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitWhenEntry(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitWhenEntry(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13217,6 +13797,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitWhenCondition(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitWhenCondition(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final WhenConditionContext whenCondition() throws RecognitionException {
@@ -13373,6 +13958,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitRangeTest(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitRangeTest(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final RangeTestContext rangeTest() throws RecognitionException {
@@ -13437,6 +14027,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTypeTest(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTypeTest(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13507,6 +14102,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitTryExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitTryExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13671,6 +14271,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitCatchBlock(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitCatchBlock(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final CatchBlockContext catchBlock() throws RecognitionException {
@@ -13770,6 +14375,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFinallyBlock(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFinallyBlock(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FinallyBlockContext finallyBlock() throws RecognitionException {
@@ -13831,6 +14441,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLoopStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLoopStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13915,6 +14530,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitForStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitForStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14099,6 +14719,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitWhileStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitWhileStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final WhileStatementContext whileStatement() throws RecognitionException {
@@ -14238,6 +14863,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitDoWhileStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitDoWhileStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DoWhileStatementContext doWhileStatement() throws RecognitionException {
@@ -14351,6 +14981,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitJumpExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitJumpExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14481,6 +15116,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitCallableReference(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitCallableReference(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14621,6 +15261,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAssignmentAndOperator(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAssignmentAndOperator(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AssignmentAndOperatorContext assignmentAndOperator() throws RecognitionException {
@@ -14669,6 +15314,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitEqualityOperator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitEqualityOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14719,6 +15369,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitComparisonOperator(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitComparisonOperator(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ComparisonOperatorContext comparisonOperator() throws RecognitionException {
@@ -14765,6 +15420,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitInOperator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitInOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14813,6 +15473,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitIsOperator(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitIsOperator(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final IsOperatorContext isOperator() throws RecognitionException {
@@ -14859,6 +15524,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAdditiveOperator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAdditiveOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14908,6 +15578,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMultiplicativeOperator(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMultiplicativeOperator(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MultiplicativeOperatorContext multiplicativeOperator() throws RecognitionException {
@@ -14954,6 +15629,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAsOperator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAsOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15006,6 +15686,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPrefixUnaryOperator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPrefixUnaryOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15086,6 +15771,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPostfixUnaryOperator(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPostfixUnaryOperator(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PostfixUnaryOperatorContext postfixUnaryOperator() throws RecognitionException {
@@ -15150,6 +15840,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMemberAccessOperator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMemberAccessOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15220,6 +15915,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitModifiers(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitModifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15351,6 +16051,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ModifierContext modifier() throws RecognitionException {
@@ -15479,6 +16184,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitClassModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitClassModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ClassModifierContext classModifier() throws RecognitionException {
@@ -15525,6 +16235,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMemberModifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMemberModifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15575,6 +16290,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitVisibilityModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitVisibilityModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final VisibilityModifierContext visibilityModifier() throws RecognitionException {
@@ -15621,6 +16341,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitVarianceModifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitVarianceModifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15673,6 +16398,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitFunctionModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitFunctionModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FunctionModifierContext functionModifier() throws RecognitionException {
@@ -15719,6 +16449,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPropertyModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPropertyModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PropertyModifierContext propertyModifier() throws RecognitionException {
@@ -15757,6 +16492,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitInheritanceModifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitInheritanceModifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15806,6 +16546,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitParameterModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitParameterModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ParameterModifierContext parameterModifier() throws RecognitionException {
@@ -15852,6 +16597,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitReificationModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitReificationModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ReificationModifierContext reificationModifier() throws RecognitionException {
@@ -15889,6 +16639,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitPlatformModifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitPlatformModifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15939,6 +16694,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitLabel(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitLabel(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16002,6 +16762,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAnnotation(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAnnotation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16081,6 +16846,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSingleAnnotation(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSingleAnnotation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16191,6 +16961,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitMultiAnnotation(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitMultiAnnotation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16325,6 +17100,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitAnnotationUseSiteTarget(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitAnnotationUseSiteTarget(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AnnotationUseSiteTargetContext annotationUseSiteTarget() throws RecognitionException {
@@ -16375,6 +17155,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitUnescapedAnnotation(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitUnescapedAnnotation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16465,6 +17250,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSimpleIdentifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSimpleIdentifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final SimpleIdentifierContext simpleIdentifier() throws RecognitionException {
@@ -16523,6 +17313,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitIdentifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitIdentifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16599,6 +17394,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitShebangLine(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitShebangLine(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ShebangLineContext shebangLine() throws RecognitionException {
@@ -16658,6 +17458,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitQuest(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitQuest(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final QuestContext quest() throws RecognitionException {
@@ -16705,6 +17510,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitElvis(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitElvis(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ElvisContext elvis() throws RecognitionException {
@@ -16745,6 +17555,11 @@ public class KotlinParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSafeNav(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSafeNav(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final SafeNavContext safeNav() throws RecognitionException {
@@ -16784,6 +17599,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitExcl(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitExcl(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16835,6 +17655,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSemi(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSemi(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16922,6 +17747,11 @@ public class KotlinParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof KotlinParserListener ) ((KotlinParserListener)listener).exitSemis(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof KotlinParserVisitor ) return ((KotlinParserVisitor<? extends T>)visitor).visitSemis(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
