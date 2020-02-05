@@ -48,6 +48,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
+        println("enterClassDeclaration")
         if (currentNode.NodeName != "") {
             classNodeQueue += currentNode
             currentType = "InnerStructures"
@@ -82,6 +83,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitClassBody(ctx: JavaParser.ClassBodyContext?) {
+        println("exitClassBody")
         hasEnterClass = false
         this.exitBody()
     }
