@@ -10,6 +10,16 @@ interface IPerson {
     name: string;
 }            
 """
-        TypeScriptIdentApp().analysis(code)
+        TypeScriptIdentApp().analysis(code, "")
+    }
+
+    @Test
+    internal fun shouldIdentifyInterfaceName() {
+        var code = """
+interface IPerson {
+    name: string;
+}            
+"""
+        TypeScriptIdentApp().analysis(code, "")
     }
 }

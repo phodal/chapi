@@ -2,13 +2,16 @@ package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
 import chapi.ast.antlr.TypeScriptParserBaseListener
+import domain.core.CodeFile
 
-class TypeScriptIdentListener() : TypeScriptParserBaseListener() {
+class TypeScriptIdentListener(fileName: String) : TypeScriptParserBaseListener() {
+    private var codeFile: CodeFile = CodeFile(FullName = fileName)
+
     override fun enterClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
-        super.enterClassDeclaration(ctx)
+
     }
 
-    fun getNodeInfo() {
-
+    fun getNodeInfo(): CodeFile {
+        return codeFile
     }
 }
