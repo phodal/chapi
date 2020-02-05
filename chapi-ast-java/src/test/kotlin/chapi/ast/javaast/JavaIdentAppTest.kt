@@ -145,6 +145,6 @@ public class Outer {
 //        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
 //        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "main")
 //        assertEquals(codeFile.DataStructures[0].InnerStructures.size, 0)
-        print(codeFile.DataStructures.size)
+        println(codeFile.DataStructures.size)
     }
 }

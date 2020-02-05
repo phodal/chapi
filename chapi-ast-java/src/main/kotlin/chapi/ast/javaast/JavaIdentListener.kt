@@ -51,7 +51,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             classNodeQueue += currentNode
             currentType = "InnerStructures"
         } else {
-            currentType = "NodeName"
+            currentType = "Class"
         }
 
         hasEnterClass = true
@@ -100,18 +100,19 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             classNodes += currentNode
         }
 
-        if (classNodeQueue.size >= 1) {
-            if (classNodeQueue.size == 1) {
+        when {
+            classNodeQueue.size == 1 -> {
                 currentNode = classNodeQueue[0]
-            } else {
+            }
+            classNodeQueue.size > 1 -> {
                 classNodeQueue = classNodeQueue.dropLast(1).toTypedArray()
                 currentNode = classNodeQueue.last()
             }
-        } else {
-            currentNode = CodeDataStruct()
+            else -> {
+                currentNode = CodeDataStruct()
+            }
         }
 
-//        classNodes += currentNode
         initClass()
     }
 
