@@ -67,16 +67,26 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
         if (ctx.EXTENDS() != null) {
             currentClzExtend = ctx.typeType().text
-            this.buildExtend(currentClzExtend)
+            currentNode.Extend = this.buildExtend(currentClzExtend)
         }
 
         if (ctx.IMPLEMENTS() != null) {
-            for (_type in ctx.typeList().typeType()) {
-                this.buildImplement(_type.text)
-            }
+            this.currentNode.Implements = buildImplements(ctx)
         }
 
         currentNode.Type = currentType
+    }
+
+    private fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
+        var implements = arrayOf<String>()
+        for (_type in ctx.typeList().typeType()) {
+            var target = this.warpTargetFullType(_type.text)
+            if (target == "") {
+                target = _type.text
+            }
+            implements += target
+        }
+        return implements
     }
 
     override fun exitClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
@@ -293,21 +303,13 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         return codeFile.PackageName + "." + currentClz + "." + name + ":" + function.Position.StartLine.toString()
     }
 
-    private fun buildImplement(typeText: String) {
-        var target = this.warpTargetFullType(typeText)
-        if (target == "") {
-            target = typeText
-        }
-        currentNode.Implements += target
-    }
-
-    private fun buildExtend(extendName: String) {
+    private fun buildExtend(extendName: String): String {
+        var extend = extendName
         val target: String = this.warpTargetFullType(extendName)
         if (target != "") {
-            currentNode.Extend = target
-        } else {
-            currentNode.Extend = extendName
+            extend = target
         }
+        return extend
     }
 
     private fun warpTargetFullType(targetType: String): String {
