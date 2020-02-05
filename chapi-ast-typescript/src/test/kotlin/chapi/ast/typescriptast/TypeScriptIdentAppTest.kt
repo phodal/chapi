@@ -26,4 +26,18 @@ export interface IPerson {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "IPerson")
     }
+
+    @Test
+    internal fun shouldIdentifyInnerClass() {
+        var code = """
+class Foo {
+    static Bar = class {
+
+    }
+}
+"""
+        val codeFile = TypeScriptIdentApp().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "Foo")
+    }
 }

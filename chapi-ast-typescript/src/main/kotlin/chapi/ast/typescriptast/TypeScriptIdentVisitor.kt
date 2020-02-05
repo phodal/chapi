@@ -7,6 +7,9 @@ import domain.core.CodeFile
 import domain.core.CodeFunction
 
 class TypeScriptIdentVisitor(private var node: TSIdentify) : TypeScriptParserBaseVisitor<Any>() {
+    private var dataStructQueue = arrayOf<CodeDataStruct>()
+    private var hasEnterClass = false
+
     private var nodeMap = mutableMapOf<String, CodeDataStruct>()
     private var codeFile: CodeFile = CodeFile(FullName = node.fileName)
 
@@ -15,7 +18,25 @@ class TypeScriptIdentVisitor(private var node: TSIdentify) : TypeScriptParserBas
     private var currentType: String = ""
 
     override fun visitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?): Any {
-        return super.visitClassDeclaration(ctx)
+        val nodeName = ctx!!.Identifier().text
+        currentNode = CodeDataStruct(
+            Type = "Interface",
+            NodeName = nodeName
+        )
+
+        val heritageCtx = ctx.classHeritage()
+        if (heritageCtx.implementsClause() != null) {
+//            val typeList = heritageCtx.implementsClause().classOrInterfaceTypeList()
+        }
+
+        if (heritageCtx.classExtendsClause() != null) {
+
+        }
+
+//        dataStructQueue += currentNode
+        nodeMap[nodeName] = currentNode
+//        return super.visitClassDeclaration(ctx)
+        return node
     }
 
     override fun visitInterfaceDeclaration(ctx: TypeScriptParser.InterfaceDeclarationContext?): Any {
