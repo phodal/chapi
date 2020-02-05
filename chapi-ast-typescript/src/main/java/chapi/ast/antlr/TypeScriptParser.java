@@ -242,6 +242,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitInitializer(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitInitializer(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final InitializerContext initializer() throws RecognitionException {
@@ -285,6 +290,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitBindingPattern(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitBindingPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -342,6 +352,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeParameters(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeParameters(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -402,6 +417,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeParameterList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeParameterList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeParameterListContext typeParameterList() throws RecognitionException {
@@ -461,6 +481,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeParameter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeParameter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -528,6 +553,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitConstraint(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitConstraint(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ConstraintContext constraint() throws RecognitionException {
@@ -570,6 +600,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeArguments(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeArguments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -630,6 +665,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeArgumentList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeArgumentList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeArgumentListContext typeArgumentList() throws RecognitionException {
@@ -686,6 +726,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeArgument(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeArgument(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeArgumentContext typeArgument() throws RecognitionException {
@@ -734,6 +779,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitType_(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitType_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -820,6 +870,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIntersection(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIntersection(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class PrimaryContext extends UnionOrIntersectionOrPrimaryTypeContext {
 		public PrimaryTypeContext primaryType() {
@@ -833,6 +888,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPrimary(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPrimary(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class UnionContext extends UnionOrIntersectionOrPrimaryTypeContext {
@@ -851,6 +911,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitUnion(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitUnion(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -961,6 +1026,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitRedefinitionOfType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitRedefinitionOfType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class PredefinedPrimTypeContext extends PrimaryTypeContext {
 		public PredefinedTypeContext predefinedType() {
@@ -974,6 +1044,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPredefinedPrimType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPredefinedPrimType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class ArrayPrimTypeContext extends PrimaryTypeContext {
@@ -991,6 +1066,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArrayPrimType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArrayPrimType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ParenthesizedPrimTypeContext extends PrimaryTypeContext {
 		public TerminalNode OpenParen() { return getToken(TypeScriptParser.OpenParen, 0); }
@@ -1007,6 +1087,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitParenthesizedPrimType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitParenthesizedPrimType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ThisPrimTypeContext extends PrimaryTypeContext {
 		public TerminalNode This() { return getToken(TypeScriptParser.This, 0); }
@@ -1018,6 +1103,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitThisPrimType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitThisPrimType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class TuplePrimTypeContext extends PrimaryTypeContext {
@@ -1035,6 +1125,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTuplePrimType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTuplePrimType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ObjectPrimTypeContext extends PrimaryTypeContext {
 		public ObjectTypeContext objectType() {
@@ -1048,6 +1143,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitObjectPrimType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitObjectPrimType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class ReferencePrimTypeContext extends PrimaryTypeContext {
@@ -1063,6 +1163,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitReferencePrimType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitReferencePrimType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class QueryPrimTypeContext extends PrimaryTypeContext {
 		public TypeQueryContext typeQuery() {
@@ -1076,6 +1181,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitQueryPrimType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitQueryPrimType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1242,6 +1352,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPredefinedType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPredefinedType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PredefinedTypeContext predefinedType() throws RecognitionException {
@@ -1295,6 +1410,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeReference(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeReference(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1353,6 +1473,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeGeneric(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeGeneric(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeGenericContext typeGeneric() throws RecognitionException {
@@ -1410,6 +1535,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeIncludeGeneric(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeIncludeGeneric(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1479,6 +1609,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeName(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeName(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeNameContext typeName() throws RecognitionException {
@@ -1533,6 +1668,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitObjectType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitObjectType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ObjectTypeContext objectType() throws RecognitionException {
@@ -1586,6 +1726,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeBody(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeBody(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1655,6 +1800,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeMemberList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeMemberList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1738,6 +1888,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeMember(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeMember(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1827,6 +1982,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArrayType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArrayType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ArrayTypeContext arrayType() throws RecognitionException {
@@ -1873,6 +2033,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTupleType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTupleType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1923,6 +2088,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTupleElementTypes(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTupleElementTypes(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1988,6 +2158,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFunctionType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFunctionType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2065,6 +2240,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitConstructorType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitConstructorType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ConstructorTypeContext constructorType() throws RecognitionException {
@@ -2134,6 +2314,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeQuery(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeQuery(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeQueryContext typeQuery() throws RecognitionException {
@@ -2182,6 +2367,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeQueryExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeQueryExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2267,6 +2457,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertySignatur(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertySignatur(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PropertySignaturContext propertySignatur() throws RecognitionException {
@@ -2350,6 +2545,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeAnnotation(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeAnnotation(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeAnnotationContext typeAnnotation() throws RecognitionException {
@@ -2398,6 +2598,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitCallSignature(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitCallSignature(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2486,6 +2691,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitParameterList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitParameterList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2679,6 +2889,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitRequiredParameterList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitRequiredParameterList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final RequiredParameterListContext requiredParameterList() throws RecognitionException {
@@ -2745,6 +2960,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitRequiredParameter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitRequiredParameter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2816,6 +3036,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitAccessibilityModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitAccessibilityModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AccessibilityModifierContext accessibilityModifier() throws RecognitionException {
@@ -2866,6 +3091,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIdentifierOrPattern(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIdentifierOrPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2976,6 +3206,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitOptionalParameterList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitOptionalParameterList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final OptionalParameterListContext optionalParameterList() throws RecognitionException {
@@ -3046,6 +3281,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitOptionalParameter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitOptionalParameter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3149,6 +3389,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitRestParameter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitRestParameter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final RestParameterContext restParameter() throws RecognitionException {
@@ -3198,6 +3443,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitConstructSignature(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitConstructSignature(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3279,6 +3529,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIndexSignature(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIndexSignature(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final IndexSignatureContext indexSignature() throws RecognitionException {
@@ -3341,6 +3596,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitMethodSignature(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitMethodSignature(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MethodSignatureContext methodSignature() throws RecognitionException {
@@ -3399,6 +3659,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeAliasDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeAliasDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3469,6 +3734,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitConstructorDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitConstructorDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3566,6 +3836,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitInterfaceDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitInterfaceDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final InterfaceDeclarationContext interfaceDeclaration() throws RecognitionException {
@@ -3651,6 +3926,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitInterfaceExtendsClause(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitInterfaceExtendsClause(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final InterfaceExtendsClauseContext interfaceExtendsClause() throws RecognitionException {
@@ -3698,6 +3978,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitClassOrInterfaceTypeList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitClassOrInterfaceTypeList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3759,6 +4044,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitEnumDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitEnumDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3827,6 +4117,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitEnumBody(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitEnumBody(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final EnumBodyContext enumBody() throws RecognitionException {
@@ -3883,6 +4178,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitEnumMemberList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitEnumMemberList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3946,6 +4246,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitEnumMember(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitEnumMember(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final EnumMemberContext enumMember() throws RecognitionException {
@@ -4003,6 +4308,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitNamespaceDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitNamespaceDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4063,6 +4373,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitNamespaceName(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitNamespaceName(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4138,6 +4453,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitImportAliasDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitImportAliasDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ImportAliasDeclarationContext importAliasDeclaration() throws RecognitionException {
@@ -4185,6 +4505,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitDecoratorList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitDecoratorList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4241,6 +4566,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitDecorator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitDecorator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4306,6 +4636,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitDecoratorMemberExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitDecoratorMemberExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4403,6 +4738,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitDecoratorCallExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitDecoratorCallExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DecoratorCallExpressionContext decoratorCallExpression() throws RecognitionException {
@@ -4444,6 +4784,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitProgram(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitProgram(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4494,6 +4839,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitSourceElement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitSourceElement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4625,6 +4975,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4864,6 +5219,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitBlock(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitBlock(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final BlockContext block() throws RecognitionException {
@@ -4917,6 +5277,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitStatementList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitStatementList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4984,6 +5349,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitAbstractDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitAbstractDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AbstractDeclarationContext abstractDeclaration() throws RecognitionException {
@@ -5046,6 +5416,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitImportStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitImportStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5111,6 +5486,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFromBlock(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFromBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5243,6 +5623,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitMultipleImportStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitMultipleImportStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MultipleImportStatementContext multipleImportStatement() throws RecognitionException {
@@ -5319,6 +5704,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitExportStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitExportStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5401,6 +5791,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitVariableStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitVariableStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5524,6 +5919,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitVariableDeclarationList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitVariableDeclarationList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final VariableDeclarationListContext variableDeclarationList() throws RecognitionException {
@@ -5598,6 +5998,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitVariableDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitVariableDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5700,6 +6105,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitEmptyStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitEmptyStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final EmptyStatementContext emptyStatement() throws RecognitionException {
@@ -5739,6 +6149,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitExpressionStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitExpressionStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5800,6 +6215,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIfStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIfStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5878,6 +6298,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitDoStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitDoStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ForVarStatementContext extends IterationStatementContext {
 		public TerminalNode For() { return getToken(TypeScriptParser.For, 0); }
@@ -5911,6 +6336,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitForVarStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitForVarStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ForVarInStatementContext extends IterationStatementContext {
 		public TerminalNode For() { return getToken(TypeScriptParser.For, 0); }
@@ -5939,6 +6369,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitForVarInStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitForVarInStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class WhileStatementContext extends IterationStatementContext {
 		public TerminalNode While() { return getToken(TypeScriptParser.While, 0); }
@@ -5958,6 +6393,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitWhileStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitWhileStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class ForStatementContext extends IterationStatementContext {
@@ -5986,6 +6426,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitForStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitForStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ForInStatementContext extends IterationStatementContext {
 		public TerminalNode For() { return getToken(TypeScriptParser.For, 0); }
@@ -6010,6 +6455,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitForInStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitForInStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6254,6 +6704,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitVarModifier(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitVarModifier(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final VarModifierContext varModifier() throws RecognitionException {
@@ -6303,6 +6758,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitContinueStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitContinueStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6358,6 +6818,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitBreakStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitBreakStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6416,6 +6881,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitReturnStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitReturnStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ReturnStatementContext returnStatement() throws RecognitionException {
@@ -6472,6 +6942,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitYieldStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitYieldStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6532,6 +7007,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitWithStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitWithStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final WithStatementContext withStatement() throws RecognitionException {
@@ -6584,6 +7064,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitSwitchStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitSwitchStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6639,6 +7124,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitCaseBlock(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitCaseBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6715,6 +7205,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitCaseClauses(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitCaseClauses(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final CaseClausesContext caseClauses() throws RecognitionException {
@@ -6772,6 +7267,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitCaseClause(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitCaseClause(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final CaseClauseContext caseClause() throws RecognitionException {
@@ -6827,6 +7327,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitDefaultClause(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitDefaultClause(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DefaultClauseContext defaultClause() throws RecognitionException {
@@ -6880,6 +7385,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitLabelledStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitLabelledStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LabelledStatementContext labelledStatement() throws RecognitionException {
@@ -6926,6 +7436,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitThrowStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitThrowStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6978,6 +7493,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTryStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTryStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7052,6 +7572,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitCatchProduction(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitCatchProduction(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final CatchProductionContext catchProduction() throws RecognitionException {
@@ -7100,6 +7625,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFinallyProduction(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFinallyProduction(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FinallyProductionContext finallyProduction() throws RecognitionException {
@@ -7141,6 +7671,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitDebuggerStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitDebuggerStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7190,6 +7725,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFunctionDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFunctionDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7267,6 +7807,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitClassDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitClassDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ClassDeclarationContext classDeclaration() throws RecognitionException {
@@ -7336,6 +7881,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitClassHeritage(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitClassHeritage(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ClassHeritageContext classHeritage() throws RecognitionException {
@@ -7399,6 +7949,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitClassTail(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitClassTail(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ClassTailContext classTail() throws RecognitionException {
@@ -7458,6 +8013,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitClassExtendsClause(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitClassExtendsClause(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ClassExtendsClauseContext classExtendsClause() throws RecognitionException {
@@ -7499,6 +8059,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitImplementsClause(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitImplementsClause(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7549,6 +8114,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitClassElement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitClassElement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7642,6 +8212,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertyMemberDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertyMemberDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7781,6 +8356,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertyMemberBase(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertyMemberBase(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PropertyMemberBaseContext propertyMemberBase() throws RecognitionException {
@@ -7859,6 +8439,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIndexMemberDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIndexMemberDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final IndexMemberDeclarationContext indexMemberDeclaration() throws RecognitionException {
@@ -7908,6 +8493,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGeneratorMethod(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGeneratorMethod(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7988,6 +8578,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGeneratorFunctionDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGeneratorFunctionDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8070,6 +8665,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGeneratorBlock(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGeneratorBlock(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final GeneratorBlockContext generatorBlock() throws RecognitionException {
@@ -8144,6 +8744,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGeneratorDefinition(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGeneratorDefinition(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final GeneratorDefinitionContext generatorDefinition() throws RecognitionException {
@@ -8193,6 +8798,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIteratorBlock(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIteratorBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8279,6 +8889,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIteratorDefinition(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIteratorDefinition(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final IteratorDefinitionContext iteratorDefinition() throws RecognitionException {
@@ -8362,6 +8977,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFormalParameterList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFormalParameterList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8486,6 +9106,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFormalParameterArg(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFormalParameterArg(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FormalParameterArgContext formalParameterArg() throws RecognitionException {
@@ -8557,6 +9182,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitLastFormalParameterArg(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitLastFormalParameterArg(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LastFormalParameterArgContext lastFormalParameterArg() throws RecognitionException {
@@ -8597,6 +9227,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFunctionBody(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFunctionBody(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8647,6 +9282,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitSourceElements(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitSourceElements(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8707,6 +9347,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArrayLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArrayLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8771,6 +9416,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitElementList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitElementList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8949,6 +9599,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitLastElement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitLastElement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LastElementContext lastElement() throws RecognitionException {
@@ -9012,6 +9667,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitObjectLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitObjectLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9107,6 +9767,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertyExpressionAssignment(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertyExpressionAssignment(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ComputedPropertyExpressionAssignmentContext extends PropertyAssignmentContext {
 		public TerminalNode OpenBracket() { return getToken(TypeScriptParser.OpenBracket, 0); }
@@ -9127,6 +9792,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitComputedPropertyExpressionAssignment(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitComputedPropertyExpressionAssignment(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class PropertyShorthandContext extends PropertyAssignmentContext {
 		public TerminalNode Identifier() { return getToken(TypeScriptParser.Identifier, 0); }
@@ -9138,6 +9808,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertyShorthand(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertyShorthand(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class PropertySetterContext extends PropertyAssignmentContext {
@@ -9153,6 +9828,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertySetter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertySetter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class PropertyGetterContext extends PropertyAssignmentContext {
 		public GetAccessorContext getAccessor() {
@@ -9166,6 +9846,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertyGetter(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertyGetter(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class RestParameterInObjectContext extends PropertyAssignmentContext {
@@ -9181,6 +9866,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitRestParameterInObject(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitRestParameterInObject(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class MethodPropertyContext extends PropertyAssignmentContext {
 		public GeneratorMethodContext generatorMethod() {
@@ -9194,6 +9884,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitMethodProperty(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitMethodProperty(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9320,6 +10015,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGetAccessor(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGetAccessor(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final GetAccessorContext getAccessor() throws RecognitionException {
@@ -9393,6 +10093,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitSetAccessor(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitSetAccessor(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9476,6 +10181,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPropertyName(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPropertyName(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9600,6 +10310,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArguments(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArguments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9758,6 +10473,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitLastArgument(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitLastArgument(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LastArgumentContext lastArgument() throws RecognitionException {
@@ -9805,6 +10525,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitExpressionSequence(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitExpressionSequence(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9875,6 +10600,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFunctionExpressionDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFunctionExpressionDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9965,6 +10695,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTemplateStringExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTemplateStringExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class TernaryExpressionContext extends SingleExpressionContext {
 		public List<SingleExpressionContext> singleExpression() {
@@ -9984,6 +10719,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTernaryExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTernaryExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class LogicalAndExpressionContext extends SingleExpressionContext {
 		public List<SingleExpressionContext> singleExpression() {
@@ -10002,6 +10742,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitLogicalAndExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitLogicalAndExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class GeneratorsExpressionContext extends SingleExpressionContext {
 		public GeneratorBlockContext generatorBlock() {
@@ -10015,6 +10760,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGeneratorsExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGeneratorsExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class PreIncrementExpressionContext extends SingleExpressionContext {
@@ -10031,6 +10781,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPreIncrementExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPreIncrementExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ObjectLiteralExpressionContext extends SingleExpressionContext {
 		public ObjectLiteralContext objectLiteral() {
@@ -10044,6 +10799,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitObjectLiteralExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitObjectLiteralExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class InExpressionContext extends SingleExpressionContext {
@@ -10063,6 +10823,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitInExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitInExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class LogicalOrExpressionContext extends SingleExpressionContext {
 		public List<SingleExpressionContext> singleExpression() {
@@ -10081,6 +10846,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitLogicalOrExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitLogicalOrExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class GenericTypesContext extends SingleExpressionContext {
 		public TypeArgumentsContext typeArguments() {
@@ -10098,6 +10868,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGenericTypes(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGenericTypes(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class NotExpressionContext extends SingleExpressionContext {
 		public TerminalNode Not() { return getToken(TypeScriptParser.Not, 0); }
@@ -10113,6 +10888,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitNotExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitNotExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class PreDecreaseExpressionContext extends SingleExpressionContext {
 		public TerminalNode MinusMinus() { return getToken(TypeScriptParser.MinusMinus, 0); }
@@ -10127,6 +10907,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPreDecreaseExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPreDecreaseExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class ArgumentsExpressionContext extends SingleExpressionContext {
@@ -10145,6 +10930,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArgumentsExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArgumentsExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ThisExpressionContext extends SingleExpressionContext {
 		public TerminalNode This() { return getToken(TypeScriptParser.This, 0); }
@@ -10156,6 +10946,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitThisExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitThisExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class FunctionExpressionContext extends SingleExpressionContext {
@@ -10171,6 +10966,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitFunctionExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitFunctionExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class UnaryMinusExpressionContext extends SingleExpressionContext {
 		public TerminalNode Minus() { return getToken(TypeScriptParser.Minus, 0); }
@@ -10185,6 +10985,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitUnaryMinusExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitUnaryMinusExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class AssignmentExpressionContext extends SingleExpressionContext {
@@ -10204,6 +11009,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitAssignmentExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitAssignmentExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class PostDecreaseExpressionContext extends SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
@@ -10219,6 +11029,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPostDecreaseExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPostDecreaseExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class TypeofExpressionContext extends SingleExpressionContext {
 		public TerminalNode Typeof() { return getToken(TypeScriptParser.Typeof, 0); }
@@ -10233,6 +11048,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitTypeofExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitTypeofExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class InstanceofExpressionContext extends SingleExpressionContext {
@@ -10252,6 +11072,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitInstanceofExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitInstanceofExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class UnaryPlusExpressionContext extends SingleExpressionContext {
 		public TerminalNode Plus() { return getToken(TypeScriptParser.Plus, 0); }
@@ -10266,6 +11091,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitUnaryPlusExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitUnaryPlusExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class DeleteExpressionContext extends SingleExpressionContext {
@@ -10282,6 +11112,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitDeleteExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitDeleteExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class GeneratorsFunctionExpressionContext extends SingleExpressionContext {
 		public GeneratorFunctionDeclarationContext generatorFunctionDeclaration() {
@@ -10295,6 +11130,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGeneratorsFunctionExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGeneratorsFunctionExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class ArrowFunctionExpressionContext extends SingleExpressionContext {
@@ -10310,6 +11150,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArrowFunctionExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArrowFunctionExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class IteratorsExpressionContext extends SingleExpressionContext {
 		public IteratorBlockContext iteratorBlock() {
@@ -10323,6 +11168,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIteratorsExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIteratorsExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class EqualityExpressionContext extends SingleExpressionContext {
@@ -10345,6 +11195,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitEqualityExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitEqualityExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class BitXOrExpressionContext extends SingleExpressionContext {
 		public List<SingleExpressionContext> singleExpression() {
@@ -10363,6 +11218,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitBitXOrExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitBitXOrExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class SuperExpressionContext extends SingleExpressionContext {
 		public TerminalNode Super() { return getToken(TypeScriptParser.Super, 0); }
@@ -10374,6 +11234,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitSuperExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitSuperExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class MultiplicativeExpressionContext extends SingleExpressionContext {
@@ -10395,6 +11260,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitMultiplicativeExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitMultiplicativeExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class BitShiftExpressionContext extends SingleExpressionContext {
 		public List<SingleExpressionContext> singleExpression() {
@@ -10415,6 +11285,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitBitShiftExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitBitShiftExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ParenthesizedExpressionContext extends SingleExpressionContext {
 		public TerminalNode OpenParen() { return getToken(TypeScriptParser.OpenParen, 0); }
@@ -10430,6 +11305,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitParenthesizedExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitParenthesizedExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class AdditiveExpressionContext extends SingleExpressionContext {
@@ -10449,6 +11329,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitAdditiveExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitAdditiveExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class RelationalExpressionContext extends SingleExpressionContext {
@@ -10471,6 +11356,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitRelationalExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitRelationalExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class PostIncrementExpressionContext extends SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
@@ -10486,6 +11376,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitPostIncrementExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitPostIncrementExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class YieldExpressionContext extends SingleExpressionContext {
 		public YieldStatementContext yieldStatement() {
@@ -10499,6 +11394,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitYieldExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitYieldExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class BitNotExpressionContext extends SingleExpressionContext {
@@ -10514,6 +11414,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitBitNotExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitBitNotExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class NewExpressionContext extends SingleExpressionContext {
@@ -10536,6 +11441,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitNewExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitNewExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class LiteralExpressionContext extends SingleExpressionContext {
 		public LiteralContext literal() {
@@ -10550,6 +11460,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitLiteralExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitLiteralExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ArrayLiteralExpressionContext extends SingleExpressionContext {
 		public ArrayLiteralContext arrayLiteral() {
@@ -10563,6 +11478,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArrayLiteralExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArrayLiteralExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class MemberDotExpressionContext extends SingleExpressionContext {
@@ -10582,6 +11502,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitMemberDotExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitMemberDotExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ClassExpressionContext extends SingleExpressionContext {
 		public TerminalNode Class() { return getToken(TypeScriptParser.Class, 0); }
@@ -10597,6 +11522,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitClassExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitClassExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class MemberIndexExpressionContext extends SingleExpressionContext {
@@ -10617,6 +11547,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitMemberIndexExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitMemberIndexExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class IdentifierExpressionContext extends SingleExpressionContext {
 		public IdentifierNameContext identifierName() {
@@ -10633,6 +11568,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIdentifierExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIdentifierExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class BitAndExpressionContext extends SingleExpressionContext {
@@ -10652,6 +11592,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitBitAndExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitBitAndExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class BitOrExpressionContext extends SingleExpressionContext {
 		public List<SingleExpressionContext> singleExpression() {
@@ -10669,6 +11614,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitBitOrExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitBitOrExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class AssignmentOperatorExpressionContext extends SingleExpressionContext {
@@ -10690,6 +11640,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitAssignmentOperatorExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitAssignmentOperatorExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class VoidExpressionContext extends SingleExpressionContext {
 		public TerminalNode Void() { return getToken(TypeScriptParser.Void, 0); }
@@ -10704,6 +11659,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitVoidExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitVoidExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11379,6 +12339,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArrowFunctionDeclaration(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArrowFunctionDeclaration(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ArrowFunctionDeclarationContext arrowFunctionDeclaration() throws RecognitionException {
@@ -11445,6 +12410,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArrowFunctionParameters(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArrowFunctionParameters(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11518,6 +12488,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitArrowFunctionBody(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitArrowFunctionBody(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ArrowFunctionBodyContext arrowFunctionBody() throws RecognitionException {
@@ -11582,6 +12557,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitAssignmentOperator(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitAssignmentOperator(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AssignmentOperatorContext assignmentOperator() throws RecognitionException {
@@ -11634,6 +12614,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11723,6 +12708,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitNumericLiteral(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitNumericLiteral(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final NumericLiteralContext numericLiteral() throws RecognitionException {
@@ -11771,6 +12761,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitIdentifierName(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitIdentifierName(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11873,6 +12868,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitReservedWord(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitReservedWord(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12021,6 +13021,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitKeyword(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitKeyword(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final KeywordContext keyword() throws RecognitionException {
@@ -12070,6 +13075,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitGetter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitGetter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final GetterContext getter() throws RecognitionException {
@@ -12114,6 +13124,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitSetter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitSetter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final SetterContext setter() throws RecognitionException {
@@ -12155,6 +13170,11 @@ public class TypeScriptParser extends TypeScriptBaseParser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TypeScriptParserListener ) ((TypeScriptParserListener)listener).exitEos(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TypeScriptParserVisitor ) return ((TypeScriptParserVisitor<? extends T>)visitor).visitEos(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
