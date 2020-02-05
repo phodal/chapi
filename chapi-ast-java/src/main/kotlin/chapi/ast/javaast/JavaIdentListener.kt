@@ -50,6 +50,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
         println("enterClassDeclaration")
+
         if (currentNode.NodeName != "") {
             classNodeQueue += currentNode
             currentType = "InnerStructures"
@@ -60,21 +61,25 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         hasEnterClass = true
         currentClzExtend = ""
 
+        buildClassExtension(ctx, currentNode)
+
+        currentNode.Type = currentType
+    }
+
+    private fun buildClassExtension(ctx: JavaParser.ClassDeclarationContext?, classNode: CodeDataStruct) {
         if (ctx!!.IDENTIFIER() != null) {
             currentClz = ctx.IDENTIFIER().text
-            currentNode.NodeName = currentClz
+            classNode.NodeName = currentClz
         }
 
         if (ctx.EXTENDS() != null) {
             currentClzExtend = ctx.typeType().text
-            currentNode.Extend = this.buildExtend(currentClzExtend)
+            classNode.Extend = this.buildExtend(currentClzExtend)
         }
 
         if (ctx.IMPLEMENTS() != null) {
-            this.currentNode.Implements = buildImplements(ctx)
+            classNode.Implements = buildImplements(ctx)
         }
-
-        currentNode.Type = currentType
     }
 
     private fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
