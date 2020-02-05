@@ -50,20 +50,24 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
         println("enterClassDeclaration")
+        val isInnerNode = currentNode.NodeName != ""
+        if (isInnerNode) {
+            var innerNode = CodeDataStruct()
 
-        if (currentNode.NodeName != "") {
-            classNodeQueue += currentNode
             currentType = "InnerStructures"
+            innerNode.Type = currentType
+
+            classNodeQueue += innerNode
+
+            buildClassExtension(ctx, innerNode)
         } else {
             currentType = "Class"
+            currentNode.Type = currentType
+
+            hasEnterClass = true
+
+            buildClassExtension(ctx, currentNode)
         }
-
-        hasEnterClass = true
-        currentClzExtend = ""
-
-        buildClassExtension(ctx, currentNode)
-
-        currentNode.Type = currentType
     }
 
     private fun buildClassExtension(ctx: JavaParser.ClassDeclarationContext?, classNode: CodeDataStruct) {
@@ -72,6 +76,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             classNode.NodeName = currentClz
         }
 
+        currentClzExtend = ""
         if (ctx.EXTENDS() != null) {
             currentClzExtend = ctx.typeType().text
             classNode.Extend = this.buildExtend(currentClzExtend)
@@ -99,8 +104,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitClassBody(ctx: JavaParser.ClassBodyContext?) {
-        println("exitClassBody")
-        hasEnterClass = false
         this.exitBody()
     }
 
@@ -110,36 +113,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             currentNode.setMethodsFromMap(methodMap)
         }
 
-        //todo: handle creator class
-        if (currentType == "CreatorClass") {
-            currentNode.setMethodsFromMap(creatorMethodMap)
-            return
-        }
-
-        if (currentNode.NodeName == "") {
-            currentNode = CodeDataStruct()
-            initClass()
-            return
-        }
-
-        if (currentNode.Type == "InnerStructures" && classNodeQueue.size >= 1) {
-            classNodeQueue[0].InnerStructures += currentNode
-        } else {
-            classNodes += currentNode
-        }
-
-        when {
-            classNodeQueue.size == 1 -> {
-                currentNode = classNodeQueue[0]
-            }
-            classNodeQueue.size > 1 -> {
-                classNodeQueue = classNodeQueue.dropLast(1).toTypedArray()
-                currentNode = classNodeQueue.last()
-            }
-            else -> {
-                currentNode = CodeDataStruct()
-            }
-        }
+        classNodes += currentNode
 
         initClass()
     }
@@ -148,7 +122,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         currentClz = ""
         currentClzExtend = ""
         currentFunction = CodeFunction()
-        currentNode.FunctionCalls = arrayOf()
+//        currentNode.FunctionCalls = arrayOf()
 
         methodMap = mutableMapOf<String, CodeFunction>()
         methodCalls = arrayOf<CodeCall>()
