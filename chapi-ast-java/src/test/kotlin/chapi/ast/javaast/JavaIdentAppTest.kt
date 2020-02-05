@@ -142,9 +142,10 @@ public class Outer {
 }
 """
         val codeFile = JavaIdentApp().analysis(code, "")
-//        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
-//        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "main")
-//        assertEquals(codeFile.DataStructures[0].InnerStructures.size, 0)
-        println(codeFile.DataStructures.size)
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "Outer")
+//        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "Outer")
+        assertEquals(codeFile.DataStructures[0].InnerStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].InnerStructures[0].NodeName, "Inner")
     }
 }
