@@ -404,9 +404,28 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         return newTypeCtx
     }
 
+    override fun enterInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
+        hasEnterClass = true
+        currentType = "Interface"
+        currentNode.NodeName = ctx!!.IDENTIFIER().text
+        currentNode.Type = "Interface"
+
+        if (ctx.EXTENDS() != null) {
+            var extend = ""
+            for (typeContext in ctx.typeList().typeType()) {
+                extend = buildExtend(typeContext.text)
+            }
+
+            currentNode.Extend = extend
+        }
+    }
+
+    override fun exitInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
+        this.exitBody()
+    }
+
     fun getNodeInfo(): CodeFile {
         codeFile.DataStructures = classNodes
         return codeFile
     }
 }
-

@@ -157,4 +157,18 @@ class Pig implements Animal {
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "main")
         assertEquals(codeFile.DataStructures[0].InnerStructures[0].Functions[0].Name, "pr")
     }
+
+    @Test
+    fun shouldIdentifyInterface() {
+        var code = """
+interface AnotherInterface extends Runnable { // local interface
+    void work();
+}
+        """
+
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        assertEquals(codeFile.DataStructures[0].NodeName, "AnotherInterface")
+        assertEquals(codeFile.DataStructures[0].Extend, "Runnable")
+    }
 }
