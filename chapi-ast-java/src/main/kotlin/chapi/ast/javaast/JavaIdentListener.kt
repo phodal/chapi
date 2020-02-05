@@ -23,6 +23,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     private var classNodes: Array<CodeDataStruct> = arrayOf()
     private var classNodeQueue: Array<CodeDataStruct> = arrayOf()
+    private var classNodeMap = mutableMapOf<String, CodeDataStruct>()
 
     private var methodQueue: Array<CodeFunction> = arrayOf()
 
@@ -141,7 +142,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-        super.enterMethodDeclaration(ctx)
+        println("enterMethodDeclaration")
         val name = ctx!!.IDENTIFIER().text
         val typeType = ctx.typeTypeOrVoid().text
 
