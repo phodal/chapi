@@ -142,6 +142,32 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         isOverrideMethod = false
     }
 
+
+    override fun enterInterfaceMethodDeclaration(ctx: JavaParser.InterfaceMethodDeclarationContext?) {
+        val name = ctx!!.IDENTIFIER().text
+        val typeType = ctx.typeTypeOrVoid().text
+
+        val codePosition = CodePosition(
+            StartLine = ctx.start.line,
+            StartLinePosition = ctx.IDENTIFIER().symbol.startIndex,
+            StopLine = ctx.stop.line,
+            StopLinePosition = ctx.IDENTIFIER().symbol.stopIndex
+        )
+
+        val codeFunction = CodeFunction(
+            Name = name,
+            ReturnType = typeType,
+            Position = codePosition
+        )
+
+        val mayModifierCtx = ctx.parent.parent.getChild(0)
+        if (mayModifierCtx::class.simpleName == "ModifierContext") {
+            this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext, codeFunction)
+        }
+
+        this.updateCodeFunction(codeFunction)
+    }
+
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
         val name = ctx!!.IDENTIFIER().text
         val typeType = ctx.typeTypeOrVoid().text

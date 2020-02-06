@@ -173,6 +173,22 @@ interface AnotherInterface extends Runnable { // local interface
     }
 
     @Test
+    fun shouldIdentifyInterfaceMethod() {
+        var code = """
+interface AnotherInterface extends Runnable { // local interface
+    void work();
+}
+        """
+
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        assertEquals(codeFile.DataStructures[0].NodeName, "AnotherInterface")
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "work")
+        assertEquals(codeFile.DataStructures[0].Functions[0].ReturnType, "void")
+    }
+
+    @Test
     fun shouldIdentifyClassAnnotation() {
         var code = """
 package adapters.outbound.persistence.blog;
