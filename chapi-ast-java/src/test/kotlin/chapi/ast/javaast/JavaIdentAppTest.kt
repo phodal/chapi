@@ -189,6 +189,23 @@ interface AnotherInterface extends Runnable { // local interface
     }
 
     @Test
+    fun shouldIdentifyInterfaceMethodAnnotation() {
+        var code = """
+public interface BlogRepository extends Repository {
+    @ServiceMethod(value="/hello")
+    long count(BlogCriteria criteria);
+}
+
+        """
+
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].Name, "ServiceMethod")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].KeyValues[0].Key, "value")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].KeyValues[0].Value, "\"/hello\"")
+    }
+
+    @Test
     fun shouldIdentifyClassAnnotation() {
         var code = """
 package adapters.outbound.persistence.blog;
