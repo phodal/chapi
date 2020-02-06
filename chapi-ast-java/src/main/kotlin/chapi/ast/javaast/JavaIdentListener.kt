@@ -44,7 +44,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterImportDeclaration(ctx: JavaParser.ImportDeclarationContext?) {
-        super.enterImportDeclaration(ctx)
         val codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
         imports += codeImport
 
@@ -104,7 +103,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     private fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
         var implements = arrayOf<String>()
         for (_type in ctx.typeList().typeType()) {
-            var target = this.warpTargetFullType(_type.text)
+            var target = this.warpTargetFullType(_type.text).targetType
             if (target == "") {
                 target = _type.text
             }
@@ -296,12 +295,38 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         }
     }
 
-    private fun buildMethodCallMethodInformation(codeCall: CodeCall, callee: String = "", targetType: String?) {
-        val packageName = codeFile.PackageName
+    private fun buildMethodCallMethodInformation(codeCall: CodeCall, callee: String = "", _targetType: String?) {
+        var packageName = codeFile.PackageName
+        var methodName = callee
+
+        var targetTypeStr = _targetType
+        val targetType = this.warpTargetFullType(targetTypeStr)
+        var callType = targetType.callType
+        var fullType = targetType.targetType
+
+        if (targetTypeStr == "super" || callee == "super") {
+            callType = "super"
+            targetTypeStr = currentClzExtend
+        }
+        codeCall.Type = callType
+
+        if (fullType != "") {
+            packageName = removeTarget(fullType)
+            methodName = callee
+        } else {
+            // HandleEmptyFullType
+        }
+
+        // 处理链试调用
 
         codeCall.Package = packageName
-        codeCall.FunctionName = callee
-        codeCall.NodeName = targetType ?: ""
+        codeCall.FunctionName = methodName
+        codeCall.NodeName = targetTypeStr ?: ""
+    }
+
+    private fun removeTarget(fullType: String): String {
+        val split = fullType.split(".")
+        return split.dropLast(1).joinToString(".")
     }
 
     private fun parseTargetType(target: String?): String? {
@@ -336,29 +361,31 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     private fun buildExtend(extendName: String): String {
         var extend = extendName
-        val target: String = this.warpTargetFullType(extendName)
+        val target: String = this.warpTargetFullType(extendName).targetType
         if (target != "") {
             extend = target
         }
         return extend
     }
 
-    private fun warpTargetFullType(targetType: String): String {
+    private fun warpTargetFullType(targetType: String?): JavaTargetType {
         var callType = ""
         if (currentClz == targetType) {
             callType = "self"
-            return codeFile.PackageName + "." + targetType
+            return JavaTargetType(targetType = codeFile.PackageName + "." + targetType, callType = callType)
         }
 
-        val split = targetType.split(".")
+        val split = targetType!!.split(".")
         var first = split[0]
         val pureTargetType = first.replace("[", "").replace("]", "")
 
         if (pureTargetType != "") {
             for (imp in imports) {
+                println(imp.Source)
+                println(pureTargetType)
                 if (imp.Source.endsWith(pureTargetType)) {
                     callType = "chain"
-                    return imp.Source
+                    return JavaTargetType(targetType = imp.Source, callType = callType)
                 }
             }
         }
@@ -369,13 +396,13 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             for (imp in imports) {
                 if (imp.Source.endsWith(currentClzExtend)) {
                     callType = "super"
-                    return imp.Source
+                    return JavaTargetType(targetType = imp.Source, callType = callType)
                 }
             }
         }
 
         // todo: add identMap
-        return ""
+        return JavaTargetType(callType = callType)
     }
 
     override fun exitFormalParameter(ctx: JavaParser.FormalParameterContext?) {
@@ -411,7 +438,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     private fun buildFieldCall(typeType: String, ctx: JavaParser.FieldDeclarationContext) {
-        val target = warpTargetFullType(typeType)
+        val target = warpTargetFullType(typeType).targetType
         if (target != "") {
             val position = buildPosition(ctx as ParserRuleContext)
             val methodCall = CodeCall(
