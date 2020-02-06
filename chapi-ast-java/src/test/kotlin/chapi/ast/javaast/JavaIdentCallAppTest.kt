@@ -45,4 +45,29 @@ public class HelloWorld {
         assertEquals(parameters.size, 1)
         assertEquals(parameters[0].TypeValue, "\"Hello World\"")
     }
+
+    @Test
+    fun shouldIdentifyFormalParameterCall() {
+        var code = """
+package regression;
+
+import hello.CreateBookCommand;
+
+@Component
+public class BookService implements Service {
+    @Transactional
+    public void getIsbnId(CreateBookCommand command) {
+        command.getIsbn();
+    }
+}
+        """
+
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        assertEquals(functionCalls.size, 1)
+        assertEquals(functionCalls[0].FunctionName, "getIsbn")
+        assertEquals(functionCalls[0].Package, "regression")
+        assertEquals(functionCalls[0].NodeName, "CreateBookCommand")
+    }
 }

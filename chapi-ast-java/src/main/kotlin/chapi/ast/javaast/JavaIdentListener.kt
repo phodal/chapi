@@ -379,7 +379,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitFormalParameter(ctx: JavaParser.FormalParameterContext?) {
-        super.exitFormalParameter(ctx)
         val paramKey = ctx!!.variableDeclaratorId().IDENTIFIER().text
         formalParameters[paramKey] = ctx.typeType().text
     }
