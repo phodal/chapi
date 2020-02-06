@@ -381,8 +381,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
         if (pureTargetType != "") {
             for (imp in imports) {
-                println(imp.Source)
-                println(pureTargetType)
                 if (imp.Source.endsWith(pureTargetType)) {
                     callType = "chain"
                     return JavaTargetType(targetType = imp.Source, callType = callType)
@@ -521,6 +519,16 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         }
 
         return codeAnnotation
+    }
+
+    override fun enterLocalVariableDeclaration(ctx: JavaParser.LocalVariableDeclarationContext?) {
+        val typ = ctx!!.getChild(0).text
+        if (ctx.getChild(1) != null) {
+            if (ctx.getChild(1).getChild(0) != null && ctx.getChild(1).getChild(0).getChild(0) != null) {
+                val variableName = ctx.getChild(1).getChild(0).getChild(0).text
+                localVars[variableName] = typ
+            }
+        }
     }
 
     fun getNodeInfo(): CodeFile {
