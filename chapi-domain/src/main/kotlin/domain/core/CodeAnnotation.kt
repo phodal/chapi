@@ -21,4 +21,8 @@ open class CodeAnnotation(
     open fun isIgnoreOrTest(): Boolean {
         return this.isIgnore() || this.isTest()
     }
+
+    open fun isOverride(): Boolean {
+        return this.Name == "Override"
+    }
 }

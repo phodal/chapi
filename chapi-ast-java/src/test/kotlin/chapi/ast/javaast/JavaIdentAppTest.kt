@@ -212,5 +212,6 @@ public class BlogPO implements PersistenceObject<Blog> {
 
         assertEquals(codeFile.DataStructures[0].Functions[0].Annotations.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].Name, "Override")
+        assertEquals(codeFile.DataStructures[0].Functions[0].isOverride(), true)
     }
 }

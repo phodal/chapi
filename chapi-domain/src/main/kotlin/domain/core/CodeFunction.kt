@@ -57,4 +57,14 @@ open class CodeFunction(
         }
         return isTest
     }
+
+    fun isOverride(): Boolean {
+        for (annotation in this.Annotations) {
+            if (annotation.isOverride()) {
+                return true
+            }
+        }
+
+        return false
+    }
 }
