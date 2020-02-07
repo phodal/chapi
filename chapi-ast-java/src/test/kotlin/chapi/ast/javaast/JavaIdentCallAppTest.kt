@@ -91,4 +91,30 @@ public class ClassTwo {
         assertEquals(functionCalls[0].NodeName, "Outer")
         assertEquals(functionCalls[0].FunctionName, "hello")
     }
+
+    @Test
+    fun shouldIdentifyChainCall() {
+        var code = """
+import hello.Outer;
+            
+public class PublishedBlogResource {
+    public ResponseEntity post(UriComponentsBuilder uriComponentsBuilder) {
+        UriComponents uriComponents = uriComponentsBuilder.path("/published-blog/{id}").buildAndExpand("1234");
+        return uriComponents.toUri();
+    }
+}
+        """
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        assertEquals(functionCalls.size, 3)
+        assertEquals(functionCalls[0].NodeName, "UriComponentsBuilder")
+        assertEquals(functionCalls[0].FunctionName, "path")
+
+//        assertEquals(functionCalls[1].NodeName, "UriComponentsBuilder")
+//        assertEquals(functionCalls[1].FunctionName, "buildAndExpand")
+
+        assertEquals(functionCalls[2].NodeName, "UriComponents")
+        assertEquals(functionCalls[2].FunctionName, "toUri")
+    }
 }
