@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 
 class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
+    private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
     private var isOverrideMethod: Boolean = false
     private var fields = arrayOf<CodeField>()
     private var methodCalls = arrayOf<CodeCall>()
@@ -122,8 +123,13 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     private fun exitBody() {
-        currentNode.Fields = fields
-        currentNode.setMethodsFromMap(methodMap)
+        if (currentType == "CreatorClass") {
+            currentNode.Fields = fields
+            currentNode.setMethodsFromMap(creatorMethodMap)
+        } else {
+            currentNode.Fields = fields
+            currentNode.setMethodsFromMap(methodMap)
+        }
 
         classNodes += currentNode
         initClass()
@@ -219,7 +225,11 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     private fun buildMethodParameters(params: JavaParser.FormalParametersContext?): Array<CodeProperty> {
         var methodParams = arrayOf<CodeProperty>()
-        val parameterList = params!!.getChild(1) as JavaParser.FormalParameterListContext
+        if (params!!.getChild(1)::class.simpleName != "FormalParameterListContext") {
+            return methodParams
+        }
+
+        val parameterList = params.getChild(1) as JavaParser.FormalParameterListContext
         for (param in parameterList.formalParameter()) {
             val paramCtx = param as JavaParser.FormalParameterContext
             val paramType = paramCtx.typeType().text
@@ -356,9 +366,13 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     private fun updateCodeFunction(codeFunction: CodeFunction) {
-        currentFunction = codeFunction
-        methodQueue += currentFunction
-        methodMap[getMethodMapName(codeFunction)] = codeFunction
+        if (currentType == "CreatorClass") {
+            creatorMethodMap[getMethodMapName(codeFunction)] = codeFunction
+        } else {
+            currentFunction = codeFunction
+            methodQueue += currentFunction
+            methodMap[getMethodMapName(codeFunction)] = codeFunction
+        }
     }
 
     private fun getMethodMapName(function: CodeFunction): String {
@@ -593,6 +607,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             val createdName = identifier.text
             localVars[variableName] = createdName
 
+            this.buildCreatedCall(createdName, ctx)
             // todo: buildCreatedCall
 
             if (currentNode.NodeName == "" || ctx.classCreatorRest() == null) {
@@ -610,10 +625,34 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
                 Type = "CreatorClass"
             )
 
+            currentCreatorNode = creatorNode
+        }
+    }
 
+    private fun buildCreatedCall(createdName: String?, ctx: JavaParser.CreatorContext) {
+        var codeFunction = methodMap[getMethodMapName(currentFunction)]
+        if (codeFunction == null) {
+            return
+        }
+
+        val fullType = warpTargetFullType(createdName)
+        val codePosition = buildPosition(ctx)
+
+        val codeCall = CodeCall(
+            Package = removeTarget(fullType = fullType.targetType),
+            Type = "CreatorClass",
+            NodeName = createdName!!,
+            Position = codePosition
+        )
+
+        codeFunction.FunctionCalls += codeCall
+        methodMap[getMethodMapName(currentFunction)] = codeFunction
+    }
+
+    override fun exitCreator(ctx: JavaParser.CreatorContext?) {
+        if (currentCreatorNode.NodeName != "") {
             val currentNodeMethodName = getMethodMapName(currentFunction)
-            var method = methodMap[currentNodeMethodName]
-            method!!.InnerStructures += creatorNode
+            val method = methodMap[currentNodeMethodName]
             if (method != null) {
                 methodMap[currentNodeMethodName] = method
             }
