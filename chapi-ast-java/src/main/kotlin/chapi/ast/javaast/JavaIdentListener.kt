@@ -586,6 +586,40 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         this.updateCodeFunction(codeFunction)
     }
 
+    override fun enterCreator(ctx: JavaParser.CreatorContext?) {
+        val variableName = ctx!!.getParent().getParent().getChild(0).text
+        val allIdentifier = ctx.createdName().IDENTIFIER()
+        for (identifier in allIdentifier!!) {
+            val createdName = identifier.text
+            localVars[variableName] = createdName
+
+            // todo: buildCreatedCall
+
+            if (currentNode.NodeName == "" || ctx.classCreatorRest() == null) {
+                return
+            }
+
+            if (ctx.classCreatorRest().classBody() != null) {
+                return
+            }
+
+            val text = ctx.createdName().text
+            val creatorNode = CodeDataStruct(
+                Package = codeFile.PackageName,
+                NodeName = text,
+                Type = "CreatorClass"
+            )
+
+
+            val currentNodeMethodName = getMethodMapName(currentFunction)
+            var method = methodMap[currentNodeMethodName]
+            method!!.InnerStructures += creatorNode
+            if (method != null) {
+                methodMap[currentNodeMethodName] = method
+            }
+        }
+    }
+
     fun getNodeInfo(): CodeFile {
         codeFile.DataStructures = classNodes
         return codeFile
