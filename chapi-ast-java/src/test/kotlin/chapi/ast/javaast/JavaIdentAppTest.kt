@@ -272,7 +272,7 @@ public class PublishedBlogResource {
 
     @Test
     fun shouldIdentifyCreator() {
-        var code = """
+        val code = """
 package cc.arduino.packages.contributions;
 
 import org.junit.Test;
@@ -303,8 +303,8 @@ public class HostDependentDownloadableContribution {
         """
 
         val codeFile = JavaIdentApp().analysis(code, "")
-        assertEquals(codeFile.DataStructures[0].Functions.size, 0)
         println(codeFile.DataStructures[0].toJson())
+        assertEquals(codeFile.DataStructures[0].Functions.size, 0)
 //        val dsFunction = codeFile.DataStructures[0].Functions[0]
 //        assertEquals(dsFunction.InnerStructures.size, 2)
 //        assertEquals(dsFunction.InnerStructures[0].NodeName, "HostDependentDownloadableContributionStub")
