@@ -318,10 +318,18 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         }
 
         // 处理链试调用
+        if (this.isChainCall(targetTypeStr)) {
+            val split = targetTypeStr!!.split(".")
+            targetTypeStr = split[0]
+        }
 
         codeCall.Package = packageName
         codeCall.FunctionName = methodName
         codeCall.NodeName = targetTypeStr ?: ""
+    }
+
+    private fun isChainCall(targetTypeStr: String?): Boolean {
+        return targetTypeStr!!.contains("(") && targetTypeStr.contains(")") && targetTypeStr.contains(".")
     }
 
     private fun removeTarget(fullType: String): String {
