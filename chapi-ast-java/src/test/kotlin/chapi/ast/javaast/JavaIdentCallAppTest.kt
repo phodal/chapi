@@ -85,7 +85,6 @@ public class ClassTwo {
         """
         val codeFile = JavaIdentApp().analysis(code, "")
 
-        println(codeFile.DataStructures[0].toJson())
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)
         assertEquals(functionCalls[0].Package, "hello")

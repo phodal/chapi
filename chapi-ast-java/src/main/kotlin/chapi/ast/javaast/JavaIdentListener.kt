@@ -465,7 +465,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         if (target != "") {
             val position = buildPosition(ctx as ParserRuleContext)
             val methodCall = CodeCall(
-                Package = "", // todo: add really package
+                Package = removeTarget(target),
                 Type = "field",
                 NodeName = typeType,
                 Position = position
@@ -607,7 +607,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             val createdName = identifier.text
             localVars[variableName] = createdName
 
-            this.buildCreatedCall(createdName, ctx)
+//            this.buildCreatedCall(createdName, ctx)
             // todo: buildCreatedCall
 
             if (currentNode.NodeName == "" || ctx.classCreatorRest() == null) {
