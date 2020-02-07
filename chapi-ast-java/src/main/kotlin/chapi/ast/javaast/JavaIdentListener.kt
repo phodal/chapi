@@ -33,7 +33,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
     private var lastNode = CodeDataStruct()
     private var currentNode = CodeDataStruct()
-    private var currentFunction = CodeFunction()
+    private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
 
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
@@ -132,7 +132,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     private fun initClass() {
         currentClz = ""
         currentClzExtend = ""
-        currentFunction = CodeFunction()
+        currentFunction = CodeFunction(IsConstructor = false)
 //        currentNode.FunctionCalls = arrayOf()
 
         methodMap = mutableMapOf<String, CodeFunction>()
@@ -156,7 +156,8 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         val codeFunction = CodeFunction(
             Name = name,
             ReturnType = typeType,
-            Position = codePosition
+            Position = codePosition,
+            IsConstructor = false
         )
 
         val mayModifierCtx = ctx.parent.parent.getChild(0)
@@ -181,7 +182,8 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         val codeFunction = CodeFunction(
             Name = name,
             ReturnType = typeType,
-            Position = codePosition
+            Position = codePosition,
+            IsConstructor = false
         )
 
         val mayModifierCtx = ctx.parent.parent.getChild(0)
@@ -233,7 +235,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-        currentFunction = CodeFunction()
+        currentFunction = CodeFunction(IsConstructor = false)
     }
 
     override fun enterMethodCall(ctx: JavaParser.MethodCallContext?) {
@@ -562,6 +564,26 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 
             sendResultToMethodCallMap(codeCall)
         }
+    }
+
+    override fun enterConstructorDeclaration(ctx: JavaParser.ConstructorDeclarationContext?) {
+        val name = ctx!!.IDENTIFIER().text
+        val position = buildPosition(ctx)
+
+        val codeFunction = CodeFunction(
+            Name = name,
+            ReturnType = "",
+            Override = isOverrideMethod,
+            Annotations = currentFunction.Annotations,
+            Position = position,
+            IsConstructor = true
+        )
+        val paramCtx = ctx.formalParameters()
+        if (paramCtx != null) {
+            codeFunction.Parameters = buildMethodParameters(ctx.formalParameters())
+        }
+
+        this.updateCodeFunction(codeFunction)
     }
 
     fun getNodeInfo(): CodeFile {

@@ -247,4 +247,61 @@ public class BlogPO implements PersistenceObject<Blog> {
         assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].Name, "Override")
         assertEquals(codeFile.DataStructures[0].Functions[0].isOverride(), true)
     }
+
+    @Test
+    fun shouldIdentifyConstructorMethod() {
+        var code = """
+package adapters.outbound.persistence.blog;
+
+public class PublishedBlogResource {
+    @Autowired
+    public PublishedBlogResource(EditBlogUseCase editBlogUseCase, QueryPublishedBlogUseCase queryPublishedBlogUseCase) {
+        this.editBlogUseCase = editBlogUseCase;
+        this.queryPublishedBlogUseCase = queryPublishedBlogUseCase;
+    }
+}
+        """
+
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].IsConstructor, true)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "PublishedBlogResource")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 2)
+    }
+
+    @Test
+    fun shouldIdentifyCreator() {
+        var code = """
+package cc.arduino.packages.contributions;
+
+import org.junit.Test;
+import processing.app.Platform;
+
+public class HostDependentDownloadableContribution {
+  public void macOsXPositiveTest() {
+    HostDependentDownloadableContributionStub contribution = new HostDependentDownloadableContributionStub() {
+      @Override
+      public String getHost() {
+        return "x86_64-apple-darwin";
+      }
+    };
+
+    Platform platform = new Platform() {
+      @Override
+      public String getOsName() {
+        return "Mac OS X";
+      }
+
+      @Override
+      public String getOsArch() {
+        return "x86_64";
+      }
+    };
+  }
+}
+        """
+
+        val codeFile = JavaIdentApp().analysis(code, "")
+    }
 }

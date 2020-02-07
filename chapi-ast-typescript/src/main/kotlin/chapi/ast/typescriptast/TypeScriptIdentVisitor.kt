@@ -14,7 +14,7 @@ class TypeScriptIdentVisitor(private var node: TSIdentify) : TypeScriptParserBas
     private var codeFile: CodeFile = CodeFile(FullName = node.fileName)
 
     private var currentNode = CodeDataStruct()
-    private var currentFunction = CodeFunction()
+    private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
 
     override fun visitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?): Any {

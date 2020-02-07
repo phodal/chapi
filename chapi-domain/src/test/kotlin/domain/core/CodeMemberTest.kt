@@ -7,7 +7,7 @@ internal class CodeMemberTest {
     @Test
     internal fun shouldBuildMemberId_WhenDefaultNode() {
         var nodes: Array<CodeFunction> = arrayOf()
-        val codeFunction = CodeFunction(Name = "Builder")
+        val codeFunction = CodeFunction(Name = "Builder", IsConstructor = false)
         nodes += codeFunction
         val codeMember = CodeMember(DataStructID = "default", FunctionNodes = nodes, AliasPackage = "alias")
 
@@ -19,7 +19,7 @@ internal class CodeMemberTest {
     @Test
     internal fun shouldBuildMemberId_WhenNormalNode() {
         var nodes: Array<CodeFunction> = arrayOf()
-        val codeFunction = CodeFunction(Name = "Builder")
+        val codeFunction = CodeFunction(Name = "Builder", IsConstructor = false)
         nodes += codeFunction
         val codeMember = CodeMember(FileID = "fileId", DataStructID = "builder", FunctionNodes = nodes, AliasPackage = "alias")
 
@@ -31,7 +31,7 @@ internal class CodeMemberTest {
     @Test
     internal fun shouldBuildMemberId_WhenSameFileIdPackageName() {
         var nodes: Array<CodeFunction> = arrayOf()
-        val codeFunction = CodeFunction(Name = "Builder")
+        val codeFunction = CodeFunction(Name = "Builder", IsConstructor = false)
         nodes += codeFunction
         val codeMember = CodeMember(FileID = "Builder", DataStructID = "builder", FunctionNodes = nodes, AliasPackage = "alias")
 

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 internal class CodeFunctionTest {
     @Test
     internal fun shouldHandleJavaReturnType() {
-        assertEquals(CodeFunction(ReturnType = "String").isJavaLangReturnType(), true)
+        assertEquals(CodeFunction(ReturnType = "String", IsConstructor = false).isJavaLangReturnType(), true)
     }
 
     @Test
@@ -14,20 +14,20 @@ internal class CodeFunctionTest {
         var modifiers: Array<String> = arrayOf()
         modifiers += "static"
 
-        assertEquals(CodeFunction(Modifiers = modifiers).isStatic(), true)
+        assertEquals(CodeFunction(Modifiers = modifiers, IsConstructor = false).isStatic(), true)
     }
 
     @Test
     internal fun shouldHandleGetterAndSetter() {
-        assertEquals(CodeFunction(Name = "getFunc").isGetterSetter(), true)
-        assertEquals(CodeFunction(Name = "setFunc").isGetterSetter(), true)
+        assertEquals(CodeFunction(Name = "getFunc", IsConstructor = false).isGetterSetter(), true)
+        assertEquals(CodeFunction(Name = "setFunc", IsConstructor = false).isGetterSetter(), true)
     }
 
     @Test
     internal fun shouldEnableBuildFullName() {
         val dataStruct = CodeDataStruct(Package = "package", NodeName = "nodeName")
 
-        val fullMethodName = CodeFunction(Name = "getFunc").buildFullMethodName(dataStruct)
+        val fullMethodName = CodeFunction(Name = "getFunc", IsConstructor = false).buildFullMethodName(dataStruct)
 
         assertEquals(fullMethodName, "package.nodeName.getFunc")
     }
@@ -37,7 +37,7 @@ internal class CodeFunctionTest {
         var calls = arrayOf<CodeCall>()
         calls += CodeCall(Package = "package", NodeName = "nodeName")
 
-        val allCallString = CodeFunction(Name = "getFunc", FunctionCalls = calls).getAllCallString()
+        val allCallString = CodeFunction(Name = "getFunc", FunctionCalls = calls, IsConstructor = false).getAllCallString()
 
         assertEquals(allCallString.size, 1)
         assertEquals(allCallString[0], "package.nodeName")
@@ -49,7 +49,7 @@ internal class CodeFunctionTest {
         var annotations = arrayOf<CodeAnnotation>()
         annotations += CodeAnnotation(Name = "Test")
 
-        val isTest = CodeFunction(Name = "getFunc", Annotations = annotations).isJUnitTest()
+        val isTest = CodeFunction(Name = "getFunc", Annotations = annotations, IsConstructor = false).isJUnitTest()
 
         assertEquals(isTest, true)
     }

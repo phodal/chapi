@@ -12,7 +12,9 @@ open class CodeFunction(
     var InnerStructures: Array<CodeDataStruct> = arrayOf(),
     var InnerFunctions: Array<CodeFunction> = arrayOf(),
     var Extension: Any? = null,
-    var Position: CodePosition = CodePosition()
+    var Position: CodePosition = CodePosition(),
+
+    var IsConstructor: Boolean = false // todo: move to extension
 ) {
     fun isJavaLangReturnType(): Boolean {
         return this.ReturnType == "String" || this.ReturnType == "int" || this.ReturnType == "float" || this.ReturnType == "void" || this.ReturnType == "char" || this.ReturnType == "double"
