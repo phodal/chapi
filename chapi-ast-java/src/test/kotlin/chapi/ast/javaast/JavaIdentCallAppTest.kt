@@ -120,4 +120,26 @@ public class PublishedBlogResource {
         assertEquals(functionCalls[2].NodeName, "UriComponents")
         assertEquals(functionCalls[2].FunctionName, "toUri")
     }
+
+    @Test
+    fun shouldIdentifyLambdaCall() {
+        var code = """
+package hello;
+
+import domain.BlogPO;
+
+@Component
+public class BlogRepositoryImpl {
+    public BlogPo getDomainModel() {
+        return BlogPO::toDomainModel;
+    }
+}
+        """
+        val codeFile = JavaIdentApp().analysis(code, "")
+
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        assertEquals(functionCalls.size, 1)
+        assertEquals(functionCalls[0].NodeName, "BlogPO")
+        assertEquals(functionCalls[0].FunctionName, "toDomainModel")
+    }
 }

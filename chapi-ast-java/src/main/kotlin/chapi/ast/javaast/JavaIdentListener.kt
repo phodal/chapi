@@ -433,14 +433,14 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
                 continue
             }
 
-            val typeType = typeCtx.IDENTIFIER(0).text
+            val typeTypeText = typeCtx.IDENTIFIER(0).text
             val typeValue = declCtx.variableDeclaratorId().IDENTIFIER().text
-            fieldsMap[typeValue] = typeType
+            fieldsMap[typeValue] = typeTypeText
 
-            val field = CodeField(typeType, typeValue, arrayOf<String>())
+            val field = CodeField(typeTypeText, typeValue, arrayOf<String>())
             fields += field
 
-            buildFieldCall(typeType, ctx)
+            buildFieldCall(typeTypeText, ctx)
         }
     }
 
@@ -537,6 +537,30 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
                 val variableName = ctx.getChild(1).getChild(0).getChild(0).text
                 localVars[variableName] = typ
             }
+        }
+    }
+
+    override fun enterExpression(ctx: JavaParser.ExpressionContext?) {
+        if (ctx!!.COLONCOLON() != null) {
+            if (ctx.expression(0) == null) {
+                return
+            }
+
+            val text = ctx.expression(0).text
+            val methodName = ctx.IDENTIFIER().text
+            val targetType = parseTargetType(text)
+
+            val fullType = warpTargetFullType(targetType).targetType
+            val position = buildPosition(ctx)
+            val codeCall = CodeCall(
+                Package = removeTarget(fullType),
+                Type = "lambda",
+                NodeName = targetType!!,
+                FunctionName = methodName,
+                Position = position
+            )
+
+            sendResultToMethodCallMap(codeCall)
         }
     }
 
