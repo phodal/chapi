@@ -1,5 +1,9 @@
 package domain.core
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+
+@Serializable
 open class CodeFunction(
     var Name: String = "",
     var ReturnType: String = "",
@@ -11,8 +15,8 @@ open class CodeFunction(
     var Modifiers: Array<String> = arrayOf(),
     var InnerStructures: Array<CodeDataStruct> = arrayOf(),
     var InnerFunctions: Array<CodeFunction> = arrayOf(),
-    var Extension: Any? = null,
     var Position: CodePosition = CodePosition(),
+    var Extension: JsonElement = JsonObject(HashMap()),
 
     var IsConstructor: Boolean = false // todo: move to extension
 ) {

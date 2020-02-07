@@ -1,7 +1,12 @@
 package domain.core
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+
+@Serializable
 data class AnnotationKeyValue(var Key: String = "", var Value: String = "") {}
 
+@Serializable
 open class CodeAnnotation(
     var Name: String = "",
     var KeyValues: Array<AnnotationKeyValue> = arrayOf()

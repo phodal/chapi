@@ -1,6 +1,7 @@
 plugins {
     java
     kotlin("jvm")
+    kotlin("plugin.serialization") version "1.3.61"
 }
 
 group = "com.phodal"
@@ -15,6 +16,8 @@ repositories {
 dependencies {
     // project deps
     implementation(project(":chapi-domain"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0") // JVM dependency
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))

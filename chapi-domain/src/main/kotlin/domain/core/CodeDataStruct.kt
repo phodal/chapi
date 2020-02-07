@@ -1,5 +1,9 @@
 package domain.core
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+
+@Serializable
 open class CodeDataStruct(
     var NodeName: String = "",
     var Type: String = "",
@@ -15,7 +19,7 @@ open class CodeDataStruct(
     var FunctionCalls: Array<CodeCall> = arrayOf<CodeCall>(),
     var InOutProperties: Array<CodeProperty> = arrayOf<CodeProperty>(),
 //    var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
-    var Extension: Any? = null
+    var Extension: JsonElement = JsonObject(HashMap())
 ) {
     open fun isUtilClass(): Boolean {
         return this.NodeName.toLowerCase().contains("util") ||
@@ -23,11 +27,16 @@ open class CodeDataStruct(
     }
 
     fun setMethodsFromMap(methodMap: MutableMap<String, CodeFunction>) {
-        var methodsArray : Array<CodeFunction> = arrayOf()
+        var methodsArray: Array<CodeFunction> = arrayOf()
         for (entry in methodMap) {
             methodsArray += entry.value
         }
 
         this.Functions = methodsArray
+    }
+
+    fun toJson(): String {
+        val json = Json(JsonConfiguration.Stable)
+        return json.stringify(serializer(), this)
     }
 }

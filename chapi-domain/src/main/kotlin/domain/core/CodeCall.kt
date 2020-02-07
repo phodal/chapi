@@ -3,7 +3,10 @@ package domain.core
 import domain.DomainConstants
 import java.lang.reflect.Modifier
 import java.util.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 
+@Serializable
 open class CodeCall(
     var Package: String = "",
     var Type: String = "",

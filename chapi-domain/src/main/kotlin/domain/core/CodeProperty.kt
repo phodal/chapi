@@ -1,5 +1,9 @@
 package domain.core
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+
+@Serializable
 class CodeProperty(
     var Modifiers: Array<String> = arrayOf(),
     var ParamName: String = "",
