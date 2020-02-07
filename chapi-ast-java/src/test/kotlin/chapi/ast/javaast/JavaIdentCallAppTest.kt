@@ -114,8 +114,8 @@ public class PublishedBlogResource {
         assertEquals(functionCalls[0].NodeName, "UriComponentsBuilder")
         assertEquals(functionCalls[0].FunctionName, "path")
 
-//        assertEquals(functionCalls[1].NodeName, "UriComponentsBuilder")
-//        assertEquals(functionCalls[1].FunctionName, "buildAndExpand")
+        assertEquals(functionCalls[1].NodeName, "UriComponentsBuilder")
+        assertEquals(functionCalls[1].FunctionName, "buildAndExpand")
 
         assertEquals(functionCalls[2].NodeName, "UriComponents")
         assertEquals(functionCalls[2].FunctionName, "toUri")

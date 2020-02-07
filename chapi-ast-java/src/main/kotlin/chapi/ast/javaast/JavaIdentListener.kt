@@ -321,6 +321,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         if (this.isChainCall(targetTypeStr)) {
             val split = targetTypeStr!!.split(".")
             targetTypeStr = split[0]
+            targetTypeStr = parseTargetType(targetTypeStr)
         }
 
         codeCall.Package = packageName
