@@ -125,18 +125,8 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     private fun exitBody() {
-        if (currentType == "CreatorClass") {
-            currentNode.Fields = fields
-            currentNode.setMethodsFromMap(creatorMethodMap)
-            creatorMethodMap = mutableMapOf()
-
-            if (classNodeStack.peek() != null) {
-                currentType = classNodeStack.peek()!!.Type
-            }
-        } else {
-            currentNode.Fields = fields
-            currentNode.setMethodsFromMap(methodMap)
-        }
+        currentNode.Fields = fields
+        currentNode.setMethodsFromMap(methodMap)
 
         classNodes += currentNode
         initClass()
@@ -648,6 +638,14 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     override fun exitCreator(ctx: JavaParser.CreatorContext?) {
         if (currentCreatorNode.NodeName == "") {
             return
+        }
+
+        currentNode.Fields = fields
+        currentNode.setMethodsFromMap(creatorMethodMap)
+        creatorMethodMap = mutableMapOf()
+
+        if (classNodeStack.peek() != null) {
+            currentType = classNodeStack.peek()!!.Type
         }
 
         val currentNodeMethodName = getMethodMapName(currentFunction)
