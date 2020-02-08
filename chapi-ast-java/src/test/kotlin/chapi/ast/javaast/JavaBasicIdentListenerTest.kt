@@ -97,4 +97,24 @@ interface Expandable {
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
     }
+
+
+    @Test
+    internal fun shouldIdentifyConstructor() {
+        val code = """
+package chapi.ast.javaast;
+
+import hello.Expandable;
+
+public class PublishedBlogResource {
+    public PublishedBlogResource() {
+
+    }
+}
+"""
+        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
+        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].IsConstructor, true)
+    }
 }

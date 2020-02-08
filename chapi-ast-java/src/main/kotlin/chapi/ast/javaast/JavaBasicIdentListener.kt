@@ -143,6 +143,28 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         currentFunction = CodeFunction()
     }
 
+    override fun enterConstructorDeclaration(ctx: JavaParser.ConstructorDeclarationContext?) {
+        val codePosition = buildPosition(ctx!!)
+        val codeFunction = CodeFunction(
+            Name = ctx.IDENTIFIER().text,
+            ReturnType = "",
+            Override = isOverrideMethod,
+            Position = codePosition,
+            IsConstructor = true
+        )
+
+        val mayModifierCtx = ctx.parent.parent.getChild(0)
+        if (mayModifierCtx::class.simpleName == "ModifierContext") {
+            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
+        }
+
+        currentFunction = codeFunction
+    }
+
+    override fun exitConstructorDeclaration(ctx: JavaParser.ConstructorDeclarationContext?) {
+        currentNode.Functions += currentFunction
+    }
+
     fun getNodeInfo(): CodeFile {
         codeFile.DataStructures = classNodes
         return codeFile
