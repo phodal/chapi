@@ -47,20 +47,6 @@ open class CodeCall(
     }
 
     override fun toString(): String {
-        return this.reflectionToString(this)
-    }
-
-    // class MiscUtils
-    private fun reflectionToString(obj: Any): String {
-        val s = LinkedList<String>()
-        var clazz: Class<in Any>? = obj.javaClass
-        while (clazz != null) {
-            for (prop in clazz.declaredFields.filterNot { Modifier.isStatic(it.modifiers) }) {
-                prop.isAccessible = true
-                s += "${prop.name}=" + prop.get(obj)?.toString()?.trim()
-            }
-            clazz = clazz.superclass
-        }
-        return "${obj.javaClass.simpleName}=[${s.joinToString(", ")}]"
+        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
     }
 }
