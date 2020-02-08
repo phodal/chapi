@@ -118,6 +118,31 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         currentFunction = CodeFunction()
     }
 
+    override fun enterInterfaceMethodDeclaration(ctx: JavaParser.InterfaceMethodDeclarationContext?) {
+        val name = ctx!!.IDENTIFIER().text
+        val typeType = ctx.typeTypeOrVoid().text
+
+        val position = buildPosition(ctx)
+        var codeFunction = CodeFunction(
+            Name = name,
+            ReturnType = typeType,
+            Position = position,
+            IsConstructor = false
+        )
+
+        val mayModifierCtx = ctx.parent.parent.getChild(0)
+        if (mayModifierCtx::class.simpleName == "ModifierContext") {
+            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
+        }
+
+        currentFunction = codeFunction
+    }
+
+    override fun exitInterfaceMethodDeclaration(ctx: JavaParser.InterfaceMethodDeclarationContext?) {
+        currentNode.Functions += currentFunction
+        currentFunction = CodeFunction()
+    }
+
     fun getNodeInfo(): CodeFile {
         codeFile.DataStructures = classNodes
         return codeFile
