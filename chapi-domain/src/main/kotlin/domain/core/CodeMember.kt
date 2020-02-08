@@ -1,5 +1,8 @@
 package domain.core
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class CodeMember(
     var ID: String = "",
     var FileID: String = "",

@@ -5,7 +5,6 @@ import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
 import domain.core.CodeImport
-import kotlinx.serialization.json.JsonObject
 
 open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var isOverrideMethod: Boolean = false

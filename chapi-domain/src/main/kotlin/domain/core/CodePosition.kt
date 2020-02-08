@@ -1,7 +1,6 @@
 package domain.core
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.Serializable
 
 @Serializable
 class CodePosition(

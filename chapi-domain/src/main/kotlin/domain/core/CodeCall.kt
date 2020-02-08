@@ -1,10 +1,9 @@
 package domain.core
 
 import domain.DomainConstants
-import java.lang.reflect.Modifier
-import java.util.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 
 @Serializable
 open class CodeCall(

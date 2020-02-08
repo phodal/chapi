@@ -1,5 +1,8 @@
 package domain.core
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 open class CodeFile(
     var FullName: String = "",
     var PackageName: String = "",
