@@ -7,6 +7,7 @@ import domain.core.CodeFunction
 import domain.core.CodeImport
 
 open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
+    private var isOverrideMethod: Boolean = false
     private var hasEnterClass: Boolean = false
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
     private var classNodes: Array<CodeDataStruct> = arrayOf()
@@ -68,9 +69,38 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     }
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-//        val codePosition = buildPosition(ctx!!)
-//        val typeType = ctx.typeTypeOrVoid().text
+        val name = ctx!!.IDENTIFIER().text
+        val typeType = ctx.typeTypeOrVoid().text
 
+        var codeFunction = CodeFunction(
+            Name = name,
+            ReturnType = typeType,
+            Position = buildPosition(ctx),
+            IsConstructor = false
+        )
+
+        val mayModifierCtx = ctx.parent.parent.getChild(0)
+        if (mayModifierCtx::class.simpleName == "ModifierContext") {
+            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
+        }
+        currentFunction = codeFunction
+
+        if (ctx.parent.parent::class.simpleName == "ClassBodyDeclarationContext") {
+            val bodyDeclCtx = ctx.parent.parent as JavaParser.ClassBodyDeclarationContext
+            for (modifierContext in bodyDeclCtx.modifier()) {
+                val text = modifierContext!!.text
+                if (!text.contains("@")) {
+                    currentFunction.Modifiers += text
+                }
+            }
+        }
+
+        isOverrideMethod = false
+    }
+
+    override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
+        currentNode.Functions += currentFunction
+        currentFunction = CodeFunction()
     }
 
     fun getNodeInfo(): CodeFile {

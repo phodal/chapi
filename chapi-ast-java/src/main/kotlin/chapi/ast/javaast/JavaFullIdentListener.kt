@@ -168,7 +168,6 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
     }
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-        println("enterMethodDeclaration")
         val name = ctx!!.IDENTIFIER().text
         val typeType = ctx.typeTypeOrVoid().text
 
@@ -179,7 +178,7 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
             StopLinePosition = ctx.IDENTIFIER().symbol.stopIndex
         )
 
-        val codeFunction = CodeFunction(
+        var codeFunction = CodeFunction(
             Name = name,
             ReturnType = typeType,
             Position = codePosition,

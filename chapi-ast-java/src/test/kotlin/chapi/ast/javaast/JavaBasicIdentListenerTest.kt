@@ -50,4 +50,22 @@ class IntegerArray extends Expandable {
         kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
         kotlin.test.assertEquals(codeFile.DataStructures[0].Extend, "Expandable")
     }
+
+    @Test
+    internal fun shouldIdentifyMethod() {
+        val code = """
+package chapi.ast.javaast;
+
+import hello.Expandable;
+
+class IntegerArray extends Expandable {
+    void addItem(Integer item) {
+    }
+}
+"""
+        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
+        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
+    }
 }
