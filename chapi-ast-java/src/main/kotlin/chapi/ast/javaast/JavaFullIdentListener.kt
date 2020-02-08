@@ -27,7 +27,6 @@ class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
 
     private var innerNode: CodeDataStruct = CodeDataStruct()
     private var classNodeStack = Stack<CodeDataStruct>()
-    private var classNodeMap = mutableMapOf<String, CodeDataStruct>()
 
     private var methodQueue: Array<CodeFunction> = arrayOf()
 
@@ -36,7 +35,6 @@ class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
     private var lastNode = CodeDataStruct()
     private var currentNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
-    private var currentNodeFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
 
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
