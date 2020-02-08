@@ -44,7 +44,7 @@ class TypeScriptIdentVisitor(private var node: TSIdentify) : TypeScriptParserBas
         val currentType = "Interface"
 
         currentNode = CodeDataStruct(
-            Type = "Interface",
+            Type = currentType,
             NodeName = nodeName
         )
 
