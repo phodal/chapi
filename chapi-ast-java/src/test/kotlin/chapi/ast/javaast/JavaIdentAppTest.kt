@@ -308,10 +308,10 @@ public class HostDependentDownloadableContribution {
         val dsFunction = codeFile.DataStructures[0].Functions[0]
         assertEquals(dsFunction.InnerStructures.size, 2)
         assertEquals(dsFunction.InnerStructures[0].NodeName, "HostDependentDownloadableContributionStub")
-//        assertEquals(dsFunction.InnerStructures[0].Functions[0].Name, "getHost")
+        assertEquals(dsFunction.InnerStructures[0].Functions[0].Name, "getHost")
         assertEquals(dsFunction.InnerStructures[1].NodeName, "Platform")
-//        assertEquals(dsFunction.InnerStructures[1].Functions.size, 2)
-//        assertEquals(dsFunction.InnerStructures[1].Functions[0].Name, "getOsName")
-//        assertEquals(dsFunction.InnerStructures[1].Functions[1].Name, "getOsArch")
+        assertEquals(dsFunction.InnerStructures[1].Functions.size, 2)
+        assertEquals(dsFunction.InnerStructures[1].Functions[0].Name, "getOsName")
+        assertEquals(dsFunction.InnerStructures[1].Functions[1].Name, "getOsArch")
     }
 }

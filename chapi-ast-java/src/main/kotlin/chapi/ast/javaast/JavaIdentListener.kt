@@ -631,7 +631,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             )
 
             currentCreatorNode = creatorNode
-            classNodeStack.push(currentCreatorNode)
         }
     }
 
@@ -640,23 +639,32 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             return
         }
 
-        currentNode.Fields = fields
-        currentNode.setMethodsFromMap(creatorMethodMap)
+        addToCreatorNodeMethod()
+        addToParentClassMethodInner()
+
+        classNodeStack.push(currentCreatorNode)
+
+        currentType = classNodeStack.elements[classNodeStack.elements.size - 1].Type
+        classNodeStack.pop()
+    }
+
+    private fun addToCreatorNodeMethod() {
+        currentCreatorNode.Fields = fields
+        currentCreatorNode.setMethodsFromMap(creatorMethodMap)
         creatorMethodMap = mutableMapOf()
 
         if (classNodeStack.peek() != null) {
             currentType = classNodeStack.peek()!!.Type
         }
+    }
 
+    private fun addToParentClassMethodInner() {
         val currentNodeMethodName = getMethodMapName(currentFunction)
         val method = methodMap[currentNodeMethodName]
         if (method != null) {
             method.InnerStructures += currentCreatorNode
             methodMap[currentNodeMethodName] = method
         }
-
-        currentType = classNodeStack.elements[classNodeStack.elements.size - 1].Type
-        classNodeStack.pop()
     }
 
     private fun buildCreatedCall(createdName: String?, ctx: JavaParser.CreatorContext) {
