@@ -7,10 +7,10 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class JavaIdentApp {
+open class JavaFullIdent {
     open fun analysis(str: String, fileName: String): CodeFile {
         val context = this.parse(str).compilationUnit()
-        val listener = JavaIdentListener(fileName)
+        val listener = JavaFullIdentListener(fileName)
 
         ParseTreeWalker().walk(listener, context)
 

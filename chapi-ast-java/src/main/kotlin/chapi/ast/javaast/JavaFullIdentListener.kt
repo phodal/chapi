@@ -8,7 +8,7 @@ import domain.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 
-class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
+class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
     private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
     private var isOverrideMethod: Boolean = false
     private var fields = arrayOf<CodeField>()

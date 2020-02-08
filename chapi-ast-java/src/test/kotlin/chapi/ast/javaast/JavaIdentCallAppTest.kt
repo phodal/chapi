@@ -15,7 +15,7 @@ public class HelloWorld {
     @Test
     internal fun shouldIdentifyFunctionCallName() {
         val code = helloworld
-        val codeFile = JavaIdentApp().analysis(code, "")
+        val codeFile = JavaFullIdent().analysis(code, "")
         val codeCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
 
         assertEquals(codeCalls.size, 1)
@@ -26,7 +26,7 @@ public class HelloWorld {
     @Test
     internal fun shouldIdentifyFunctionCallPosition() {
         val code = helloworld
-        val codeFile = JavaIdentApp().analysis(code, "")
+        val codeFile = JavaFullIdent().analysis(code, "")
         val firstCall = codeFile.DataStructures[0].Functions[0].FunctionCalls[0]
 
         assertEquals(firstCall.Position.StartLine, 4)
@@ -38,7 +38,7 @@ public class HelloWorld {
     @Test
     internal fun shouldIdentifyFunctionCallParameterValue() {
         val code = helloworld
-        val codeFile = JavaIdentApp().analysis(code, "")
+        val codeFile = JavaFullIdent().analysis(code, "")
         val firstCall = codeFile.DataStructures[0].Functions[0].FunctionCalls[0]
         val parameters = firstCall.Parameters
 
@@ -62,7 +62,7 @@ public class BookService implements Service {
 }
         """
 
-        val codeFile = JavaIdentApp().analysis(code, "")
+        val codeFile = JavaFullIdent().analysis(code, "")
 
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)
@@ -83,7 +83,7 @@ public class ClassTwo {
   }
 }
         """
-        val codeFile = JavaIdentApp().analysis(code, "")
+        val codeFile = JavaFullIdent().analysis(code, "")
 
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)
@@ -107,7 +107,7 @@ public class PublishedBlogResource {
     }
 }
         """
-        val codeFile = JavaIdentApp().analysis(code, "")
+        val codeFile = JavaFullIdent().analysis(code, "")
 
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 3)
@@ -135,7 +135,7 @@ public class BlogRepositoryImpl {
     }
 }
         """
-        val codeFile = JavaIdentApp().analysis(code, "")
+        val codeFile = JavaFullIdent().analysis(code, "")
 
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)
