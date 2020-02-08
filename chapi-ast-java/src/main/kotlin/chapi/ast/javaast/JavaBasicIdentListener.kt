@@ -68,6 +68,21 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         return implements
     }
 
+    override fun enterInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
+        hasEnterClass = true
+        currentNode = CodeDataStruct(
+            Type = "Interface",
+            NodeName = ctx!!.IDENTIFIER().text
+        )
+    }
+
+    override fun exitInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
+        hasEnterClass = false
+        if (currentNode.NodeName != "") {
+            classNodes += currentNode
+        }
+    }
+
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
         val name = ctx!!.IDENTIFIER().text
         val typeType = ctx.typeTypeOrVoid().text
