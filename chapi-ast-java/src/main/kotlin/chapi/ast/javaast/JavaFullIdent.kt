@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class JavaFullIdent {
-    open fun analysis(str: String, fileName: String): CodeFile {
+    open fun identFullInfo(str: String, fileName: String): CodeFile {
         val context = this.parse(str).compilationUnit()
         val listener = JavaFullIdentListener(fileName)
 
