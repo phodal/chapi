@@ -3,7 +3,7 @@ package chapi.ast.javaast
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class JavaFullIdentTest {
+class JavaAnalyserTest {
     @Test
     fun shouldIdentifyFilePackageName() {
         val code = """
@@ -11,7 +11,7 @@ package chapi.ast.javaast;
 
 import org.junit.Test;
 """
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         assertEquals(codeFile.PackageName, "chapi.ast.javaast")
     }
 
@@ -22,7 +22,7 @@ package chapi.ast.javaast;
 
 import org.junit.Test;
 """
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         assertEquals(codeFile.Imports[0].Source, "org.junit.Test")
     }
 
@@ -35,7 +35,7 @@ public class HelloWorld {
     }
 }
 """
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         assertEquals(codeFile.DataStructures[0].NodeName, "HelloWorld")
     }
 
@@ -48,7 +48,7 @@ public class HelloWorld {
     }
 }
 """
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         val firstParameter = codeFile.DataStructures[0].Functions[0].Parameters[0]
         assertEquals(firstParameter.TypeType, "String[]")
         assertEquals(firstParameter.TypeValue, "args")
@@ -63,7 +63,7 @@ public class HelloWorld {
     }
 }
 """
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "main")
     }
@@ -79,7 +79,7 @@ public class HelloWorld {
     }
   }
 """
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         assertEquals(codeFile.DataStructures[0].Extend, "HasStatic")
     }
 
@@ -97,7 +97,7 @@ public class JavaCallApp {
 }
 
 """
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         println(codeFile.DataStructures[0].Fields.size)
 
         assertEquals(codeFile.DataStructures[0].Fields.size, 1)
@@ -117,7 +117,7 @@ class Pig implements Animal {
   }
 }
 """
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         assertEquals(codeFile.DataStructures[0].Implements[0], "Animal")
     }
 
@@ -142,7 +142,7 @@ class Pig implements Animal {
 
     @Test
     fun shouldIdentifyInnerStructureName() {
-        val codeFile = JavaFullIdent().identFullInfo(innerCode, "")
+        val codeFile = JavaAnalyser().identFullInfo(innerCode, "")
 
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "Outer")
@@ -152,7 +152,7 @@ class Pig implements Animal {
 
     @Test
     fun shouldIdentifyInnerStructureFunction() {
-        val codeFile = JavaFullIdent().identFullInfo(innerCode, "")
+        val codeFile = JavaAnalyser().identFullInfo(innerCode, "")
 
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "main")
         assertEquals(codeFile.DataStructures[0].InnerStructures[0].Functions[0].Name, "pr")
@@ -166,7 +166,7 @@ interface AnotherInterface extends Runnable { // local interface
 }
         """
 
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
 
         assertEquals(codeFile.DataStructures[0].NodeName, "AnotherInterface")
         assertEquals(codeFile.DataStructures[0].Extend, "Runnable")
@@ -180,7 +180,7 @@ interface AnotherInterface extends Runnable { // local interface
 }
         """
 
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
 
         assertEquals(codeFile.DataStructures[0].NodeName, "AnotherInterface")
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
@@ -198,7 +198,7 @@ public interface BlogRepository extends Repository {
 
         """
 
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
 
         assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].Name, "ServiceMethod")
         assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].KeyValues[0].Key, "value")
@@ -218,7 +218,7 @@ public class BlogPO implements PersistenceObject<Blog> {
 }
         """
 
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
 
         assertEquals(codeFile.DataStructures[0].Annotations.size, 3)
         assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "NoArgsConstructor")
@@ -241,7 +241,7 @@ public class BlogPO implements PersistenceObject<Blog> {
 }
         """
 
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
 
         assertEquals(codeFile.DataStructures[0].Functions[0].Annotations.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].Name, "Override")
@@ -262,7 +262,7 @@ public class PublishedBlogResource {
 }
         """
 
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
 
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].IsConstructor, true)
@@ -302,7 +302,7 @@ public class HostDependentDownloadableContribution {
 }
         """
 
-        val codeFile = JavaFullIdent().identFullInfo(code, "")
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
         println(codeFile.DataStructures[0].toString())
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         val dsFunction = codeFile.DataStructures[0].Functions[0]

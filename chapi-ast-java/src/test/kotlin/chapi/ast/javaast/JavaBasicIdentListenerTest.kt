@@ -11,7 +11,7 @@ package chapi.ast.javaast;
 
 import org.junit.Test;
 """
-        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.PackageName, "chapi.ast.javaast")
     }
 
@@ -27,7 +27,7 @@ class IntegerArray implements Expandable {
     }
 }
 """
-        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
         kotlin.test.assertEquals(codeFile.DataStructures[0].Implements[0], "Expandable")
@@ -45,7 +45,7 @@ class IntegerArray extends Expandable {
     }
 }
 """
-        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
         kotlin.test.assertEquals(codeFile.DataStructures[0].Extend, "Expandable")
@@ -63,7 +63,7 @@ class IntegerArray extends Expandable {
     }
 }
 """
-        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
@@ -78,7 +78,7 @@ interface Expandable {
     void addItem(T item);
 }
 """
-        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "Expandable")
     }
@@ -92,7 +92,7 @@ interface Expandable {
     void addItem(T item);
 }
 """
-        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
@@ -111,7 +111,7 @@ public class PublishedBlogResource {
     }
 }
 """
-        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].IsConstructor, true)
@@ -130,7 +130,7 @@ public class PublishedBlogResource {
     }
 }
 """
-        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
 
