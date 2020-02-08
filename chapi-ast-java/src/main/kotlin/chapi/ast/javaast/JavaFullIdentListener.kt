@@ -8,7 +8,7 @@ import domain.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 
-class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
+open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
     private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
     private var isOverrideMethod: Boolean = false
     private var fields = arrayOf<CodeField>()
@@ -283,15 +283,6 @@ class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
         codeCall.Position = buildPosition(ctx)
     }
 
-    private fun buildPosition(ctx: ParserRuleContext): CodePosition {
-        val position = CodePosition()
-        position.StartLine = ctx.start.line
-        position.StartLinePosition = ctx.start.charPositionInLine
-        position.StopLine = ctx.stop.line
-        position.StopLinePosition = ctx.stop.charPositionInLine
-        return position
-    }
-
     private fun sendResultToMethodCallMap(codeCall: CodeCall) {
         methodCalls += codeCall
         val currentMethodName = getMethodMapName(currentFunction)
@@ -334,10 +325,6 @@ class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
         codeCall.Package = packageName
         codeCall.FunctionName = methodName
         codeCall.NodeName = targetTypeStr ?: ""
-    }
-
-    private fun isChainCall(targetTypeStr: String?): Boolean {
-        return targetTypeStr!!.contains("(") && targetTypeStr.contains(")") && targetTypeStr.contains(".")
     }
 
     private fun removeTarget(fullType: String): String {
@@ -528,26 +515,6 @@ class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
                 currentNode.Annotations += annotation
             }
         }
-    }
-
-    private fun buildAnnotation(ctx: JavaParser.AnnotationContext): CodeAnnotation {
-        var annotationName = ctx.qualifiedName().text
-        val codeAnnotation = CodeAnnotation(
-            Name = annotationName
-        )
-        if (ctx.elementValuePairs() != null) {
-            for (pairContext in ctx.elementValuePairs().elementValuePair()) {
-                val key = pairContext.IDENTIFIER().text
-                val value = pairContext.elementValue().text
-
-                codeAnnotation.KeyValues += AnnotationKeyValue(key, value)
-            }
-        } else if (ctx.elementValue() != null) {
-            val value = ctx.elementValue().text
-            codeAnnotation.KeyValues += AnnotationKeyValue(value, value)
-        }
-
-        return codeAnnotation
     }
 
     override fun enterLocalVariableDeclaration(ctx: JavaParser.LocalVariableDeclarationContext?) {
