@@ -1,4 +1,4 @@
-package chapi.ast.javaast
+package chapi.ast.javaast.model
 
 class JavaTargetType(
     var targetType: String = "",

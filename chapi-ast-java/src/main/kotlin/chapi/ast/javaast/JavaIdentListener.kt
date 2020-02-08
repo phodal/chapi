@@ -2,6 +2,7 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
 import chapi.ast.antlr.JavaParserBaseListener
+import chapi.ast.javaast.model.JavaTargetType
 import domain.core.*
 import domain.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
@@ -395,7 +396,10 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
         var callType = ""
         if (currentClz == targetType) {
             callType = "self"
-            return JavaTargetType(targetType = codeFile.PackageName + "." + targetType, callType = callType)
+            return JavaTargetType(
+                targetType = codeFile.PackageName + "." + targetType,
+                callType = callType
+            )
         }
 
         val split = targetType!!.split(".")
@@ -406,7 +410,10 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             for (imp in imports) {
                 if (imp.Source.endsWith(pureTargetType)) {
                     callType = "chain"
-                    return JavaTargetType(targetType = imp.Source, callType = callType)
+                    return JavaTargetType(
+                        targetType = imp.Source,
+                        callType = callType
+                    )
                 }
             }
         }
@@ -417,7 +424,10 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
             for (imp in imports) {
                 if (imp.Source.endsWith(currentClzExtend)) {
                     callType = "super"
-                    return JavaTargetType(targetType = imp.Source, callType = callType)
+                    return JavaTargetType(
+                        targetType = imp.Source,
+                        callType = callType
+                    )
                 }
             }
         }
