@@ -116,8 +116,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
-        println("exitClassDeclaration")
-        super.exitClassDeclaration(ctx)
         classNodeStack.pop()
         if (classNodeStack.count() == 0) {
             this.exitBody()
@@ -645,9 +643,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     override fun exitCreator(ctx: JavaParser.CreatorContext?) {
         if (currentCreatorNode.NodeName != "") {
             val currentNodeMethodName = getMethodMapName(currentFunction)
-            println(methodMap)
             val method = methodMap[currentNodeMethodName]
-            println(method)
             if (method != null) {
                 method.InnerStructures += currentCreatorNode
                 methodMap[currentNodeMethodName] = method
