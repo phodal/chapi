@@ -40,7 +40,6 @@ class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
-        super.enterPackageDeclaration(ctx)
         codeFile.PackageName = ctx?.qualifiedName()!!.text
     }
 

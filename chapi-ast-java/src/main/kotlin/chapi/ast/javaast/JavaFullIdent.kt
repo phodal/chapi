@@ -17,6 +17,15 @@ open class JavaFullIdent {
         return listener.getNodeInfo()
     }
 
+    open fun identBasicInfo(str: String, fileName: String): CodeFile {
+        val context = this.parse(str).compilationUnit()
+        val listener = JavaBasicIdentListener(fileName)
+
+        ParseTreeWalker().walk(listener, context)
+
+        return listener.getNodeInfo()
+    }
+
     open fun parse(str: String): JavaParser {
         val fromString = CharStreams.fromString(str)
         val lexer = JavaLexer(fromString)
