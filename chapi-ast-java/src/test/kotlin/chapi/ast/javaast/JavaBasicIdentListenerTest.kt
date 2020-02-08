@@ -22,7 +22,7 @@ package chapi.ast.javaast;
 
 import hello.Expandable;
 
-class IntegerArray implements Expandable<Integer> {
+class IntegerArray implements Expandable {
     void addItem(Integer item) {
     }
 }
@@ -30,5 +30,24 @@ class IntegerArray implements Expandable<Integer> {
         val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
+        kotlin.test.assertEquals(codeFile.DataStructures[0].Implements[0], "Expandable")
+    }
+
+    @Test
+    internal fun shouldIdentifyExtends() {
+        val code = """
+package chapi.ast.javaast;
+
+import hello.Expandable;
+
+class IntegerArray extends Expandable {
+    void addItem(Integer item) {
+    }
+}
+"""
+        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
+        kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
+        kotlin.test.assertEquals(codeFile.DataStructures[0].Extend, "Expandable")
     }
 }
