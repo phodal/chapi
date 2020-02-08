@@ -76,12 +76,16 @@ open class CodeFunction(
         return false
     }
 
-    override fun toString(): String {
-        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
-    }
-
     fun addExtension(key: String, value: String) {
         this.extensionMap[key] = JsonPrimitive(value)
         this.Extension = JsonObject(this.extensionMap)
+    }
+
+    fun isReturnNull(): Boolean {
+        return this.Extension.jsonObject["IsReturnNull"] == JsonPrimitive("true")
+    }
+
+    override fun toString(): String {
+        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
     }
 }

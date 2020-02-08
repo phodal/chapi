@@ -5,6 +5,7 @@ import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
 import domain.core.CodeImport
+import kotlinx.serialization.json.JsonObject
 
 open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var isOverrideMethod: Boolean = false
@@ -163,6 +164,18 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
 
     override fun exitConstructorDeclaration(ctx: JavaParser.ConstructorDeclarationContext?) {
         currentNode.Functions += currentFunction
+    }
+
+    override fun enterExpression(ctx: JavaParser.ExpressionContext?) {
+        if (ctx!!.parent::class.java.simpleName == "StatementContext") {
+            val statementCtx = ctx.parent as JavaParser.StatementContext
+            val firstChild = statementCtx.getChild(0).text
+
+            if (firstChild.toLowerCase() == "return") {
+                val isReturnNull = ctx.text == "null"
+                currentFunction.addExtension("IsReturnNull", isReturnNull.toString())
+            }
+        }
     }
 
     fun getNodeInfo(): CodeFile {

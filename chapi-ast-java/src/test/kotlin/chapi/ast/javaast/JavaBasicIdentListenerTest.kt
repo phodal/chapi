@@ -1,6 +1,6 @@
 package chapi.ast.javaast
 
-import org.junit.jupiter.api.Assertions.*
+import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.Test
 
 internal class JavaBasicIdentListenerTest {
@@ -98,7 +98,6 @@ interface Expandable {
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
     }
 
-
     @Test
     internal fun shouldIdentifyConstructor() {
         val code = """
@@ -116,5 +115,28 @@ public class PublishedBlogResource {
         kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].IsConstructor, true)
+    }
+
+    @Test
+    internal fun shouldIdentifyReturnNull() {
+        val code = """
+package chapi.ast.javaast;
+
+import hello.Expandable;
+
+public class PublishedBlogResource {
+    public PublishedBlogResource() {
+        return null;
+    }
+}
+"""
+        val codeFile = JavaFullIdent().identBasicInfo(code, "basic")
+        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
+        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+
+        val codeFunction = codeFile.DataStructures[0].Functions[0]
+
+        kotlin.test.assertEquals(codeFunction.Extension.jsonObject["IsReturnNull"], JsonPrimitive("true"))
+        kotlin.test.assertEquals(codeFunction.isReturnNull(), true)
     }
 }
