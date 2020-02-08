@@ -20,6 +20,8 @@ open class CodeFunction(
 
     var IsConstructor: Boolean = false // todo: move to extension
 ) {
+    private var extensionMap = HashMap<String, JsonElement>()
+
     fun isJavaLangReturnType(): Boolean {
         return this.ReturnType == "String" || this.ReturnType == "int" || this.ReturnType == "float" || this.ReturnType == "void" || this.ReturnType == "char" || this.ReturnType == "double"
     }
@@ -76,5 +78,10 @@ open class CodeFunction(
 
     override fun toString(): String {
         return Json(JsonConfiguration.Stable).stringify(serializer(), this)
+    }
+
+    fun addExtension(key: String, value: String) {
+        this.extensionMap[key] = JsonPrimitive(value)
+        this.Extension = JsonObject(this.extensionMap)
     }
 }

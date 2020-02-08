@@ -1,5 +1,8 @@
 package domain.core
 
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -43,7 +46,6 @@ internal class CodeFunctionTest {
         assertEquals(allCallString[0], "package.nodeName")
     }
 
-
     @Test
     internal fun shouldHandleJunitTest() {
         var annotations = arrayOf<CodeAnnotation>()
@@ -52,5 +54,16 @@ internal class CodeFunctionTest {
         val isTest = CodeFunction(Name = "getFunc", Annotations = annotations, IsConstructor = false).isJUnitTest()
 
         assertEquals(isTest, true)
+    }
+
+    @Test
+    internal fun shouldEnableAddExtension() {
+        val codeFunction = CodeFunction(Name = "getFunc")
+        codeFunction.addExtension("key", "value")
+
+        val expect = HashMap<String, JsonElement>()
+        expect["key"] = JsonPrimitive("value")
+
+        assertEquals(codeFunction.Extension, expect)
     }
 }
