@@ -303,7 +303,7 @@ public class HostDependentDownloadableContribution {
         """
 
         val codeFile = JavaIdentApp().analysis(code, "")
-        println(codeFile.DataStructures[0].toJson())
+        println(codeFile.DataStructures[0].toString())
         assertEquals(codeFile.DataStructures[0].Functions.size, 0)
 //        val dsFunction = codeFile.DataStructures[0].Functions[0]
 //        assertEquals(dsFunction.InnerStructures.size, 2)

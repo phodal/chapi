@@ -35,8 +35,7 @@ open class CodeDataStruct(
         this.Functions = methodsArray
     }
 
-    fun toJson(): String {
-        val json = Json(JsonConfiguration.Stable)
-        return json.stringify(serializer(), this)
+    override fun toString(): String {
+        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
     }
 }
