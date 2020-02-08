@@ -1,13 +1,12 @@
 package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
-import chapi.ast.antlr.JavaParserBaseListener
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
 import domain.core.CodeImport
 
-open class JavaBasicIdentListener(fileName: String) : JavaParserBaseListener() {
+open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var hasEnterClass: Boolean = false
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
     private var classNodes: Array<CodeDataStruct> = arrayOf()
@@ -66,6 +65,12 @@ open class JavaBasicIdentListener(fileName: String) : JavaParserBaseListener() {
 
         }
         return implements
+    }
+
+    override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
+//        val codePosition = buildPosition(ctx!!)
+//        val typeType = ctx.typeTypeOrVoid().text
+
     }
 
     fun getNodeInfo(): CodeFile {

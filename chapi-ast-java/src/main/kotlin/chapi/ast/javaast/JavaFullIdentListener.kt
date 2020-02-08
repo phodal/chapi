@@ -1,7 +1,6 @@
 package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
-import chapi.ast.antlr.JavaParserBaseListener
 import chapi.ast.javaast.model.JavaTargetType
 import domain.core.*
 import domain.infra.Stack
@@ -162,7 +161,7 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
 
         val mayModifierCtx = ctx.parent.parent.getChild(0)
         if (mayModifierCtx::class.simpleName == "ModifierContext") {
-            this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext, codeFunction)
+            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
         }
 
         this.updateCodeFunction(codeFunction)
@@ -189,7 +188,7 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
 
         val mayModifierCtx = ctx.parent.parent.getChild(0)
         if (mayModifierCtx::class.simpleName == "ModifierContext") {
-            this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext, codeFunction)
+            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
         }
 
         val params = ctx.formalParameters()
@@ -203,19 +202,6 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
         }
 
         this.updateCodeFunction(codeFunction)
-    }
-
-    private fun buildAnnotationForMethod(
-        modifierCtx: JavaParser.ModifierContext,
-        codeFunction: CodeFunction
-    ) {
-        if (modifierCtx.classOrInterfaceModifier() != null) {
-            val childCtx = modifierCtx.classOrInterfaceModifier().getChild(0)
-            if (childCtx::class.simpleName == "AnnotationContext") {
-                val annotation = this.buildAnnotation(childCtx as JavaParser.AnnotationContext)
-                codeFunction.Annotations += annotation
-            }
-        }
     }
 
     private fun buildMethodParameters(params: JavaParser.FormalParametersContext?): Array<CodeProperty> {

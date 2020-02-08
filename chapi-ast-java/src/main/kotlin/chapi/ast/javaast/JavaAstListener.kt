@@ -40,4 +40,17 @@ open class JavaAstListener : JavaParserBaseListener() {
     fun isChainCall(targetTypeStr: String?): Boolean {
         return targetTypeStr!!.contains("(") && targetTypeStr.contains(")") && targetTypeStr.contains(".")
     }
+
+    fun buildAnnotationForMethod(modifierCtx: JavaParser.ModifierContext): Array<CodeAnnotation> {
+        var annotations: Array<CodeAnnotation> = arrayOf()
+        if (modifierCtx.classOrInterfaceModifier() != null) {
+            val childCtx = modifierCtx.classOrInterfaceModifier().getChild(0)
+            if (childCtx::class.simpleName == "AnnotationContext") {
+                val annotation = this.buildAnnotation(childCtx as JavaParser.AnnotationContext)
+                annotations += annotation
+            }
+        }
+
+        return annotations
+    }
 }
