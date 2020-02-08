@@ -304,7 +304,7 @@ public class HostDependentDownloadableContribution {
 
         val codeFile = JavaIdentApp().analysis(code, "")
         println(codeFile.DataStructures[0].toString())
-        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 3)
 //        val dsFunction = codeFile.DataStructures[0].Functions[0]
 //        assertEquals(dsFunction.InnerStructures.size, 2)
 //        assertEquals(dsFunction.InnerStructures[0].NodeName, "HostDependentDownloadableContributionStub")

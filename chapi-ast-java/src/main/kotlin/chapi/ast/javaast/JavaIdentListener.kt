@@ -182,6 +182,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
+        println("enterMethodDeclaration")
         val name = ctx!!.IDENTIFIER().text
         val typeType = ctx.typeTypeOrVoid().text
 
@@ -252,7 +253,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-        currentFunction = CodeFunction(IsConstructor = false)
+//        currentFunction = CodeFunction(IsConstructor = false)
     }
 
     override fun enterMethodCall(ctx: JavaParser.MethodCallContext?) {
@@ -373,7 +374,6 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     private fun updateCodeFunction(codeFunction: CodeFunction) {
-        println("updateCodeFunction: " + currentType)
         if (currentType == "CreatorClass") {
             creatorMethodMap[getMethodMapName(codeFunction)] = codeFunction
         } else {
@@ -609,7 +609,7 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterCreator(ctx: JavaParser.CreatorContext?) {
-        super.enterCreator(ctx)
+        println("enterCreator")
         val variableName = ctx!!.getParent().getParent().getChild(0).text
         val allIdentifier = ctx.createdName().IDENTIFIER()
         for (identifier in allIdentifier!!) {
@@ -619,7 +619,12 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
 //            this.buildCreatedCall(createdName, ctx)
             // todo: buildCreatedCall
 
-            if (currentFunction.Name == "" || ctx.classCreatorRest() == null) {
+            // todo: handle enter class in parallel
+            if (currentFunction.Name == "") {
+                return
+            }
+
+            if (ctx.classCreatorRest() == null) {
                 return
             }
 
@@ -641,18 +646,21 @@ class JavaIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun exitCreator(ctx: JavaParser.CreatorContext?) {
-        if (currentCreatorNode.NodeName != "") {
-            val currentNodeMethodName = getMethodMapName(currentFunction)
-            val method = methodMap[currentNodeMethodName]
-            if (method != null) {
-                method.InnerStructures += currentCreatorNode
-                methodMap[currentNodeMethodName] = method
-            }
+        if (currentCreatorNode.NodeName == "") {
+            return
+        }
+
+        val currentNodeMethodName = getMethodMapName(currentFunction)
+        val method = methodMap[currentNodeMethodName]
+        if (method != null) {
+            method.InnerStructures += currentCreatorNode
+            methodMap[currentNodeMethodName] = method
         }
 
         currentType = classNodeStack.elements[classNodeStack.elements.size - 1].Type
         classNodeStack.pop()
     }
+
     private fun buildCreatedCall(createdName: String?, ctx: JavaParser.CreatorContext) {
         var codeFunction = methodMap[getMethodMapName(currentFunction)]
         if (codeFunction == null) {

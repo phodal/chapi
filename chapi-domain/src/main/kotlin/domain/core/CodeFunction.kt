@@ -73,4 +73,8 @@ open class CodeFunction(
 
         return false
     }
+
+    override fun toString(): String {
+        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
+    }
 }
