@@ -51,7 +51,6 @@ class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
-        println("enterClassDeclaration")
         val isInnerNode = currentNode.NodeName != ""
         if (isInnerNode) {
             updateStructMethods()
@@ -101,7 +100,7 @@ class JavaFullIdentListener(fileName: String) : JavaParserBaseListener() {
         }
     }
 
-    private fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
+    open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
         var implements = arrayOf<String>()
         for (_type in ctx.typeList().typeType()) {
             var target = this.warpTargetFullType(_type.text).targetType
