@@ -84,6 +84,7 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
 
     private fun buildClassExtension(ctx: JavaParser.ClassDeclarationContext?, classNode: CodeDataStruct) {
         classNode.Package = codeFile.PackageName
+        classNode.FilePath = codeFile.FullName
 
         if (ctx!!.IDENTIFIER() != null) {
             currentClz = ctx.IDENTIFIER().text
