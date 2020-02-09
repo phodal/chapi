@@ -7,10 +7,6 @@ plugins {
     java // Required by at least JUnit.
 
 //    id("org.jetbrains.kotlin.multiplatform") version "1.3.61"
-
-    // Test coverage
-    jacoco
-    // Upload jacoco coverage reports to coveralls
     id("com.github.kt3k.coveralls") version "2.9.0"
 }
 
@@ -25,42 +21,24 @@ allprojects {
     }
 }
 
+val jacocoReports by configurations.creating {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+    attributes {
+        attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage::class, "jacocoReports"))
+    }
+}
 
 dependencies {
+    jacocoReports(project(":chapi-domain"))
+    jacocoReports(project(":chapi-ast-java"))
+
     subprojects.forEach {
         archives(it)
     }
 }
 
-jacoco {
-    toolVersion = "0.8.5"
-    reportsDir = file("$buildDir/reports")
+tasks.register<Copy>("aggregateJacocoReports") {
+    from(jacocoReports)
+    into(file("$buildDir/jacoco"))
 }
-
-// Test coverage reporting for coveralls.
-tasks {
-    // Enable xml for coveralls.
-    "jacocoTestReport"(JacocoReport::class) {
-        reports {
-            // To be read by humans
-            html.isEnabled = true
-            // To be read by Coveralls etc.
-            xml.isEnabled = true
-            xml.destination = file("$buildDir/reports/jacoco/test/jacocoTestReport.xml")
-        }
-    }
-
-    // Trying to run tests every time.
-    val test by tasks
-    val cleanTest by tasks
-    test.dependsOn(cleanTest)
-
-    // Use the built-in JUnit support of Gradle.
-    "test"(Test::class) {
-        useJUnitPlatform()
-    }
-
-    // Sorry, I have no idea.
-    Unit
-}
-
