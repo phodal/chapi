@@ -1,5 +1,10 @@
 package chapi.app.analyser
 
+import domain.core.CodeDataStruct
+import kotlinx.serialization.internal.ArrayListSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.list
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -38,6 +43,7 @@ internal class ChapiAnalyserTest {
         val path = Paths.get(resource!!.toURI()).toFile()
 
         val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
+//        println(nodes.toList().toString())
         assertEquals(nodes.size, 14)
     }
 }
