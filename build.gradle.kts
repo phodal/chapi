@@ -32,6 +32,11 @@ dependencies {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.5"
+    reportsDir = file("$buildDir/reports")
+}
+
 // Test coverage reporting for coveralls.
 tasks {
     // Enable xml for coveralls.
