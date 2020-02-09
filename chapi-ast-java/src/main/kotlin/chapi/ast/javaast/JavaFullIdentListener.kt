@@ -253,7 +253,7 @@ open class JavaFullIdentListener(
         val callee = ctx.getChild(0).text
 
         buildMethodCallLocation(codeCall, ctx)
-        buildMethodCallMethodInformation(codeCall, callee, targetType)
+        buildMethodCallMethodInfo(codeCall, callee, targetType, ctx)
         buildMethodCallParameters(codeCall, ctx)
 
         sendResultToMethodCallMap(codeCall)
@@ -285,7 +285,12 @@ open class JavaFullIdentListener(
         }
     }
 
-    private fun buildMethodCallMethodInformation(codeCall: CodeCall, callee: String = "", _targetType: String?) {
+    private fun buildMethodCallMethodInfo(
+        codeCall: CodeCall,
+        callee: String = "",
+        _targetType: String?,
+        ctx: JavaParser.MethodCallContext
+    ) {
         var packageName = codeFile.PackageName
         var methodName = callee
 
@@ -304,19 +309,51 @@ open class JavaFullIdentListener(
             packageName = removeTarget(fullType)
             methodName = callee
         } else {
-            // HandleEmptyFullType
-        }
-
-        // 处理链试调用
-        if (this.isChainCall(targetTypeStr)) {
-            val split = targetTypeStr!!.split(".")
-            targetTypeStr = split[0]
-            targetTypeStr = parseTargetType(targetTypeStr)
+            val targetTypePackage = this.handleEmptyFullType(ctx, targetType, methodName, packageName)
+            packageName = targetTypePackage.packageName
+            targetTypeStr = targetTypePackage.targetType
         }
 
         codeCall.Package = packageName
         codeCall.FunctionName = methodName
         codeCall.NodeName = targetTypeStr ?: ""
+    }
+
+    private fun handleEmptyFullType(
+        ctx: JavaParser.MethodCallContext,
+        targetTypeObj: JavaTargetType,
+        methodName: String,
+        packageName: String
+    ): TargetTypePackage {
+        var pkgName = packageName
+        var target = targetTypeObj.targetType
+
+        if (ctx.text == target) {
+            var clz: String = currentClz
+            // 处理 static 方法，如 now()
+            for (imp in imports) {
+                if (imp.Source.endsWith(".$methodName")) {
+                    pkgName = imp.Source
+                    clz = ""
+                }
+            }
+
+            target = clz
+        } else  {
+            if (target.contains("this.")) {
+                val newType = target.replace("this.", "")
+                for (field in fields) {
+                    if (field.TypeValue == newType) {
+                        target = field.TypeType
+                    }
+                }
+            }
+        }
+
+        return TargetTypePackage(
+            targetType = target,
+            packageName = pkgName
+        )
     }
 
     private fun removeTarget(fullType: String): String {
@@ -328,8 +365,8 @@ open class JavaFullIdentListener(
         var targetType = target
 
         val fieldType = fieldsMap[targetType]
-        val formalType = formalParameters[targetType]
         val localVarType = localVars[targetType]
+        val formalType = formalParameters[targetType]
 
         if (fieldType != null && fieldType != "") {
             targetType = fieldType
@@ -491,6 +528,7 @@ open class JavaFullIdentListener(
         currentType = "Interface"
         currentNode.NodeName = ctx!!.IDENTIFIER().text
         currentNode.Type = "Interface"
+        currentNode.Package = codeFile.PackageName
 
         if (ctx.EXTENDS() != null) {
             var extend = ""
@@ -667,4 +705,8 @@ open class JavaFullIdentListener(
         codeFile.DataStructures = classNodes
         return codeFile
     }
+}
+
+class TargetTypePackage(val targetType: String, val packageName: String) {
+
 }

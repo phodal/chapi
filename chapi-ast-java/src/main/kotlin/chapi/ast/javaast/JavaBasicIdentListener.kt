@@ -30,6 +30,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
         hasEnterClass = true
         currentNode.Type = "Class"
+        currentNode.Package = codeFile.PackageName
 
         if (ctx!!.IDENTIFIER() != null) {
             currentNode.NodeName = ctx.IDENTIFIER().text
@@ -72,7 +73,8 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         hasEnterClass = true
         currentNode = CodeDataStruct(
             Type = "Interface",
-            NodeName = ctx!!.IDENTIFIER().text
+            NodeName = ctx!!.IDENTIFIER().text,
+            Package = codeFile.PackageName
         )
     }
 

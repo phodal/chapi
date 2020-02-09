@@ -69,7 +69,6 @@ internal class ChapiAnalyserTest {
         val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
         var nodeMap: HashMap<String, CodeDataStruct> = HashMap()
         for (node in nodes) {
-            println(node.getClassFullName())
             nodeMap[node.getClassFullName()] = node
         }
 
@@ -79,7 +78,7 @@ internal class ChapiAnalyserTest {
             mainFunCallMap[function.NodeName] = function
         }
 
-        println(mainFunCallMap)
         assertEquals(mainFunCallMap["AggregateRootARepo"]!!.Type, "same package")
+        assertEquals(mainFunCallMap["AggregateRootARepo"]!!.Package, "repositories")
     }
 }
