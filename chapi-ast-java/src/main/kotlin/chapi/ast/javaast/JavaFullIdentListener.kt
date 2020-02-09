@@ -310,8 +310,18 @@ open class JavaFullIdentListener(
             methodName = callee
         } else {
             val targetTypePackage = this.handleEmptyFullType(ctx, targetType, methodName, packageName)
-            packageName = targetTypePackage.packageName
-            targetTypeStr = targetTypePackage.targetType
+            if (targetTypePackage.packageName != "") {
+                packageName = targetTypePackage.packageName
+            }
+            if (targetTypePackage.targetType != "") {
+                targetTypeStr = targetTypePackage.targetType
+            }
+        }
+
+        // 处理链试调用
+        if (this.isChainCall(targetTypeStr)) {
+            val split = targetTypeStr!!.split(".")
+            targetTypeStr = parseTargetType(split[0])
         }
 
         codeCall.Package = packageName
@@ -339,7 +349,7 @@ open class JavaFullIdentListener(
             }
 
             target = clz
-        } else  {
+        } else {
             if (target.contains("this.")) {
                 val newType = target.replace("this.", "")
                 for (field in fields) {
