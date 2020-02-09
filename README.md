@@ -1,5 +1,7 @@
 # Chapi
 
+[![Build Status](https://travis-ci.org/phodal/chapi.svg?branch=master)](https://travis-ci.org/phodal/chapi)
+
 > Chapi is a common language data structure parser, which will parse different language to same JSON object.
 
 Support languages (in plan):
