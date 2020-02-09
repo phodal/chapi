@@ -38,6 +38,10 @@ open class CodeDataStruct(
         this.Functions = methodsArray
     }
 
+    fun getClassFullName(): String {
+        return this.Package + "." + this.NodeName
+    }
+
     override fun toString(): String {
         return Json(JsonConfiguration.Stable).stringify(serializer(), this)
     }

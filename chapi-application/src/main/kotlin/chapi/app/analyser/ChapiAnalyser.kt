@@ -16,7 +16,31 @@ open class ChapiAnalyser(
     }
 
     open fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> {
-        return analysisBasicInfo(files)
+        val basicNodes = analysisBasicInfo(files)
+        return analysisFullNodes(files, basicNodes)
+    }
+
+    private fun analysisFullNodes(files: Array<AbstractFile>, basicNodes: Array<CodeDataStruct>): Array<CodeDataStruct> {
+        val identMap = HashMap<String, CodeDataStruct>()
+        for (node in basicNodes) {
+            identMap[node.getClassFullName()] = node
+        }
+
+        var classes : Array<String> = arrayOf()
+        for (basicNode in basicNodes) {
+            classes += basicNode.getClassFullName()
+        }
+
+        var nodeInfos: Array<CodeDataStruct> = arrayOf()
+        for (file in files) {
+            val fileContent = readFileAsString(file.absolutePath)
+            val codeFile = JavaAnalyser().identFullInfo(fileContent, file.fileName)
+            for (dataStructure in codeFile.DataStructures) {
+                nodeInfos += dataStructure
+            }
+        }
+
+        return nodeInfos
     }
 
     private fun analysisBasicInfo(files: Array<AbstractFile>): Array<CodeDataStruct> {
