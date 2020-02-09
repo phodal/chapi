@@ -323,10 +323,13 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
     private fun parseTargetType(target: String?): String? {
         var targetType = target
 
+        val fieldType = fieldsMap[targetType]
         val formalType = formalParameters[targetType]
         val localVarType = localVars[targetType]
 
-        if (formalType != null && formalType != "") {
+        if (fieldType != null && fieldType != "") {
+            targetType = fieldType
+        } else if (formalType != null && formalType != "") {
             targetType = formalType
         } else if (localVarType != null && localVarType != "") {
             targetType = localVarType
