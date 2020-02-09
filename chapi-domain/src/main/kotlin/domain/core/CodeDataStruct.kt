@@ -21,7 +21,8 @@ open class CodeDataStruct(
     var Annotations: Array<CodeAnnotation> = arrayOf<CodeAnnotation>(),
     var FunctionCalls: Array<CodeCall> = arrayOf<CodeCall>(),
     var InOutProperties: Array<CodeProperty> = arrayOf<CodeProperty>(),
-//    var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
+    // todo: select node useonly imports
+    var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
     var Extension: JsonElement = JsonObject(HashMap())
 ) {
     open fun isUtilClass(): Boolean {

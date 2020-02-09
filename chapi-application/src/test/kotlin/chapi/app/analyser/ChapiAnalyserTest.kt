@@ -43,7 +43,21 @@ internal class ChapiAnalyserTest {
         val path = Paths.get(resource!!.toURI()).toFile()
 
         val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
-//        println(nodes.toList().toString())
         assertEquals(nodes.size, 14)
+    }
+
+    @Test
+    fun shouldIdentifyImport() {
+        val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
+        val path = Paths.get(resource!!.toURI()).toFile()
+
+        val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
+        var nodeMap : HashMap<String, CodeDataStruct> = HashMap()
+        for (node in nodes) {
+            nodeMap[node.getClassFullName()] = node
+        }
+
+        assertEquals(nodeMap["repositories.Repository"]!!.Imports.size, 1)
+        assertEquals(nodeMap["repositories.Repository"]!!.Imports[0].Source, "domain")
     }
 }

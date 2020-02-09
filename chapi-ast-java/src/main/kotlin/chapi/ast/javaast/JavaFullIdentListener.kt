@@ -39,7 +39,7 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
-        codeFile.PackageName = ctx?.qualifiedName()!!.text
+        codeFile.PackageName = ctx!!.qualifiedName()!!.text
     }
 
     override fun enterImportDeclaration(ctx: JavaParser.ImportDeclarationContext?) {
@@ -83,6 +83,8 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
     }
 
     private fun buildClassExtension(ctx: JavaParser.ClassDeclarationContext?, classNode: CodeDataStruct) {
+        classNode.Package = codeFile.PackageName
+
         if (ctx!!.IDENTIFIER() != null) {
             currentClz = ctx.IDENTIFIER().text
             classNode.NodeName = currentClz
