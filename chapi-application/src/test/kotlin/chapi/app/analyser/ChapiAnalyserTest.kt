@@ -1,10 +1,7 @@
 package chapi.app.analyser
 
+import domain.core.CodeCall
 import domain.core.CodeDataStruct
-import kotlinx.serialization.internal.ArrayListSerializer
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.list
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -62,5 +59,27 @@ internal class ChapiAnalyserTest {
         assertEquals(nodeMap["repositories.Repository"]!!.Imports.size, 1)
         assertEquals(nodeMap["repositories.Repository"]!!.Imports[0].Source, "domain")
         assertEquals(nodeMap["repositories.Repository"]!!.FilePath, "Repository.java")
+    }
+
+    @Test
+    fun shouldIdentifySamePackage() {
+        val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
+        val path = Paths.get(resource!!.toURI()).toFile()
+
+        val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
+        var nodeMap: HashMap<String, CodeDataStruct> = HashMap()
+        for (node in nodes) {
+            println(node.getClassFullName())
+            nodeMap[node.getClassFullName()] = node
+        }
+
+        var mainFunCallMap: HashMap<String, CodeCall> = HashMap()
+        val mainFunc = nodeMap[".Main"]!!.Functions[0]
+        for (function in mainFunc.FunctionCalls) {
+            mainFunCallMap[function.NodeName] = function
+        }
+
+        println(mainFunCallMap)
+        assertEquals(mainFunCallMap["AggregateRootARepo"]!!.Type, "same package")
     }
 }

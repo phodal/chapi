@@ -34,7 +34,7 @@ open class ChapiAnalyser(
         var nodeInfos: Array<CodeDataStruct> = arrayOf()
         for (file in files) {
             val fileContent = readFileAsString(file.absolutePath)
-            val codeFile = JavaAnalyser().identFullInfo(fileContent, file.fileName)
+            val codeFile = JavaAnalyser().identFullInfo(fileContent, file.fileName, classes, basicNodes)
             for (dataStructure in codeFile.DataStructures) {
                 dataStructure.Imports = codeFile.Imports
                 nodeInfos += dataStructure

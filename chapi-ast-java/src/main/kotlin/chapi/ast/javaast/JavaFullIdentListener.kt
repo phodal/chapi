@@ -7,7 +7,11 @@ import domain.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 
-open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
+open class JavaFullIdentListener(
+    fileName: String,
+    val classes: Array<String>,
+    basicNodes: Array<CodeDataStruct>
+) : JavaAstListener() {
     private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
     private var isOverrideMethod: Boolean = false
     private var fields = arrayOf<CodeField>()
@@ -393,6 +397,15 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
         }
 
         // todo: add ident clzs
+        for (clz in classes) {
+            if (clz.endsWith(".$pureTargetType")) {
+                callType = "same package"
+                return JavaTargetType(
+                    targetType = clz,
+                    callType = callType
+                )
+            }
+        }
 
         if (pureTargetType == "super" || pureTargetType == "this") {
             for (imp in imports) {

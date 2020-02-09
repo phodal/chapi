@@ -2,15 +2,21 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaLexer
 import chapi.ast.antlr.JavaParser
+import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class JavaAnalyser {
-    open fun identFullInfo(str: String, fileName: String): CodeFile {
+    open fun identFullInfo(
+        str: String,
+        fileName: String,
+        classes: Array<String> = arrayOf(),
+        basicNodes: Array<CodeDataStruct> = arrayOf()
+    ): CodeFile {
         val context = this.parse(str).compilationUnit()
-        val listener = JavaFullIdentListener(fileName)
+        val listener = JavaFullIdentListener(fileName, classes, basicNodes)
 
         ParseTreeWalker().walk(listener, context)
 
