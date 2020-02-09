@@ -30,8 +30,8 @@ val jacocoReports by configurations.creating {
 }
 
 dependencies {
-    jacocoReports(project(":chapi-domain"))
-    jacocoReports(project(":chapi-ast-java"))
+    jacocoReports(project("chapi-domain"))
+    jacocoReports(project("chapi-ast-java"))
 
     subprojects.forEach {
         archives(it)
