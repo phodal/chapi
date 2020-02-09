@@ -20,8 +20,7 @@ internal class ChapiAnalyserTest {
             ?: resource::class.java.getResourceAsStream(resource)
 
     @Test
-    fun analysisByPath() {
-//        val files = getResourceFiles("e2e/step2-java")
+    fun analysisByFile() {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/Main.java")
         val file = Paths.get(resource!!.toURI()).toFile()
 
