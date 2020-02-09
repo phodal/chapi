@@ -557,7 +557,6 @@ open class JavaFullIdentListener(fileName: String) : JavaAstListener() {
     }
 
     override fun enterCreator(ctx: JavaParser.CreatorContext?) {
-        println("enterCreator")
         val variableName = ctx!!.getParent().getParent().getChild(0).text
         val allIdentifier = ctx.createdName().IDENTIFIER()
         for (identifier in allIdentifier!!) {

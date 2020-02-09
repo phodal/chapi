@@ -31,4 +31,13 @@ internal class ChapiAnalyserTest {
         val nodes = ChapiAnalyser().analysisByFiles(files)
         assertEquals(nodes.size, 1)
     }
+
+    @Test
+    fun analysisByDir() {
+        val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
+        val path = Paths.get(resource!!.toURI()).toFile()
+
+        val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
+        assertEquals(nodes.size, 14)
+    }
 }
