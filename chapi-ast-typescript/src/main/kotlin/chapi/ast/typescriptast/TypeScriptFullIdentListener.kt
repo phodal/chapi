@@ -22,7 +22,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     override fun enterClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
         val nodeName = ctx!!.Identifier().text
         currentNode = CodeDataStruct(
-            Type = "Interface",
+            Type = "Class",
             NodeName = nodeName
         )
 
