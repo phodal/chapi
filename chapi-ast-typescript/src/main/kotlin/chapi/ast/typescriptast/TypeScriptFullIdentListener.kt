@@ -225,6 +225,17 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             val parameters = buildMethodParameters(callSignCtx.parameterList())
             currentFunction.Parameters = parameters
         }
+
+        if (callSignCtx.typeAnnotation() != null) {
+            val typeAnnotation = buildTypeAnnotation(callSignCtx.typeAnnotation())
+
+            val returnType = CodeProperty(
+                TypeType = typeAnnotation!!,
+                TypeValue = ""
+            )
+
+            currentFunction.MultipleReturns += returnType
+        }
     }
 
     fun getNodeInfo(): CodeFile {

@@ -266,5 +266,7 @@ function Sum(x: number, y: number) : void {
         assertEquals(codeFile.DataStructures[0].NodeName, "default")
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "Sum")
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 2)
+        assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns[0].TypeType, "void")
     }
 }
