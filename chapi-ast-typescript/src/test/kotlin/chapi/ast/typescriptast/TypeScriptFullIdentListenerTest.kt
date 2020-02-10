@@ -269,4 +269,17 @@ function Sum(x: number, y: number) : void {
         assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns[0].TypeType, "void")
     }
+
+    @Test
+    internal fun shouldIdentifyInterfaceProperty() {
+        val code = """
+export interface IPerson {
+    name: string;
+    gender: string;
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields.size, 2)
+    }
 }

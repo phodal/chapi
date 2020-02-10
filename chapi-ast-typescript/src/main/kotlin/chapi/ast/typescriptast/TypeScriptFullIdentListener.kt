@@ -150,8 +150,67 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             currentNode.Extend = elements[0]
         }
 
+        val objectTypeCtx = ctx.objectType()
+        if (objectTypeCtx.typeBody() != null) {
+            this.buildInterfaceBody(objectTypeCtx.typeBody().typeMemberList())
+        }
+
         nodeMap[nodeName] = currentNode
     }
+
+
+    fun buildInterfaceBody(typeMemberList: TypeScriptParser.TypeMemberListContext?) {
+        for (memberContext in typeMemberList!!.typeMember()) {
+            val memberChild = memberContext.getChild(0)
+            val childType = memberChild::class.java.simpleName
+
+            when(childType) {
+                "PropertySignaturContext" -> {
+                    buildInterfacePropertySignature(memberChild as TypeScriptParser.PropertySignaturContext)
+                }
+                "MethodSignatureContext" -> {
+
+                }
+                else -> {
+                    println("enterInterfaceDeclaration -> buildInterfaceBody")
+                }
+            }
+        }
+    }
+
+    private fun buildInterfacePropertySignature(signCtx: TypeScriptParser.PropertySignaturContext) {
+        val typeType = buildTypeAnnotation(signCtx.typeAnnotation())!!
+        val typeValue = signCtx.propertyName().text
+
+        val isArrowFunc = signCtx.type_() != null
+        if (isArrowFunc) {
+            val codeFunction = CodeFunction(
+                Name = typeValue
+            )
+            val param = CodeProperty(
+                TypeValue = "any",
+                TypeType = typeType
+            )
+
+            val returnType = CodeProperty(
+                TypeType = signCtx.type_().text,
+                TypeValue = ""
+            )
+
+            codeFunction.Parameters += param
+            codeFunction.MultipleReturns += returnType
+
+            currentNode.Functions += codeFunction
+        } else {
+            val codeField = CodeField(
+                TypeType = typeType,
+                TypeValue = typeValue
+            )
+
+            currentNode.Fields += codeField
+        }
+    }
+
 
     override fun enterFromBlock(ctx: TypeScriptParser.FromBlockContext?) {
         val imp = removeQuote(ctx!!.StringLiteral().text)

@@ -101,5 +101,4 @@ open class TypeScriptAstListener() : TypeScriptParserBaseListener() {
 
         return parameter
     }
-
 }
