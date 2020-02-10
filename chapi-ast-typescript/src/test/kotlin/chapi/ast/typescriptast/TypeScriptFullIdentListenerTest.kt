@@ -3,7 +3,7 @@ package chapi.ast.typescriptast
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-internal class TypeScriptIdentAppTest {
+internal class TypeScriptFullIdentListenerTest {
     @Test
     internal fun shouldCompile() {
         var code = """
@@ -11,7 +11,7 @@ interface IPerson {
     name: string;
 }            
 """
-        TypeScriptIdentApp().analysis(code, "")
+        TypeScriptAnalyser().analysis(code, "")
     }
 
     @Test
@@ -22,7 +22,7 @@ export interface IPerson {
     gender: string;
 }
 """
-        val codeFile = TypeScriptIdentApp().analysis(code, "")
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "IPerson")
     }
@@ -36,7 +36,7 @@ class Foo {
     }
 }
 """
-        val codeFile = TypeScriptIdentApp().analysis(code, "")
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "Foo")
     }

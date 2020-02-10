@@ -1,12 +1,13 @@
 package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
+import chapi.ast.antlr.TypeScriptParserBaseListener
 import chapi.ast.antlr.TypeScriptParserBaseVisitor
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
 
-class TypeScriptIdentVisitor(private var node: TSIdentify) : TypeScriptParserBaseVisitor<Any>() {
+class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptParserBaseListener() {
     private var dataStructQueue = arrayOf<CodeDataStruct>()
     private var hasEnterClass = false
 
@@ -17,7 +18,7 @@ class TypeScriptIdentVisitor(private var node: TSIdentify) : TypeScriptParserBas
     private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
 
-    override fun visitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?): Any {
+    override fun enterClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
         val nodeName = ctx!!.Identifier().text
         currentNode = CodeDataStruct(
             Type = "Interface",
@@ -26,20 +27,17 @@ class TypeScriptIdentVisitor(private var node: TSIdentify) : TypeScriptParserBas
 
         val heritageCtx = ctx.classHeritage()
         if (heritageCtx.implementsClause() != null) {
-//            val typeList = heritageCtx.implementsClause().classOrInterfaceTypeList()
+
         }
 
         if (heritageCtx.classExtendsClause() != null) {
 
         }
 
-//        dataStructQueue += currentNode
         nodeMap[nodeName] = currentNode
-//        return super.visitClassDeclaration(ctx)
-        return node
     }
 
-    override fun visitInterfaceDeclaration(ctx: TypeScriptParser.InterfaceDeclarationContext?): Any {
+    override fun enterInterfaceDeclaration(ctx: TypeScriptParser.InterfaceDeclarationContext?) {
         val nodeName = ctx!!.Identifier().text
         val currentType = "Interface"
 
@@ -49,8 +47,6 @@ class TypeScriptIdentVisitor(private var node: TSIdentify) : TypeScriptParserBas
         )
 
         nodeMap[nodeName] = currentNode
-//        return super.visitInterfaceDeclaration(ctx) // todo: figure why
-        return node
     }
 
     fun getNodeInfo(): CodeFile {

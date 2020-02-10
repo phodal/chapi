@@ -5,15 +5,16 @@ import chapi.ast.antlr.TypeScriptParser
 import domain.core.CodeFile
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class TypeScriptIdentApp {
+open class TypeScriptAnalyser {
     open fun analysis(str: String, fileName: String): CodeFile {
         val context = this.parse(str).program()
+        val listener = TypeScriptFullIdentListener(TSIdentify(fileName = fileName))
 
-        val visitor = TypeScriptIdentVisitor(TSIdentify(fileName = fileName))
-        visitor.visit(context)
+        ParseTreeWalker().walk(listener, context)
 
-        return visitor.getNodeInfo()
+        return listener.getNodeInfo()
     }
 
     private fun parse(str: String): TypeScriptParser {
