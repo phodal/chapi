@@ -8,7 +8,7 @@ language: java
 
 jdk:
   - openjdk8
-  - oraclejdk11
+#  - oraclejdk11 todo: check why
 
 services:
   - xvfb
