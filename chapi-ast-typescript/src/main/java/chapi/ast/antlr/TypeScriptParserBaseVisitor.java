@@ -465,6 +465,13 @@ public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitImportAll(TypeScriptParser.ImportAllContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitDecoratorList(TypeScriptParser.DecoratorListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

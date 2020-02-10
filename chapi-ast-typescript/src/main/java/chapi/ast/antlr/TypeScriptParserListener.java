@@ -672,6 +672,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitImportAliasDeclaration(TypeScriptParser.ImportAliasDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#importAll}.
+	 * @param ctx the parse tree
+	 */
+	void enterImportAll(TypeScriptParser.ImportAllContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#importAll}.
+	 * @param ctx the parse tree
+	 */
+	void exitImportAll(TypeScriptParser.ImportAllContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#decoratorList}.
 	 * @param ctx the parse tree
 	 */

@@ -62,6 +62,9 @@ BitXorAssign:                   '^=';
 BitOrAssign:                    '|=';
 ARROW:                          '=>';
 
+Lodash:                         '_'; // lodash
+Dollar:                         '$'; // jquery
+
 /// Null Literals
 
 NullLiteral:                    'null';

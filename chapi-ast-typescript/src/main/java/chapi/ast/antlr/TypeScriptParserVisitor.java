@@ -407,6 +407,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitImportAliasDeclaration(TypeScriptParser.ImportAliasDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#importAll}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitImportAll(TypeScriptParser.ImportAllContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#decoratorList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

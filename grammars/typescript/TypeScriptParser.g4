@@ -299,6 +299,11 @@ namespaceName
 
 importAliasDeclaration
     : Identifier '=' namespaceName SemiColon
+    | Identifier '=' 'require' '(' StringLiteral ')' SemiColon
+    ;
+
+importAll
+    : StringLiteral
     ;
 
 // Ext.2 Additions to 1.8: Decorators
@@ -372,7 +377,7 @@ abstractDeclaration
     ;
 
 importStatement
-    : Import (fromBlock | importAliasDeclaration)
+    : Import (fromBlock | importAliasDeclaration | importAll)
     ;
 
 fromBlock

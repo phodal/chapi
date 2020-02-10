@@ -784,6 +784,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterImportAll(TypeScriptParser.ImportAllContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitImportAll(TypeScriptParser.ImportAllContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDecoratorList(TypeScriptParser.DecoratorListContext ctx) { }
 	/**
 	 * {@inheritDoc}
