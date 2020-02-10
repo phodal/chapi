@@ -12,6 +12,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var codeFile: CodeFile = CodeFile(FullName = node.fileName)
 
     private var currentNode = CodeDataStruct()
+    private var defaultNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
 
@@ -73,7 +74,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 codeField.Modifiers += modifier
             }
             if (ctx.typeAnnotation() != null) {
-                codeField.TypeType = this.getTypeType(ctx.typeAnnotation())!!
+                codeField.TypeType = this.buildTypeAnnotation(ctx.typeAnnotation())!!
             }
 
             currentNode.Fields += codeField
@@ -88,7 +89,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     val callSignCtx = ctx.callSignature()
 
                     if (callSignCtx.typeAnnotation() != null) {
-                        codeFunction.ReturnType = getTypeType(callSignCtx.typeAnnotation())!!
+                        codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
                     }
 
                     currentNode.Functions += codeFunction
@@ -117,7 +118,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
 
         if (ctx.formalParameterList() != null) {
-            codeFunction.Parameters += buildParameters(ctx)
+            codeFunction.Parameters += buildParameters(ctx.formalParameterList())
         }
 
         return codeFunction
@@ -203,10 +204,38 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         codeFile.Imports += imp
     }
 
+    override fun enterFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
+        val funcName = ctx!!.Identifier().text
+        currentFunction.Name = funcName
+
+        fillMethodFromCallSignature(ctx.callSignature())
+        currentFunction.Position = this.buildPosition(ctx)
+
+        defaultNode.Functions += currentFunction
+    }
+
+    override fun exitFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
+        currentFunction = CodeFunction()
+    }
+
+    private fun fillMethodFromCallSignature(
+        callSignCtx: TypeScriptParser.CallSignatureContext
+    ) {
+        if (callSignCtx.parameterList() != null) {
+            val parameters = buildMethodParameters(callSignCtx.parameterList())
+            currentFunction.Parameters = parameters
+        }
+    }
+
     fun getNodeInfo(): CodeFile {
         for (entry in nodeMap) {
             codeFile.DataStructures += entry.value
         }
+        if (defaultNode.Functions.isNotEmpty()) {
+            defaultNode.NodeName = "default"
+            codeFile.DataStructures += defaultNode
+        }
+
         return codeFile
     }
 }

@@ -252,4 +252,19 @@ class Employee extends Person {
         assertEquals(codeFile.DataStructures[0].Functions[1].Name, "displayName")
         assertEquals(codeFile.DataStructures[0].Functions[1].ReturnType, "void")
     }
+
+    @Test
+    internal fun shouldIdentifyNormalPureFunction() {
+        val normalClassFunction = """
+function Sum(x: number, y: number) : void {
+    console.log('processNumKeyPairs: key = ' + key + ', value = ' + value)
+    return x + y;
+}
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(normalClassFunction, "")
+        assertEquals(codeFile.DataStructures[0].NodeName, "default")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "Sum")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 2)
+    }
 }
