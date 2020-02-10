@@ -308,4 +308,16 @@ interface IEmployee extends IPerson {
         assertEquals(secondFunc.MultipleReturns[0].TypeType, "string")
         assertEquals(secondFunc.Parameters[0].TypeType, "number")
     }
+
+    @Test
+    internal fun shouldIdentifyFunctionExpression() {
+        val code = """
+let greeting = function() {
+    console.log("Hello TypeScript!");
+};
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+    }
 }

@@ -288,6 +288,27 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         currentFunction = CodeFunction()
     }
 
+    override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
+        println("enterFunctionExpressionDeclaration")
+
+
+        currentFunction.Position = this.buildPosition(ctx)
+        defaultNode.Functions += currentFunction
+    }
+
+    override fun exitFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
+        currentFunction = CodeFunction()
+    }
+
+    override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
+        currentFunction.Position = this.buildPosition(ctx)
+        defaultNode.Functions += currentFunction
+    }
+
+    override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
+        currentFunction = CodeFunction()
+    }
+
     private fun fillMethodFromCallSignature(
         callSignCtx: TypeScriptParser.CallSignatureContext
     ) {
