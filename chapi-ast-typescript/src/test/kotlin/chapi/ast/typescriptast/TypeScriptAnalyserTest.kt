@@ -4,59 +4,46 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 internal class TypeScriptAnalyserTest {
-    fun String.asResource(work: (String) -> Unit) {
-        val content = this.javaClass::class.java.getResource(this).readText()
-        work(content)
-    }
-
     @Test
     internal fun shouldAnalysisTypeScriptMultipleClass() {
-        "/grammar/Class.ts".asResource {
-            val codeFile = TypeScriptAnalyser().analysis(it, "")
+        val content = this::class.java.getResource("/grammar/Class.ts").readText()
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
 
-            assertEquals(codeFile.DataStructures.size, 3)
-            assertEquals(codeFile.DataStructures[1].Implements.size, 1)
-            assertEquals(codeFile.DataStructures[1].Implements[0], "IPerson")
-            assertEquals(codeFile.DataStructures[1].Fields.size, 5)
-            assertEquals(codeFile.DataStructures[1].Fields[0].Modifiers[0], "public")
-        }
+        assertEquals(codeFile.DataStructures.size, 3)
+        assertEquals(codeFile.DataStructures[1].Implements.size, 1)
+        assertEquals(codeFile.DataStructures[1].Implements[0], "IPerson")
+        assertEquals(codeFile.DataStructures[1].Fields.size, 5)
+        assertEquals(codeFile.DataStructures[1].Fields[0].Modifiers[0], "public")
     }
 
     @Test
     internal fun shouldAnalysisTypeScriptAbstractClass() {
-        "/grammar/AbstractClass.ts".asResource {
-            val codeFile = TypeScriptAnalyser().analysis(it, "")
+        val content = this::class.java.getResource("/grammar/AbstractClass.ts").readText()
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
 
-            assertEquals(codeFile.DataStructures.size, 2)
-            assertEquals(codeFile.DataStructures[0].Type, "Class")
-            assertEquals(codeFile.DataStructures[1].NodeName, "Employee")
-            assertEquals(codeFile.DataStructures[1].Extend, "Person")
-        }
+        assertEquals(codeFile.DataStructures.size, 2)
+        assertEquals(codeFile.DataStructures[0].Type, "Class")
+        assertEquals(codeFile.DataStructures[1].NodeName, "Employee")
+        assertEquals(codeFile.DataStructures[1].Extend, "Person")
     }
 
     @Test
     internal fun shouldAnalysisTypeScriptModule() {
-        "/grammar/Module.ts".asResource {
-            val codeFile = TypeScriptAnalyser().analysis(it, "")
+        val content = this::class.java.getResource("/grammar/Module.ts").readText()
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
 
-            assertEquals(codeFile.DataStructures.size, 1)
-            assertEquals(codeFile.DataStructures[0].NodeName, "Employee")
-        }
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "Employee")
     }
 
     @Test
     internal fun shouldAnalysisTypeScriptFunctions() {
-        "/grammar/Function.ts".asResource {
-            val codeFile = TypeScriptAnalyser().analysis(it, "")
+        val content = this::class.java.getResource("/grammar/Function.ts").readText()
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
 
-            assertEquals(codeFile.DataStructures.size, 1)
-            assertEquals(codeFile.DataStructures[0].NodeName, "default")
-            val functions = codeFile.DataStructures[0].Functions
-            assertEquals(functions.size, 9) // todo: fix size
-//            assertEquals(functions[0].Name, "Sum")
-//            assertEquals(functions[1].Name, "Greet")
-//            assertEquals(functions[2].Name, "Greet2")
-//            assertEquals(functions[3].Name, "Test")
-        }
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "default")
+        val functions = codeFile.DataStructures[0].Functions
+        assertEquals(functions.size, 9)
     }
 }
