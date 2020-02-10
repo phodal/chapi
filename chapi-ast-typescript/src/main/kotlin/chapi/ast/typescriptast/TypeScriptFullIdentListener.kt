@@ -45,8 +45,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassTailContext?) {
         for (clzElementCtx in classTailCtx!!.classElement()) {
             val childCtx = clzElementCtx.getChild(0)
-            val childElementType = childCtx::class.java.simpleName
-            when (childElementType) {
+            when (val childElementType = childCtx::class.java.simpleName) {
                 "ConstructorDeclarationContext" -> {
                     val codeFunction =
                         this.buildConstructorMethod(childCtx as TypeScriptParser.ConstructorDeclarationContext)
@@ -65,10 +64,11 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private fun buildPropertyMember(ctx: TypeScriptParser.PropertyMemberDeclarationContext) {
         val isField = ctx.propertyName() != null
         if (isField) {
-            val modifier = ctx.propertyMemberBase().text
             val codeField = CodeField(
                 TypeValue = ctx.propertyName().text
             )
+
+            val modifier = ctx.propertyMemberBase().text
             if (modifier != "") {
                 codeField.Modifiers += modifier
             }
@@ -82,9 +82,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         val callSignaturePos = 3
         if (ctx.childCount >= callSignaturePos) {
             val callSignCtxPos = 2
-            val ctxType = ctx.getChild(callSignCtxPos)::class.java.simpleName
-
-            when (ctxType) {
+            when (ctx.getChild(callSignCtxPos)::class.java.simpleName) {
                 "CallSignatureContext" -> {
                     val codeFunction = buildMemberMethod(ctx)
                     currentNode.Functions += codeFunction
@@ -104,10 +102,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     private fun buildConstructorMethod(ctx: TypeScriptParser.ConstructorDeclarationContext): CodeFunction {
         val codeFunction = CodeFunction(
-            Name = "constructor"
+            Name = "constructor",
+            Position = this.buildPosition(ctx)
         )
-
-        codeFunction.Position = this.buildPosition(ctx)
 
         if (ctx.accessibilityModifier() != null) {
             codeFunction.Modifiers += ctx.accessibilityModifier().text
