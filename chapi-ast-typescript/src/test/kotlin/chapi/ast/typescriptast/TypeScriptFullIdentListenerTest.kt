@@ -86,4 +86,15 @@ class Person implements IPerson {
         assertEquals(codeFile.DataStructures[0].Implements[0], "IPerson")
     }
 
+    @Test
+    internal fun shouldIdentifyExtends() {
+        var code = """
+class Employee extends Person {
+
+}"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Extend, "Person")
+    }
+
 }

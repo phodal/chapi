@@ -36,7 +36,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
         }
 
         if (heritageCtx.classExtendsClause() != null) {
-
+            val refCtx = heritageCtx.classExtendsClause().typeReference()
+            currentNode.Extend = refCtx.typeName().text
         }
 
         classNodeStack.push(currentNode)
