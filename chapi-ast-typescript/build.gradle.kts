@@ -15,6 +15,7 @@ repositories {
 dependencies {
     // project deps
     implementation(project(":chapi-domain"))
+    implementation(project(":chapi-testing"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0") // JVM dependency
 
