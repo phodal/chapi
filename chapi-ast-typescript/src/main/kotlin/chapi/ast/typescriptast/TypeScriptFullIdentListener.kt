@@ -77,10 +77,17 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
     override fun enterFromBlock(ctx: TypeScriptParser.FromBlockContext?) {
         val importText = ctx!!.StringLiteral().text
         val imp = importText.replace("[\"']".toRegex(), "")
-
-        codeFile.Imports += CodeImport(
+        val codeImport = CodeImport(
             Source = imp
         )
+
+        if (ctx.multipleImportStatement() != null) {
+            for (nameContext in ctx.multipleImportStatement().identifierName()) {
+                codeImport.UsageName += nameContext.text
+            }
+        }
+
+        codeFile.Imports += codeImport
     }
 
     fun getNodeInfo(): CodeFile {
