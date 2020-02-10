@@ -85,6 +85,12 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             when (ctx.getChild(callSignCtxPos)::class.java.simpleName) {
                 "CallSignatureContext" -> {
                     val codeFunction = buildMemberMethod(ctx)
+                    val callSignCtx = ctx.callSignature()
+
+                    if (callSignCtx.typeAnnotation() != null) {
+                        codeFunction.ReturnType = getTypeType(callSignCtx.typeAnnotation())!!
+                    }
+
                     currentNode.Functions += codeFunction
                 }
             }

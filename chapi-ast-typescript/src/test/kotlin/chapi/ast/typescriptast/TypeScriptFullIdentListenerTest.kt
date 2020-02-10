@@ -232,7 +232,6 @@ import * as validator from "./ZipCodeValidator";
     @Test
     internal fun shouldIdentifyNormalClassFunction() {
         val normalClassFunction = """
-           
 class Employee extends Person {
     empCode: number;
     static pi: number = 3.14;
@@ -251,5 +250,6 @@ class Employee extends Person {
         val codeFile = TypeScriptAnalyser().analysis(normalClassFunction, "")
         assertEquals(codeFile.DataStructures[0].Functions.size, 2)
         assertEquals(codeFile.DataStructures[0].Functions[1].Name, "displayName")
+        assertEquals(codeFile.DataStructures[0].Functions[1].ReturnType, "void")
     }
 }
