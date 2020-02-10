@@ -6,6 +6,7 @@ import chapi.ast.antlr.TypeScriptParserBaseVisitor
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
+import domain.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptParserBaseListener() {
     private var dataStructQueue = arrayOf<CodeDataStruct>()
@@ -17,6 +18,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
     private var currentNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
+
+    private var classNodeStack = Stack<CodeDataStruct>()
+    private var methodMap = mutableMapOf<String, CodeFunction>()
 
     override fun enterClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
         val nodeName = ctx!!.Identifier().text
@@ -34,7 +38,12 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
 
         }
 
+        classNodeStack.push(currentNode)
         nodeMap[nodeName] = currentNode
+    }
+
+    override fun exitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
+        classNodeStack.pop()
     }
 
     override fun enterInterfaceDeclaration(ctx: TypeScriptParser.InterfaceDeclarationContext?) {
