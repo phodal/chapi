@@ -1,6 +1,8 @@
 rootProject.name = "chapi"
+
 include("chapi-domain")
 include("chapi-application")
+include("chapi-testing")
 
 include("chapi-ast-java")
 include("chapi-ast-typescript")
