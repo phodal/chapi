@@ -214,5 +214,9 @@ class Person implements IPerson {
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "constructor")
+        val parameters = codeFile.DataStructures[0].Functions[0].Parameters
+        assertEquals(parameters.size, 1)
+        assertEquals(parameters[0].TypeValue, "name")
+        assertEquals(parameters[0].TypeType, "string")
     }
 }

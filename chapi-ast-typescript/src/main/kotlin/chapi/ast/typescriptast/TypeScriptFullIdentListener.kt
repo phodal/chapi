@@ -1,12 +1,8 @@
 package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
-import domain.core.CodeDataStruct
-import domain.core.CodeFile
-import domain.core.CodeFunction
-import domain.core.CodeImport
+import domain.core.*
 import domain.infra.Stack
-import org.antlr.v4.runtime.ParserRuleContext
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
     private var dataStructQueue = arrayOf<CodeDataStruct>()
@@ -76,6 +72,22 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         if (ctx.accessibilityModifier() != null) {
             val modifier = ctx.accessibilityModifier().text
             codeFunction.Modifiers += modifier
+        }
+
+        if (ctx.formalParameterList() != null) {
+            for (argCtx in ctx.formalParameterList().formalParameterArg()) {
+                val typeType = this.getTypeType(argCtx.typeAnnotation())
+                val parameter = CodeProperty(
+                    TypeValue = argCtx.Identifier().text,
+                    TypeType = typeType!!
+                )
+
+                if (argCtx.accessibilityModifier() != null) {
+                    parameter.Modifiers += argCtx.accessibilityModifier().text
+                }
+
+                codeFunction.Parameters += parameter
+            }
         }
 
         return codeFunction
