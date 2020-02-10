@@ -43,4 +43,20 @@ internal class TypeScriptAnalyserTest {
             assertEquals(codeFile.DataStructures[0].NodeName, "Employee")
         }
     }
+
+    @Test
+    internal fun shouldAnalysisTypeScriptFunctions() {
+        "/grammar/Function.ts".asResource {
+            val codeFile = TypeScriptAnalyser().analysis(it, "")
+
+            assertEquals(codeFile.DataStructures.size, 1)
+            assertEquals(codeFile.DataStructures[0].NodeName, "default")
+            val functions = codeFile.DataStructures[0].Functions
+            assertEquals(functions.size, 4) // todo: fix size
+            assertEquals(functions[0].Name, "Sum")
+            assertEquals(functions[1].Name, "Greet")
+            assertEquals(functions[2].Name, "Greet2")
+            assertEquals(functions[3].Name, "Test")
+        }
+    }
 }
