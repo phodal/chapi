@@ -9,10 +9,10 @@
 Support languages (in plan):
 
  - Python
- - Java
+ - Java (done)
  - Kotlin
  - Go
- - TypeScript / JavaScript
+ - TypeScript / JavaScript (doing)
  - C / C++
 
 Todo:
@@ -20,6 +20,7 @@ Todo:
  - Migrate [Coca](https://github.com/phodal/coca) ast (doing)
  - Pluggable
  - Multiple Languages
+ - Support Oracle JDK 11 on Travis CI
 
 ## Data Structures
 
