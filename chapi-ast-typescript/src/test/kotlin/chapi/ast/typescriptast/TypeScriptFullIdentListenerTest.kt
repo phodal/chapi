@@ -40,4 +40,31 @@ class Foo {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "Foo")
     }
+
+    @Test
+    internal fun shouldIdentifyMultipleNode() {
+        var code = """
+interface IPerson {
+    name: string;
+}
+
+class Person implements IPerson {
+    public publicString: string;
+    private privateString: string;
+    protected protectedString: string;
+    readonly readonlyString: string;
+    name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 2)
+        assertEquals(codeFile.DataStructures[0].NodeName, "IPerson")
+        assertEquals(codeFile.DataStructures[1].NodeName, "Person")
+    }
+
+
 }
