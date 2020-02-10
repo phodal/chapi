@@ -31,7 +31,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
 
         val heritageCtx = ctx.classHeritage()
         if (heritageCtx.implementsClause() != null) {
-
+            val typeList = heritageCtx.implementsClause().classOrInterfaceTypeList()
+            currentNode.Implements = buildImplements(typeList)
         }
 
         if (heritageCtx.classExtendsClause() != null) {
@@ -40,6 +41,14 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
 
         classNodeStack.push(currentNode)
         nodeMap[nodeName] = currentNode
+    }
+
+    private fun buildImplements(typeList: TypeScriptParser.ClassOrInterfaceTypeListContext?): Array<String> {
+        var implements : Array<String> = arrayOf()
+        for (typeRefCtx in typeList!!.typeReference()) {
+            implements += typeRefCtx.typeName().text
+        }
+        return implements
     }
 
     override fun exitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {

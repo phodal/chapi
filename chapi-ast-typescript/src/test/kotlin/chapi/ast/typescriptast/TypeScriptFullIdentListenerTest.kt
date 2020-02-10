@@ -66,5 +66,24 @@ class Person implements IPerson {
         assertEquals(codeFile.DataStructures[1].NodeName, "Person")
     }
 
+    @Test
+    internal fun shouldIdentifyImplements() {
+        var code = """
+class Person implements IPerson {
+    public publicString: string;
+    private privateString: string;
+    protected protectedString: string;
+    readonly readonlyString: string;
+    name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Implements[0], "IPerson")
+    }
 
 }
