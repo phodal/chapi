@@ -180,4 +180,17 @@ import _ from "lodash";
         assertEquals(codeFile.Imports[1].Source, "lodash")
         assertEquals(codeFile.Imports[1].UsageName[0], "_")
     }
+
+    @Test
+    internal fun shouldIdentifyImportAs() {
+        var code = """
+import * as validator from "./ZipCodeValidator";
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "./ZipCodeValidator")
+        assertEquals(codeFile.Imports[0].UsageName[0], "validator")
+    }
 }

@@ -93,6 +93,10 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
             codeImport.UsageName += ctx.Lodash().text
         }
 
+        if (ctx.As() != null) {
+            codeImport.UsageName += ctx.identifierName().text
+        }
+
         codeFile.Imports += codeImport
     }
 
