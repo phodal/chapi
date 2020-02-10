@@ -31,6 +31,8 @@ val jacocoReports by configurations.creating {
 
 dependencies {
     jacocoReports(project("chapi-domain"))
+    jacocoReports(project("chapi-application"))
+
     jacocoReports(project("chapi-ast-java"))
     jacocoReports(project("chapi-ast-typescript"))
 

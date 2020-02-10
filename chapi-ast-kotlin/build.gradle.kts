@@ -2,10 +2,9 @@ plugins {
     java
     kotlin("jvm")
     kotlin("plugin.serialization") version "1.3.61"
-}
 
-group = "com.phodal"
-version = "1.0-SNAPSHOT"
+    `jacoco-conventions`
+}
 
 repositories {
     mavenCentral()
@@ -38,15 +37,9 @@ configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-
-    test {
-        useJUnitPlatform()
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
     }
 }
