@@ -112,4 +112,15 @@ interface IEmployee extends IPerson {
         assertEquals(codeFile.DataStructures[0].Extend, "IPerson")
     }
 
+    @Test
+    internal fun shouldReturnBlockImportsSource() {
+        var code = """
+import { ZipCodeValidator } from "./ZipCodeValidator";
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "./ZipCodeValidator")
+    }
 }

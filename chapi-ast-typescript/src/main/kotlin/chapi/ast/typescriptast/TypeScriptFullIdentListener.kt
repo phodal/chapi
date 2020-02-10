@@ -6,6 +6,7 @@ import chapi.ast.antlr.TypeScriptParserBaseVisitor
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
+import domain.core.CodeImport
 import domain.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptParserBaseListener() {
@@ -45,7 +46,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
     }
 
     private fun buildImplements(typeList: TypeScriptParser.ClassOrInterfaceTypeListContext?): Array<String> {
-        var implements : Array<String> = arrayOf()
+        var implements: Array<String> = arrayOf()
         for (typeRefCtx in typeList!!.typeReference()) {
             implements += typeRefCtx.typeName().text
         }
@@ -71,6 +72,15 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
         }
 
         nodeMap[nodeName] = currentNode
+    }
+
+    override fun enterFromBlock(ctx: TypeScriptParser.FromBlockContext?) {
+        val importText = ctx!!.StringLiteral().text
+        val imp = importText.replace("[\"']".toRegex(), "")
+
+        codeFile.Imports += CodeImport(
+            Source = imp
+        )
     }
 
     fun getNodeInfo(): CodeFile {
