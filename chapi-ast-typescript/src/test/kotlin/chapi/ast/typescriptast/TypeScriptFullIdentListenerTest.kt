@@ -96,6 +96,7 @@ class Employee extends Person {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Extend, "Person")
     }
+
     @Test
     internal fun shouldIdentifyInterfaceExtends() {
         var code = """
@@ -192,5 +193,26 @@ import * as validator from "./ZipCodeValidator";
         assertEquals(codeFile.Imports.size, 1)
         assertEquals(codeFile.Imports[0].Source, "./ZipCodeValidator")
         assertEquals(codeFile.Imports[0].UsageName[0], "validator")
+    }
+
+
+    @Test
+    internal fun shouldIdentifyClassConstructorMethod() {
+        var code = """
+class Person implements IPerson {
+    public publicString: string;
+    private privateString: string;
+    protected protectedString: string;
+    readonly readonlyString: string;
+    name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "constructor")
     }
 }

@@ -1,14 +1,14 @@
 package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
-import chapi.ast.antlr.TypeScriptParserBaseListener
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
 import domain.core.CodeImport
 import domain.infra.Stack
+import org.antlr.v4.runtime.ParserRuleContext
 
-class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptParserBaseListener() {
+class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
     private var dataStructQueue = arrayOf<CodeDataStruct>()
     private var hasEnterClass = false
 
@@ -40,8 +40,45 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
             currentNode.Extend = refCtx.typeName().text
         }
 
+        this.handleClassBodyElements(ctx.classTail())
+
         classNodeStack.push(currentNode)
         nodeMap[nodeName] = currentNode
+    }
+
+    private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassTailContext?) {
+        for (clzElementCtx in classTailCtx!!.classElement()) {
+            val childCtx = clzElementCtx.getChild(0)
+            val childElementType = childCtx::class.java.simpleName
+            when (childElementType) {
+                "ConstructorDeclarationContext" -> {
+                    val codeFunction =
+                        this.buildConstructorMethod(childCtx as TypeScriptParser.ConstructorDeclarationContext)
+                    currentNode.Functions += codeFunction
+                }
+                "PropertyMemberDeclarationContext" -> {
+                    println("PropertyMemberDeclarationContext")
+                }
+                else -> {
+                    println("handleClassBodyElements -> childElementType : $childElementType")
+                }
+            }
+        }
+    }
+
+    private fun buildConstructorMethod(ctx: TypeScriptParser.ConstructorDeclarationContext): CodeFunction {
+        val codeFunction = CodeFunction(
+            Name = "constructor"
+        )
+
+        codeFunction.Position = this.buildPosition(ctx)
+
+        if (ctx.accessibilityModifier() != null) {
+            val modifier = ctx.accessibilityModifier().text
+            codeFunction.Modifiers += modifier
+        }
+
+        return codeFunction
     }
 
     private fun buildImplements(typeList: TypeScriptParser.ClassOrInterfaceTypeListContext?): Array<String> {
