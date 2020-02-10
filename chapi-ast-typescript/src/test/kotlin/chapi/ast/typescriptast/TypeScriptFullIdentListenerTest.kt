@@ -113,7 +113,7 @@ interface IEmployee extends IPerson {
     }
 
     @Test
-    internal fun shouldReturnBlockImportsSource() {
+    internal fun shouldIdentifyBlockImportsSource() {
         var code = """
 import { ZipCodeValidator } from "./ZipCodeValidator";
 
@@ -123,5 +123,20 @@ import { ZipCodeValidator } from "./ZipCodeValidator";
         assertEquals(codeFile.Imports.size, 1)
         assertEquals(codeFile.Imports[0].Source, "./ZipCodeValidator")
         assertEquals(codeFile.Imports[0].UsageName[0], "ZipCodeValidator")
+    }
+
+    @Test
+    internal fun shouldIdentifyMultipleBlockImportsSource() {
+        var code = """
+import { ZipCodeValidator, ZipCodeGenerator } from "./ZipCodeValidator";
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "./ZipCodeValidator")
+        assertEquals(codeFile.Imports[0].UsageName.size, 2)
+        assertEquals(codeFile.Imports[0].UsageName[0], "ZipCodeValidator")
+        assertEquals(codeFile.Imports[0].UsageName[1], "ZipCodeGenerator")
     }
 }
