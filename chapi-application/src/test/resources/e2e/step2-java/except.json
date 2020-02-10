@@ -1,0 +1,656 @@
+[
+  {
+    "MultipleExtend": [],
+    "Package": "repositories",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [
+      {
+        "Position": {
+          "StartLinePosition": 12,
+          "StartLine": 7,
+          "StopLine": 7,
+          "StopLinePosition": 35
+        },
+        "Type": "field",
+        "FunctionName": "",
+        "Parameters": [],
+        "Package": "domain",
+        "NodeName": "AggregateRootA"
+      }
+    ],
+    "FilePath": "AggregateRootARepo.java",
+    "Fields": [
+      {
+        "TypeValue": "arList",
+        "Modifiers": [],
+        "TypeType": "AggregateRootA"
+      }
+    ],
+    "Imports": [
+      {
+        "Source": "domain",
+        "ImportName": "",
+        "Scope": "",
+        "AsName": "",
+        "UsageName": []
+      }
+    ],
+    "Functions": [
+      {
+        "Override": false,
+        "Position": {
+          "StartLinePosition": 148,
+          "StartLine": 8,
+          "StopLine": 10,
+          "StopLinePosition": 151
+        },
+        "extensionMap": {},
+        "Annotations": [],
+        "Extension": {},
+        "FunctionCalls": [
+          {
+            "Position": {
+              "StartLinePosition": 19,
+              "StartLine": 9,
+              "StopLine": 9,
+              "StopLinePosition": 36
+            },
+            "Type": "",
+            "FunctionName": "println",
+            "Parameters": [
+              {
+                "TypeValue": "\"saved\\n\"",
+                "TypeType": "",
+                "ReturnTypes": [],
+                "Modifiers": [],
+                "Parameters": [],
+                "ParamName": ""
+              }
+            ],
+            "Package": "repositories",
+            "NodeName": "System.out"
+          }
+        ],
+        "ReturnType": "void",
+        "InnerFunctions": [],
+        "Parameters": [
+          {
+            "TypeValue": "a",
+            "TypeType": "AggregateRootA",
+            "ReturnTypes": [],
+            "Modifiers": [],
+            "Parameters": [],
+            "ParamName": ""
+          }
+        ],
+        "InnerStructures": [],
+        "Modifiers": [],
+        "IsConstructor": false,
+        "MultipleReturns": [],
+        "Name": "save"
+      }
+    ],
+    "InnerStructures": [],
+    "Extend": "Repository",
+    "InOutProperties": [],
+    "NodeName": "AggregateRootARepo"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "repositories",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "Repository.java",
+    "Fields": [],
+    "Imports": [
+      {
+        "Source": "domain",
+        "ImportName": "",
+        "Scope": "",
+        "AsName": "",
+        "UsageName": []
+      }
+    ],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "",
+    "InOutProperties": [],
+    "NodeName": "Repository"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "Main.java",
+    "Fields": [],
+    "Imports": [
+      {
+        "Source": "domain",
+        "ImportName": "",
+        "Scope": "",
+        "AsName": "",
+        "UsageName": []
+      },
+      {
+        "Source": "gateways",
+        "ImportName": "",
+        "Scope": "",
+        "AsName": "",
+        "UsageName": []
+      },
+      {
+        "Source": "repositories",
+        "ImportName": "",
+        "Scope": "",
+        "AsName": "",
+        "UsageName": []
+      }
+    ],
+    "Functions": [
+      {
+        "Override": false,
+        "Position": {
+          "StartLinePosition": 106,
+          "StartLine": 8,
+          "StopLine": 14,
+          "StopLinePosition": 109
+        },
+        "extensionMap": {},
+        "Annotations": [],
+        "Extension": {},
+        "FunctionCalls": [
+          {
+            "Position": {
+              "StartLinePosition": 19,
+              "StartLine": 9,
+              "StopLine": 9,
+              "StopLinePosition": 33
+            },
+            "Type": "",
+            "FunctionName": "println",
+            "Parameters": [
+              {
+                "TypeValue": "\"main\"",
+                "TypeType": "",
+                "ReturnTypes": [],
+                "Modifiers": [],
+                "Parameters": [],
+                "ParamName": ""
+              }
+            ],
+            "Package": "",
+            "NodeName": "System.out"
+          },
+          {
+            "Position": {
+              "StartLinePosition": 13,
+              "StartLine": 12,
+              "StopLine": 12,
+              "StopLinePosition": 44
+            },
+            "Type": "same package",
+            "FunctionName": "save",
+            "Parameters": [
+              {
+                "TypeValue": "newAggregateRootA(router)",
+                "TypeType": "",
+                "ReturnTypes": [],
+                "Modifiers": [],
+                "Parameters": [],
+                "ParamName": ""
+              }
+            ],
+            "Package": "repositories",
+            "NodeName": "AggregateRootARepo"
+          }
+        ],
+        "ReturnType": "void",
+        "InnerFunctions": [],
+        "Parameters": [
+          {
+            "TypeValue": "args",
+            "TypeType": "String[]",
+            "ReturnTypes": [],
+            "Modifiers": [],
+            "Parameters": [],
+            "ParamName": ""
+          }
+        ],
+        "InnerStructures": [],
+        "Modifiers": [],
+        "IsConstructor": false,
+        "MultipleReturns": [],
+        "Name": "main"
+      }
+    ],
+    "InnerStructures": [],
+    "Extend": "",
+    "InOutProperties": [],
+    "NodeName": "Main"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "gateways",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "FakeRouter.java",
+    "Fields": [],
+    "Imports": [
+      {
+        "Source": "domain",
+        "ImportName": "",
+        "Scope": "",
+        "AsName": "",
+        "UsageName": []
+      }
+    ],
+    "Functions": [
+      {
+        "Override": false,
+        "Position": {
+          "StartLinePosition": 94,
+          "StartLine": 7,
+          "StopLine": 10,
+          "StopLinePosition": 99
+        },
+        "extensionMap": {},
+        "Annotations": [],
+        "Extension": {},
+        "FunctionCalls": [
+          {
+            "Position": {
+              "StartLinePosition": 19,
+              "StartLine": 8,
+              "StopLine": 8,
+              "StopLinePosition": 38
+            },
+            "Type": "",
+            "FunctionName": "println",
+            "Parameters": [
+              {
+                "TypeValue": "\"routed \\n\"",
+                "TypeType": "",
+                "ReturnTypes": [],
+                "Modifiers": [],
+                "Parameters": [],
+                "ParamName": ""
+              }
+            ],
+            "Package": "gateways",
+            "NodeName": "System.out"
+          }
+        ],
+        "ReturnType": "int",
+        "InnerFunctions": [],
+        "Parameters": [],
+        "InnerStructures": [],
+        "Modifiers": [],
+        "IsConstructor": false,
+        "MultipleReturns": [],
+        "Name": "select"
+      }
+    ],
+    "InnerStructures": [],
+    "Extend": "domain.Router",
+    "InOutProperties": [],
+    "NodeName": "FakeRouter"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "ValueObjectD.java",
+    "Fields": [],
+    "Imports": [],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "ValueObject",
+    "InOutProperties": [],
+    "NodeName": "ValueObjectD"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "ValueObject.java",
+    "Fields": [],
+    "Imports": [],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "",
+    "InOutProperties": [],
+    "NodeName": "ValueObject"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "Router.java",
+    "Fields": [],
+    "Imports": [],
+    "Functions": [
+      {
+        "Override": false,
+        "Position": {
+          "StartLinePosition": 74,
+          "StartLine": 6,
+          "StopLine": 8,
+          "StopLinePosition": 79
+        },
+        "extensionMap": {},
+        "Annotations": [],
+        "Extension": {},
+        "FunctionCalls": [],
+        "ReturnType": "int",
+        "InnerFunctions": [],
+        "Parameters": [],
+        "InnerStructures": [],
+        "Modifiers": [],
+        "IsConstructor": false,
+        "MultipleReturns": [],
+        "Name": "select"
+      }
+    ],
+    "InnerStructures": [],
+    "Extend": "Provider",
+    "InOutProperties": [],
+    "NodeName": "Router"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [
+      {
+        "Position": {
+          "StartLinePosition": 12,
+          "StartLine": 6,
+          "StopLine": 6,
+          "StopLinePosition": 28
+        },
+        "Type": "field",
+        "FunctionName": "",
+        "Parameters": [],
+        "Package": "domain",
+        "NodeName": "AggregateRootA"
+      }
+    ],
+    "FilePath": "AggregateRootB.java",
+    "Fields": [
+      {
+        "TypeValue": "a",
+        "Modifiers": [],
+        "TypeType": "AggregateRootA"
+      }
+    ],
+    "Imports": [],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "AggregateRoot",
+    "InOutProperties": [],
+    "NodeName": "AggregateRootB"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "Provider.java",
+    "Fields": [],
+    "Imports": [],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "",
+    "InOutProperties": [],
+    "NodeName": "Provider"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "EntityB.java",
+    "Fields": [
+      {
+        "TypeValue": "vo_d",
+        "Modifiers": [],
+        "TypeType": "ValueObjectD"
+      }
+    ],
+    "Imports": [],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "domain.Entity",
+    "InOutProperties": [],
+    "NodeName": "EntityB"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "ValueObjectC.java",
+    "Fields": [],
+    "Imports": [],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "ValueObject",
+    "InOutProperties": [],
+    "NodeName": "ValueObjectC"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [
+      {
+        "Position": {
+          "StartLinePosition": 12,
+          "StartLine": 6,
+          "StopLine": 6,
+          "StopLinePosition": 28
+        },
+        "Type": "field",
+        "FunctionName": "",
+        "Parameters": [],
+        "Package": "domain",
+        "NodeName": "EntityB"
+      },
+      {
+        "Position": {
+          "StartLinePosition": 12,
+          "StartLine": 8,
+          "StopLine": 8,
+          "StopLinePosition": 25
+        },
+        "Type": "field",
+        "FunctionName": "",
+        "Parameters": [],
+        "Package": "domain",
+        "NodeName": "Router"
+      },
+      {
+        "Position": {
+          "StartLinePosition": 12,
+          "StartLine": 9,
+          "StopLine": 9,
+          "StopLinePosition": 28
+        },
+        "Type": "field",
+        "FunctionName": "",
+        "Parameters": [],
+        "Package": "domain",
+        "NodeName": "AggregateRootB"
+      }
+    ],
+    "FilePath": "AggregateRootA.java",
+    "Fields": [
+      {
+        "TypeValue": "entity_b",
+        "Modifiers": [],
+        "TypeType": "EntityB"
+      },
+      {
+        "TypeValue": "vo_c",
+        "Modifiers": [],
+        "TypeType": "ValueObjectC"
+      },
+      {
+        "TypeValue": "router",
+        "Modifiers": [],
+        "TypeType": "Router"
+      },
+      {
+        "TypeValue": "b",
+        "Modifiers": [],
+        "TypeType": "AggregateRootB"
+      }
+    ],
+    "Imports": [],
+    "Functions": [
+      {
+        "Override": false,
+        "Position": {
+          "StartLinePosition": 11,
+          "StartLine": 11,
+          "StopLine": 13,
+          "StopLinePosition": 4
+        },
+        "extensionMap": {},
+        "Annotations": [],
+        "Extension": {},
+        "FunctionCalls": [],
+        "ReturnType": "",
+        "InnerFunctions": [],
+        "Parameters": [
+          {
+            "TypeValue": "router",
+            "TypeType": "Router",
+            "ReturnTypes": [],
+            "Modifiers": [],
+            "Parameters": [],
+            "ParamName": ""
+          }
+        ],
+        "InnerStructures": [],
+        "Modifiers": [],
+        "IsConstructor": true,
+        "MultipleReturns": [],
+        "Name": "AggregateRootA"
+      },
+      {
+        "Override": false,
+        "Position": {
+          "StartLinePosition": 286,
+          "StartLine": 14,
+          "StopLine": 16,
+          "StopLinePosition": 289
+        },
+        "extensionMap": {},
+        "Annotations": [],
+        "Extension": {},
+        "FunctionCalls": [
+          {
+            "Position": {
+              "StartLinePosition": 15,
+              "StartLine": 15,
+              "StopLine": 15,
+              "StopLinePosition": 22
+            },
+            "Type": "same package",
+            "FunctionName": "select",
+            "Parameters": [],
+            "Package": "domain",
+            "NodeName": "Router"
+          }
+        ],
+        "ReturnType": "void",
+        "InnerFunctions": [],
+        "Parameters": [],
+        "InnerStructures": [],
+        "Modifiers": [],
+        "IsConstructor": false,
+        "MultipleReturns": [],
+        "Name": "init"
+      }
+    ],
+    "InnerStructures": [],
+    "Extend": "AggregateRoot",
+    "InOutProperties": [],
+    "NodeName": "AggregateRootA"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "Entity.java",
+    "Fields": [],
+    "Imports": [],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "",
+    "InOutProperties": [],
+    "NodeName": "Entity"
+  },
+  {
+    "MultipleExtend": [],
+    "Package": "domain",
+    "Type": "Class",
+    "Annotations": [],
+    "Implements": [],
+    "Extension": {},
+    "FunctionCalls": [],
+    "FilePath": "AggregateRoot.java",
+    "Fields": [],
+    "Imports": [],
+    "Functions": [],
+    "InnerStructures": [],
+    "Extend": "domain.Entity",
+    "InOutProperties": [],
+    "NodeName": "AggregateRoot"
+  }
+]
