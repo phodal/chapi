@@ -85,6 +85,14 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
             }
         }
 
+        if (ctx.Dollar() != null) {
+            codeImport.UsageName += ctx.Dollar().text
+        }
+
+        if (ctx.Lodash() != null) {
+            codeImport.UsageName += ctx.Lodash().text
+        }
+
         codeFile.Imports += codeImport
     }
 

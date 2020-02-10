@@ -164,4 +164,20 @@ import "./module.js";
         assertEquals(codeFile.Imports.size, 1)
         assertEquals(codeFile.Imports[0].Source, "./module.js")
     }
+
+    @Test
+    internal fun shouldIdentifySpecificSymbol() {
+        var code = """
+import $ from "jquery";
+import _ from "lodash";
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.Imports.size, 2)
+        assertEquals(codeFile.Imports[0].Source, "jquery")
+        assertEquals(codeFile.Imports[0].UsageName[0], "$")
+        assertEquals(codeFile.Imports[1].Source, "lodash")
+        assertEquals(codeFile.Imports[1].UsageName[0], "_")
+    }
 }
