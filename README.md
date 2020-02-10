@@ -21,6 +21,7 @@ Todo:
  - Pluggable
  - Multiple Languages
  - Support Oracle JDK 11 on Travis CI
+ - SQL (refs: [antlr4-oracle](https://github.com/alris/antlr4-oracle) && [sqlgraph](https://github.com/dengdaiyemanren/sqlgraph))
 
 ## Data Structures
 
