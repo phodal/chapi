@@ -63,8 +63,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     private fun buildPropertyMember(ctx: TypeScriptParser.PropertyMemberDeclarationContext) {
-
-        if (ctx.propertyName() != null) {
+        val isField = ctx.propertyName() != null
+        if (isField) {
             val modifier = ctx.propertyMemberBase().text
             val codeField = CodeField(
                 TypeValue = ctx.propertyName().text
@@ -115,6 +115,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
 
         if (ctx.formalParameterList() != null) {
+            var parameters: Array<CodeProperty> = arrayOf()
             for (argCtx in ctx.formalParameterList().formalParameterArg()) {
                 val typeType = this.getTypeType(argCtx.typeAnnotation())
                 val parameter = CodeProperty(
@@ -126,8 +127,10 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     parameter.Modifiers += argCtx.accessibilityModifier().text
                 }
 
-                codeFunction.Parameters += parameter
+                parameters += parameter
             }
+
+            codeFunction.Parameters += parameters
         }
 
         return codeFunction
