@@ -65,6 +65,11 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
             NodeName = nodeName
         )
 
+        if (ctx.interfaceExtendsClause() != null) {
+            val elements = buildImplements(ctx.interfaceExtendsClause().classOrInterfaceTypeList())
+            currentNode.Extend = elements[0]
+        }
+
         nodeMap[nodeName] = currentNode
     }
 

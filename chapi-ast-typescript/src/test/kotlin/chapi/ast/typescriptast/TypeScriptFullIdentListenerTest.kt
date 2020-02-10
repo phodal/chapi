@@ -87,7 +87,7 @@ class Person implements IPerson {
     }
 
     @Test
-    internal fun shouldIdentifyExtends() {
+    internal fun shouldIdentifyClassExtends() {
         var code = """
 class Employee extends Person {
 
@@ -95,6 +95,21 @@ class Employee extends Person {
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Extend, "Person")
+    }
+    @Test
+    internal fun shouldIdentifyInterfaceExtends() {
+        var code = """
+interface IEmployee extends IPerson {
+    empCode: number;
+    readonly empName: string;
+    empDept?:string;
+    getSalary: (number) => number; // arrow function
+    getManagerName(number): string;
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Extend, "IPerson")
     }
 
 }
