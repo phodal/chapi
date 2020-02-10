@@ -110,27 +110,11 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         codeFunction.Position = this.buildPosition(ctx)
 
         if (ctx.accessibilityModifier() != null) {
-            val modifier = ctx.accessibilityModifier().text
-            codeFunction.Modifiers += modifier
+            codeFunction.Modifiers += ctx.accessibilityModifier().text
         }
 
         if (ctx.formalParameterList() != null) {
-            var parameters: Array<CodeProperty> = arrayOf()
-            for (argCtx in ctx.formalParameterList().formalParameterArg()) {
-                val typeType = this.getTypeType(argCtx.typeAnnotation())
-                val parameter = CodeProperty(
-                    TypeValue = argCtx.Identifier().text,
-                    TypeType = typeType!!
-                )
-
-                if (argCtx.accessibilityModifier() != null) {
-                    parameter.Modifiers += argCtx.accessibilityModifier().text
-                }
-
-                parameters += parameter
-            }
-
-            codeFunction.Parameters += parameters
+            codeFunction.Parameters += buildParameters(ctx)
         }
 
         return codeFunction
