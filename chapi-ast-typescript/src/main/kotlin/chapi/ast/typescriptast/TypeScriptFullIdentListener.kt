@@ -2,7 +2,6 @@ package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
 import chapi.ast.antlr.TypeScriptParserBaseListener
-import chapi.ast.antlr.TypeScriptParserBaseVisitor
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
@@ -75,8 +74,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
     }
 
     override fun enterFromBlock(ctx: TypeScriptParser.FromBlockContext?) {
-        val importText = ctx!!.StringLiteral().text
-        val imp = importText.replace("[\"']".toRegex(), "")
+        val imp = removeQuote(ctx!!.StringLiteral().text)
         val codeImport = CodeImport(
             Source = imp
         )
@@ -85,6 +83,21 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
             for (nameContext in ctx.multipleImportStatement().identifierName()) {
                 codeImport.UsageName += nameContext.text
             }
+        }
+
+        codeFile.Imports += codeImport
+    }
+
+    private fun removeQuote(text: String): String = text.replace("[\"']".toRegex(), "")
+
+    override fun enterImportAliasDeclaration(ctx: TypeScriptParser.ImportAliasDeclarationContext?) {
+        val imp = removeQuote(ctx!!.StringLiteral().text)
+        val codeImport = CodeImport(
+            Source = imp
+        )
+
+        if (ctx.Require() != null) {
+            codeImport.UsageName += ctx.Identifier().text
         }
 
         codeFile.Imports += codeImport
