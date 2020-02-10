@@ -103,6 +103,15 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptPars
         codeFile.Imports += codeImport
     }
 
+    override fun enterImportAll(ctx: TypeScriptParser.ImportAllContext?) {
+        val source = removeQuote(ctx!!.StringLiteral().text)
+        val imp = CodeImport(
+            Source = source
+        )
+
+        codeFile.Imports += imp
+    }
+
     fun getNodeInfo(): CodeFile {
         for (entry in nodeMap) {
             codeFile.DataStructures += entry.value

@@ -152,4 +152,16 @@ import zip = require("./ZipCodeValidator");
         assertEquals(codeFile.Imports[0].Source, "./ZipCodeValidator")
         assertEquals(codeFile.Imports[0].UsageName[0], "zip")
     }
+
+    @Test
+    internal fun shouldIdentifyImportAll() {
+        var code = """
+import "./module.js";
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "./module.js")
+    }
 }
