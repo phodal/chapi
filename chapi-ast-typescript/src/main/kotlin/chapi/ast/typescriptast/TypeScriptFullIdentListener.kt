@@ -53,12 +53,29 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     currentNode.Functions += codeFunction
                 }
                 "PropertyMemberDeclarationContext" -> {
-                    println("PropertyMemberDeclarationContext")
+                    this.buildPropertyMember(childCtx as TypeScriptParser.PropertyMemberDeclarationContext)
                 }
                 else -> {
                     println("handleClassBodyElements -> childElementType : $childElementType")
                 }
             }
+        }
+    }
+
+    private fun buildPropertyMember(ctx: TypeScriptParser.PropertyMemberDeclarationContext) {
+        if (ctx.propertyName() != null) {
+            val modifier = ctx.propertyMemberBase().text
+            val codeField = CodeField(
+                TypeValue = ctx.propertyName().text
+            )
+            if (modifier != "") {
+                codeField.Modifiers += modifier
+            }
+            if (ctx.typeAnnotation() != null) {
+                codeField.TypeType = this.getTypeType(ctx.typeAnnotation())!!
+            }
+
+            currentNode.Fields += codeField
         }
     }
 
