@@ -228,4 +228,28 @@ import * as validator from "./ZipCodeValidator";
         assertEquals(codeFile.DataStructures[0].Fields[1].TypeType, "string")
         assertEquals(codeFile.DataStructures[0].Fields[4].Modifiers.size, 0)
     }
+
+    @Test
+    internal fun shouldIdentifyNormalClassFunction() {
+        val normalClassFunction = """
+           
+class Employee extends Person {
+    empCode: number;
+    static pi: number = 3.14;
+
+    constructor(empcode: number, name:string) {
+        super(name);
+        this.empCode = empcode;
+    }
+
+    displayName():void {
+        console.log("Name = " + this.name +  ", Employee Code = " + this.empCode);
+    }
+} 
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(normalClassFunction, "")
+        assertEquals(codeFile.DataStructures[0].Functions.size, 2)
+        assertEquals(codeFile.DataStructures[0].Functions[1].Name, "displayName")
+    }
 }

@@ -63,6 +63,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     private fun buildPropertyMember(ctx: TypeScriptParser.PropertyMemberDeclarationContext) {
+
         if (ctx.propertyName() != null) {
             val modifier = ctx.propertyMemberBase().text
             val codeField = CodeField(
@@ -77,6 +78,28 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
             currentNode.Fields += codeField
         }
+
+        val callSignaturePos = 3
+        if (ctx.childCount >= callSignaturePos) {
+            val callSignCtxPos = 2
+            val ctxType = ctx.getChild(callSignCtxPos)::class.java.simpleName
+
+            when (ctxType) {
+                "CallSignatureContext" -> {
+                    val codeFunction = buildMemberMethod(ctx)
+                    currentNode.Functions += codeFunction
+                }
+            }
+        }
+    }
+
+    private fun buildMemberMethod(ctx: TypeScriptParser.PropertyMemberDeclarationContext): CodeFunction {
+        val codeFunction = CodeFunction(
+            Name = ctx.propertyName().text,
+            Position = this.buildPosition(ctx)
+        )
+
+        return codeFunction
     }
 
     private fun buildConstructorMethod(ctx: TypeScriptParser.ConstructorDeclarationContext): CodeFunction {
