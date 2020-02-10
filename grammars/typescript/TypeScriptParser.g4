@@ -299,7 +299,7 @@ namespaceName
 
 importAliasDeclaration
     : Identifier '=' namespaceName SemiColon
-    | Identifier '=' 'require' '(' StringLiteral ')' SemiColon
+    | Identifier '=' Require '(' StringLiteral ')' SemiColon
     ;
 
 importAll

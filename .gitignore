@@ -28,4 +28,3 @@ build
 !gradle-wrapper.jar
 **/gen
 **/out
-**/src/main/java/chapi/ast/antlr/**
