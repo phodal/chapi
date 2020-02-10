@@ -282,4 +282,30 @@ export interface IPerson {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Fields.size, 2)
     }
+
+    @Test
+    internal fun shouldIdentifyInterfacePropertyFunction() {
+        val code = """
+interface IEmployee extends IPerson {
+    empCode: number;
+    readonly empName: string;
+    empDept?:string;
+    getSalary: (number) => number; // arrow function
+    getManagerName(number): string;
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Fields.size, 3)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 2)
+
+        val firstFunc = codeFile.DataStructures[0].Functions[0]
+        assertEquals(firstFunc.Name, "getSalary")
+        assertEquals(firstFunc.MultipleReturns[0].TypeType, "number")
+        assertEquals(firstFunc.Parameters[0].TypeType, "number")
+
+        val secondFunc = codeFile.DataStructures[0].Functions[1]
+        assertEquals(secondFunc.Name, "getManagerName")
+        assertEquals(secondFunc.MultipleReturns[0].TypeType, "string")
+        assertEquals(secondFunc.Parameters[0].TypeType, "number")
+    }
 }

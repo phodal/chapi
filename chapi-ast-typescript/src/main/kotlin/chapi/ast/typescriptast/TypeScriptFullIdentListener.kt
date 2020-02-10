@@ -158,18 +158,29 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         nodeMap[nodeName] = currentNode
     }
 
+    override fun exitInterfaceDeclaration(ctx: TypeScriptParser.InterfaceDeclarationContext?) {
+        currentNode = CodeDataStruct()
+    }
 
     fun buildInterfaceBody(typeMemberList: TypeScriptParser.TypeMemberListContext?) {
         for (memberContext in typeMemberList!!.typeMember()) {
             val memberChild = memberContext.getChild(0)
             val childType = memberChild::class.java.simpleName
 
-            when(childType) {
+            when (childType) {
                 "PropertySignaturContext" -> {
                     buildInterfacePropertySignature(memberChild as TypeScriptParser.PropertySignaturContext)
                 }
                 "MethodSignatureContext" -> {
+                    val methodSignCtx = memberChild as TypeScriptParser.MethodSignatureContext
+                    currentFunction = CodeFunction(
+                        Name = methodSignCtx.propertyName().text
+                    )
 
+                    fillMethodFromCallSignature(methodSignCtx.callSignature())
+
+                    currentNode.Functions += currentFunction
+                    currentFunction = CodeFunction()
                 }
                 else -> {
                     println("enterInterfaceDeclaration -> buildInterfaceBody")

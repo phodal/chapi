@@ -38,7 +38,29 @@ open class TypeScriptAstListener() : TypeScriptParserBaseListener() {
     }
 
     fun buildTypeAnnotation(typeAnnotation: TypeScriptParser.TypeAnnotationContext?): String? {
-        return typeAnnotation!!.type_().text
+        val typeContext = typeAnnotation!!.type_()
+
+        var type = typeContext.text
+        when (typeContext.getChild(0)::class.java.simpleName) {
+            "PrimaryContext" -> {
+                type = handleTypeAnnotationPrimary(typeContext, type)
+            }
+        }
+        return type
+    }
+
+    private fun handleTypeAnnotationPrimary(typeContext: TypeScriptParser.Type_Context, typ: String?): String? {
+        var typeStr = typ
+        val primaryContext = typeContext.getChild(0) as TypeScriptParser.PrimaryContext
+        val childPrimaryCtx = primaryContext.getChild(0)
+
+        when (childPrimaryCtx::class.java.simpleName) {
+            "ParenthesizedPrimTypeContext" -> {
+                val parentCtx = childPrimaryCtx as TypeScriptParser.ParenthesizedPrimTypeContext
+                typeStr = parentCtx.type_().text
+            }
+        }
+        return typeStr
     }
 
     fun buildMethodParameters(paramListCtx: TypeScriptParser.ParameterListContext?): Array<CodeProperty> {
@@ -60,10 +82,11 @@ open class TypeScriptAstListener() : TypeScriptParserBaseListener() {
             }
             "PredefinedTypeContext" -> {
                 val predefinedTypeContext = childNode as TypeScriptParser.PredefinedTypeContext
-                CodeProperty(
+                val predefinedType = CodeProperty(
                     TypeValue = "any",
                     TypeType = predefinedTypeContext.text
                 )
+                parameters += predefinedType
             }
             else -> {
                 println("enterFunctionDeclaration -> TypeScriptAstListener::buildMethodParameters")
