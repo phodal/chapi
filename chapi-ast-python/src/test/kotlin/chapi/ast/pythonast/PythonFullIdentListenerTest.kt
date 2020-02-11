@@ -103,4 +103,18 @@ def printinfo( name, age = 35):
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[1].TypeValue, "age")
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[1].DefaultValue, "35")
     }
+    @Test
+    internal fun shouldIdentifyClassAnnotation() {
+        val code = """
+@decorator
+class foo:
+    pass
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].NodeName, "foo")
+        assertEquals(codeFile.DataStructures[0].Annotations.size, 1)
+        assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "decorator")
+    }
 }

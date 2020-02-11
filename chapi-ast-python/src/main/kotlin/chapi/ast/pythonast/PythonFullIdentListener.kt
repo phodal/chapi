@@ -26,6 +26,11 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
                 currentNode.MultipleExtend += argumentContext.text
             }
         }
+
+        val ctxIndex = this.getNodeIndex(ctx)
+        if (ctxIndex > 0) {
+            currentNode.Annotations = this.buildAnnotationsByIndex(ctx, ctxIndex)
+        }
     }
 
     override fun exitClassdef(ctx: PythonParser.ClassdefContext?) {
