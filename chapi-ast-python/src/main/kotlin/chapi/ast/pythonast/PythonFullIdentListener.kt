@@ -15,6 +15,12 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         currentNode = CodeDataStruct(
             NodeName = ctx!!.name().text
         )
+
+        if (ctx.arglist() != null) {
+            for (argumentContext in ctx.arglist().argument()) {
+                currentNode.MultipleExtend += argumentContext.text
+            }
+        }
     }
 
     override fun exitClassdef(ctx: PythonParser.ClassdefContext?) {

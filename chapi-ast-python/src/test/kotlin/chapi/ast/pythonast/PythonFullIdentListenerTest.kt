@@ -25,4 +25,19 @@ internal class PythonFullIdentListenerTest {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "foo")
     }
+
+    @Test
+    internal fun shouldIdentClassInheritance() {
+        val code = """
+class Student(Person):
+    pass
+        """
+        val codeFile = PythonAnalyser().analysis(code, "")
+
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "Student")
+        assertEquals(codeFile.DataStructures[0].MultipleExtend.size, 1)
+        assertEquals(codeFile.DataStructures[0].Extend, "")
+        assertEquals(codeFile.DataStructures[0].MultipleExtend[0], "Person")
+    }
 }
