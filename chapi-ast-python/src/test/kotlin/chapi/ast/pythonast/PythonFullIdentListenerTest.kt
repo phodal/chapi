@@ -84,4 +84,23 @@ async def show(str):
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[0].TypeValue, "str")
     }
+
+    @Test
+    internal fun shouldIdentFuncParametersInitValue() {
+        val code = """
+def printinfo( name, age = 35):
+   "This prints a passed info into this function"
+   print "Name: ", name
+   print "Age ", age
+   return;
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].NodeName, "default")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "printinfo")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 2)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[0].TypeValue, "name")
+//        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[1].TypeValue, "age")
+    }
 }
