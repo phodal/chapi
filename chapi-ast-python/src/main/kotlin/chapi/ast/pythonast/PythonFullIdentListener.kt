@@ -11,6 +11,9 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
 
     private var currentNode: CodeDataStruct = CodeDataStruct()
+    private var defaultNode: CodeDataStruct = CodeDataStruct(
+        NodeName = "default"
+    )
 
     override fun enterClassdef(ctx: PythonParser.ClassdefContext?) {
         hasEnterClass = true
@@ -39,11 +42,16 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     }
 
     override fun exitFuncdef(ctx: PythonParser.FuncdefContext?) {
-        currentNode.Functions += currentFunction
+        if (currentNode.NodeName == "") {
+            defaultNode.Functions += currentFunction
+        } else {
+            currentNode.Functions += currentFunction
+        }
         currentFunction = CodeFunction()
     }
 
     fun getNodeInfo(): CodeFile {
+        this.codeFile.DataStructures += defaultNode
         return this.codeFile
     }
 }

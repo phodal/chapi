@@ -56,4 +56,17 @@ class MyServer(IInterface):
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "show")
     }
+
+    @Test
+    internal fun shouldPutFuncToDefaultWhenNoNode() {
+        val code = """
+def show(self):
+    print('Hello, World 2!')
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].NodeName, "default")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "show")
+    }
 }
