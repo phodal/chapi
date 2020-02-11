@@ -1,17 +1,29 @@
 package chapi.ast.pythonast
 
 import chapi.ast.antlr.PythonParser
+import domain.core.CodeDataStruct
 import domain.core.CodeFile
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
+    private var hasEnterClass = false
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
-    private var pythonVersion: String = ""
 
-    override fun enterClass_or_func_def_stmt(ctx: PythonParser.Class_or_func_def_stmtContext?) {
-        super.enterClass_or_func_def_stmt(ctx)
+    private var currentNode: CodeDataStruct = CodeDataStruct()
+
+    override fun enterClassdef(ctx: PythonParser.ClassdefContext?) {
+        hasEnterClass = true
+        currentNode = CodeDataStruct(
+            NodeName = ctx!!.name().text
+        )
     }
 
-    fun getNodeInfo() {
+    override fun exitClassdef(ctx: PythonParser.ClassdefContext?) {
+        hasEnterClass = false
+        codeFile.DataStructures += currentNode
+        currentNode = CodeDataStruct()
+    }
 
+    fun getNodeInfo(): CodeFile {
+        return this.codeFile
     }
 }
