@@ -32,7 +32,7 @@ internal class PythonFullIdentListenerTest {
 class Student(Person):
     pass
 
-        """
+"""
         val codeFile = PythonAnalyser().analysis(code, "")
 
         assertEquals(codeFile.DataStructures.size, 1)
@@ -49,7 +49,7 @@ class MyServer(IInterface):
     def show(self):
         print('Hello, World 2!')
 
-        """
+"""
 
         val codeFile = PythonAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
