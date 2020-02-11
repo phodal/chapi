@@ -35,8 +35,21 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     }
 
     override fun enterFrom_stmt(ctx: PythonParser.From_stmtContext?) {
-        super.enterFrom_stmt(ctx)
-        println("super.enterFrom_stmt(ctx)")
+        var sourceName = ""
+        if (ctx!!.dotted_name() != null) {
+            sourceName = ctx.dotted_name().text
+        }
+
+        val codeImport = CodeImport(
+            Source = sourceName
+        )
+
+        for (importAsNameCtx in ctx.import_as_names().import_as_name()) {
+            val usageName = importAsNameCtx.name()[0].text
+            codeImport.UsageName += usageName
+        }
+
+        codeFile.Imports += codeImport
     }
 
     override fun enterClassdef(ctx: PythonParser.ClassdefContext?) {
