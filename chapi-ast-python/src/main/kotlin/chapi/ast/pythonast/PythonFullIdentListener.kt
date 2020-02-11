@@ -37,7 +37,12 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     override fun enterFrom_stmt(ctx: PythonParser.From_stmtContext?) {
         var sourceName = ""
         if (ctx!!.dotted_name() != null) {
-            sourceName = ctx.dotted_name().text
+            if (ctx.import_dot_ellipsis() != null) {
+                sourceName = ctx.getChild(1).text
+            }
+            sourceName += ctx.dotted_name().text
+        } else {
+            sourceName = ctx.getChild(1).text
         }
 
         val codeImport = CodeImport(

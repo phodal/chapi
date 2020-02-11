@@ -213,7 +213,7 @@ from . import bar
         val codeFile = PythonAnalyser().analysis(code, "")
 
         assertEquals(codeFile.Imports.size, 1)
-//        assertEquals(codeFile.Imports[0].Source, ".")
+        assertEquals(codeFile.Imports[0].Source, ".")
         assertEquals(codeFile.Imports[0].UsageName[0], "bar")
     }
 }
