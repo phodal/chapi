@@ -339,4 +339,14 @@ let SumAnon = function(x: number, y: number) : number
         assertEquals(functions[0].Parameters[1].TypeValue, "y")
         assertEquals(functions[0].MultipleReturns[0].TypeType, "number")
     }
+
+    @Test
+    internal fun shouldIdentifyArrayFunction() {
+        val code = """
+let Print = () => console.log("Hello TypeScript");
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        val functions = codeFile.DataStructures[0].Functions
+        assertEquals(functions.size, 1)
+    }
 }
