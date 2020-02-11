@@ -321,4 +321,22 @@ let greeting = function() {
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "greeting")
     }
+
+    @Test
+    internal fun shouldIdentifyFunctionExpressionParameterAndReturnType() {
+        val code = """
+let SumAnon = function(x: number, y: number) : number
+{
+    return x + y;
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        val functions = codeFile.DataStructures[0].Functions
+        assertEquals(functions[0].Parameters.size, 2)
+        assertEquals(functions[0].Parameters[0].TypeType, "number")
+        assertEquals(functions[0].Parameters[0].TypeValue, "x")
+        assertEquals(functions[0].Parameters[1].TypeType, "number")
+        assertEquals(functions[0].Parameters[1].TypeValue, "y")
+        assertEquals(functions[0].MultipleReturns[0].TypeType, "number")
+    }
 }
