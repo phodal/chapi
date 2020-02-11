@@ -60,13 +60,14 @@ class MyServer(IInterface):
     @Test
     internal fun shouldPutFuncToDefaultWhenNoNode() {
         val code = """
-def show(self):
-    print('Hello, World 2!')
+async def show(str):
+    print(str)
 
 """
 
         val codeFile = PythonAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures[0].NodeName, "default")
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "show")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Modifiers[0], "async")
     }
 }

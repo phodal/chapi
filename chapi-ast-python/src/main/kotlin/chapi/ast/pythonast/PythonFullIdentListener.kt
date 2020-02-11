@@ -39,6 +39,10 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         currentFunction = CodeFunction(
             Name = funcName
         )
+
+        if (ctx.ASYNC() != null) {
+            currentFunction.Modifiers += ctx.ASYNC().text
+        }
     }
 
     override fun exitFuncdef(ctx: PythonParser.FuncdefContext?) {
