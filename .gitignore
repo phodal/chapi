@@ -28,3 +28,4 @@ build
 !gradle-wrapper.jar
 **/gen
 **/out
+venv/
