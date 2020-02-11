@@ -406,7 +406,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     val argsCtx = singleExprCtx as TypeScriptParser.ArgumentsExpressionContext
                     codeCall.Parameters = this.buildArguments(argsCtx.arguments())
                     codeCall.FunctionName = buildFunctionName(argsCtx)
-                    codeCall.NodeName = wrapNodeName(argsCtx)
+                    codeCall.NodeName = wrapTargetType(argsCtx)
 
                     currentFunction.FunctionCalls += codeCall
                 }
@@ -419,10 +419,16 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     private fun buildFunctionName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
-        return argsCtx.singleExpression().text
+        var text = argsCtx.singleExpression().text
+        if (text.contains(".")) {
+            var split = text.split(".")
+            text = split[split.size - 1]
+        }
+
+        return text
     }
 
-    private fun wrapNodeName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
+    private fun wrapTargetType(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
         var text = argsCtx.singleExpression().text
         if (text.contains(".")) {
             text = text.split(".")[0]

@@ -393,7 +393,8 @@ function helloworld() {
         assertEquals(codeFile.DataStructures.size, 1)
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)
-        assertEquals(functionCalls[0].FunctionName, "console.log")
+        assertEquals(functionCalls[0].FunctionName, "log")
+//        assertEquals(functionCalls[0].NodeName, "console")
         assertEquals(functionCalls[0].Parameters[0].TypeValue, "\"hello, world\"")
     }
 
@@ -409,7 +410,7 @@ function testNew() {
         assertEquals(codeFile.DataStructures.size, 1)
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)
-        assertEquals(functionCalls[0].FunctionName, "emp.display")
+        assertEquals(functionCalls[0].FunctionName, "display")
         assertEquals(functionCalls[0].NodeName, "Employee")
     }
 }
