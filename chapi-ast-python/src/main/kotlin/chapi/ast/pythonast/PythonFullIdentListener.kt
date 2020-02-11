@@ -3,8 +3,10 @@ package chapi.ast.pythonast
 import chapi.ast.antlr.PythonParser
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
+import domain.core.CodeFunction
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
+    private var currentFunction: CodeFunction = CodeFunction()
     private var hasEnterClass = false
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
 
@@ -27,6 +29,18 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         hasEnterClass = false
         codeFile.DataStructures += currentNode
         currentNode = CodeDataStruct()
+    }
+
+    override fun enterFuncdef(ctx: PythonParser.FuncdefContext?) {
+        val funcName = ctx!!.name().text
+        currentFunction = CodeFunction(
+            Name = funcName
+        )
+    }
+
+    override fun exitFuncdef(ctx: PythonParser.FuncdefContext?) {
+        currentNode.Functions += currentFunction
+        currentFunction = CodeFunction()
     }
 
     fun getNodeInfo(): CodeFile {

@@ -31,6 +31,7 @@ internal class PythonFullIdentListenerTest {
         val code = """
 class Student(Person):
     pass
+
         """
         val codeFile = PythonAnalyser().analysis(code, "")
 
@@ -39,5 +40,20 @@ class Student(Person):
         assertEquals(codeFile.DataStructures[0].MultipleExtend.size, 1)
         assertEquals(codeFile.DataStructures[0].Extend, "")
         assertEquals(codeFile.DataStructures[0].MultipleExtend[0], "Person")
+    }
+
+    @Test
+    internal fun shouldIdentClassMethodName() {
+        val code = """
+class MyServer(IInterface):
+    def show(self):
+        print('Hello, World 2!')
+
+        """
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "show")
     }
 }
