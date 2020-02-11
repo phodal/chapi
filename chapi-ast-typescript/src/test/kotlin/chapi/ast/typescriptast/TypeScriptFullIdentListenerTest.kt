@@ -367,4 +367,18 @@ let sumArrow = (x: number, y: number): number => {
         assertEquals(functions[0].Parameters[1].TypeValue, "y")
         assertEquals(functions[0].MultipleReturns[0].TypeType, "number")
     }
+
+    @Test
+    internal fun shouldIdentifyNameSpaceAsPackage() {
+        val code = """
+export namespace Polygons {
+    export class Triangle { }
+    export class Square { }
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 2)
+        assertEquals(codeFile.DataStructures[0].Package, "Polygons")
+        assertEquals(codeFile.DataStructures[1].Package, "Polygons")
+    }
 }

@@ -15,15 +15,25 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var defaultNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
+    private var namespaceName : String = ""
 
     private var classNodeStack = Stack<CodeDataStruct>()
     private var methodMap = mutableMapOf<String, CodeFunction>()
+
+    override fun enterNamespaceDeclaration(ctx: TypeScriptParser.NamespaceDeclarationContext?) {
+        this.namespaceName = ctx!!.namespaceName().text
+    }
+
+    override fun exitNamespaceDeclaration(ctx: TypeScriptParser.NamespaceDeclarationContext?) {
+        this.namespaceName = ""
+    }
 
     override fun enterClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
         val nodeName = ctx!!.Identifier().text
         currentNode = CodeDataStruct(
             Type = "Class",
-            NodeName = nodeName
+            NodeName = nodeName,
+            Package = this.namespaceName
         )
 
         val heritageCtx = ctx.classHeritage()
@@ -142,7 +152,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
         currentNode = CodeDataStruct(
             Type = currentType,
-            NodeName = nodeName
+            NodeName = nodeName,
+            Package = this.namespaceName
         )
 
         if (ctx.interfaceExtendsClause() != null) {
