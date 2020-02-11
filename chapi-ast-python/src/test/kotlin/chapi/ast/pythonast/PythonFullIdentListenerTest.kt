@@ -172,4 +172,18 @@ def bar(low,high):
         assertEquals(firstFunc.Annotations[1].Name, "returns")
         assertEquals(firstFunc.Annotations[1].KeyValues[0].Key, "float")
     }
+
+    @Test
+    internal fun shouldIdentImportDottedName() {
+        val code = """
+import collections.abc
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "collections.abc")
+        assertEquals(codeFile.Imports[0].UsageName.size, 0)
+    }
 }

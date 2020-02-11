@@ -4,6 +4,7 @@ import chapi.ast.antlr.PythonParser
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
+import domain.core.CodeImport
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     private var currentFunction: CodeFunction = CodeFunction()
@@ -14,6 +15,29 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     private var defaultNode: CodeDataStruct = CodeDataStruct(
         NodeName = "default"
     )
+
+    override fun enterImport_stmt(ctx: PythonParser.Import_stmtContext?) {
+        val dotNames = ctx!!.dotted_as_names().dotted_as_name()
+        val firstNameCtx = dotNames[0]
+
+        var codeImport = CodeImport(
+            Source = firstNameCtx.dotted_name().text
+        )
+        if (firstNameCtx.name() != null) {
+            codeImport.UsageName += firstNameCtx.name().text
+        }
+
+        for (i in 1 until dotNames.size - 1) {
+            codeImport.UsageName += dotNames[i].text
+        }
+
+        codeFile.Imports += codeImport
+    }
+
+    override fun enterFrom_stmt(ctx: PythonParser.From_stmtContext?) {
+        super.enterFrom_stmt(ctx)
+        println("super.enterFrom_stmt(ctx)")
+    }
 
     override fun enterClassdef(ctx: PythonParser.ClassdefContext?) {
         hasEnterClass = true
