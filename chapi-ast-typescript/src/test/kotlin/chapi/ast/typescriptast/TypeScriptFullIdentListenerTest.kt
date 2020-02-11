@@ -310,7 +310,7 @@ interface IEmployee extends IPerson {
     }
 
     @Test
-    internal fun shouldIdentifyFunctionExpression() {
+    internal fun shouldIdentifyFunctionExpressionFunction() {
         val code = """
 let greeting = function() {
     console.log("Hello TypeScript!");
@@ -319,5 +319,6 @@ let greeting = function() {
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "greeting")
     }
 }

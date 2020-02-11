@@ -289,8 +289,23 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
-        println("enterFunctionExpressionDeclaration")
+        val statementParent = ctx!!.parent.parent
+        when (statementParent::class.java.simpleName) {
+            "VariableDeclarationContext" -> {
+                val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
+                currentFunction.Name = varDeclCtx.Identifier().text
+                if (ctx.formalParameterList() != null) {
+                    currentFunction.Parameters = this.buildParameters(ctx.formalParameterList())
+                }
 
+                if (ctx.typeAnnotation() != null) {
+                    currentFunction.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
+                }
+            }
+            else -> {
+                println("enterFunctionExpressionDeclaration -> ")
+            }
+        }
 
         currentFunction.Position = this.buildPosition(ctx)
         defaultNode.Functions += currentFunction
@@ -318,15 +333,22 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
 
         if (callSignCtx.typeAnnotation() != null) {
-            val typeAnnotation = buildTypeAnnotation(callSignCtx.typeAnnotation())
-
-            val returnType = CodeProperty(
-                TypeType = typeAnnotation!!,
-                TypeValue = ""
-            )
+            val returnType = buildReturnTypeByType(callSignCtx.typeAnnotation())
 
             currentFunction.MultipleReturns += returnType
         }
+    }
+
+    private fun buildReturnTypeByType(
+        typeAnnotationContext: TypeScriptParser.TypeAnnotationContext?
+    ): CodeProperty {
+        val typeAnnotation = buildTypeAnnotation(typeAnnotationContext)
+
+        val returnType = CodeProperty(
+            TypeType = typeAnnotation!!,
+            TypeValue = ""
+        )
+        return returnType
     }
 
     fun getNodeInfo(): CodeFile {
