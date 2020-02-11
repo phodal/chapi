@@ -4,6 +4,7 @@ import chapi.ast.antlr.PythonParser
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
+import domain.core.CodeProperty
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     private var currentFunction: CodeFunction = CodeFunction()
@@ -42,6 +43,10 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
 
         if (ctx.ASYNC() != null) {
             currentFunction.Modifiers += ctx.ASYNC().text
+        }
+
+        if (ctx.typedargslist() != null) {
+            currentFunction.Parameters = this.buildParameters(ctx)
         }
     }
 
