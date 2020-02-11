@@ -27,7 +27,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
             codeImport.UsageName += firstNameCtx.name().text
         }
 
-        for (i in 1 until dotNames.size - 1) {
+        for (i in 1 until dotNames.size) {
             codeImport.UsageName += dotNames[i].text
         }
 

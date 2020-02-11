@@ -186,4 +186,19 @@ import collections.abc
         assertEquals(codeFile.Imports[0].Source, "collections.abc")
         assertEquals(codeFile.Imports[0].UsageName.size, 0)
     }
+    @Test
+    internal fun shouldIdentImportAs() {
+        val code = """
+import collections.abc as ss, itertools
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "collections.abc")
+        assertEquals(codeFile.Imports[0].UsageName.size, 2)
+        assertEquals(codeFile.Imports[0].UsageName[0], "ss")
+        assertEquals(codeFile.Imports[0].UsageName[1], "itertools")
+    }
 }
