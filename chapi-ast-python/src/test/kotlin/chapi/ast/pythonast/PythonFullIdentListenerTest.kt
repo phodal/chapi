@@ -6,18 +6,14 @@ import org.junit.jupiter.api.Test
 internal class PythonFullIdentListenerTest {
     @Test
     internal fun shouldAnalysisPython2() {
-        val python2HelloWorld = """
-print("Hello, World!")
-        """
+        val python2HelloWorld = """print("Hello, World!")"""
 
         PythonAnalyser().analysis(python2HelloWorld, "")
     }
 
     @Test
     internal fun shouldAnalysisPython3() {
-        val py3HelloWorld = """
-print "Hello, World!"
-        """
+        val py3HelloWorld = """print "Hello, World!""""
         PythonAnalyser().analysis(py3HelloWorld, "")
     }
 }
