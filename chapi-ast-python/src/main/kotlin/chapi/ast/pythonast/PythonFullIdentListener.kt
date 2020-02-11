@@ -114,6 +114,21 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         currentFunction = CodeFunction()
     }
 
+    override fun enterSimple_stmt(ctx: PythonParser.Simple_stmtContext?) {
+        for (smallStmtCtx in ctx!!.small_stmt()) {
+            val stmtType = smallStmtCtx::class.java.simpleName
+            println(stmtType)
+            when (stmtType) {
+                "Expr_stmtContext" -> {
+                    this.buildExprStmt(smallStmtCtx as PythonParser.Expr_stmtContext)
+                }
+                else -> {
+                    println("enterSimple_stmt ->$stmtType")
+                }
+            }
+        }
+    }
+
     fun getNodeInfo(): CodeFile {
         if (defaultNode.Functions.isNotEmpty()) {
             this.codeFile.DataStructures += defaultNode

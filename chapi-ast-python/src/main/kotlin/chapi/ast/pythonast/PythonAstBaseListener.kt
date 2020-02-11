@@ -87,4 +87,13 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
 
         return arguments
     }
+
+    fun buildExprStmt(exprCtx: PythonParser.Expr_stmtContext) {
+        val starExpr = exprCtx.getChild(0) as PythonParser.Testlist_star_exprContext
+        println(starExpr.text)
+
+        if (exprCtx.assign_part() != null) {
+            println(exprCtx.assign_part().text)
+        }
+    }
 }

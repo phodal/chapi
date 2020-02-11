@@ -231,4 +231,17 @@ from classdef import bar as b
         assertEquals(codeFile.Imports[0].UsageName[0], "bar")
         assertEquals(codeFile.Imports[0].AsName, "b")
     }
+
+    @Test
+    internal fun shouldIdentFuncCall() {
+        val code = """
+class Employee:
+    def __init__(self, name):
+        self.name = name
+ 
+emp = Employee("Zara")
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+    }
 }
