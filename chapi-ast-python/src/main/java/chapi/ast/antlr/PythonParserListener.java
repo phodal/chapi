@@ -470,6 +470,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitNonlocal_stmt(PythonParser.Nonlocal_stmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonParser#import_dot_ellipsis}.
+	 * @param ctx the parse tree
+	 */
+	void enterImport_dot_ellipsis(PythonParser.Import_dot_ellipsisContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#import_dot_ellipsis}.
+	 * @param ctx the parse tree
+	 */
+	void exitImport_dot_ellipsis(PythonParser.Import_dot_ellipsisContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#testlist_star_expr}.
 	 * @param ctx the parse tree
 	 */

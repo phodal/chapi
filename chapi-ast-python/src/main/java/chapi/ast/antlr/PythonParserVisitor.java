@@ -284,6 +284,12 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNonlocal_stmt(PythonParser.Nonlocal_stmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonParser#import_dot_ellipsis}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitImport_dot_ellipsis(PythonParser.Import_dot_ellipsisContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#testlist_star_expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

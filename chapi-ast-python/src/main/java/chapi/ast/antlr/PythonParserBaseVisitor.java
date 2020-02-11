@@ -311,6 +311,13 @@ public class PythonParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitImport_dot_ellipsis(PythonParser.Import_dot_ellipsisContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitTestlist_star_expr(PythonParser.Testlist_star_exprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

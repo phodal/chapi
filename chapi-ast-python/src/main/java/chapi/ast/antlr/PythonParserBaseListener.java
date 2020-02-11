@@ -520,6 +520,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterImport_dot_ellipsis(PythonParser.Import_dot_ellipsisContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitImport_dot_ellipsis(PythonParser.Import_dot_ellipsisContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTestlist_star_expr(PythonParser.Testlist_star_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}

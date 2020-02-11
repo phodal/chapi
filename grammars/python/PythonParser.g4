@@ -153,13 +153,15 @@ small_stmt
     | RAISE (test (COMMA test (COMMA test)?)?)? (FROM test)?                          #raise_stmt
     | yield_expr                                                                      #yield_stmt
     | IMPORT dotted_as_names                                                          #import_stmt
-    | FROM ((DOT | ELLIPSIS)* dotted_name | (DOT | ELLIPSIS)+)
+    | FROM (import_dot_ellipsis* dotted_name | import_dot_ellipsis+)
       IMPORT (STAR | OPEN_PAREN import_as_names CLOSE_PAREN | import_as_names)        #from_stmt
     | GLOBAL name (COMMA name)*                                                       #global_stmt
     | {CheckVersion(2)}? EXEC expr (IN test (COMMA test)?)? {SetVersion(2);}          #exec_stmt     // Python 2
     | ASSERT test (COMMA test)?                                                       #assert_stmt
     | {CheckVersion(3)}? NONLOCAL name (COMMA name)* {SetVersion(3);}                 #nonlocal_stmt // Python 3
     ;
+
+import_dot_ellipsis : (DOT | ELLIPSIS) ;
 
 testlist_star_expr
     : ((test | star_expr) COMMA)+ (test | star_expr)?
