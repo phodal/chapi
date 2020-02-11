@@ -13,6 +13,12 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
                     TypeType = "",
                     TypeValue = defParaCtx.text
                 )
+
+                if (defParaCtx.ASSIGN() != null) {
+                    parameter.DefaultValue = defParaCtx.test().text
+                    parameter.TypeValue = defParaCtx.named_parameter().text
+                }
+
                 parameters += parameter
             }
         }

@@ -97,10 +97,10 @@ def printinfo( name, age = 35):
 """
 
         val codeFile = PythonAnalyser().analysis(code, "")
-        assertEquals(codeFile.DataStructures[0].NodeName, "default")
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "printinfo")
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 2)
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[0].TypeValue, "name")
-//        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[1].TypeValue, "age")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[1].TypeValue, "age")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[1].DefaultValue, "35")
     }
 }
