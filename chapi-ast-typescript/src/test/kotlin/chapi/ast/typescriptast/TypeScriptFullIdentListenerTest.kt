@@ -381,4 +381,19 @@ export namespace Polygons {
         assertEquals(codeFile.DataStructures[0].Package, "Polygons")
         assertEquals(codeFile.DataStructures[1].Package, "Polygons")
     }
+
+    @Test
+    internal fun shouldIdentifyFunctionCall() {
+        val code = """
+function helloworld() {
+  console.log("hello, world")
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        assertEquals(functionCalls.size, 1)
+        assertEquals(functionCalls[0].FunctionName, "console.log")
+        assertEquals(functionCalls[0].Parameters[0].TypeValue, "\"hello, world\"")
+    }
 }

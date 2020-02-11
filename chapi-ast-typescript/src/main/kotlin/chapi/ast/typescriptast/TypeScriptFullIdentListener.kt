@@ -393,6 +393,40 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         return returnType
     }
 
+    override fun enterExpressionStatement(ctx: TypeScriptParser.ExpressionStatementContext?) {
+        println("enterExpressionStatement : " + ctx!!.text)
+        for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
+            val singleCtxType = singleExprCtx::class.java.simpleName
+
+            when(singleCtxType) {
+                "ArgumentsExpressionContext" -> {
+                    val codeCall = CodeCall()
+
+                    val argsCtx = singleExprCtx as TypeScriptParser.ArgumentsExpressionContext
+                    codeCall.Parameters = this.buildArguments(argsCtx.arguments())
+                    codeCall.FunctionName = argsCtx.singleExpression().text
+
+                    currentFunction.FunctionCalls += codeCall
+                }
+                else -> {
+                    println("enterExpressionStatement :$singleCtxType")
+                }
+            }
+
+        }
+    }
+
+    private fun buildArguments(arguments: TypeScriptParser.ArgumentsContext?): Array<CodeProperty> {
+        var args : Array<CodeProperty> = arrayOf()
+        val value = arguments!!.getChild(1).text
+        val arg = CodeProperty(
+            TypeValue = value,
+            TypeType = ""
+        )
+        args += arg
+        return args
+    }
+
     fun getNodeInfo(): CodeFile {
         for (entry in nodeMap) {
             codeFile.DataStructures += entry.value
