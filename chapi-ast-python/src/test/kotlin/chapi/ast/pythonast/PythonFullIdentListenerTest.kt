@@ -216,4 +216,19 @@ from . import bar
         assertEquals(codeFile.Imports[0].Source, ".")
         assertEquals(codeFile.Imports[0].UsageName[0], "bar")
     }
+
+    @Test
+    internal fun shouldIdentFromImportAs() {
+        val code = """
+from classdef import bar as b
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "classdef")
+        assertEquals(codeFile.Imports[0].UsageName[0], "bar")
+        assertEquals(codeFile.Imports[0].AsName, "b")
+    }
 }
