@@ -348,5 +348,6 @@ let Print = () => console.log("Hello TypeScript");
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         val functions = codeFile.DataStructures[0].Functions
         assertEquals(functions.size, 1)
+        assertEquals(functions[0].Name, "Print")
     }
 }

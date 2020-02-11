@@ -316,6 +316,23 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
+        val statementParent = ctx!!.parent.parent
+        when (statementParent::class.java.simpleName) {
+            "VariableDeclarationContext" -> {
+                val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
+                currentFunction.Name = varDeclCtx.Identifier().text
+//                if (ctx.formalParameterList() != null) {
+//                    currentFunction.Parameters = this.buildParameters(ctx.formalParameterList())
+//                }
+
+                if (ctx.typeAnnotation() != null) {
+                    currentFunction.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
+                }
+            }
+            else -> {
+                println("enterFunctionExpressionDeclaration -> ")
+            }
+        }
         currentFunction.Position = this.buildPosition(ctx)
         defaultNode.Functions += currentFunction
     }
