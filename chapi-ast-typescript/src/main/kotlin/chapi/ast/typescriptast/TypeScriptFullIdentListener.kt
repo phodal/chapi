@@ -321,9 +321,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             "VariableDeclarationContext" -> {
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
                 currentFunction.Name = varDeclCtx.Identifier().text
-//                if (ctx.formalParameterList() != null) {
-//                    currentFunction.Parameters = this.buildParameters(ctx.formalParameterList())
-//                }
+                this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
+                    currentFunction.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
 
                 if (ctx.typeAnnotation() != null) {
                     currentFunction.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
@@ -335,6 +334,21 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
         currentFunction.Position = this.buildPosition(ctx)
         defaultNode.Functions += currentFunction
+    }
+
+    private fun buildArrowFunctionParameters(arrowFuncCtx: TypeScriptParser.ArrowFunctionParametersContext?): Array<CodeProperty> {
+        if (arrowFuncCtx!!.formalParameterList() != null) {
+            return this.buildParameters(arrowFuncCtx.formalParameterList())
+        }
+        var parameters : Array<CodeProperty> = arrayOf()
+        if (arrowFuncCtx.Identifier() != null) {
+            val parameter = CodeProperty(
+                TypeValue = arrowFuncCtx.Identifier().text,
+                TypeType = "any"
+            )
+            parameters += parameter
+        }
+        return parameters
     }
 
     override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {

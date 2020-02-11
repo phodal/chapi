@@ -350,4 +350,21 @@ let Print = () => console.log("Hello TypeScript");
         assertEquals(functions.size, 1)
         assertEquals(functions[0].Name, "Print")
     }
+
+    @Test
+    internal fun shouldIdentifyArrayFunctionParameters() {
+        val code = """
+let sumArrow = (x: number, y: number): number => {
+    return x + y
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        val functions = codeFile.DataStructures[0].Functions
+        assertEquals(functions.size, 1)
+        assertEquals(functions[0].Name, "sumArrow")
+        assertEquals(functions[0].Parameters.size, 2)
+        assertEquals(functions[0].Parameters[1].TypeType, "number")
+        assertEquals(functions[0].Parameters[1].TypeValue, "y")
+        assertEquals(functions[0].MultipleReturns[0].TypeType, "number")
+    }
 }
