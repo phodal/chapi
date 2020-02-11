@@ -6,10 +6,10 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class PythonIdentApp() {
-    open fun analysis(str: String) {
+open class PythonAnalyser() {
+    open fun analysis(str: String, fileName: String) {
         val context = this.parse(str).root()
-        val listener = PythonIdentListener()
+        val listener = PythonFullIdentListener(fileName = fileName)
 
         ParseTreeWalker().walk(listener, context)
 

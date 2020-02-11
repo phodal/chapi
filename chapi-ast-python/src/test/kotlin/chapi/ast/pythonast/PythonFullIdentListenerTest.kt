@@ -1,15 +1,16 @@
 package chapi.ast.pythonast
 
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-internal class PythonIdentAppTest {
+internal class PythonFullIdentListenerTest {
     @Test
     internal fun shouldAnalysisPython2() {
         val python2HelloWorld = """
 print("Hello, World!")
         """
 
-        PythonIdentApp().analysis(python2HelloWorld)
+        PythonAnalyser().analysis(python2HelloWorld, "")
     }
 
     @Test
@@ -17,6 +18,6 @@ print("Hello, World!")
         val py3HelloWorld = """
 print "Hello, World!"
         """
-        PythonIdentApp().analysis(py3HelloWorld)
+        PythonAnalyser().analysis(py3HelloWorld, "")
     }
 }
