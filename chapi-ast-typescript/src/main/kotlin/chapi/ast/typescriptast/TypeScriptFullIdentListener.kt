@@ -5,6 +5,7 @@ import domain.core.*
 import domain.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
+    private var localVars = mutableMapOf<String, String>()
     private var dataStructQueue = arrayOf<CodeDataStruct>()
     private var hasEnterClass = false
 
@@ -15,7 +16,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var defaultNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
-    private var namespaceName : String = ""
+    private var namespaceName: String = ""
 
     private var classNodeStack = Stack<CodeDataStruct>()
     private var methodMap = mutableMapOf<String, CodeFunction>()
@@ -333,7 +334,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
                 currentFunction.Name = varDeclCtx.Identifier().text
                 this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
-                    currentFunction.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
+                currentFunction.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
 
                 if (ctx.typeAnnotation() != null) {
                     currentFunction.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
@@ -351,7 +352,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         if (arrowFuncCtx!!.formalParameterList() != null) {
             return this.buildParameters(arrowFuncCtx.formalParameterList())
         }
-        var parameters : Array<CodeProperty> = arrayOf()
+        var parameters: Array<CodeProperty> = arrayOf()
         if (arrowFuncCtx.Identifier() != null) {
             val parameter = CodeProperty(
                 TypeValue = arrowFuncCtx.Identifier().text,
@@ -398,13 +399,14 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
             val singleCtxType = singleExprCtx::class.java.simpleName
 
-            when(singleCtxType) {
+            when (singleCtxType) {
                 "ArgumentsExpressionContext" -> {
                     val codeCall = CodeCall()
 
                     val argsCtx = singleExprCtx as TypeScriptParser.ArgumentsExpressionContext
                     codeCall.Parameters = this.buildArguments(argsCtx.arguments())
-                    codeCall.FunctionName = argsCtx.singleExpression().text
+                    codeCall.FunctionName = buildFunctionName(argsCtx)
+                    codeCall.NodeName = wrapNodeName(argsCtx)
 
                     currentFunction.FunctionCalls += codeCall
                 }
@@ -416,8 +418,55 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
     }
 
+    private fun buildFunctionName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
+        return argsCtx.singleExpression().text
+    }
+
+    private fun wrapNodeName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
+        var text = argsCtx.singleExpression().text
+        if (text.contains(".")) {
+            text = text.split(".")[0]
+        }
+
+        if (localVars[text] != "") {
+            text = localVars[text]
+        }
+
+        if (text == null) {
+            text = ""
+        }
+
+        return text
+    }
+
+
+    override fun enterVariableDeclaration(ctx: TypeScriptParser.VariableDeclarationContext?) {
+        val varName = ctx!!.getChild(0).text
+        if (ctx.singleExpression().size == 1 && ctx.typeParameters() == null) {
+            val singleExprCtx = ctx.singleExpression()[0]
+            val singleCtxType = singleExprCtx::class.java.simpleName
+            when (singleCtxType) {
+                "NewExpressionContext" -> {
+                    val newExprCtx = singleExprCtx as TypeScriptParser.NewExpressionContext
+                    val newSingleExpr = newExprCtx.singleExpression()
+                    when (newSingleExpr::class.java.simpleName) {
+                        "IdentifierExpressionContext" -> {
+                            val identExprCtx = newSingleExpr as TypeScriptParser.IdentifierExpressionContext
+                            val varType = identExprCtx.identifierName().text
+
+                            localVars[varName] = varType
+                        }
+                    }
+                }
+                else -> {
+                    println("enterVariableDeclaration : $singleCtxType")
+                }
+            }
+        }
+    }
+
     private fun buildArguments(arguments: TypeScriptParser.ArgumentsContext?): Array<CodeProperty> {
-        var args : Array<CodeProperty> = arrayOf()
+        var args: Array<CodeProperty> = arrayOf()
         val value = arguments!!.getChild(1).text
         val arg = CodeProperty(
             TypeValue = value,
