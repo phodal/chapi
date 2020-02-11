@@ -103,6 +103,7 @@ def printinfo( name, age = 35):
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[1].TypeValue, "age")
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[1].DefaultValue, "35")
     }
+
     @Test
     internal fun shouldIdentifyClassAnnotation() {
         val code = """
@@ -116,5 +117,22 @@ class foo:
         assertEquals(codeFile.DataStructures[0].NodeName, "foo")
         assertEquals(codeFile.DataStructures[0].Annotations.size, 1)
         assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "decorator")
+    }
+
+    @Test
+    internal fun shouldIdentifyMultipleClassAnnotation() {
+        val code = """
+@cache
+@decorator
+class foo:
+    pass
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].NodeName, "foo")
+        assertEquals(codeFile.DataStructures[0].Annotations.size, 2)
+        assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "cache")
+        assertEquals(codeFile.DataStructures[0].Annotations[1].Name, "decorator")
     }
 }
