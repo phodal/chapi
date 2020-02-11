@@ -43,7 +43,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         return 0
     }
 
-    fun buildAnnotationsByIndex(ctx: PythonParser.ClassdefContext, ctxIndex: Int): Array<CodeAnnotation> {
+    fun buildAnnotationsByIndex(ctx: ParseTree, ctxIndex: Int): Array<CodeAnnotation> {
         var nodes: Array<PythonParser.DecoratorContext> = arrayOf()
         for (i in 0 until ctxIndex) {
             nodes += ctx.parent.getChild(i) as PythonParser.DecoratorContext

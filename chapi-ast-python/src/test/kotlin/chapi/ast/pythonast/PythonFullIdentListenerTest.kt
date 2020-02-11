@@ -150,4 +150,26 @@ class multiple_annotation():
         assertEquals(codeFile.DataStructures[0].Annotations[0].KeyValues[0].Key, "key")
         assertEquals(codeFile.DataStructures[0].Annotations[0].KeyValues[0].Value, "\"value\"")
     }
+
+    @Test
+    internal fun shouldIdentifyMultipleFunctionAnnotationKeyValue() {
+        val code = """
+@accepts(int, int)
+@returns(float)
+def bar(low,high):
+    pass
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+        val firstFunc = codeFile.DataStructures[0].Functions[0]
+
+        assertEquals(firstFunc.Annotations[0].Name, "accepts")
+        assertEquals(firstFunc.Annotations[0].KeyValues.size, 2)
+        assertEquals(firstFunc.Annotations[0].KeyValues[0].Key, "int")
+        assertEquals(firstFunc.Annotations[0].KeyValues[1].Key, "int")
+
+        assertEquals(firstFunc.Annotations[1].Name, "returns")
+        assertEquals(firstFunc.Annotations[1].KeyValues[0].Key, "float")
+    }
 }

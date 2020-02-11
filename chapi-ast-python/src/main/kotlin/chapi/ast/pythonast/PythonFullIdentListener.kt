@@ -49,6 +49,11 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
             currentFunction.Modifiers += ctx.ASYNC().text
         }
 
+        val ctxIndex = this.getNodeIndex(ctx)
+        if (ctxIndex > 0) {
+            currentFunction.Annotations = this.buildAnnotationsByIndex(ctx, ctxIndex)
+        }
+
         if (ctx.typedargslist() != null) {
             currentFunction.Parameters = this.buildParameters(ctx.typedargslist())
         }
