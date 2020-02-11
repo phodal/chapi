@@ -14,12 +14,14 @@ Support languages (in plan):
  - Go
  - TypeScript / JavaScript (doing)
  - C / C++
+ - C#
+ - Yours Languages
 
 Todo:
 
  - Migrate [Coca](https://github.com/phodal/coca) ast (doing)
  - Pluggable
- - Multiple Languages
+ - Multiple Languages （welcome to PR）
  - Support Oracle JDK 11 on Travis CI
  - SQL (refs: [antlr4-oracle](https://github.com/alris/antlr4-oracle) && [sqlgraph](https://github.com/dengdaiyemanren/sqlgraph))
 
