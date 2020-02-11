@@ -59,7 +59,9 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     }
 
     fun getNodeInfo(): CodeFile {
-        this.codeFile.DataStructures += defaultNode
+        if (defaultNode.Functions.isNotEmpty()) {
+            this.codeFile.DataStructures += defaultNode
+        }
         return this.codeFile
     }
 }
