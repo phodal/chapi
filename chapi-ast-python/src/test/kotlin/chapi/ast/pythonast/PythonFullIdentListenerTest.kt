@@ -135,4 +135,19 @@ class foo:
         assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "cache")
         assertEquals(codeFile.DataStructures[0].Annotations[1].Name, "decorator")
     }
+
+    @Test
+    internal fun shouldIdentifyMultipleClassAnnotationKeyValue() {
+        val code = """
+@cache(key="value")
+class multiple_annotation():
+    pass
+
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "cache")
+        assertEquals(codeFile.DataStructures[0].Annotations[0].KeyValues[0].Key, "key")
+        assertEquals(codeFile.DataStructures[0].Annotations[0].KeyValues[0].Value, "\"value\"")
+    }
 }

@@ -2,6 +2,7 @@ package chapi.ast.pythonast
 
 import chapi.ast.antlr.PythonParser
 import chapi.ast.antlr.PythonParserBaseListener
+import domain.core.AnnotationKeyValue
 import domain.core.CodeAnnotation
 import domain.core.CodeProperty
 import org.antlr.v4.runtime.tree.ParseTree
@@ -43,12 +44,12 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     }
 
     fun buildAnnotationsByIndex(ctx: PythonParser.ClassdefContext, ctxIndex: Int): Array<CodeAnnotation> {
-        var nodes : Array<PythonParser.DecoratorContext> = arrayOf()
+        var nodes: Array<PythonParser.DecoratorContext> = arrayOf()
         for (i in 0 until ctxIndex) {
             nodes += ctx.parent.getChild(i) as PythonParser.DecoratorContext
         }
 
-        var annotations : Array<CodeAnnotation> = arrayOf()
+        var annotations: Array<CodeAnnotation> = arrayOf()
         for (node in nodes) {
             annotations += this.buildAnnotation(node)
         }
@@ -61,6 +62,29 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
             Name = node.dotted_name().text
         )
 
+        if (node.arglist() != null) {
+            codeAnnotation.KeyValues = this.buildArgList(node.arglist())
+        }
+
         return codeAnnotation
+    }
+
+    private fun buildArgList(arglistCtx: PythonParser.ArglistContext?): Array<AnnotationKeyValue> {
+        var arguments: Array<AnnotationKeyValue> = arrayOf()
+        for (argCtx in arglistCtx!!.argument()) {
+            val key = argCtx.test(0).text
+            var value = ""
+            if (argCtx.test().size > 1) {
+                value = argCtx.test(1).text
+            }
+
+            val annotation = AnnotationKeyValue(
+                Key = key,
+                Value = value
+            )
+            arguments += annotation
+        }
+
+        return arguments
     }
 }
