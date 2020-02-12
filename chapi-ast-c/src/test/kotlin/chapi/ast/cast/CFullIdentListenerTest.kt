@@ -38,4 +38,19 @@ struct list_el {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "list_el")
     }
+
+    @Test
+    internal fun shouldIdentifyStructPropertyName() {
+        val code = """
+struct list_el {
+   int val;
+};
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "int")
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "val")
+    }
 }
