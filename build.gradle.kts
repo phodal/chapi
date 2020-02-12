@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.withType as withType1
+
 plugins {
     base
 
@@ -6,6 +8,7 @@ plugins {
 
     java // Required by at least JUnit.
 
+    jacoco
 //    id("org.jetbrains.kotlin.multiplatform") version "1.3.61"
     id("com.github.kt3k.coveralls") version "2.9.0"
 }
@@ -46,7 +49,25 @@ dependencies {
     }
 }
 
-tasks.register<Copy>("aggregateJacocoReports") {
-    from(jacocoReports)
-    into(file("$buildDir/jacoco"))
+// refs: https://github.com/ben-manes/caffeine/blob/v2.6.2/build.gradle#L133
+tasks.register("jacocoMerge", JacocoMerge::class) {
+    subprojects.forEach { subproject ->
+        executionData = files("${subproject.buildDir}/jacoco/test.exec")
+    }
+//    doFirst {
+//        executionData = executionData.findAll {
+//            it.exists()
+//        }
+//    }
+}
+
+tasks.register("aggregateJacocoReports", JacocoReport::class) {
+    dependsOn("test")
+    dependsOn("jacocoMerge").outputs
+
+    reports {
+        xml.setEnabled(true)
+        html.setEnabled(true)
+        xml.setDestination(file("${project.buildDir}/${project.name}.xml"))
+    }
 }
