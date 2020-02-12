@@ -10,8 +10,9 @@ internal class GoFullIdentListenerTest {
 package main
 """
 
-        val codeFile = GoAnalyser().analysis(code, "")
+        val codeFile = GoAnalyser().analysis(code, "basic.go")
         assertEquals(codeFile.PackageName, "main")
+        assertEquals(codeFile.FullName, "basic.go")
     }
 
     @Test
@@ -72,9 +73,10 @@ type School struct {
 }
 """
 
-        val codeFile = GoAnalyser().analysis(code, "")
+        val codeFile = GoAnalyser().analysis(code, "basic.go")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "School")
+        assertEquals(codeFile.DataStructures[0].FilePath, "basic.go")
         assertEquals(codeFile.DataStructures[0].Fields.size, 1)
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "bson.ObjectId")
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "Id")

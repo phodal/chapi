@@ -63,9 +63,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     private fun addReceiverToStruct(receiverName: String, codeFunction: CodeFunction) {
         if (structMap[receiverName] == null) {
-            val struct = CodeDataStruct(
-                NodeName = receiverName
-            )
+            val struct = createStructByName(receiverName)
 
             struct.Functions += codeFunction
             structMap[receiverName] = struct
@@ -93,9 +91,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun buildStruct(identifyName: String, typeChild: ParseTree?) {
-        val struct = CodeDataStruct(
-            NodeName = identifyName
-        )
+        val struct = createStructByName(identifyName)
         val structTypeCtx = typeChild as GoParser.StructTypeContext
 
         val fields = buildStructFields(structTypeCtx)
@@ -106,6 +102,14 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             struct.Fields = fields
             structMap[identifyName] = struct
         }
+    }
+
+    private fun createStructByName(identifyName: String): CodeDataStruct {
+        val struct = CodeDataStruct(
+            NodeName = identifyName,
+            FilePath = codeFile.FullName
+        )
+        return struct
     }
 
     private fun buildStructFields(structTypeCtx: GoParser.StructTypeContext): Array<CodeField> {
