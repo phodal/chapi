@@ -1,9 +1,27 @@
 plugins {
     jacoco
 }
+//
+//val jacocoCoverageVerification by tasks.getting(JacocoCoverageVerification::class) {
+//    afterEvaluate {
+//        classDirectories.setFrom(files(classDirectories.files.map {
+//            fileTree(it).apply {
+//                exclude("chapi/ast/antlr")
+//            }
+//        }))
+//    }
+//}
 
 val jacocoTestReport by tasks.getting(JacocoReport::class) {
     dependsOn("test")
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it).apply {
+                exclude("chapi/ast/antlr")
+            }
+        }))
+    }
 
     reports {
         xml.setEnabled(true)
