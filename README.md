@@ -6,23 +6,23 @@
 
 > Chapi is a common language data structure parser, which will parse different language to same JSON object.
 
-Support languages (in plan):
+Languages Stages (Welcome to PR your usage languages)
 
- - Python
- - Java (done)
- - Kotlin
- - Go
- - TypeScript / JavaScript (doing)
- - C / C++
- - C#
- - Yours Languages
+| Features/Languages  |   Java |  Python  | Go  |  Kotlin | TypeScript | C/C++ | C# |
+|---------------------|--------|----------|-----|---------|------------|-------|----|
+| syntax parse        |    ✅  |      ✅  |   ✅ |    ✅   |     ✅      |       |     |
+| function call graph |    ✅  |          |      |         |            |       |     |
+| arch/package graph  |    ✅  |          |      |         |            |       |     |
+| real world validate |    ✅  |          |      |         |            |       |     |
 
 Todo:
 
- - Migrate [Coca](https://github.com/phodal/coca) ast (doing)
+ - Migrate [Coca](https://github.com/phodal/coca) ast (done)
  - Pluggable
  - Multiple Languages （welcome to PR）
- - Support Oracle JDK 11 on Travis CI
+
+TBC:
+
  - SQL (refs: [antlr4-oracle](https://github.com/alris/antlr4-oracle) && [sqlgraph](https://github.com/dengdaiyemanren/sqlgraph))
 
 ## Data Structures
