@@ -8,9 +8,9 @@
 
 Languages Stages (Welcome to PR your usage languages)
 
-| Features/Languages  |   Java |  Python  | Go  |  Kotlin | TypeScript | C/C++ | C# |
+| Features/Languages  |   Java |  Python  | Go  |  Kotlin | TypeScript | C     | C# |
 |---------------------|--------|----------|-----|---------|------------|-------|----|
-| syntax parse        |    ✅  |      ✅  |   ✅ |         |     ✅      |       |     |
+| syntax parse        |    ✅  |      ✅  |   ✅ |         |     ✅   |  🆕  |     |
 | function call graph |    ✅  |          |      |         |            |       |     |
 | arch/package graph  |    ✅  |          |      |         |            |       |     |
 | real world validate |    ✅  |          |      |         |            |       |     |
