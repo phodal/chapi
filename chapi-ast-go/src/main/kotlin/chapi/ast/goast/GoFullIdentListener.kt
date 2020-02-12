@@ -21,7 +21,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterImportSpec(ctx: GoParser.ImportSpecContext?) {
-        val sourceName = ctx!!.importPath().text
+        val originSource = ctx!!.importPath().text
+        val sourceName = originSource.replace("\"", "")
         val codeImport = CodeImport(Source = sourceName)
 
         if (ctx.DOT() != null) {

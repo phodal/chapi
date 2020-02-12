@@ -24,6 +24,6 @@ import "fmt"
 
         val codeFile = GoAnalyser().analysis(code, "")
         assertEquals(codeFile.Imports.size, 1)
-        assertEquals(codeFile.Imports[0].Source, "\"fmt\"")
+        assertEquals(codeFile.Imports[0].Source, "fmt")
     }
 }
