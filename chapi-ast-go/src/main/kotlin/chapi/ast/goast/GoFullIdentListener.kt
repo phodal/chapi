@@ -4,6 +4,7 @@ import chapi.ast.antlr.GoParser
 import domain.core.CodeDataStruct
 import domain.core.CodeFile
 import domain.core.CodeFunction
+import domain.core.CodeImport
 
 class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
@@ -17,6 +18,21 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     override fun enterPackageClause(ctx: GoParser.PackageClauseContext?) {
         codeFile.PackageName = ctx!!.IDENTIFIER().text
+    }
+
+    override fun enterImportSpec(ctx: GoParser.ImportSpecContext?) {
+        val sourceName = ctx!!.importPath().text
+        val codeImport = CodeImport(Source = sourceName)
+
+        if (ctx.DOT() != null) {
+            codeImport.AsName = "."
+        }
+
+        if (ctx.IDENTIFIER() != null) {
+            codeImport.UsageName += ctx.IDENTIFIER().text
+        }
+
+        codeFile.Imports += codeImport
     }
 
     fun getNodeInfo(): CodeFile {
