@@ -61,4 +61,22 @@ import (
         assertEquals(codeFile.Imports[1].Source, "html/template")
         assertEquals(codeFile.Imports[2].Source, "os")
     }
+
+    @Test
+    internal fun shouldIdentifyBasicStruct() {
+        var code = """
+package main
+
+type School struct {
+    Id      bson.ObjectId
+}
+"""
+
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "School")
+        assertEquals(codeFile.DataStructures[0].Fields.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "bson.ObjectId")
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "Id")
+    }
 }
