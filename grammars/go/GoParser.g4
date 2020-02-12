@@ -83,7 +83,7 @@ expressionList
     ;
 
 typeDecl
-    : 'type' (typeSpec | '(' (typeSpec eos)* ')')
+    : 'type' (typeSpec | L_PAREN (typeSpec eos)* R_PAREN)
     ;
 
 typeSpec
