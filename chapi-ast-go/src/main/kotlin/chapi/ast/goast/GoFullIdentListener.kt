@@ -3,7 +3,7 @@ package chapi.ast.goast
 import chapi.ast.antlr.GoParser
 import chapi.ast.antlr.GoParserBaseListener
 
-class GoIdentListener() : GoParserBaseListener() {
+class GoFullIdentListener() : GoAstListener() {
     override fun enterImportDecl(ctx: GoParser.ImportDeclContext?) {
         super.enterImportDecl(ctx)
     }

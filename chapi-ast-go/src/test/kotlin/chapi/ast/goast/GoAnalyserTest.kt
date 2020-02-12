@@ -2,7 +2,7 @@ package chapi.ast.goast
 
 import org.junit.jupiter.api.Test
 
-internal class GoIdentAppTest {
+internal class GoAnalyserTest {
     @Test
     fun analysis() {
 var helloworld = """
@@ -12,6 +12,6 @@ func main() {
     fmt.Println("hello world")
 }
 """
-        GoIdentApp().analysis(helloworld)
+        GoAnalyser().analysis(helloworld)
     }
 }
