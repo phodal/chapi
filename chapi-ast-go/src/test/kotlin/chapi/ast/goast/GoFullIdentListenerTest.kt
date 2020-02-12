@@ -102,9 +102,30 @@ func (a *Animal) Move() {
         val codeFile = GoAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "Animal")
-        println(codeFile.DataStructures[0])
         assertEquals(codeFile.DataStructures[0].Fields.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "Move")
+    }
+
+    @Test
+    internal fun shouldIdentifyStructFunctionReturnType() {
+        var code = """
+package main
+
+import "fmt"
+
+type Animal struct {
+	Age int
+}
+
+func (a *Animal) Move() string {
+	return ""
+}
+"""
+
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns[0].TypeType, "string")
     }
 }

@@ -52,8 +52,13 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
         val result = ctx.signature().result()
         if (result != null) {
-            println("enterMethodDecl -> " + result.text)
+            val returnType = CodeProperty(
+                TypeType = result.text,
+                TypeValue = ""
+            )
+            codeFunction.MultipleReturns += returnType
         }
+
         this.buildParameters(ctx.signature().parameters())
 
         val receiverName = this.getTypeNameFromReceiver(ctx.receiver().parameters())!!
@@ -80,8 +85,6 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             when (typeChild::class.java.simpleName) {
                 "StructTypeContext" -> {
                     buildStruct(identifyName, typeChild)
-
-
                 }
                 else -> {
 
