@@ -52,18 +52,22 @@ dependencies {
 // refs: https://github.com/ben-manes/caffeine/blob/v2.6.2/build.gradle#L133
 tasks.register("jacocoMerge", JacocoMerge::class) {
     subprojects.forEach { subproject ->
-        executionData = files("${subproject.buildDir}/jacoco/test.exec")
+        executionData(subproject.tasks.withType(Test::class.java))
     }
-//    doFirst {
-//        executionData = executionData.findAll {
-//            it.exists()
-//        }
-//    }
+    doFirst {
+        executionData = files(executionData.filter {
+            it.exists()
+        })
+    }
 }
 
-tasks.register("aggregateJacocoReports", JacocoReport::class) {
-    dependsOn("test")
-    dependsOn("jacocoMerge").outputs
+tasks.register<Copy>("aggregateJacocoReports") {
+    from(jacocoReports)
+    into(file("$buildDir/reports/jacoco"))
+}
+
+tasks.register("jacocoRootReports", JacocoReport::class) {
+    dependsOn("jacocoMerge")
 
     reports {
         xml.setEnabled(true)
