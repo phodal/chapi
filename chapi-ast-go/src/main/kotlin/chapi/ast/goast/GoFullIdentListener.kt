@@ -41,7 +41,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         val funcName = ctx!!.IDENTIFIER().text
 
         val codeFunction = CodeFunction(
-            Name = funcName
+            Name = funcName,
+            Package = codeFile.PackageName
         )
 
         defaultNode.Functions += codeFunction

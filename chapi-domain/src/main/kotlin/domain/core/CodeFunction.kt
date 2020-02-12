@@ -6,6 +6,7 @@ import kotlinx.serialization.json.*
 @Serializable
 open class CodeFunction(
     var Name: String = "",
+    var Package : String = "",
     var ReturnType: String = "",
     var MultipleReturns: Array<CodeProperty> = arrayOf(),
     var Parameters: Array<CodeProperty> = arrayOf(),
