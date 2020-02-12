@@ -23,16 +23,27 @@ open class GoAstListener : GoParserBaseListener() {
         return ""
     }
 
-    protected fun buildReturnTypeFromSignature(codeFunction: CodeFunction, signatureContext: GoParser.SignatureContext?): Array<CodeProperty> {
+    protected fun buildReturnTypeFromSignature(
+        codeFunction: CodeFunction,
+        signatureContext: GoParser.SignatureContext?
+    ): Array<CodeProperty> {
         val result = signatureContext!!.result()
-        var returns : Array<CodeProperty> = arrayOf()
+        var returns: Array<CodeProperty> = arrayOf()
         if (result != null) {
-            val returnType = CodeProperty(
-                TypeType = result.text,
-                TypeValue = ""
-            )
+            val parameters = result.parameters()
+            if (parameters != null) {
+                for (parameterDeclContext in parameters.parameterDecl()) {
+                    val typeType = parameterDeclContext.text
+                    val returnType = CodeProperty(TypeType = typeType, TypeValue = "")
+                    returns += returnType
+                }
+            }
 
-            returns += returnType
+            if (result.type_() != null) {
+                val typeType = result.type_().text
+                val returnType = CodeProperty(TypeType = typeType, TypeValue = "")
+                returns += returnType
+            }
         }
 
         return returns;

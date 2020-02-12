@@ -142,4 +142,19 @@ func add(x int, y int) int {
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "add")
     }
+
+    @Test
+    internal fun shouldIdentifyFunctionMultipleReturnType() {
+        var code = """
+package main
+
+func get(x int, y int) (int, int) {
+	return x, y
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns.size, 2)
+    }
 }

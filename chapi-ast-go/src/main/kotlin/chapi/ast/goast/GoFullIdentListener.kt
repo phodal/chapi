@@ -45,6 +45,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             Package = codeFile.PackageName
         )
 
+        codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(codeFunction, ctx.signature())
+
         defaultNode.Functions += codeFunction
     }
 
