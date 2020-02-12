@@ -15,6 +15,10 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         super.enterImportDecl(ctx)
     }
 
+    override fun enterPackageClause(ctx: GoParser.PackageClauseContext?) {
+        codeFile.PackageName = ctx!!.IDENTIFIER().text
+    }
+
     fun getNodeInfo(): CodeFile {
         return codeFile
     }
