@@ -37,6 +37,16 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         codeFile.Imports += codeImport
     }
 
+    override fun enterFunctionDecl(ctx: GoParser.FunctionDeclContext?) {
+        val funcName = ctx!!.IDENTIFIER().text
+
+        val codeFunction = CodeFunction(
+            Name = funcName
+        )
+
+        defaultNode.Functions += codeFunction
+    }
+
     override fun enterTypeDecl(ctx: GoParser.TypeDeclContext?) {
         val typeSpecs = ctx!!.typeSpec()
         for (typeSpec in typeSpecs) {
@@ -134,9 +144,15 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     fun getNodeInfo(): CodeFile {
+
         for (entry in structMap) {
             codeFile.DataStructures += entry.value
         }
+
+        if (defaultNode.Functions.isNotEmpty()) {
+            codeFile.DataStructures += defaultNode
+        }
+
         return codeFile
     }
 }

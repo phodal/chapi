@@ -122,10 +122,24 @@ func (a *Animal) Move() string {
 	return ""
 }
 """
-
         val codeFile = GoAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns[0].TypeType, "string")
+    }
+
+    @Test
+    internal fun shouldIdentifyFunctionAsDefault() {
+        var code = """
+package main
+
+func add(x int, y int) int {
+	return x + y
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "add")
     }
 }
