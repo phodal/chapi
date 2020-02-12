@@ -532,4 +532,16 @@ public interface CVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDeclarationList(CParser.DeclarationListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CParser#includeDirective}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIncludeDirective(CParser.IncludeDirectiveContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CParser#includeIdentifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIncludeIdentifier(CParser.IncludeIdentifierContext ctx);
 }

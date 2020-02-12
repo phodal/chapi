@@ -525,7 +525,7 @@ jumpStatement
     ;
 
 compilationUnit
-    :   translationUnit? EOF
+    : includeDirective? translationUnit? EOF
     ;
 
 translationUnit
@@ -897,9 +897,12 @@ ComplexDefine
         -> skip
     ;
          
-IncludeDirective
-    :   '#' Whitespace? 'include' Whitespace? (('"' ~[\r\n]* '"') | ('<' ~[\r\n]* '>' )) Whitespace? Newline
-        -> skip
+includeDirective
+    :   '#' Whitespace? 'include' Whitespace? (('"' includeIdentifier '"') | ('<' includeIdentifier '>' ))
+    ;
+
+includeIdentifier
+    : Identifier Dot? 'h'?
     ;
 
 // ignore the following asm blocks:
