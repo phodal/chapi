@@ -1,3 +1,4 @@
+import kotlinx.coroutines.flow.asFlow
 import org.gradle.kotlin.dsl.withType as withType1
 
 plugins {
@@ -68,14 +69,26 @@ tasks.register("jacocoRootReports", JacocoReport::class) {
 
     executionData(files(jacocoMerge))
     additionalClassDirs(files(subprojects.flatMap { project ->
-        listOf("java", "kotlin").map {
-            project.buildDir.path + "/classes/$it/main"
-        }
+        listOf("java", "kotlin")
+            .map {
+                project.buildDir.path + "/classes/$it/main"
+            }
+            .map {
+                fileTree(it).apply {
+                    exclude("chapi/ast/antlr")
+                }
+            }
     }))
     additionalSourceDirs(files(subprojects.flatMap { project ->
-        listOf("java", "kotlin").map {
-            project.file("src/main/$it").absolutePath
-        }
+        listOf("java", "kotlin")
+            .map {
+                project.file("src/main/$it").absolutePath
+            }
+            .map {
+                fileTree(it).apply {
+                    exclude("chapi/ast/antlr")
+                }
+            }
     }))
 
     reports {
