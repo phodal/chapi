@@ -5,17 +5,6 @@ import kotlin.test.assertEquals
 
 internal class CAnalyserTest {
     @Test
-    fun shouldAnalysis() {
-        val helloWorld = """
-main()
-{
-    printf("Hello World");
-}
-"""
-        CAnalyser().analysis(helloWorld, "")
-    }
-
-    @Test
     internal fun shouldGetCodeFileName() {
         val code = this::class.java.getResource("/_fixtures/examples/1-helloworld.c").readText()
         val fileName = "helloworld.c"
@@ -23,5 +12,17 @@ main()
         val codeFile = CAnalyser().analysis(code, fileName)
 
         assertEquals(codeFile.FullName, fileName)
+    }
+
+    @Test
+    internal fun shouldIdentifyImport() {
+        val code = """
+#include <stdio.h>
+
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "stdio.h")
     }
 }
