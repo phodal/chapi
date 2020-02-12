@@ -67,7 +67,7 @@ public class CParser extends Parser {
 		RULE_forCondition = 78, RULE_forDeclaration = 79, RULE_forExpression = 80, 
 		RULE_jumpStatement = 81, RULE_compilationUnit = 82, RULE_translationUnit = 83, 
 		RULE_externalDeclaration = 84, RULE_functionDefinition = 85, RULE_declarationList = 86, 
-		RULE_includeDirective = 87, RULE_includeIdentifier = 88;
+		RULE_includeDeclaration = 87, RULE_includeIdentifier = 88;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"primaryExpression", "genericSelection", "genericAssocList", "genericAssociation", 
@@ -92,7 +92,7 @@ public class CParser extends Parser {
 			"blockItemList", "blockItem", "expressionStatement", "selectionStatement", 
 			"iterationStatement", "forCondition", "forDeclaration", "forExpression", 
 			"jumpStatement", "compilationUnit", "translationUnit", "externalDeclaration", 
-			"functionDefinition", "declarationList", "includeDirective", "includeIdentifier"
+			"functionDefinition", "declarationList", "includeDeclaration", "includeIdentifier"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -8078,8 +8078,8 @@ public class CParser extends Parser {
 
 	public static class CompilationUnitContext extends ParserRuleContext {
 		public TerminalNode EOF() { return getToken(CParser.EOF, 0); }
-		public IncludeDirectiveContext includeDirective() {
-			return getRuleContext(IncludeDirectiveContext.class,0);
+		public IncludeDeclarationContext includeDeclaration() {
+			return getRuleContext(IncludeDeclarationContext.class,0);
 		}
 		public TranslationUnitContext translationUnit() {
 			return getRuleContext(TranslationUnitContext.class,0);
@@ -8116,7 +8116,7 @@ public class CParser extends Parser {
 			if (_la==T__14) {
 				{
 				setState(1264);
-				includeDirective();
+				includeDeclaration();
 				}
 			}
 
@@ -8451,7 +8451,7 @@ public class CParser extends Parser {
 		return _localctx;
 	}
 
-	public static class IncludeDirectiveContext extends ParserRuleContext {
+	public static class IncludeDeclarationContext extends ParserRuleContext {
 		public List<TerminalNode> Whitespace() { return getTokens(CParser.Whitespace); }
 		public TerminalNode Whitespace(int i) {
 			return getToken(CParser.Whitespace, i);
@@ -8461,28 +8461,28 @@ public class CParser extends Parser {
 		}
 		public TerminalNode Less() { return getToken(CParser.Less, 0); }
 		public TerminalNode Greater() { return getToken(CParser.Greater, 0); }
-		public IncludeDirectiveContext(ParserRuleContext parent, int invokingState) {
+		public IncludeDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_includeDirective; }
+		@Override public int getRuleIndex() { return RULE_includeDeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CListener ) ((CListener)listener).enterIncludeDirective(this);
+			if ( listener instanceof CListener ) ((CListener)listener).enterIncludeDeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CListener ) ((CListener)listener).exitIncludeDirective(this);
+			if ( listener instanceof CListener ) ((CListener)listener).exitIncludeDeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CVisitor ) return ((CVisitor<? extends T>)visitor).visitIncludeDirective(this);
+			if ( visitor instanceof CVisitor ) return ((CVisitor<? extends T>)visitor).visitIncludeDeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final IncludeDirectiveContext includeDirective() throws RecognitionException {
-		IncludeDirectiveContext _localctx = new IncludeDirectiveContext(_ctx, getState());
-		enterRule(_localctx, 174, RULE_includeDirective);
+	public final IncludeDeclarationContext includeDeclaration() throws RecognitionException {
+		IncludeDeclarationContext _localctx = new IncludeDeclarationContext(_ctx, getState());
+		enterRule(_localctx, 174, RULE_includeDeclaration);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);

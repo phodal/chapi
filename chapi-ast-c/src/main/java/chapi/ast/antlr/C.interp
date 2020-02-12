@@ -334,7 +334,7 @@ translationUnit
 externalDeclaration
 functionDefinition
 declarationList
-includeDirective
+includeDeclaration
 includeIdentifier
 
 

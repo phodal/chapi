@@ -626,7 +626,7 @@ public class CBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements CVis
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIncludeDirective(CParser.IncludeDirectiveContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIncludeDeclaration(CParser.IncludeDeclarationContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

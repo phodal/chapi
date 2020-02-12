@@ -878,15 +878,15 @@ public interface CListener extends ParseTreeListener {
 	 */
 	void exitDeclarationList(CParser.DeclarationListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CParser#includeDirective}.
+	 * Enter a parse tree produced by {@link CParser#includeDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterIncludeDirective(CParser.IncludeDirectiveContext ctx);
+	void enterIncludeDeclaration(CParser.IncludeDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CParser#includeDirective}.
+	 * Exit a parse tree produced by {@link CParser#includeDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitIncludeDirective(CParser.IncludeDirectiveContext ctx);
+	void exitIncludeDeclaration(CParser.IncludeDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CParser#includeIdentifier}.
 	 * @param ctx the parse tree

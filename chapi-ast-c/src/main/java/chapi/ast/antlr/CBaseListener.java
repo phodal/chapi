@@ -1060,13 +1060,13 @@ public class CBaseListener implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIncludeDirective(CParser.IncludeDirectiveContext ctx) { }
+	@Override public void enterIncludeDeclaration(CParser.IncludeDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIncludeDirective(CParser.IncludeDirectiveContext ctx) { }
+	@Override public void exitIncludeDeclaration(CParser.IncludeDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

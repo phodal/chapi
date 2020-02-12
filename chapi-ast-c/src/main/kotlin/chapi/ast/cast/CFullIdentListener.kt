@@ -13,7 +13,7 @@ open class CFullIdentListener(fileName: String) : CBaseListener() {
         super.enterFunctionDefinition(ctx)
     }
 
-    override fun enterIncludeDirective(ctx: CParser.IncludeDirectiveContext?) {
+    override fun enterIncludeDeclaration(ctx: CParser.IncludeDeclarationContext?) {
         val importName = ctx!!.includeIdentifier().text
         val imp = CodeImport(
             Source = importName

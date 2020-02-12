@@ -525,7 +525,7 @@ jumpStatement
     ;
 
 compilationUnit
-    : includeDirective? translationUnit? EOF
+    : includeDeclaration? translationUnit? EOF
     ;
 
 translationUnit
@@ -897,7 +897,7 @@ ComplexDefine
         -> skip
     ;
          
-includeDirective
+includeDeclaration
     :   '#' Whitespace? 'include' Whitespace? (('"' includeIdentifier '"') | ('<' includeIdentifier '>' ))
     ;
 
