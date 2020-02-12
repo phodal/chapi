@@ -38,5 +38,14 @@ internal class CodeAnnotationTest {
         val isComponent = CodeAnnotation("Ignore", emptyStringArray).isIgnoreOrTest()
         assertEquals(isComponent, true)
     }
+
+
+    @Test
+    fun shouldReturnTrueWhenIsOverride() {
+        val emptyStringArray = arrayOf<AnnotationKeyValue>()
+        assertEquals(CodeAnnotation("Override", emptyStringArray).isOverride(), true)
+    }
+
+
 }
 

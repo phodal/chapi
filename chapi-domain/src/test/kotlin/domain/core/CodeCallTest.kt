@@ -45,4 +45,14 @@ internal class CodeCallTest {
         assertEquals(CodeCall(FunctionName = "assertEquals").hasAssertion(), true)
         assertEquals(CodeCall(FunctionName = "should").hasAssertion(), true)
     }
+
+    @Test
+    internal fun shouldReturnFalseWhenNotAssertion() {
+        assertEquals(CodeCall(FunctionName = "get").hasAssertion(), false)
+    }
+
+    @Test
+    internal fun shouldSuccessToString() {
+        assertEquals(CodeCall(FunctionName = "get").toString(), """{"Package":"","Type":"","NodeName":"","FunctionName":"get","Parameters":[],"Position":{"StartLine":0,"StartLinePosition":0,"StopLine":0,"StopLinePosition":0}}""")
+    }
 }
