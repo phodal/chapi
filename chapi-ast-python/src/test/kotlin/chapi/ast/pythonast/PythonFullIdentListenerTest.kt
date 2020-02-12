@@ -113,8 +113,9 @@ class foo:
 
 """
 
-        val codeFile = PythonAnalyser().analysis(code, "")
+        val codeFile = PythonAnalyser().analysis(code, "fileName.py")
         assertEquals(codeFile.DataStructures[0].NodeName, "foo")
+        assertEquals(codeFile.DataStructures[0].FilePath, "fileName.py")
         assertEquals(codeFile.DataStructures[0].Annotations.size, 1)
         assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "decorator")
     }
