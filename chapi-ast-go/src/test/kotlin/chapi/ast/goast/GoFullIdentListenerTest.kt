@@ -77,6 +77,7 @@ type School struct {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "School")
         assertEquals(codeFile.DataStructures[0].FilePath, "basic.go")
+        assertEquals(codeFile.DataStructures[0].Package, "main")
         assertEquals(codeFile.DataStructures[0].Fields.size, 1)
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "bson.ObjectId")
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "Id")
@@ -104,5 +105,6 @@ func (a *Animal) Move() {
         println(codeFile.DataStructures[0])
         assertEquals(codeFile.DataStructures[0].Fields.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "Move")
     }
 }
