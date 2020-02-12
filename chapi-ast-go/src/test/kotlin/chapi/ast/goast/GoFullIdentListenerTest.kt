@@ -42,4 +42,23 @@ import . "time"
         assertEquals(codeFile.Imports[1].Source, "time")
         assertEquals(codeFile.Imports[1].AsName, ".")
     }
+
+    @Test
+    internal fun shouldIdentifyMultipleTogetherImport() {
+        var code = """
+package main
+
+import (
+    "fmt"
+    "html/template"
+    "os"
+)
+"""
+
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.Imports.size, 3)
+        assertEquals(codeFile.Imports[0].Source, "fmt")
+        assertEquals(codeFile.Imports[1].Source, "html/template")
+        assertEquals(codeFile.Imports[2].Source, "os")
+    }
 }
