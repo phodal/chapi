@@ -2,3 +2,4 @@ version: "2"
 exclude_patterns:
   - "**/src/main/java/chapi/ast/antlr/"
   - "**/resources/**"
+  - "tests/"
