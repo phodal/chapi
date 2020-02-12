@@ -53,7 +53,7 @@ importDecl
     ;
 
 importSpec
-    : ('.' | IDENTIFIER)? importPath
+    : (DOT | IDENTIFIER)? importPath
     ;
 
 importPath
