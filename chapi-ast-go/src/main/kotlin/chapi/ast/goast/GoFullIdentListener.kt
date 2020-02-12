@@ -48,7 +48,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         codeFunction.Parameters = this.buildParameters(ctx.signature().parameters())
         codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(codeFunction, ctx.signature())
 
-        defaultNode.Functions += codeFunction
+        currentFunction = codeFunction
+    }
+
+    override fun exitFunctionDecl(ctx: GoParser.FunctionDeclContext?) {
+        defaultNode.Functions += currentFunction
+        currentFunction = CodeFunction()
     }
 
     override fun enterTypeDecl(ctx: GoParser.TypeDeclContext?) {
@@ -70,6 +75,11 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         val receiverName = this.getStructNameFromReceiver(ctx.receiver().parameters())!!
 
         this.addReceiverToStruct(receiverName, codeFunction)
+    }
+
+    override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
+//        defaultNode.Functions += currentFunction
+//        currentFunction = CodeFunction()
     }
 
     private fun addReceiverToStruct(receiverName: String, codeFunction: CodeFunction) {
@@ -137,6 +147,36 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
 
         return fields
+    }
+
+    override fun enterExpression(ctx: GoParser.ExpressionContext?) {
+        val firstChild = ctx!!.getChild(0)
+        when (firstChild::class.java.simpleName) {
+            "PrimaryExprContext" -> {
+                if (firstChild.getChild(1) != null) {
+                    this.buildPrimaryExprCtx(firstChild)
+                }
+            }
+        }
+    }
+
+    private fun buildPrimaryExprCtx(primaryExprCtx: ParseTree?) {
+        when (primaryExprCtx!!.getChild(1)::class.java.simpleName) {
+            "ArgumentsContext" -> {
+                val codeCall = CodeCall(
+                    NodeName = primaryExprCtx.getChild(0).text
+                )
+                val argumentsContext = primaryExprCtx.getChild(1) as GoParser.ArgumentsContext
+                for (expressionContext in argumentsContext.expressionList().expression()) {
+                    val codeProperty = CodeProperty(
+                        TypeValue = expressionContext.text,
+                        TypeType = ""
+                    )
+                    codeCall.Parameters += codeProperty
+                }
+                currentFunction.FunctionCalls += codeCall
+            }
+        }
     }
 
     fun getNodeInfo(): CodeFile {

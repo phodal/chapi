@@ -169,10 +169,28 @@ func get(x int, y int) (int, int) {
 """
         val codeFile = GoAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
-        println(codeFile.DataStructures[0])
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 2)
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[0].TypeValue, "x")
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[0].TypeType, "int")
+    }
+
+    @Test
+    internal fun shouldIdentifyFuncCall() {
+        var code = """
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("hello world")
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].NodeName, "fmt.Println")
+        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters.size, 1)
     }
 }
