@@ -50,7 +50,7 @@ dependencies {
 }
 
 // refs: https://github.com/ben-manes/caffeine/blob/v2.6.2/build.gradle#L133
-tasks.register("jacocoMerge", JacocoMerge::class) {
+val jacocoMerge by tasks.registering(JacocoMerge::class) {
     subprojects.forEach { subproject ->
         executionData(subproject.tasks.withType(Test::class.java))
     }
@@ -61,17 +61,23 @@ tasks.register("jacocoMerge", JacocoMerge::class) {
     }
 }
 
-tasks.register<Copy>("aggregateJacocoReports") {
-    from(jacocoReports)
-    into(file("$buildDir/reports/jacoco"))
-}
-
+// refs: https://github.com/stankevichevg/axon-couchbase/blob/b455cbf420963656adf8f3d964c68f9811c9e8e3/build.gradle.kts
 tasks.register("jacocoRootReports", JacocoReport::class) {
-    dependsOn("jacocoMerge")
+    dependsOn("test")
+    dependsOn(jacocoMerge)
+
+    executionData(files(jacocoMerge))
+    additionalClassDirs(files(subprojects.flatMap { project ->
+        listOf("java", "kotlin").map { project.buildDir.path + "/classes/$it/main" }
+    }))
+    additionalSourceDirs(files(subprojects.flatMap { project ->
+        listOf("java", "kotlin").map { project.file("src/main/$it").absolutePath }
+    }))
 
     reports {
         xml.setEnabled(true)
         html.setEnabled(true)
         xml.setDestination(file("${project.buildDir}/${project.name}.xml"))
     }
+    dependsOn(jacocoMerge)
 }
