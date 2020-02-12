@@ -72,7 +72,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
         this.buildParameters(ctx.signature().parameters())
 
-        val receiverName = this.getTypeNameFromReceiver(ctx.receiver().parameters())!!
+        val receiverName = this.getStructNameFromReceiver(ctx.receiver().parameters())!!
 
         this.addReceiverToStruct(receiverName, codeFunction)
     }

@@ -8,7 +8,7 @@ open class GoAstListener : GoParserBaseListener() {
         println("buildParameters")
     }
 
-    fun getTypeNameFromReceiver(parameters: GoParser.ParametersContext?): String? {
+    fun getStructNameFromReceiver(parameters: GoParser.ParametersContext?): String? {
         val parameterDecls = parameters!!.parameterDecl()
         for (paramCtx in parameterDecls) {
             var typeType = paramCtx.type_().text
