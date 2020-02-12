@@ -30,13 +30,16 @@ val jacocoReports by configurations.creating {
 }
 
 dependencies {
-    jacocoReports(project("chapi-domain"))
-    jacocoReports(project("chapi-application"))
+    jacocoReports(project(":chapi-domain"))
+    jacocoReports(project(":chapi-application"))
+    jacocoReports(project(":chapi-testing"))
 
-    jacocoReports(project("chapi-ast-java"))
-    jacocoReports(project("chapi-ast-typescript"))
-    jacocoReports(project("chapi-ast-python"))
-    jacocoReports(project("chapi-ast-go"))
+    jacocoReports(project(":chapi-ast-java"))
+    jacocoReports(project(":chapi-ast-typescript"))
+    jacocoReports(project(":chapi-ast-python"))
+    jacocoReports(project(":chapi-ast-go"))
+    jacocoReports(project(":chapi-ast-kotlin"))
+    jacocoReports(project(":chapi-ast-c"))
 
     subprojects.forEach {
         archives(it)

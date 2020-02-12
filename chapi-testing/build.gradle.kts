@@ -2,6 +2,8 @@ plugins {
     java
     kotlin("jvm")
     kotlin("plugin.serialization") version "1.3.61"
+
+    `jacoco-conventions`
 }
 
 repositories {
