@@ -72,14 +72,13 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(codeFunction, ctx.signature())
         codeFunction.Parameters = this.buildParameters(ctx.signature().parameters())
 
-        val receiverName = this.getStructNameFromReceiver(ctx.receiver().parameters())!!
-
-        this.addReceiverToStruct(receiverName, codeFunction)
+        currentFunction = codeFunction
     }
 
     override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
-//        defaultNode.Functions += currentFunction
-//        currentFunction = CodeFunction()
+        val receiverName = this.getStructNameFromReceiver(ctx!!.receiver().parameters())!!
+        this.addReceiverToStruct(receiverName, currentFunction)
+        currentFunction = CodeFunction()
     }
 
     private fun addReceiverToStruct(receiverName: String, codeFunction: CodeFunction) {

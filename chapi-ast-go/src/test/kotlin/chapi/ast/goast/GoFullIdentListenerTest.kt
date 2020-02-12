@@ -176,6 +176,29 @@ func get(x int, y int) (int, int) {
     }
 
     @Test
+    internal fun shouldIdentifyStructFuncCall() {
+        var code = """
+package main
+
+import "fmt"
+
+type Animal struct {
+	Age int
+}
+
+func (a *Animal) Move() {
+	fmt.Println("Animal moved")
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].NodeName, "fmt.Println")
+        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters.size, 1)
+    }
+
+    @Test
     internal fun shouldIdentifyFuncCall() {
         var code = """
 package main
