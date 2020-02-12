@@ -77,7 +77,7 @@ tasks.register("jacocoRootReports", JacocoReport::class) {
     reports {
         xml.setEnabled(true)
         html.setEnabled(true)
-        xml.setDestination(file("${project.buildDir}/${project.name}.xml"))
+        xml.setDestination(file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"))
     }
     dependsOn(jacocoMerge)
 }
