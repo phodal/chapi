@@ -5,16 +5,6 @@ import kotlin.test.assertEquals
 
 internal class TypeScriptFullIdentListenerTest {
     @Test
-    internal fun shouldCompile() {
-        var code = """
-interface IPerson {
-    name: string;
-}            
-"""
-        TypeScriptAnalyser().analysis(code, "")
-    }
-
-    @Test
     internal fun shouldIdentifyInterfaceName() {
         var code = """
 export interface IPerson {
@@ -22,9 +12,10 @@ export interface IPerson {
     gender: string;
 }
 """
-        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        val codeFile = TypeScriptAnalyser().analysis(code, "iperson.ts")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "IPerson")
+        assertEquals(codeFile.DataStructures[0].FilePath, "iperson.ts")
     }
 
     @Test

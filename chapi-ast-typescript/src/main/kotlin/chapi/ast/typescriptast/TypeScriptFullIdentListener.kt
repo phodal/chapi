@@ -34,7 +34,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         currentNode = CodeDataStruct(
             Type = "Class",
             NodeName = nodeName,
-            Package = this.namespaceName
+            Package = this.namespaceName,
+            FilePath = codeFile.FullName
         )
 
         val heritageCtx = ctx.classHeritage()
@@ -154,7 +155,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         currentNode = CodeDataStruct(
             Type = currentType,
             NodeName = nodeName,
-            Package = this.namespaceName
+            Package = this.namespaceName,
+            FilePath = codeFile.FullName
         )
 
         if (ctx.interfaceExtendsClause() != null) {
