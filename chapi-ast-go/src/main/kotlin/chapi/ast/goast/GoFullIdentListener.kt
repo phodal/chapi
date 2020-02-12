@@ -44,6 +44,36 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
+    override fun enterMethodDecl(ctx: GoParser.MethodDeclContext?) {
+        val funcName = ctx!!.IDENTIFIER().text
+        val codeFunction = CodeFunction(
+            Name = funcName
+        )
+
+        val result = ctx.signature().result()
+        if (result != null) {
+            println("enterMethodDecl -> " + result.text)
+        }
+        this.buildParameters(ctx.signature().parameters())
+
+        val receiverName = this.getTypeNameFromReceiver(ctx.receiver().parameters())!!
+
+        this.addReceiverToStruct(receiverName, codeFunction)
+    }
+
+    private fun addReceiverToStruct(receiverName: String, codeFunction: CodeFunction) {
+        if (structMap[receiverName] == null) {
+            val struct = CodeDataStruct(
+                NodeName = receiverName
+            )
+
+            struct.Functions += codeFunction
+            structMap[receiverName] = struct
+        } else {
+            structMap[receiverName]!!.Functions += codeFunction
+        }
+    }
+
     private fun buildTypeSpec(typeSpec: GoParser.TypeSpecContext) {
         val identifyName = typeSpec.IDENTIFIER().text
         val typeLit = typeSpec.type_().typeLit()
@@ -67,6 +97,19 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             NodeName = identifyName
         )
         val structTypeCtx = typeChild as GoParser.StructTypeContext
+
+        val fields = buildStructFields(structTypeCtx)
+
+        if (structMap[identifyName] != null) {
+            structMap[identifyName]!!.Fields = fields
+        } else {
+            struct.Fields = fields
+            structMap[identifyName] = struct
+        }
+    }
+
+    private fun buildStructFields(structTypeCtx: GoParser.StructTypeContext): Array<CodeField> {
+        var fields: Array<CodeField> = arrayOf()
         for (fieldDeclContext in structTypeCtx.fieldDecl()) {
             val typeValue = fieldDeclContext.identifierList().text
             val typeType = fieldDeclContext.type_().text
@@ -76,10 +119,10 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 TypeValue = typeValue
             )
 
-            struct.Fields += field
+            fields += field
         }
 
-        structMap[identifyName] = struct
+        return fields
     }
 
     fun getNodeInfo(): CodeFile {

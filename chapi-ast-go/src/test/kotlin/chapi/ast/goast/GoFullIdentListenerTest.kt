@@ -79,4 +79,28 @@ type School struct {
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "bson.ObjectId")
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "Id")
     }
+
+    @Test
+    internal fun shouldIdentifyBasicStructFunction() {
+        var code = """
+package main
+
+import "fmt"
+
+type Animal struct {
+	Age int
+}
+
+func (a *Animal) Move() {
+	fmt.Println("Animal moved")
+}
+"""
+
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "Animal")
+        println(codeFile.DataStructures[0])
+        assertEquals(codeFile.DataStructures[0].Fields.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+    }
 }
