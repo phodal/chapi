@@ -6,8 +6,17 @@ import domain.core.CodeFunction
 import domain.core.CodeProperty
 
 open class GoAstListener : GoParserBaseListener() {
-    fun buildParameters(parameters: GoParser.ParametersContext?) {
-        println("buildParameters")
+    fun buildParameters(parametersCtx: GoParser.ParametersContext?): Array<CodeProperty> {
+        var parameters : Array<CodeProperty> = arrayOf()
+        for (paramCtx in parametersCtx!!.parameterDecl()) {
+            val parameter = CodeProperty(
+                TypeValue = paramCtx.identifierList().text,
+                TypeType = paramCtx.type_().text
+            )
+
+            parameters += parameter
+        }
+        return parameters
     }
 
     fun getStructNameFromReceiver(parameters: GoParser.ParametersContext?): String? {

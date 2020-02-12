@@ -45,6 +45,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             Package = codeFile.PackageName
         )
 
+        codeFunction.Parameters = this.buildParameters(ctx.signature().parameters())
         codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(codeFunction, ctx.signature())
 
         defaultNode.Functions += codeFunction
@@ -64,8 +65,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         )
 
         codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(codeFunction, ctx.signature())
-
-        this.buildParameters(ctx.signature().parameters())
+        codeFunction.Parameters = this.buildParameters(ctx.signature().parameters())
 
         val receiverName = this.getStructNameFromReceiver(ctx.receiver().parameters())!!
 

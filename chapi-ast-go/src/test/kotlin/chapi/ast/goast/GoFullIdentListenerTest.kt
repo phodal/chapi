@@ -157,4 +157,22 @@ func get(x int, y int) (int, int) {
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns.size, 2)
     }
+
+    @Test
+    internal fun shouldIdentifyFunctionParameters() {
+        var code = """
+package main
+
+func get(x int, y int) (int, int) {
+	return x, y
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        println(codeFile.DataStructures[0])
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 2)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[0].TypeValue, "x")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Parameters[0].TypeType, "int")
+    }
 }
