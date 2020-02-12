@@ -1,16 +1,12 @@
-import kotlinx.coroutines.flow.asFlow
-import org.gradle.kotlin.dsl.withType as withType1
-
 plugins {
     base
 
     val kotlinVersion = "1.3.61"
     kotlin("jvm") version kotlinVersion apply false
 
-    java // Required by at least JUnit.
+    java
 
     jacoco
-//    id("org.jetbrains.kotlin.multiplatform") version "1.3.61"
     id("com.github.kt3k.coveralls") version "2.9.0"
 }
 
