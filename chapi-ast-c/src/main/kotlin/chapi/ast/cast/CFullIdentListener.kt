@@ -5,7 +5,7 @@ import chapi.ast.antlr.CParser
 
 import domain.core.CodeFile
 
-open class CIdentListener(fileName: String) : CBaseListener() {
+open class CFullIdentListener(fileName: String) : CBaseListener() {
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
 
     override fun enterFunctionDefinition(ctx: CParser.FunctionDefinitionContext?) {

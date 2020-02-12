@@ -7,10 +7,10 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class CIdentApp() {
+open class CAnalyser() {
     open fun analysis(str: String, fileName: String = ""): CodeFile {
         val context = this.parse(str).compilationUnit()
-        val listener = CIdentListener(fileName)
+        val listener = CFullIdentListener(fileName)
 
         ParseTreeWalker().walk(listener, context)
 
