@@ -61,14 +61,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             Name = funcName
         )
 
-        val result = ctx.signature().result()
-        if (result != null) {
-            val returnType = CodeProperty(
-                TypeType = result.text,
-                TypeValue = ""
-            )
-            codeFunction.MultipleReturns += returnType
-        }
+        codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(codeFunction, ctx.signature())
 
         this.buildParameters(ctx.signature().parameters())
 
