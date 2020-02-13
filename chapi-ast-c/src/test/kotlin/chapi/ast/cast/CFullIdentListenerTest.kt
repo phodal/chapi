@@ -55,6 +55,22 @@ struct list_el {
     }
 
     @Test
+    internal fun shouldIdentifyStructFunctionFunction() {
+        val code = """
+struct Person {
+    int age;
+}
+
+int is_old(Person* p) {
+    return p->age > 60;
+}
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
+
+    @Test
     internal fun shouldIdentifyStructFunctionPoint() {
         val code = """
 struct list_el {
