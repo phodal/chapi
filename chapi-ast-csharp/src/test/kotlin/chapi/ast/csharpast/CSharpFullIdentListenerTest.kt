@@ -47,4 +47,17 @@ using generics = System.Collections.Generic;
         assertEquals(codeFile.Imports[0].Source, "System.Collections.Generic")
         assertEquals(codeFile.Imports[0].AsName, "generics")
     }
+
+    @Test
+    fun shouldIdentDeclNameSpace() {
+        val code = """
+using System; 
+  
+namespace HelloWorldApp {
+
+}
+"""
+        val codeFile = CSharpAnalyser().analysis(code, "hello.cs")
+        assertEquals(codeFile.Packages.size, 1)
+    }
 }
