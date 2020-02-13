@@ -1,6 +1,12 @@
 all: test
 
+build:
+
+
 test:
+	./gradlew test
+
+coverage:
 	./gradlew check jacocoTestReport jacocoRootReports coveralls
 
 changelog:
