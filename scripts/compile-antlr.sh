@@ -47,3 +47,9 @@ cd grammars/csharp
 antlr -Dlanguage=Java -listener -visitor CSharpLexer.g4 -o ../../chapi-ast-csharp/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
 antlr -Dlanguage=Java -listener -visitor CSharpPreprocessorParser.g4 -o ../../chapi-ast-csharp/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
 antlr -Dlanguage=Java -listener -visitor CSharpParser.g4 -o ../../chapi-ast-csharp/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+
+cd ../..
+
+cd grammars/scala
+
+antlr -Dlanguage=Java -listener -visitor Scala.g4 -o ../../chapi-ast-scala/src/main/java/chapi/ast/antlr -package chapi.ast.antlr

@@ -13,6 +13,7 @@ include(
     ":chapi-ast-python",
     ":chapi-ast-c",
     ":chapi-ast-csharp",
-    ":chapi-ast-kotlin"
+    ":chapi-ast-kotlin",
+    ":chapi-ast-scala"
 )
 
