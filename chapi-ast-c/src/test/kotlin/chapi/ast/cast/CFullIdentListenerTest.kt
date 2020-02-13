@@ -53,4 +53,74 @@ struct list_el {
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "int")
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "val")
     }
+
+    @Test
+    internal fun shouldIdentifyStructFunctionPoint() {
+        val code = """
+struct list_el {
+   int val;
+   void (*func1)(void);
+};
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
+
+    @Test
+    internal fun shouldIdentifyAnonymousStruct() {
+        val code = """
+struct {
+   int i;
+   int j;
+}  myVariableName;
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+    }
+
+    @Test
+    internal fun shouldIdentifyNestedStruct() {
+        val code = """
+struct Info{
+    char name[30];
+    int age;
+    struct {
+        char area_name[39];
+        int house_no;
+        char district[39];
+    } address; // <<< here it is now
+};
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+    }
+
+    @Test
+    internal fun shouldIdentifyForwardDeclaration() {
+        val code = """
+struct context;
+
+struct funcptrs{
+  void (*func0)(struct context *ctx);
+  void (*func1)(void);
+};
+
+struct context{
+    struct funcptrs fps;
+}; 
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+    }
+
+    @Test
+    internal fun shouldIdentifyForwardDeclarationSelf() {
+        val code = """
+struct element;
+typedef struct {
+    int value;
+    // Use of the forward declaration
+    struct element *next;
+} element; // Complete definition
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+    }
 }

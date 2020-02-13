@@ -33,7 +33,11 @@ open class CFullIdentListener(fileName: String) : CBaseListener() {
             val specifierQualifierList = structDecl.specifierQualifierList()
             if (specifierQualifierList != null) {
                 val key = specifierQualifierList.typeSpecifier().text
-                val value = specifierQualifierList.specifierQualifierList().text
+                val qualifierList = specifierQualifierList.specifierQualifierList()
+                var value = ""
+                if (qualifierList != null) {
+                    value = qualifierList.text
+                }
 
                 val field = CodeField(
                     TypeType = key,
