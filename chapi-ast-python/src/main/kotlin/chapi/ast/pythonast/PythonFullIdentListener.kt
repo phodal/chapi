@@ -2,14 +2,14 @@ package chapi.ast.pythonast
 
 import chapi.ast.antlr.PythonParser
 import domain.core.CodeDataStruct
-import domain.core.CodeFile
+import domain.core.CodeContainer
 import domain.core.CodeFunction
 import domain.core.CodeImport
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     private var currentFunction: CodeFunction = CodeFunction()
     private var hasEnterClass = false
-    private var codeFile: CodeFile = CodeFile(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
     private var currentNode: CodeDataStruct = CodeDataStruct()
     private var defaultNode: CodeDataStruct = CodeDataStruct(
@@ -31,7 +31,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
             codeImport.UsageName += dotNames[i].text
         }
 
-        codeFile.Imports += codeImport
+        codeContainer.Imports += codeImport
     }
 
     override fun enterFrom_stmt(ctx: PythonParser.From_stmtContext?) {
@@ -58,13 +58,13 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
             }
         }
 
-        codeFile.Imports += codeImport
+        codeContainer.Imports += codeImport
     }
 
     override fun enterClassdef(ctx: PythonParser.ClassdefContext?) {
         hasEnterClass = true
         currentNode = CodeDataStruct(
-            FilePath = codeFile.FullName,
+            FilePath = codeContainer.FullName,
             NodeName = ctx!!.name().text
         )
 
@@ -82,7 +82,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
 
     override fun exitClassdef(ctx: PythonParser.ClassdefContext?) {
         hasEnterClass = false
-        codeFile.DataStructures += currentNode
+        codeContainer.DataStructures += currentNode
         currentNode = CodeDataStruct()
     }
 
@@ -130,10 +130,10 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         }
     }
 
-    fun getNodeInfo(): CodeFile {
+    fun getNodeInfo(): CodeContainer {
         if (defaultNode.Functions.isNotEmpty()) {
-            this.codeFile.DataStructures += defaultNode
+            this.codeContainer.DataStructures += defaultNode
         }
-        return this.codeFile
+        return this.codeContainer
     }
 }

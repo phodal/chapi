@@ -10,7 +10,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var hasEnterClass = false
 
     private var nodeMap = mutableMapOf<String, CodeDataStruct>()
-    private var codeFile: CodeFile = CodeFile(FullName = node.fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = node.fileName)
 
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
@@ -35,7 +35,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             Type = "Class",
             NodeName = nodeName,
             Package = this.namespaceName,
-            FilePath = codeFile.FullName
+            FilePath = codeContainer.FullName
         )
 
         val heritageCtx = ctx.classHeritage()
@@ -156,7 +156,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             Type = currentType,
             NodeName = nodeName,
             Package = this.namespaceName,
-            FilePath = codeFile.FullName
+            FilePath = codeContainer.FullName
         )
 
         if (ctx.interfaceExtendsClause() != null) {
@@ -261,7 +261,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             codeImport.UsageName += ctx.identifierName().text
         }
 
-        codeFile.Imports += codeImport
+        codeContainer.Imports += codeImport
     }
 
     private fun removeQuote(text: String): String = text.replace("[\"']".toRegex(), "")
@@ -276,7 +276,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             codeImport.UsageName += ctx.Identifier().text
         }
 
-        codeFile.Imports += codeImport
+        codeContainer.Imports += codeImport
     }
 
     override fun enterImportAll(ctx: TypeScriptParser.ImportAllContext?) {
@@ -285,7 +285,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             Source = source
         )
 
-        codeFile.Imports += imp
+        codeContainer.Imports += imp
     }
 
     override fun enterFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
@@ -484,15 +484,15 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         return args
     }
 
-    fun getNodeInfo(): CodeFile {
+    fun getNodeInfo(): CodeContainer {
         for (entry in nodeMap) {
-            codeFile.DataStructures += entry.value
+            codeContainer.DataStructures += entry.value
         }
         if (defaultNode.Functions.isNotEmpty()) {
             defaultNode.NodeName = "default"
-            codeFile.DataStructures += defaultNode
+            codeContainer.DataStructures += defaultNode
         }
 
-        return codeFile
+        return codeContainer
     }
 }

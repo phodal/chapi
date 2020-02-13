@@ -2,14 +2,14 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
 import domain.core.CodeDataStruct
-import domain.core.CodeFile
+import domain.core.CodeContainer
 import domain.core.CodeFunction
 import domain.core.CodeImport
 
 open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var isOverrideMethod: Boolean = false
     private var hasEnterClass: Boolean = false
-    private var codeFile: CodeFile = CodeFile(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     private var classNodes: Array<CodeDataStruct> = arrayOf()
     private var imports: Array<CodeImport> = arrayOf()
 
@@ -20,17 +20,17 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         val codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
         imports += codeImport
 
-        codeFile.Imports += codeImport
+        codeContainer.Imports += codeImport
     }
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
-        codeFile.PackageName = ctx?.qualifiedName()!!.text
+        codeContainer.PackageName = ctx?.qualifiedName()!!.text
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
         hasEnterClass = true
         currentNode.Type = "Class"
-        currentNode.Package = codeFile.PackageName
+        currentNode.Package = codeContainer.PackageName
 
         if (ctx!!.IDENTIFIER() != null) {
             currentNode.NodeName = ctx.IDENTIFIER().text
@@ -74,7 +74,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         currentNode = CodeDataStruct(
             Type = "Interface",
             NodeName = ctx!!.IDENTIFIER().text,
-            Package = codeFile.PackageName
+            Package = codeContainer.PackageName
         )
     }
 
@@ -179,8 +179,8 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         }
     }
 
-    fun getNodeInfo(): CodeFile {
-        codeFile.DataStructures = classNodes
-        return codeFile
+    fun getNodeInfo(): CodeContainer {
+        codeContainer.DataStructures = classNodes
+        return codeContainer
     }
 }

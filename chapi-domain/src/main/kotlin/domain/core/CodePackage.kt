@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonObject
 class CodePackage(
     var Name: String = "",
     var ID: String = "",
-    var CodeFiles: Array<CodeFile> = arrayOf(),
+    var codeContainers: Array<CodeContainer> = arrayOf(),
     var Extension: JsonElement = JsonObject(HashMap())
 ) {
 

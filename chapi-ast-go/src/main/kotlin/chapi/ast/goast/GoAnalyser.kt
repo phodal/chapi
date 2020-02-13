@@ -2,13 +2,13 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoLexer
 import chapi.ast.antlr.GoParser
-import domain.core.CodeFile
+import domain.core.CodeContainer
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class GoAnalyser {
-    open fun analysis(code: String, fileName: String): CodeFile {
+    open fun analysis(code: String, fileName: String): CodeContainer {
         val context = this.parse(code).sourceFile()
         val listener = GoFullIdentListener(fileName = fileName)
 

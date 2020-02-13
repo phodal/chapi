@@ -2,13 +2,13 @@ package chapi.ast.cast
 
 import chapi.ast.antlr.CLexer
 import chapi.ast.antlr.CParser
-import domain.core.CodeFile
+import domain.core.CodeContainer
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class CAnalyser() {
-    open fun analysis(str: String, fileName: String = ""): CodeFile {
+    open fun analysis(str: String, fileName: String = ""): CodeContainer {
         val context = this.parse(str).compilationUnit()
         val listener = CFullIdentListener(fileName)
 

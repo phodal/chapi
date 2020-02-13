@@ -5,7 +5,7 @@ import domain.core.*
 import org.antlr.v4.runtime.tree.ParseTree
 
 class GoFullIdentListener(var fileName: String) : GoAstListener() {
-    private var codeFile: CodeFile = CodeFile(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
@@ -18,7 +18,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterPackageClause(ctx: GoParser.PackageClauseContext?) {
-        codeFile.PackageName = ctx!!.IDENTIFIER().text
+        codeContainer.PackageName = ctx!!.IDENTIFIER().text
     }
 
     override fun enterImportSpec(ctx: GoParser.ImportSpecContext?) {
@@ -34,7 +34,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             codeImport.UsageName += ctx.IDENTIFIER().text
         }
 
-        codeFile.Imports += codeImport
+        codeContainer.Imports += codeImport
     }
 
     override fun enterFunctionDecl(ctx: GoParser.FunctionDeclContext?) {
@@ -42,7 +42,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
         val codeFunction = CodeFunction(
             Name = funcName,
-            Package = codeFile.PackageName
+            Package = codeContainer.PackageName
         )
 
         codeFunction.Parameters = this.buildParameters(ctx.signature().parameters())
@@ -125,8 +125,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private fun createStructByName(identifyName: String): CodeDataStruct {
         val struct = CodeDataStruct(
             NodeName = identifyName,
-            Package = codeFile.PackageName,
-            FilePath = codeFile.FullName
+            Package = codeContainer.PackageName,
+            FilePath = codeContainer.FullName
         )
         return struct
     }
@@ -178,16 +178,16 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
-    fun getNodeInfo(): CodeFile {
+    fun getNodeInfo(): CodeContainer {
 
         for (entry in structMap) {
-            codeFile.DataStructures += entry.value
+            codeContainer.DataStructures += entry.value
         }
 
         if (defaultNode.Functions.isNotEmpty()) {
-            codeFile.DataStructures += defaultNode
+            codeContainer.DataStructures += defaultNode
         }
 
-        return codeFile
+        return codeContainer
     }
 }

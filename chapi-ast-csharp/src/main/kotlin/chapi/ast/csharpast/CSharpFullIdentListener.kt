@@ -1,12 +1,12 @@
 package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
-import domain.core.CodeFile
+import domain.core.CodeContainer
 import domain.core.CodeImport
 import domain.core.CodePackage
 
 class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
-    private var codeFile: CodeFile = CodeFile(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
     private var currentPackage: CodePackage = CodePackage()
 
@@ -36,7 +36,7 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
             }
         }
 
-        codeFile.Imports += codeImport
+        codeContainer.Imports += codeImport
     }
 
     override fun enterNamespace_member_declaration(ctx: CSharpParser.Namespace_member_declarationContext?) {
@@ -49,12 +49,12 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
                 )
 
                 currentPackage = codePackage
-                codeFile.Packages += codePackage
+                codeContainer.Packages += codePackage
             }
         }
     }
 
-    fun getNodeInfo(): CodeFile {
-        return codeFile
+    fun getNodeInfo(): CodeContainer {
+        return codeContainer
     }
 }

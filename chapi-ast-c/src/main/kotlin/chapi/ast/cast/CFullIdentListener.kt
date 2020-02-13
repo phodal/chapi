@@ -6,7 +6,7 @@ import domain.core.*
 
 open class CFullIdentListener(fileName: String) : CBaseListener() {
     private var currentDataStruct = CodeDataStruct()
-    private var codeFile: CodeFile = CodeFile(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
 
     override fun enterIncludeDeclaration(ctx: CParser.IncludeDeclarationContext?) {
@@ -14,7 +14,7 @@ open class CFullIdentListener(fileName: String) : CBaseListener() {
         val imp = CodeImport(
             Source = importName
         )
-        codeFile.Imports += imp
+        codeContainer.Imports += imp
     }
 
     override fun enterStructOrUnionSpecifier(ctx: CParser.StructOrUnionSpecifierContext?) {
@@ -45,7 +45,7 @@ open class CFullIdentListener(fileName: String) : CBaseListener() {
 
         }
 
-        codeFile.DataStructures += codeDataStruct
+        codeContainer.DataStructures += codeDataStruct
     }
 
 
@@ -57,7 +57,7 @@ open class CFullIdentListener(fileName: String) : CBaseListener() {
 
     }
 
-    fun getNodeInfo(): CodeFile {
-        return codeFile
+    fun getNodeInfo(): CodeContainer {
+        return codeContainer
     }
 }

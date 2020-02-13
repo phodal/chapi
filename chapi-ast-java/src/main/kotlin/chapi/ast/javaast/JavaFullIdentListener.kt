@@ -40,17 +40,17 @@ open class JavaFullIdentListener(
     private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
 
-    private var codeFile: CodeFile = CodeFile(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
-        codeFile.PackageName = ctx!!.qualifiedName()!!.text
+        codeContainer.PackageName = ctx!!.qualifiedName()!!.text
     }
 
     override fun enterImportDeclaration(ctx: JavaParser.ImportDeclarationContext?) {
         val codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
         imports += codeImport
 
-        codeFile.Imports += codeImport
+        codeContainer.Imports += codeImport
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
@@ -87,8 +87,8 @@ open class JavaFullIdentListener(
     }
 
     private fun buildClassExtension(ctx: JavaParser.ClassDeclarationContext?, classNode: CodeDataStruct) {
-        classNode.Package = codeFile.PackageName
-        classNode.FilePath = codeFile.FullName
+        classNode.Package = codeContainer.PackageName
+        classNode.FilePath = codeContainer.FullName
 
         if (ctx!!.IDENTIFIER() != null) {
             currentClz = ctx.IDENTIFIER().text
@@ -291,7 +291,7 @@ open class JavaFullIdentListener(
         _targetType: String?,
         ctx: JavaParser.MethodCallContext
     ) {
-        var packageName = codeFile.PackageName
+        var packageName = codeContainer.PackageName
         var methodName = callee
 
         var targetTypeStr = _targetType
@@ -405,7 +405,7 @@ open class JavaFullIdentListener(
             name = methodQueue[methodQueue.size - 1].Name
         }
 
-        return codeFile.PackageName + "." + currentClz + "." + name + ":" + method.Position.StartLine.toString()
+        return codeContainer.PackageName + "." + currentClz + "." + name + ":" + method.Position.StartLine.toString()
     }
 
     private fun buildExtend(extendName: String): String {
@@ -422,7 +422,7 @@ open class JavaFullIdentListener(
         if (currentClz == targetType) {
             callType = "self"
             return JavaTargetType(
-                targetType = codeFile.PackageName + "." + targetType,
+                targetType = codeContainer.PackageName + "." + targetType,
                 callType = callType
             )
         }
@@ -538,7 +538,7 @@ open class JavaFullIdentListener(
         currentType = "Interface"
         currentNode.NodeName = ctx!!.IDENTIFIER().text
         currentNode.Type = "Interface"
-        currentNode.Package = codeFile.PackageName
+        currentNode.Package = codeContainer.PackageName
 
         if (ctx.EXTENDS() != null) {
             var extend = ""
@@ -649,7 +649,7 @@ open class JavaFullIdentListener(
             val text = ctx.createdName().text
             currentType = "CreatorClass"
             val creatorNode = CodeDataStruct(
-                Package = codeFile.PackageName,
+                Package = codeContainer.PackageName,
                 NodeName = text,
                 Type = currentType
             )
@@ -711,9 +711,9 @@ open class JavaFullIdentListener(
         methodMap[getMethodMapName(currentFunction)] = codeFunction
     }
 
-    fun getNodeInfo(): CodeFile {
-        codeFile.DataStructures = classNodes
-        return codeFile
+    fun getNodeInfo(): CodeContainer {
+        codeContainer.DataStructures = classNodes
+        return codeContainer
     }
 }
 
