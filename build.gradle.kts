@@ -18,7 +18,7 @@ repositories {
 
 allprojects {
     group = "com.phodal"
-    version = "1.0-SNAPSHOT"
+    version = "0.0.1"
 
     repositories {
         mavenCentral()
