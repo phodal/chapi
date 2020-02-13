@@ -83,6 +83,11 @@ code_property
 code_call
 ```
 
+Refs
+---
+
+Goal: source code data model for different language & different language family from [Language support](https://en.wikipedia.org/wiki/First-class_function)
+
 License
 ---
 
