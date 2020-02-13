@@ -57,7 +57,8 @@ namespace HelloWorldApp {
 
 }
 """
-        val codeFile = CSharpAnalyser().analysis(code, "hello.cs")
-//        assertEquals(codeFile.Packages.size, 1)
+        val codeContainer = CSharpAnalyser().analysis(code, "hello.cs")
+        assertEquals(codeContainer.Containers.size, 1)
+        assertEquals(codeContainer.Containers[0].PackageName, "HelloWorldApp")
     }
 }

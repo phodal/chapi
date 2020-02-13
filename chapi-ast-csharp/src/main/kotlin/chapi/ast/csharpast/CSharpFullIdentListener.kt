@@ -4,11 +4,19 @@ import chapi.ast.antlr.CSharpParser
 import domain.core.CodeContainer
 import domain.core.CodeImport
 import domain.core.CodePackage
+import domain.infra.Stack
 
-class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
+class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
+    private var currentContainer: CodeContainer = codeContainer
+    private var containerStack: Stack<CodeContainer> = Stack<CodeContainer>()
+
     private var currentPackage: CodePackage = CodePackage()
+
+    override fun enterCompilation_unit(ctx: CSharpParser.Compilation_unitContext?) {
+        containerStack.push(codeContainer)
+    }
 
     override fun enterUsing_directives(ctx: CSharpParser.Using_directivesContext?) {
         for (usingCtx in ctx!!.using_directive()) {
@@ -43,14 +51,22 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
         val namespaceDeclaration = ctx!!.namespace_declaration()
         if (namespaceDeclaration != null) {
             if (namespaceDeclaration.qualified_identifier() != null) {
-                val nsName = ctx.namespace_declaration().text
-                val codePackage = CodePackage(
-                    Name = nsName
+                val nsName = ctx.namespace_declaration().qualified_identifier().text
+                val container = CodeContainer(
+                    FullName = fileName,
+                    PackageName = nsName
                 )
 
-                currentPackage = codePackage
+                currentContainer = container
             }
         }
+    }
+
+    override fun exitNamespace_member_declaration(ctx: CSharpParser.Namespace_member_declarationContext?) {
+        val lastContainer = containerStack.elements.last()
+        lastContainer.Containers += currentContainer
+
+        currentContainer = CodeContainer(FullName = this.fileName)
     }
 
     fun getNodeInfo(): CodeContainer {
