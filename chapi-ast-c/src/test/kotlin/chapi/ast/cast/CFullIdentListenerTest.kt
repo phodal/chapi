@@ -55,7 +55,7 @@ struct list_el {
     }
 
     @Test
-    internal fun shouldIdentifyStructFunctionFunction() {
+    internal fun shouldIdentifyStructFunction() {
         val code = """
 struct Person {
     int age;

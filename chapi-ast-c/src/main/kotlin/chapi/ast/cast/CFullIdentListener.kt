@@ -8,9 +8,6 @@ open class CFullIdentListener(fileName: String) : CBaseListener() {
     private var currentDataStruct = CodeDataStruct()
     private var codeFile: CodeFile = CodeFile(FullName = fileName)
 
-    override fun enterFunctionDefinition(ctx: CParser.FunctionDefinitionContext?) {
-        super.enterFunctionDefinition(ctx)
-    }
 
     override fun enterIncludeDeclaration(ctx: CParser.IncludeDeclarationContext?) {
         val importName = ctx!!.includeIdentifier().text
@@ -49,6 +46,15 @@ open class CFullIdentListener(fileName: String) : CBaseListener() {
         }
 
         codeFile.DataStructures += codeDataStruct
+    }
+
+
+    override fun enterFunctionDefinition(ctx: CParser.FunctionDefinitionContext?) {
+
+    }
+
+    override fun exitFunctionDefinition(ctx: CParser.FunctionDefinitionContext?) {
+
     }
 
     fun getNodeInfo(): CodeFile {
