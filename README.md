@@ -27,9 +27,8 @@ Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
 Todo:
 
- - Migrate [Coca](https://github.com/phodal/coca) ast (done)
- - Pluggable
- - Multiple Languages （welcome to PR）
+ - [x] Migrate [Coca](https://github.com/phodal/coca) ast
+ - [] Pluggable
 
 TBC:
 
