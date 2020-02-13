@@ -15,19 +15,25 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
 
     private fun handleDirective(usingCtx: CSharpParser.Using_directiveContext) {
         val usingType = usingCtx::class.java.simpleName
+        val codeImport = CodeImport()
+
         when (usingType) {
             "UsingNamespaceDirectiveContext" -> {
-                val codeImport = CodeImport()
                 val directiveCtx = usingCtx as CSharpParser.UsingNamespaceDirectiveContext
-                val sourceName = directiveCtx.namespace_or_type_name().text
+                codeImport.Source = directiveCtx.namespace_or_type_name().text
+            }
+            "UsingAliasDirectiveContext" -> {
+                val alisCtx = usingCtx as CSharpParser.UsingAliasDirectiveContext
 
-                codeImport.Source = sourceName
-                codeFile.Imports += codeImport
+                codeImport.Source = alisCtx.namespace_or_type_name().text
+                codeImport.AsName = alisCtx.identifier().text
             }
             else -> {
                 println(usingType)
             }
         }
+
+        codeFile.Imports += codeImport
     }
 
     fun getNodeInfo(): CodeFile {

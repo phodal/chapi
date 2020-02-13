@@ -26,7 +26,7 @@ namespace HelloWorldApp {
     }
 
     @Test
-    fun shouldIdentUsingSpace() {
+    fun shouldIdentUsingNamespace() {
         val code = """
 using SomeNameSpace.Nested;
 
@@ -34,5 +34,17 @@ using SomeNameSpace.Nested;
         val codeFile = CSharpAnalyser().analysis(code, "hello.cs")
         assertEquals(codeFile.Imports.size, 1)
         assertEquals(codeFile.Imports[0].Source, "SomeNameSpace.Nested")
+    }
+
+    @Test
+    fun shouldIdentUsingAlias() {
+        val code = """
+using generics = System.Collections.Generic;
+
+"""
+        val codeFile = CSharpAnalyser().analysis(code, "hello.cs")
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "System.Collections.Generic")
+        assertEquals(codeFile.Imports[0].AsName, "generics")
     }
 }
