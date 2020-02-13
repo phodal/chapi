@@ -41,3 +41,9 @@ antlr -Dlanguage=Java -listener -visitor KotlinLexer.g4 -o ../../chapi-ast-kotli
 antlr -Dlanguage=Java -listener -visitor KotlinParser.g4 -o ../../chapi-ast-kotlin/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
 
 cd ../..
+
+cd grammars/csharp
+
+antlr -Dlanguage=Java -listener -visitor CSharpLexer.g4 -o ../../chapi-ast-csharp/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+antlr -Dlanguage=Java -listener -visitor CSharpPreprocessorParser.g4 -o ../../chapi-ast-csharp/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
+antlr -Dlanguage=Java -listener -visitor CSharpParser.g4 -o ../../chapi-ast-csharp/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
