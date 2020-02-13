@@ -14,7 +14,8 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
     }
 
     private fun handleDirective(usingCtx: CSharpParser.Using_directiveContext) {
-        when (usingCtx::class.java.simpleName) {
+        val usingType = usingCtx::class.java.simpleName
+        when (usingType) {
             "UsingNamespaceDirectiveContext" -> {
                 val codeImport = CodeImport()
                 val directiveCtx = usingCtx as CSharpParser.UsingNamespaceDirectiveContext
@@ -22,6 +23,9 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
 
                 codeImport.Source = sourceName
                 codeFile.Imports += codeImport
+            }
+            else -> {
+                println(usingType)
             }
         }
     }

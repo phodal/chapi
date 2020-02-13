@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.*
 internal class CSharpFullIdentListenerTest {
 
     @Test
-    fun analysis() {
+    fun shouldIdentUsingSystem() {
         val code = """
 using System; 
   
@@ -20,9 +20,19 @@ namespace HelloWorldApp {
     } 
 } 
 """
-
         val codeFile = CSharpAnalyser().analysis(code, "hello.cs")
         assertEquals(codeFile.Imports.size, 1)
         assertEquals(codeFile.Imports[0].Source, "System")
+    }
+
+    @Test
+    fun shouldIdentUsingSpace() {
+        val code = """
+using SomeNameSpace.Nested;
+
+"""
+        val codeFile = CSharpAnalyser().analysis(code, "hello.cs")
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "SomeNameSpace.Nested")
     }
 }
