@@ -25,36 +25,6 @@ TBC:
 
  - SQL (refs: [antlr4-oracle](https://github.com/alris/antlr4-oracle) && [sqlgraph](https://github.com/dengdaiyemanren/sqlgraph))
 
-## Data Structures
-
-```
-code_project
-code_module
-
-code_package
-code_package_manager
-code_dependency
-
-code_file
-
-code_annotation
-code_data_struct
-code_field
-code_function
-code_import
-code_member
-code_position
-code_property
-
-code_call
-```
-
-## Setup
-
-1. setup Antlr: `brew install antlr`
-2. run compile: `./scripts/compile-antlr.sh`
-
-
 ## Development
 
 Syntax Parse Identify Rules:
@@ -75,6 +45,43 @@ Syntax Parse Identify Rules:
     1. new instance call
     2. parameter call
     3. field call
+
+
+### Setup
+
+1. setup Antlr: `brew install antlr`
+2. run compile: `./scripts/compile-antlr.sh`
+
+### Data Structures
+
+```
+// for multiple project analysis
+code_project
+code_module
+
+// for package dependency analysis
+code_package_manager
+code_dependency
+
+// package or file as dependency analysis
+code_package
+code_file
+
+// class-first or function-first
+code_data_struct
+code_function
+
+// function or class detail
+code_annotation
+code_field
+code_import
+code_member
+code_position
+code_property
+
+// method call information
+code_call
+```
 
 License
 ---
