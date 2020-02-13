@@ -49,7 +49,6 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener() {
                 )
 
                 currentPackage = codePackage
-                codeContainer.Packages += codePackage
             }
         }
     }
