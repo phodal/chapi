@@ -54,6 +54,28 @@ code_call
 1. setup Antlr: `brew install antlr`
 2. run compile: `./scripts/compile-antlr.sh`
 
+
+## Development
+
+Syntax Parse Identify Rules:
+
+ 1. package name
+ 2. import name
+ 3. class / data struct
+    1. struct name
+    2. struct parameters
+    3. function name
+    4. return types
+    5. function parameters
+ 4. function
+    1. function name
+    2. return types
+    3. function parameters
+ 5. method call
+    1. new instance call
+    2. parameter call
+    3. field call
+
 License
 ---
 
