@@ -58,15 +58,19 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                 )
 
                 currentContainer = container
+
+                val lastContainer = containerStack.elements.last()
+                lastContainer.Containers += currentContainer
+
+                containerStack.push(currentContainer)
+
+                currentContainer = CodeContainer(FullName = this.fileName)
             }
         }
     }
 
     override fun exitNamespace_member_declaration(ctx: CSharpParser.Namespace_member_declarationContext?) {
-        val lastContainer = containerStack.elements.last()
-        lastContainer.Containers += currentContainer
 
-        currentContainer = CodeContainer(FullName = this.fileName)
     }
 
     fun getNodeInfo(): CodeContainer {
