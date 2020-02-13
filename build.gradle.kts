@@ -40,6 +40,7 @@ dependencies {
     jacocoReports(project(":chapi-ast-go"))
     jacocoReports(project(":chapi-ast-kotlin"))
     jacocoReports(project(":chapi-ast-c"))
+    jacocoReports(project(":chapi-ast-csharp"))
 
     subprojects.forEach {
         archives(it)
