@@ -21,6 +21,8 @@ namespace HelloWorldApp {
 } 
 """
 
-        CSharpAnalyser().analysis(code, "hello.cs")
+        val codeFile = CSharpAnalyser().analysis(code, "hello.cs")
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "System")
     }
 }
