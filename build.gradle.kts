@@ -8,6 +8,7 @@ plugins {
 
     jacoco
     id("com.github.kt3k.coveralls") version "2.9.0"
+    id("maven-publish")
 }
 
 allprojects {
@@ -18,6 +19,26 @@ allprojects {
         mavenCentral()
         mavenLocal()
         jcenter()
+    }
+}
+
+val sourcesJar by tasks.registering(Jar::class) {
+    classifier = "sources"
+    from(sourceSets.main.get().allSource)
+}
+
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url = uri("$buildDir/repo")
+        }
+    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
+            artifact(sourcesJar.get())
+        }
     }
 }
 
@@ -58,14 +79,6 @@ val jacocoMerge by tasks.registering(JacocoMerge::class) {
         })
     }
 }
-
-//tasks.register<Copy>("copyjar") {
-//    subprojects.forEach { subproject ->
-//        from(file("${subproject.name}$/buildDir/reports/my-report.pdf"))
-//    }
-//    from(file("$buildDir/reports/my-report.pdf"))
-//    into(file("$buildDir/toArchive"))
-//}
 
 // refs: https://github.com/stankevichevg/axon-couchbase/blob/b455cbf420963656adf8f3d964c68f9811c9e8e3/build.gradle.kts
 tasks.register("jacocoRootReports", JacocoReport::class) {
