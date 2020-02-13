@@ -12,6 +12,10 @@ plugins {
     id("com.jfrog.artifactory") version "4.1.1"
 }
 
+jacoco {
+    toolVersion = "0.8.5"
+}
+
 repositories {
     jcenter()
 }
