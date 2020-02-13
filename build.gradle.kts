@@ -59,6 +59,14 @@ val jacocoMerge by tasks.registering(JacocoMerge::class) {
     }
 }
 
+//tasks.register<Copy>("copyjar") {
+//    subprojects.forEach { subproject ->
+//        from(file("${subproject.name}$/buildDir/reports/my-report.pdf"))
+//    }
+//    from(file("$buildDir/reports/my-report.pdf"))
+//    into(file("$buildDir/toArchive"))
+//}
+
 // refs: https://github.com/stankevichevg/axon-couchbase/blob/b455cbf420963656adf8f3d964c68f9811c9e8e3/build.gradle.kts
 tasks.register("jacocoRootReports", JacocoReport::class) {
     dependsOn("test")
