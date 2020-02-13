@@ -15,6 +15,16 @@ Languages Stages (Welcome to PR your usage languages)
 | arch/package graph  |    ✅  |          |      |         |            |       |     |
 | real world validate |    ✅  |          |      |         |            |       |     |
 
+Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
+
+|            | Languages     |  plan support    |
+|------------|---------------|-------------|
+| Algol      | Ada, Delphi, Pascal, ALGOL, ... |  Pascal? |
+| C family	 | C#, Java, Go, C, C++,  Objective-C, Rust, ... | C, Java, C#, Rust? |
+| Functional | Scheme, Lisp, Clojure, Scala, ...| Scala  |
+| Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript |
+| Other      | Fortran, Swift, Matlab, ...| Swift?, Fortran? |
+
 Todo:
 
  - Migrate [Coca](https://github.com/phodal/coca) ast (done)
