@@ -17,7 +17,7 @@ compilation_unit
 //B.2.1 Basic concepts
 
 namespace_or_type_name 
-	: (identifier type_argument_list? | qualified_alias_member) ('.' identifier type_argument_list?)*
+	: (identifier type_argument_list? | qualified_alias_member) (DOT identifier type_argument_list?)*
 	;
 
 //B.2.2 Types
