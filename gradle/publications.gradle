@@ -1,0 +1,56 @@
+apply plugin: "java"
+apply plugin: "maven-publish"
+apply plugin: 'com.jfrog.artifactory'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                afterEvaluate {
+                    name = project.description
+                    description = project.description
+                }
+                url = "https://github.com/phodal/chapi"
+                organization {
+                    name = "Phodal"
+                    url = "https://www.phodal.com/"
+                }
+                licenses {
+                    license {
+                        name = "MPL"
+                        url = "https://github.com/phodal/chapi/blob/master/LICENSE"
+                        distribution = "repo"
+                    }
+                }
+                scm {
+                    url = "https://github.com/phodal/chapi"
+                    connection = "scm:git:git://github.com/phodal/chapi"
+                    developerConnection = "scm:git:git://github.com/phodal/chapi"
+                }
+                developers {
+                    developer {
+                        id = "jhoeller"
+                        name = "Juergen Hoeller"
+                        email = "jhoeller@pivotal.io"
+                    }
+                }
+                issueManagement {
+                    system = "GitHub"
+                    url = "https://github.com/phodal/chapi/issues"
+                }
+            }
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionResult()
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+}
+
+artifactoryPublish {
+    publications(publishing.publications.mavenJava)
+}

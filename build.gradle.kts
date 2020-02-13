@@ -9,6 +9,11 @@ plugins {
     jacoco
     id("com.github.kt3k.coveralls") version "2.9.0"
     id("maven-publish")
+    id("com.jfrog.artifactory") version "4.1.1"
+}
+
+repositories {
+    jcenter()
 }
 
 allprojects {
@@ -19,26 +24,6 @@ allprojects {
         mavenCentral()
         mavenLocal()
         jcenter()
-    }
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-    classifier = "sources"
-    from(sourceSets.main.get().allSource)
-}
-
-publishing {
-    repositories {
-        maven {
-            // change to point to your repo, e.g. http://my.org/repo
-            url = uri("$buildDir/repo")
-        }
-    }
-    publications {
-        register("mavenJava", MavenPublication::class) {
-            from(components["java"])
-            artifact(sourcesJar.get())
-        }
     }
 }
 
@@ -63,9 +48,13 @@ dependencies {
     jacocoReports(project(":chapi-ast-c"))
     jacocoReports(project(":chapi-ast-csharp"))
 
-    subprojects.forEach {
-        archives(it)
-    }
+//    subprojects.forEach {
+//        archives(it)
+//    }
+}
+
+configure(subprojects) {
+    apply("${rootDir}/gradle/chapi-module.gradle")
 }
 
 // refs: https://github.com/ben-manes/caffeine/blob/v2.6.2/build.gradle#L133

@@ -1,0 +1,24 @@
+apply plugin: "java"
+apply from: "$rootDir/gradle/publications.gradle"
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+    // Don't include or exclude anything explicitly by default. See SPR-12085.
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier.set("javadoc")
+    from javadoc
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
