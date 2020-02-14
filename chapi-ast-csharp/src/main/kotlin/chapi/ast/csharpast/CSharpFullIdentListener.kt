@@ -103,6 +103,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                     val codeFunction = CodeFunction(
                         Package = codeDataStruct.Package,
                         Name = methodName.text,
+                        ReturnType = memberDeclaration.getChild(0).text,
                         Modifiers = buildFunctionModifiers(memberCtx)
                     )
 

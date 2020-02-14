@@ -134,6 +134,14 @@ namespace HelloWorldApp {
     }
 
     @Test
+    fun shouldIdentVoidReturnType() {
+        val codeContainer = CSharpAnalyser().analysis(helloworld, "hello.cs")
+        val codeDataStruct = codeContainer.Containers[0].DataStructures[0]
+        assertEquals(codeDataStruct.Functions.size, 1)
+        assertEquals(codeDataStruct.Functions[0].ReturnType, "void")
+    }
+
+    @Test
     fun shouldIdentNameSpaceClassParametersSupport() {
         val codeContainer = CSharpAnalyser().analysis(helloworld, "hello.cs")
         val codeDataStruct = codeContainer.Containers[0].DataStructures[0]
