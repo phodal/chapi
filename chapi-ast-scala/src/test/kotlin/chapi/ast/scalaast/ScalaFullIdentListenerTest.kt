@@ -25,4 +25,18 @@ object HelloWorld {
         assertEquals(container.DataStructures[0].NodeName, "HelloWorld")
         assertEquals(container.DataStructures[0].Type, DataStructType.OBJECT)
     }
+
+    @Test
+    internal fun shouldAnalysisClassName() {
+        val code = """
+class Outer(i : Int) {
+  def foo(x : Inner.type) = x.getI
+}
+        """
+
+        val container = ScalaAnalyser().analysis(code, "hello.scala")
+        assertEquals(container.DataStructures.size, 1)
+        assertEquals(container.DataStructures[0].NodeName, "Outer")
+        assertEquals(container.DataStructures[0].Type, DataStructType.CLASS)
+    }
 }

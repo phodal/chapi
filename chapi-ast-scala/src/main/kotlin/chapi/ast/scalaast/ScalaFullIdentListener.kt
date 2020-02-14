@@ -19,6 +19,17 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
         codeContainer.DataStructures += codeDataStruct
     }
 
+    override fun enterClassDef(ctx: ScalaParser.ClassDefContext?) {
+        val className = ctx!!.Id().text
+        val codeDataStruct = CodeDataStruct(
+            Type = DataStructType.CLASS,
+            NodeName = className,
+            FilePath = codeContainer.FullName
+        )
+
+        codeContainer.DataStructures += codeDataStruct
+    }
+
     fun getNodeInfo(): CodeContainer {
         return this.codeContainer
     }
