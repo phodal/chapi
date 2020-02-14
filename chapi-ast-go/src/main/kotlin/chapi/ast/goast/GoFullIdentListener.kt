@@ -2,7 +2,6 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
 import chapi.domain.core.*
-import domain.core.*
 import org.antlr.v4.runtime.tree.ParseTree
 
 class GoFullIdentListener(var fileName: String) : GoAstListener() {

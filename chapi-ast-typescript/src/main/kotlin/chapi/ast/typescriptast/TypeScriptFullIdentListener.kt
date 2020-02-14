@@ -2,7 +2,6 @@ package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
 import chapi.domain.core.*
-import domain.core.*
 import chapi.domain.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {

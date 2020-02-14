@@ -6,7 +6,6 @@ import chapi.domain.core.CodeContainer
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeField
 import chapi.domain.core.CodeImport
-import domain.core.*
 
 open class CFullIdentListener(fileName: String) : CBaseListener() {
     private var currentDataStruct = CodeDataStruct()
