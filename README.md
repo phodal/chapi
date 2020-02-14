@@ -8,12 +8,12 @@
 
 Languages Stages (Welcome to PR your usage languages)
 
-| Features/Languages  |   Java |  Python  | Go  |  Kotlin | TypeScript | C     | C# |
-|---------------------|--------|----------|-----|---------|------------|-------|----|
-| syntax parse        |    ✅  |      ✅  |   ✅ |         |     ✅     | TBC   |  🆕 |
-| function call graph |    ✅  |          |      |         |            |       |     |
-| arch/package graph  |    ✅  |          |      |         |            |       |     |
-| real world validate |    ✅  |          |      |         |            |       |     |
+| Features/Languages  |   Java |  Python  | Go  |  Kotlin | TypeScript | C     | C# | Scala |
+|---------------------|--------|----------|-----|---------|------------|-------|----|-------|
+| syntax parse        |    ✅  |      ✅  |   ✅ |   TBC   |     ✅     | TBC   |  🆕 | 🆕 |
+| function call graph |    ✅  |          |      |         |            |       |     |   |
+| arch/package graph  |    ✅  |          |      |         |            |       |     |   |
+| real world validate |    ✅  |          |      |         |            |       |     |   |
 
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
