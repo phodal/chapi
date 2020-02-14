@@ -8,7 +8,7 @@ class JavaAnalyserTest {
     @Test
     fun shouldNotCrashForGrammarFile() {
         val code = this::class.java.getResource("/grammar/AllInOne8.java").readText()
-        val codeFile = JavaAnalyser().identFullInfo(code, "AllInOne8.java")
+        JavaAnalyser().identFullInfo(code, "AllInOne8.java")
     }
 
     @Test
