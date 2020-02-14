@@ -41,6 +41,21 @@ class Outer(i : Int) {
     }
 
     @Test
+    internal fun shouldIdentClassParameters() {
+        val code = """
+class Outer(i : Int) {
+  def foo(x : Inner.type) = x.getI
+}
+"""
+
+        val container = ScalaAnalyser().analysis(code, "hello.scala")
+        assertEquals(container.DataStructures.size, 1)
+        assertEquals(container.DataStructures[0].Parameters.size, 1)
+        assertEquals(container.DataStructures[0].Parameters[0].TypeType, "Int")
+        assertEquals(container.DataStructures[0].Parameters[0].TypeValue, "i")
+    }
+
+    @Test
     internal fun shouldAnalysisOutClassInnerObjectName() {
         val code = """
 class Outer(i : Int) {
