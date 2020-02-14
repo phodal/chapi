@@ -31,6 +31,9 @@ open class CodeDataStruct(
     var Annotations: Array<CodeAnnotation> = arrayOf<CodeAnnotation>(),
     var FunctionCalls: Array<CodeCall> = arrayOf<CodeCall>(),
 
+    @Deprecated(message = "looking for constructor method for SCALA")
+    var Parameters: Array<CodeProperty> = arrayOf(), // for Scala
+
     @Deprecated(message = "need to figure why")
     var InOutProperties: Array<CodeProperty> = arrayOf<CodeProperty>(),
 
