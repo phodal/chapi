@@ -4,6 +4,13 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class JavaAnalyserTest {
+
+    @Test
+    fun shouldNotCrashForGrammarFile() {
+        val code = this::class.java.getResource("/grammar/AllInOne8.java").readText()
+        val codeFile = JavaAnalyser().identFullInfo(code, "AllInOne8.java")
+    }
+
     @Test
     fun shouldIdentifyFilePackageName() {
         val code = """
