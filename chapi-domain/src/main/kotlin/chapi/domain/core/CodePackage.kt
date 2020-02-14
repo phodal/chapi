@@ -9,6 +9,8 @@ class CodePackage(
     var Name: String = "",
     var ID: String = "",
     var codeContainers: Array<CodeContainer> = arrayOf(),
+    var Packages : Array<CodePackage> = arrayOf(),
+
     var Extension: JsonElement = JsonObject(HashMap())
 ) {
 

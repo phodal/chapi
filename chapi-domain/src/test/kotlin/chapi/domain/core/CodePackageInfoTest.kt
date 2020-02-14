@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 
-internal class CodePackageManagerInfoTest {
+internal class CodePackageInfoTest {
 
     @Test
     fun getterSetter() {
-        val pkgInfo = CodePackageManagerInfo("project")
+        val pkgInfo = CodePackageInfo("project")
         assertEquals(pkgInfo.ProjectName, "project")
     }
 }
