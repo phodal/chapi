@@ -89,10 +89,7 @@ using System;
   
 namespace HelloWorldApp { 
     class Geeks { 
-        static void Main(string[] args) { 
-            Console.WriteLine("Hello World!"); 
-            Console.ReadKey(); 
-        } 
+
     } 
 } 
 """
@@ -100,5 +97,25 @@ namespace HelloWorldApp {
         println(codeContainer.toString())
         assertEquals(codeContainer.Containers[0].DataStructures.size, 1)
         assertEquals(codeContainer.Containers[0].DataStructures[0].NodeName, "Geeks")
+    }
+
+    @Test
+    fun shouldIdentNameSpaceClassInNameSpaceName() {
+        val code = """
+using System; 
+  
+namespace HelloWorldApp { 
+    class Geeks {}
+    namespace HelloWorldApp2 {
+        class Geeks2 {}    
+    }
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "hello.cs")
+        println(codeContainer.toString())
+        assertEquals(codeContainer.Containers[0].DataStructures.size, 1)
+        assertEquals(codeContainer.Containers[0].DataStructures[0].NodeName, "Geeks")
+        assertEquals(codeContainer.Containers[0].Containers[0].DataStructures.size, 1)
+        assertEquals(codeContainer.Containers[0].Containers[0].DataStructures[0].NodeName, "Geeks2")
     }
 }
