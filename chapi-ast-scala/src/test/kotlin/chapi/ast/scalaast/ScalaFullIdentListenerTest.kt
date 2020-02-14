@@ -1,5 +1,6 @@
 package chapi.ast.scalaast
 
+import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -22,5 +23,6 @@ object HelloWorld {
         val container = ScalaAnalyser().analysis(hellowoorld, "hello.scala")
         assertEquals(container.DataStructures.size, 1)
         assertEquals(container.DataStructures[0].NodeName, "HelloWorld")
+        assertEquals(container.DataStructures[0].Type, DataStructType.OBJECT)
     }
 }
