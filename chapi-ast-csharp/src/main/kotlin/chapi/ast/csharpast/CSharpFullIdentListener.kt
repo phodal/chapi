@@ -53,18 +53,30 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                     PackageName = nsName
                 )
 
-                currentContainer = container
-
-                val lastContainer = containerStack.elements.last()
-                lastContainer.Containers += currentContainer
-
-                containerStack.push(currentContainer)
+                pushContainer(container)
             }
         }
     }
 
-    override fun exitNamespace_member_declaration(ctx: CSharpParser.Namespace_member_declarationContext?) {
+    private fun pushContainer(container: CodeContainer) {
+        currentContainer = container
 
+        val DEFAULT_CODE_CONTAINER = 1
+        if (containerStack.elements.size > DEFAULT_CODE_CONTAINER) {
+            val lastContainer = containerStack.elements.last()
+            lastContainer.Containers += currentContainer
+            containerStack.elements[containerStack.elements.size - 1] = lastContainer
+
+            containerStack.push(currentContainer)
+        } else {
+            codeContainer.Containers += currentContainer
+            containerStack.push(currentContainer)
+            println(containerStack.elements.size)
+        }
+    }
+
+    override fun exitNamespace_declaration(ctx: CSharpParser.Namespace_declarationContext?) {
+        containerStack.pop()
     }
 
     override fun enterClass_definition(ctx: CSharpParser.Class_definitionContext?) {

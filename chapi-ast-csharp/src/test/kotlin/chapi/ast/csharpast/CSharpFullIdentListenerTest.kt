@@ -69,6 +69,25 @@ namespace HelloWorldApp {
     }
 
     @Test
+    fun shouldIdentDeclMultipleNameSpace() {
+        val code = """
+using System; 
+  
+namespace HelloWorldApp {
+
+}
+
+namespace HelloWorldApp2 {
+
+}
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "hello.cs")
+        assertEquals(codeContainer.Containers.size, 2)
+        assertEquals(codeContainer.Containers[0].PackageName, "HelloWorldApp")
+        assertEquals(codeContainer.Containers[1].PackageName, "HelloWorldApp2")
+    }
+
+    @Test
     fun shouldIdentDeclNameSpaceInNameSpace() {
         val code = """
 using System; 
@@ -119,6 +138,7 @@ namespace HelloWorldApp {
         val codeContainer = CSharpAnalyser().analysis(code, "hello.cs")
         assertEquals(codeContainer.Containers[0].DataStructures.size, 1)
         assertEquals(codeContainer.Containers[0].DataStructures[0].NodeName, "Geeks")
+        println(codeContainer)
         assertEquals(codeContainer.Containers[0].Containers[0].DataStructures.size, 1)
         assertEquals(codeContainer.Containers[0].Containers[0].DataStructures[0].NodeName, "Geeks2")
     }
