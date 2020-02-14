@@ -1,10 +1,7 @@
 package chapi.ast.pythonast
 
 import chapi.ast.antlr.PythonParser
-import chapi.domain.core.CodeDataStruct
-import chapi.domain.core.CodeContainer
-import chapi.domain.core.CodeFunction
-import chapi.domain.core.CodeImport
+import chapi.domain.core.*
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     private var currentFunction: CodeFunction = CodeFunction()
@@ -62,6 +59,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     override fun enterClassdef(ctx: PythonParser.ClassdefContext?) {
         hasEnterClass = true
         currentNode = CodeDataStruct(
+            Type = DataStructType.CLASS,
             FilePath = codeContainer.FullName,
             NodeName = ctx!!.name().text
         )

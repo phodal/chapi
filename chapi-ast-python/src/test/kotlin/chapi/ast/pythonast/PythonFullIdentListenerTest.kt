@@ -1,5 +1,6 @@
 package chapi.ast.pythonast
 
+import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -24,6 +25,7 @@ internal class PythonFullIdentListenerTest {
 
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "foo")
+        assertEquals(codeFile.DataStructures[0].Type, DataStructType.CLASS)
     }
 
     @Test
