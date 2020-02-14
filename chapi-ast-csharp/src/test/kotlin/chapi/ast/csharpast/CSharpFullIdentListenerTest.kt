@@ -81,4 +81,24 @@ namespace HelloWorldApp {
         assertEquals(codeContainer.Containers[0].Containers[0].PackageName, "HelloWorldApp2")
         assertEquals(codeContainer.Containers[0].Containers[0].Containers[0].PackageName, "HelloWorldApp3")
     }
+
+    @Test
+    fun shouldIdentClassName() {
+        val code = """
+using System; 
+  
+namespace HelloWorldApp { 
+    class Geeks { 
+        static void Main(string[] args) { 
+            Console.WriteLine("Hello World!"); 
+            Console.ReadKey(); 
+        } 
+    } 
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "hello.cs")
+        println(codeContainer.toString())
+        assertEquals(codeContainer.Containers[0].DataStructures.size, 1)
+        assertEquals(codeContainer.Containers[0].DataStructures[0].NodeName, "Geeks")
+    }
 }

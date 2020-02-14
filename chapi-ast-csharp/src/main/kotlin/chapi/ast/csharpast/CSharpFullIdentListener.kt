@@ -2,6 +2,7 @@ package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
 import domain.core.CodeContainer
+import domain.core.CodeDataStruct
 import domain.core.CodeImport
 import domain.core.CodePackage
 import domain.infra.Stack
@@ -63,14 +64,21 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                 lastContainer.Containers += currentContainer
 
                 containerStack.push(currentContainer)
-
-                currentContainer = CodeContainer(FullName = this.fileName)
             }
         }
     }
 
     override fun exitNamespace_member_declaration(ctx: CSharpParser.Namespace_member_declarationContext?) {
 
+    }
+
+    override fun enterClass_definition(ctx: CSharpParser.Class_definitionContext?) {
+        val className = ctx!!.identifier().text
+        val codeDataStruct = CodeDataStruct(
+            NodeName = className
+        )
+
+        currentContainer.DataStructures += codeDataStruct
     }
 
     fun getNodeInfo(): CodeContainer {
