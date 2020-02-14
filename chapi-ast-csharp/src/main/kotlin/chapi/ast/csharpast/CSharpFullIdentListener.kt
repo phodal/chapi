@@ -92,19 +92,21 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         val memberDeclaration = memberCtx!!.common_member_declaration()
         if (memberDeclaration != null) {
             val memberType = memberDeclaration.getChild(0)::class.java.simpleName
-            when(memberType) {
+            when (memberType) {
                 "TerminalNodeImpl" -> {
                     val methodDeclaration = memberDeclaration.method_declaration()
                     val methodName = methodDeclaration.method_member_name()
-                    val parameters =
-                        this.buildFunctionParameters(methodDeclaration.formal_parameter_list())
 
                     val codeFunction = CodeFunction(
                         Package = codeDataStruct.Package,
                         Name = methodName.text,
-                        Modifiers = buildFunctionModifiers(memberCtx),
-                        Parameters = parameters
+                        Modifiers = buildFunctionModifiers(memberCtx)
                     )
+
+                    val formalParameterList = methodDeclaration.formal_parameter_list()
+                    if (formalParameterList != null) {
+                        codeFunction.Parameters = this.buildFunctionParameters(formalParameterList)
+                    }
 
                     codeDataStruct.Functions += codeFunction
                 }
@@ -116,7 +118,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
     }
 
     private fun buildFunctionParameters(formalParameterList: CSharpParser.Formal_parameter_listContext?): Array<CodeProperty> {
-        var parameters : Array<CodeProperty> = arrayOf()
+        var parameters: Array<CodeProperty> = arrayOf()
         if (formalParameterList!!.fixed_parameters() != null) {
             for (fixedParamCtx in formalParameterList.fixed_parameters().fixed_parameter()) {
                 val argDeclCtx = fixedParamCtx.arg_declaration()
@@ -136,8 +138,11 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
 
     private fun buildFunctionModifiers(memberCtx: CSharpParser.Class_member_declarationContext): Array<String> {
         var modifiers: Array<String> = arrayOf()
-        for (allMemberModifiercontext in memberCtx.all_member_modifiers().all_member_modifier()) {
-            modifiers += allMemberModifiercontext.text
+        val allMemberModifiers = memberCtx.all_member_modifiers()
+        if (allMemberModifiers != null) {
+            for (allMemberModifiercontext in allMemberModifiers.all_member_modifier()) {
+                modifiers += allMemberModifiercontext.text
+            }
         }
         return modifiers
     }

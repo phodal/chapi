@@ -19,6 +19,12 @@ internal class CSharpFullIdentListenerTest {
     """
 
     @Test
+    fun shouldNotCrashForGrammarFile() {
+        val code = this::class.java.getResource("/grammar/AllInOneNoPreprocessor.cs").readText()
+        val codeFile = CSharpAnalyser().analysis(code, "AllInOneNoPreprocessor.cs")
+    }
+
+    @Test
     fun shouldIdentUsingSystem() {
         val codeFile = CSharpAnalyser().analysis(helloworld, "hello.cs")
         assertEquals(codeFile.Imports.size, 1)
