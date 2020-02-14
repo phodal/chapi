@@ -135,5 +135,7 @@ namespace HelloWorldApp {
         val codeDataStruct = codeContainer.Containers[0].DataStructures[0]
         assertEquals(codeDataStruct.Functions.size, 1)
         assertEquals(codeDataStruct.Functions[0].Name, "Main")
+        assertEquals(codeDataStruct.Functions[0].Modifiers.size, 1)
+        assertEquals(codeDataStruct.Functions[0].Modifiers[0], "static")
     }
 }

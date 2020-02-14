@@ -99,7 +99,8 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
 
                     val codeFunction = CodeFunction(
                         Package = codeDataStruct.Package,
-                        Name = methodName.text
+                        Name = methodName.text,
+                        Modifiers = buildModifiers(memberCtx)
                     )
 
                     codeDataStruct.Functions += codeFunction
@@ -109,6 +110,14 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                 }
             }
         }
+    }
+
+    private fun buildModifiers(memberCtx: CSharpParser.Class_member_declarationContext): Array<String> {
+        var modifiers: Array<String> = arrayOf()
+        for (allMemberModifiercontext in memberCtx.all_member_modifiers().all_member_modifier()) {
+            modifiers += allMemberModifiercontext.text
+        }
+        return modifiers
     }
 
     fun getNodeInfo(): CodeContainer {
