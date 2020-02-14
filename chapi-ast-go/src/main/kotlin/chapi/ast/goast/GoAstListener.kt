@@ -2,8 +2,8 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
 import chapi.ast.antlr.GoParserBaseListener
-import domain.core.CodeFunction
-import domain.core.CodeProperty
+import chapi.domain.core.CodeFunction
+import chapi.domain.core.CodeProperty
 
 open class GoAstListener : GoParserBaseListener() {
     fun buildParameters(parametersCtx: GoParser.ParametersContext?): Array<CodeProperty> {
@@ -43,7 +43,8 @@ open class GoAstListener : GoParserBaseListener() {
             if (parameters != null) {
                 for (parameterDeclContext in parameters.parameterDecl()) {
                     val typeType = parameterDeclContext.text
-                    val returnType = CodeProperty(TypeType = typeType, TypeValue = "")
+                    val returnType =
+                        CodeProperty(TypeType = typeType, TypeValue = "")
                     returns += returnType
                 }
             }

@@ -1,8 +1,9 @@
 package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
+import chapi.domain.core.*
 import domain.core.*
-import domain.infra.Stack
+import chapi.domain.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
     private var localVars = mutableMapOf<String, String>()
@@ -10,7 +11,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var hasEnterClass = false
 
     private var nodeMap = mutableMapOf<String, CodeDataStruct>()
-    private var codeContainer: CodeContainer = CodeContainer(FullName = node.fileName)
+    private var codeContainer: CodeContainer =
+        CodeContainer(FullName = node.fileName)
 
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
@@ -18,7 +20,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var currentType: String = ""
     private var namespaceName: String = ""
 
-    private var classNodeStack = Stack<CodeDataStruct>()
+    private var classNodeStack =
+        Stack<CodeDataStruct>()
     private var methodMap = mutableMapOf<String, CodeFunction>()
 
     override fun enterNamespaceDeclaration(ctx: TypeScriptParser.NamespaceDeclarationContext?) {

@@ -1,16 +1,20 @@
 package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
+import chapi.domain.core.*
 import domain.core.*
-import domain.infra.Stack
+import chapi.domain.infra.Stack
 
 class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer =
+        CodeContainer(FullName = fileName)
 
     private var currentContainer: CodeContainer = codeContainer
-    private var containerStack: Stack<CodeContainer> = Stack<CodeContainer>()
+    private var containerStack: Stack<CodeContainer> =
+        Stack<CodeContainer>()
 
-    private var currentPackage: CodePackage = CodePackage()
+    private var currentPackage: CodePackage =
+        CodePackage()
 
     override fun enterCompilation_unit(ctx: CSharpParser.Compilation_unitContext?) {
         containerStack.push(codeContainer)

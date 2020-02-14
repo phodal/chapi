@@ -2,8 +2,8 @@ package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
 import chapi.ast.antlr.TypeScriptParserBaseListener
-import domain.core.CodePosition
-import domain.core.CodeProperty
+import chapi.domain.core.CodePosition
+import chapi.domain.core.CodeProperty
 import org.antlr.v4.runtime.ParserRuleContext
 
 open class TypeScriptAstListener() : TypeScriptParserBaseListener() {

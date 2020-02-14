@@ -1,11 +1,13 @@
 package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
+import chapi.domain.core.*
 import domain.core.*
 import org.antlr.v4.runtime.tree.ParseTree
 
 class GoFullIdentListener(var fileName: String) : GoAstListener() {
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer =
+        CodeContainer(FullName = fileName)
 
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()

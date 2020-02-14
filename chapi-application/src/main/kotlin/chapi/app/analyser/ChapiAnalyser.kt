@@ -3,7 +3,7 @@ package chapi.app.analyser
 import chapi.app.analyser.config.ChapiConfig
 import chapi.app.analyser.filter.FileFilter
 import chapi.ast.javaast.JavaAnalyser
-import domain.core.CodeDataStruct
+import chapi.domain.core.CodeDataStruct
 import java.io.BufferedReader
 import java.io.File
 

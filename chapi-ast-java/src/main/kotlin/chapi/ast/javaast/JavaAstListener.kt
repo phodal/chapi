@@ -2,9 +2,9 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
 import chapi.ast.antlr.JavaParserBaseListener
-import domain.core.AnnotationKeyValue
-import domain.core.CodeAnnotation
-import domain.core.CodePosition
+import chapi.domain.core.AnnotationKeyValue
+import chapi.domain.core.CodeAnnotation
+import chapi.domain.core.CodePosition
 import org.antlr.v4.runtime.ParserRuleContext
 
 open class JavaAstListener : JavaParserBaseListener() {

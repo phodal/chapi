@@ -2,7 +2,7 @@ package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptLexer
 import chapi.ast.antlr.TypeScriptParser
-import domain.core.CodeContainer
+import chapi.domain.core.CodeContainer
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker

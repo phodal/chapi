@@ -1,15 +1,16 @@
 package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
-import domain.core.CodeDataStruct
-import domain.core.CodeContainer
-import domain.core.CodeFunction
-import domain.core.CodeImport
+import chapi.domain.core.CodeDataStruct
+import chapi.domain.core.CodeContainer
+import chapi.domain.core.CodeFunction
+import chapi.domain.core.CodeImport
 
 open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var isOverrideMethod: Boolean = false
     private var hasEnterClass: Boolean = false
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer =
+        CodeContainer(FullName = fileName)
     private var classNodes: Array<CodeDataStruct> = arrayOf()
     private var imports: Array<CodeImport> = arrayOf()
 

@@ -2,9 +2,9 @@ package chapi.ast.pythonast
 
 import chapi.ast.antlr.PythonParser
 import chapi.ast.antlr.PythonParserBaseListener
-import domain.core.AnnotationKeyValue
-import domain.core.CodeAnnotation
-import domain.core.CodeProperty
+import chapi.domain.core.AnnotationKeyValue
+import chapi.domain.core.CodeAnnotation
+import chapi.domain.core.CodeProperty
 import org.antlr.v4.runtime.tree.ParseTree
 
 open class PythonAstBaseListener : PythonParserBaseListener() {

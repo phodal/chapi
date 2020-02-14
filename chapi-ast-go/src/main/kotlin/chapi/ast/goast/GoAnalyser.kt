@@ -2,7 +2,7 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoLexer
 import chapi.ast.antlr.GoParser
-import domain.core.CodeContainer
+import chapi.domain.core.CodeContainer
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker

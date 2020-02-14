@@ -2,8 +2,8 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaLexer
 import chapi.ast.antlr.JavaParser
-import domain.core.CodeDataStruct
-import domain.core.CodeContainer
+import chapi.domain.core.CodeDataStruct
+import chapi.domain.core.CodeContainer
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker

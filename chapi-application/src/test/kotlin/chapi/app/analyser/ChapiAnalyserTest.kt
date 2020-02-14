@@ -1,7 +1,7 @@
 package chapi.app.analyser
 
-import domain.core.CodeCall
-import domain.core.CodeDataStruct
+import chapi.domain.core.CodeCall
+import chapi.domain.core.CodeDataStruct
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*

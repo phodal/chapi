@@ -2,7 +2,7 @@ package chapi.ast.pythonast
 
 import chapi.ast.antlr.PythonLexer
 import chapi.ast.antlr.PythonParser
-import domain.core.CodeContainer
+import chapi.domain.core.CodeContainer
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker

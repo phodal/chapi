@@ -2,8 +2,9 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
 import chapi.ast.javaast.model.JavaTargetType
+import chapi.domain.core.*
 import domain.core.*
-import domain.infra.Stack
+import chapi.domain.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 
@@ -12,7 +13,8 @@ open class JavaFullIdentListener(
     val classes: Array<String>,
     basicNodes: Array<CodeDataStruct>
 ) : JavaAstListener() {
-    private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
+    private var currentCreatorNode: CodeDataStruct =
+        CodeDataStruct()
     private var isOverrideMethod: Boolean = false
     private var fields = arrayOf<CodeField>()
     private var methodCalls = arrayOf<CodeCall>()
@@ -28,8 +30,10 @@ open class JavaFullIdentListener(
     private var hasEnterClass: Boolean = false
     private var classNodes: Array<CodeDataStruct> = arrayOf()
 
-    private var innerNode: CodeDataStruct = CodeDataStruct()
-    private var classNodeStack = Stack<CodeDataStruct>()
+    private var innerNode: CodeDataStruct =
+        CodeDataStruct()
+    private var classNodeStack =
+        Stack<CodeDataStruct>()
 
     private var methodQueue: Array<CodeFunction> = arrayOf()
 
@@ -40,7 +44,8 @@ open class JavaFullIdentListener(
     private var currentFunction = CodeFunction(IsConstructor = false)
     private var currentType: String = ""
 
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer =
+        CodeContainer(FullName = fileName)
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
         codeContainer.PackageName = ctx!!.qualifiedName()!!.text
@@ -223,7 +228,8 @@ open class JavaFullIdentListener(
             val paramValue = paramCtx.variableDeclaratorId().IDENTIFIER().text
             localVars[paramValue] = paramType
 
-            val parameter = CodeProperty(TypeValue = paramValue, TypeType = paramType)
+            val parameter =
+                CodeProperty(TypeValue = paramValue, TypeType = paramType)
 
             methodParams += parameter
         }
@@ -263,7 +269,8 @@ open class JavaFullIdentListener(
         if (ctx.expressionList() != null) {
             var parameters = arrayOf<CodeProperty>()
             for (exprCtx in ctx.expressionList().expression()) {
-                val parameter = CodeProperty(TypeType = "", TypeValue = exprCtx.text)
+                val parameter =
+                    CodeProperty(TypeType = "", TypeValue = exprCtx.text)
                 parameters += parameter
             }
 
