@@ -7,18 +7,12 @@ import chapi.domain.core.CodeFunction
 import chapi.domain.core.CodeImport
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
-    private var currentFunction: CodeFunction =
-        CodeFunction()
+    private var currentFunction: CodeFunction = CodeFunction()
     private var hasEnterClass = false
-    private var codeContainer: CodeContainer =
-        CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
-    private var currentNode: CodeDataStruct =
-        CodeDataStruct()
-    private var defaultNode: CodeDataStruct =
-        CodeDataStruct(
-            NodeName = "default"
-        )
+    private var currentNode: CodeDataStruct = CodeDataStruct()
+    private var defaultNode: CodeDataStruct = CodeDataStruct(NodeName = "default")
 
     override fun enterImport_stmt(ctx: PythonParser.Import_stmtContext?) {
         val dotNames = ctx!!.dotted_as_names().dotted_as_name()

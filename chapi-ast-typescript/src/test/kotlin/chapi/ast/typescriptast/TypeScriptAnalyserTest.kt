@@ -1,5 +1,6 @@
 package chapi.ast.typescriptast
 
+import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -22,7 +23,7 @@ internal class TypeScriptAnalyserTest {
         val codeFile = TypeScriptAnalyser().analysis(content, "")
 
         assertEquals(codeFile.DataStructures.size, 2)
-        assertEquals(codeFile.DataStructures[0].Type, "Class")
+        assertEquals(codeFile.DataStructures[0].Type, DataStructType.CLASS)
         assertEquals(codeFile.DataStructures[1].NodeName, "Employee")
         assertEquals(codeFile.DataStructures[1].Extend, "Person")
     }

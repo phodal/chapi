@@ -6,10 +6,20 @@ import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
+enum class DataStructType (val structType: String) {
+    EMPTY(""),
+    CLASS("Class"),
+    INTERFACE("Interface"),
+    STRUCT("Struct"),
+    OBJECT("Object"),
+    INNERSTRUCTURES("InnerStructures"),
+    CREATORCLASS("CreatorClass")
+}
+
 @Serializable
 open class CodeDataStruct(
     var NodeName: String = "",
-    var Type: String = "",
+    var Type: DataStructType = DataStructType.EMPTY,
     var Package: String = "",
     var FilePath: String = "",
     var Fields: Array<CodeField> = arrayOf<CodeField>(),

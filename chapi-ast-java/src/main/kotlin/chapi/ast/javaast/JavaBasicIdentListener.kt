@@ -1,10 +1,7 @@
 package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
-import chapi.domain.core.CodeDataStruct
-import chapi.domain.core.CodeContainer
-import chapi.domain.core.CodeFunction
-import chapi.domain.core.CodeImport
+import chapi.domain.core.*
 
 open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var isOverrideMethod: Boolean = false
@@ -30,7 +27,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
         hasEnterClass = true
-        currentNode.Type = "Class"
+        currentNode.Type = DataStructType.CLASS
         currentNode.Package = codeContainer.PackageName
 
         if (ctx!!.IDENTIFIER() != null) {
@@ -73,7 +70,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     override fun enterInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
         hasEnterClass = true
         currentNode = CodeDataStruct(
-            Type = "Interface",
+            Type = DataStructType.INTERFACE,
             NodeName = ctx!!.IDENTIFIER().text,
             Package = codeContainer.PackageName
         )

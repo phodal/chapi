@@ -1,5 +1,6 @@
 package chapi.ast.typescriptast
 
+import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -15,6 +16,7 @@ export interface IPerson {
         val codeFile = TypeScriptAnalyser().analysis(code, "iperson.ts")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "IPerson")
+        assertEquals(codeFile.DataStructures[0].Type, DataStructType.INTERFACE)
         assertEquals(codeFile.DataStructures[0].FilePath, "iperson.ts")
     }
 
@@ -29,6 +31,7 @@ class Foo {
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Type, DataStructType.CLASS)
         assertEquals(codeFile.DataStructures[0].NodeName, "Foo")
     }
 

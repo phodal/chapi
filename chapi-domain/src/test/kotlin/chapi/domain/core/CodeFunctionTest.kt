@@ -1,7 +1,6 @@
 package chapi.domain.core
 
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
