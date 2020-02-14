@@ -1,10 +1,7 @@
 package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
-import domain.core.CodeContainer
-import domain.core.CodeDataStruct
-import domain.core.CodeImport
-import domain.core.CodePackage
+import domain.core.*
 import domain.infra.Stack
 
 class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
@@ -78,7 +75,40 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
             NodeName = className
         )
 
+        val classMemberDeclarations = ctx.class_body().class_member_declarations()
+        if (classMemberDeclarations != null) {
+            for (classMemberDeclarationcontext in classMemberDeclarations.class_member_declaration()) {
+                this.handleClassMember(classMemberDeclarationcontext, codeDataStruct)
+            }
+        }
+
         currentContainer.DataStructures += codeDataStruct
+    }
+
+    private fun handleClassMember(
+        memberCtx: CSharpParser.Class_member_declarationContext?,
+        codeDataStruct: CodeDataStruct
+    ) {
+        val memberDeclaration = memberCtx!!.common_member_declaration()
+        if (memberDeclaration != null) {
+            val memberType = memberDeclaration.getChild(0)::class.java.simpleName
+            when(memberType) {
+                "TerminalNodeImpl" -> {
+                    val methodDeclaration = memberDeclaration.method_declaration()
+                    val methodName = methodDeclaration.method_member_name()
+
+                    val codeFunction = CodeFunction(
+                        Package = codeDataStruct.Package,
+                        Name = methodName.text
+                    )
+
+                    codeDataStruct.Functions += codeFunction
+                }
+                else -> {
+                    println(memberType)
+                }
+            }
+        }
     }
 
     fun getNodeInfo(): CodeContainer {
