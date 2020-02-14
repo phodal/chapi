@@ -69,12 +69,12 @@ code_project
 code_module
 
 // for package dependency analysis
-code_package_manager
+code_package_info
 code_dependency
 
 // package or file as dependency analysis
 code_package
-code_file
+code_container
 
 // class-first or function-first
 code_data_struct
