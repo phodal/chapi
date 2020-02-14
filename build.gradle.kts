@@ -89,7 +89,7 @@ tasks.register("jacocoRootReports", JacocoReport::class) {
             }
             .map {
                 fileTree(it).apply {
-                    exclude("chapi/ast/antlr")
+                    exclude("chapi/ast/antlr", "chapi/domain")
                 }
             }
     }))
@@ -100,7 +100,7 @@ tasks.register("jacocoRootReports", JacocoReport::class) {
             }
             .map {
                 fileTree(it).apply {
-                    exclude("chapi/ast/antlr")
+                    exclude("chapi/ast/antlr", "chapi/domain")
                 }
             }
     }))
