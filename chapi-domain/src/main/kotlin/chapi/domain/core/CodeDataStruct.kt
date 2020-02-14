@@ -20,7 +20,10 @@ open class CodeDataStruct(
     var InnerStructures: Array<CodeDataStruct> = arrayOf<CodeDataStruct>(),
     var Annotations: Array<CodeAnnotation> = arrayOf<CodeAnnotation>(),
     var FunctionCalls: Array<CodeCall> = arrayOf<CodeCall>(),
+
+    @Deprecated(message = "need to figure why")
     var InOutProperties: Array<CodeProperty> = arrayOf<CodeProperty>(),
+
     // todo: select node useonly imports
     var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
     var Extension: JsonElement = JsonObject(HashMap())
