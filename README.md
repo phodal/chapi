@@ -29,6 +29,7 @@ Todo:
 
  - [x] Migrate [Coca](https://github.com/phodal/coca) ast
  - [ ] Pluggable
+ - [ ] Publish to Maven / GitHub
 
 TBC:
 
