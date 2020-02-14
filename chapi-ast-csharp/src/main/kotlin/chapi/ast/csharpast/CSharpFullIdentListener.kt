@@ -5,15 +5,10 @@ import chapi.domain.core.*
 import chapi.domain.infra.Stack
 
 class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
-    private var codeContainer: CodeContainer =
-        CodeContainer(FullName = fileName)
-
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     private var currentContainer: CodeContainer = codeContainer
-    private var containerStack: Stack<CodeContainer> =
-        Stack<CodeContainer>()
-
-    private var currentPackage: CodePackage =
-        CodePackage()
+    private var containerStack: Stack<CodeContainer> = Stack<CodeContainer>()
+    private var currentPackage: CodePackage = CodePackage()
 
     override fun enterCompilation_unit(ctx: CSharpParser.Compilation_unitContext?) {
         containerStack.push(codeContainer)
