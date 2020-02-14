@@ -5,22 +5,22 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
 internal class CSharpFullIdentListenerTest {
+    private val helloworld = """
+    using System; 
+      
+    namespace HelloWorldApp { 
+        class Geeks { 
+            static void Main(string[] args) { 
+                Console.WriteLine("Hello World!"); 
+                Console.ReadKey(); 
+            } 
+        } 
+    } 
+    """
 
     @Test
     fun shouldIdentUsingSystem() {
-        val code = """
-using System; 
-  
-namespace HelloWorldApp { 
-    class Geeks { 
-        static void Main(string[] args) { 
-            Console.WriteLine("Hello World!"); 
-            Console.ReadKey(); 
-        } 
-    } 
-} 
-"""
-        val codeFile = CSharpAnalyser().analysis(code, "hello.cs")
+        val codeFile = CSharpAnalyser().analysis(helloworld, "hello.cs")
         assertEquals(codeFile.Imports.size, 1)
         assertEquals(codeFile.Imports[0].Source, "System")
     }
@@ -119,23 +119,20 @@ namespace HelloWorldApp {
 
     @Test
     fun shouldIdentNameSpaceClassMethodSupport() {
-        val code = """
-using System; 
-  
-namespace HelloWorldApp { 
-    class Geeks { 
-        static void Main(string[] args) { 
-            Console.WriteLine("Hello World!"); 
-            Console.ReadKey(); 
-        } 
-    } 
-} 
-"""
-        val codeContainer = CSharpAnalyser().analysis(code, "hello.cs")
+        val codeContainer = CSharpAnalyser().analysis(helloworld, "hello.cs")
         val codeDataStruct = codeContainer.Containers[0].DataStructures[0]
         assertEquals(codeDataStruct.Functions.size, 1)
         assertEquals(codeDataStruct.Functions[0].Name, "Main")
         assertEquals(codeDataStruct.Functions[0].Modifiers.size, 1)
         assertEquals(codeDataStruct.Functions[0].Modifiers[0], "static")
+    }
+
+    @Test
+    fun shouldIdentNameSpaceClassParametersSupport() {
+        val codeContainer = CSharpAnalyser().analysis(helloworld, "hello.cs")
+        val codeDataStruct = codeContainer.Containers[0].DataStructures[0]
+        assertEquals(codeDataStruct.Functions[0].Parameters.size, 1)
+        assertEquals(codeDataStruct.Functions[0].Parameters[0].TypeType, "string[]")
+        assertEquals(codeDataStruct.Functions[0].Parameters[0].TypeValue, "args")
     }
 }

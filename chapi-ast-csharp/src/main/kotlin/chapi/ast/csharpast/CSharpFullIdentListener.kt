@@ -96,11 +96,14 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                 "TerminalNodeImpl" -> {
                     val methodDeclaration = memberDeclaration.method_declaration()
                     val methodName = methodDeclaration.method_member_name()
+                    val parameters =
+                        this.buildFunctionParameters(methodDeclaration.formal_parameter_list())
 
                     val codeFunction = CodeFunction(
                         Package = codeDataStruct.Package,
                         Name = methodName.text,
-                        Modifiers = buildModifiers(memberCtx)
+                        Modifiers = buildFunctionModifiers(memberCtx),
+                        Parameters = parameters
                     )
 
                     codeDataStruct.Functions += codeFunction
@@ -112,7 +115,26 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         }
     }
 
-    private fun buildModifiers(memberCtx: CSharpParser.Class_member_declarationContext): Array<String> {
+    private fun buildFunctionParameters(formalParameterList: CSharpParser.Formal_parameter_listContext?): Array<CodeProperty> {
+        var parameters : Array<CodeProperty> = arrayOf()
+        if (formalParameterList!!.fixed_parameters() != null) {
+            for (fixedParamCtx in formalParameterList.fixed_parameters().fixed_parameter()) {
+                val argDeclCtx = fixedParamCtx.arg_declaration()
+                if (argDeclCtx != null) {
+                    val parameter = CodeProperty(
+                        TypeType = argDeclCtx.type_().text,
+                        TypeValue = argDeclCtx.identifier().text
+                    )
+
+                    parameters += parameter
+                }
+            }
+        }
+
+        return parameters
+    }
+
+    private fun buildFunctionModifiers(memberCtx: CSharpParser.Class_member_declarationContext): Array<String> {
         var modifiers: Array<String> = arrayOf()
         for (allMemberModifiercontext in memberCtx.all_member_modifiers().all_member_modifier()) {
             modifiers += allMemberModifiercontext.text
