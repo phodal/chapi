@@ -67,7 +67,6 @@ class Outer(i : Int) {
 """
 
         val container = ScalaAnalyser().analysis(code, "hello.scala")
-        println(container)
         assertEquals(container.DataStructures.size, 1)
         assertEquals(container.DataStructures[0].InnerStructures.size, 1)
         assertEquals(container.DataStructures[0].InnerStructures[0].Type, DataStructType.OBJECT)
