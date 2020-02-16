@@ -3,7 +3,7 @@ package chapi.ast.javaast
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class JavaAnalyserTest {
+class JavaFullIdentListenerTest {
 
     @Test
     fun shouldNotCrashForGrammarFile() {

@@ -14,13 +14,13 @@ object HelloWorld {
 }        
 """
 
-    @Test
-    internal fun shouldIdentObjectName() {
-        val container = ScalaAnalyser().analysis(helloworld, "hello.scala")
-        assertEquals(container.DataStructures.size, 1)
-        assertEquals(container.DataStructures[0].NodeName, "HelloWorld")
-        assertEquals(container.DataStructures[0].Type, DataStructType.OBJECT)
-    }
+@Test
+internal fun shouldIdentObjectName() {
+    val container = ScalaAnalyser().analysis(helloworld, "hello.scala")
+    assertEquals(container.DataStructures.size, 1)
+    assertEquals(container.DataStructures[0].NodeName, "HelloWorld")
+    assertEquals(container.DataStructures[0].Type, DataStructType.OBJECT)
+}
 
     @Test
     internal fun shouldIdentClassName() {
