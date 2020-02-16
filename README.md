@@ -35,6 +35,78 @@ TBC:
 
  - SQL (refs: [antlr4-oracle](https://github.com/alris/antlr4-oracle) && [sqlgraph](https://github.com/dengdaiyemanren/sqlgraph))
 
+## Usage
+
+TBC
+
+## Examples
+
+examples Java source code:
+
+```java
+package adapters.outbound.persistence.blog;
+
+public class BlogPO implements PersistenceObject<Blog> {
+    @Override
+    public Blog toDomainModel() {
+
+    }
+}
+```
+
+examples output
+
+```json
+{
+    "Imports": [],
+    "Implements": [
+        "PersistenceObject<Blog>"
+    ],
+    "NodeName": "BlogPO",
+    "Extend": "",
+    "Type": "CLASS",
+    "FilePath": "",
+    "InOutProperties": [],
+    "Functions": [
+        {
+            "IsConstructor": false,
+            "InnerFunctions": [],
+            "Position": {
+                "StartLine": 6,
+                "StartLinePosition": 133,
+                "StopLine": 8,
+                "StopLinePosition": 145
+            },
+            "Package": "",
+            "Name": "toDomainModel",
+            "MultipleReturns": [],
+            "Annotations": [
+                {
+                    "Name": "Override",
+                    "KeyValues": []
+                }
+            ],
+            "Extension": {},
+            "Override": false,
+            "extensionMap": {},
+            "Parameters": [],
+            "InnerStructures": [],
+            "ReturnType": "Blog",
+            "Modifiers": [],
+            "FunctionCalls": []
+        }
+    ],
+    "Annotations": [],
+    "Extension": {},
+    "Parameters": [],
+    "Fields": [],
+    "MultipleExtend": [],
+    "InnerStructures": [],
+    "Package": "adapters.outbound.persistence.blog",
+    "FunctionCalls": []
+}
+```
+
 ## Development
 
 Syntax Parse Identify Rules:
