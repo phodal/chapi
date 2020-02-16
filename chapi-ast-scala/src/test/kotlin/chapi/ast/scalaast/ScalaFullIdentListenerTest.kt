@@ -14,7 +14,7 @@ object HelloWorld {
 """
 
     @Test
-    internal fun shouldAnalysisObjectName() {
+    internal fun shouldIdentObjectName() {
         val container = ScalaAnalyser().analysis(helloworld, "hello.scala")
         assertEquals(container.DataStructures.size, 1)
         assertEquals(container.DataStructures[0].NodeName, "HelloWorld")
@@ -22,7 +22,7 @@ object HelloWorld {
     }
 
     @Test
-    internal fun shouldAnalysisClassName() {
+    internal fun shouldIdentClassName() {
         val code = """
 class Outer(i : Int) {
   def foo(x : Inner.type) = x.getI
@@ -51,7 +51,7 @@ class Outer(i : Int) {
     }
 
     @Test
-    internal fun shouldAnalysisOutClassInnerObjectName() {
+    internal fun shouldIdentOutClassInnerObjectName() {
         val code = """
 class Outer(i : Int) {
   object Inner {
