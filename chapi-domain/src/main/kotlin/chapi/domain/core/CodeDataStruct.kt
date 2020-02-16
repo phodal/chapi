@@ -13,7 +13,8 @@ enum class DataStructType (val structType: String) {
     STRUCT("Struct"),
     OBJECT("Object"),
     INNERSTRUCTURES("InnerStructures"),
-    CREATORCLASS("CreatorClass")
+    CREATORCLASS("CreatorClass"),
+    ABSTRACTCLASS("AbstractClass")
 }
 
 @Serializable
