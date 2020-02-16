@@ -1,6 +1,7 @@
 package chapi.ast.scalaast
 
 import chapi.domain.core.DataStructType
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -66,5 +67,20 @@ class Outer(i : Int) {
         assertEquals(container.DataStructures[0].InnerStructures.size, 1)
         assertEquals(container.DataStructures[0].InnerStructures[0].Type, DataStructType.OBJECT)
         assertEquals(container.DataStructures[0].InnerStructures[0].NodeName, "Inner")
+    }
+
+    @Test
+    internal fun shouldIdentExtendClassName() {
+
+    }
+
+    @Test
+    internal fun shouldIdentTraitName() {
+
+    }
+
+    @Test
+    internal fun shouldIdentMultipleTraitName() {
+
     }
 }
