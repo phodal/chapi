@@ -39,6 +39,16 @@ TBC:
 
 TBC
 
+```
+import chapi.domain.core.CodeCall
+import chapi.domain.core.CodeDataStruct
+import chapi.app.analyser
+
+...
+val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
+...
+```
+
 ## Examples
 
 examples Java source code:
