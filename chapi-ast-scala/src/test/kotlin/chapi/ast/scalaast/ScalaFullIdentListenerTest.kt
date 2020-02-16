@@ -14,11 +14,6 @@ object HelloWorld {
 """
 
     @Test
-    internal fun shouldAnalysis() {
-        ScalaAnalyser().analysis(helloworld, "hello.scala")
-    }
-
-    @Test
     internal fun shouldAnalysisObjectName() {
         val container = ScalaAnalyser().analysis(helloworld, "hello.scala")
         assertEquals(container.DataStructures.size, 1)
