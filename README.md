@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/phodal/chapi.svg?branch=master)](https://travis-ci.org/phodal/chapi)
 [![codecov](https://codecov.io/gh/phodal/chapi/branch/master/graph/badge.svg)](https://codecov.io/gh/phodal/chapi)
 [![Maintainability](https://api.codeclimate.com/v1/badges/2af5f5168a9ceb2ebe9b/maintainability)](https://codeclimate.com/github/phodal/chapi/maintainability)
+![Java CI](https://github.com/phodal/chapi/workflows/Java%20CI/badge.svg)
 
 > Chapi is a common language data structure parser, which will parse different language to same JSON object.
 
