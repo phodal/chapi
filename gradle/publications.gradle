@@ -15,14 +15,14 @@ publishing {
     }
 
     publications {
-        gpr(MavenPublication) {
-            from(components.java)
-        }
+//        gpr(MavenPublication) {
+//            from(components.java)
+//        }
         mavenJava(MavenPublication) {
             pom {
                 afterEvaluate {
                     name = project.description
-                    description = project.description
+                    description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
                 }
                 url.set("https://github.com/phodal/chapi.git")
                 organization {

@@ -24,7 +24,8 @@ repositories {
 
 allprojects {
     group = "com.phodal"
-    version = "0.0.1"
+    version = "0.0.3"
+    description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
 
     repositories {
         mavenCentral()
