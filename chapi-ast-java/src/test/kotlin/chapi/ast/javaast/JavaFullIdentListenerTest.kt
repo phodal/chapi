@@ -310,7 +310,6 @@ public class HostDependentDownloadableContribution {
         """
 
         val codeFile = JavaAnalyser().identFullInfo(code, "")
-        println(codeFile.DataStructures[0].toString())
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         val dsFunction = codeFile.DataStructures[0].Functions[0]
         assertEquals(dsFunction.InnerStructures.size, 2)
@@ -320,5 +319,26 @@ public class HostDependentDownloadableContribution {
         assertEquals(dsFunction.InnerStructures[1].Functions.size, 2)
         assertEquals(dsFunction.InnerStructures[1].Functions[0].Name, "getOsName")
         assertEquals(dsFunction.InnerStructures[1].Functions[1].Name, "getOsArch")
+    }
+
+
+    @Test
+    fun shouldEnableGetLocalVarsForFunction() {
+        var code = """
+package adapters.outbound.persistence.blog;
+
+public class LexerTest {
+    static void main(String[] args) {
+        long creditCardNumber = 1234_5678_9012_3456L;
+        long socialSecurityNumber = 999_99_9999L;
+    }
+}
+        """
+
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        println(codeFile.DataStructures[0].Functions[0])
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables.size, 3)
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[0].TypeValue, "args")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[0].TypeType, "String[]")
     }
 }

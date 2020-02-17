@@ -237,7 +237,23 @@ open class JavaFullIdentListener(
     }
 
     override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-//        currentFunction = CodeFunction(IsConstructor = false)
+        if (localVars.isNotEmpty()) {
+            addLocalVarsToFunction()
+        }
+    }
+
+    private fun addLocalVarsToFunction() {
+        val currentMethodName = getMethodMapName(currentFunction)
+        val mapFunc = methodMap[currentMethodName]
+        if (mapFunc != null) {
+            var vars: Array<CodeProperty> = arrayOf()
+            for (entry in localVars) {
+                val param = CodeProperty(TypeValue = entry.key, TypeType = entry.value)
+                vars += param
+            }
+            mapFunc.LocalVariables = vars
+            methodMap[currentMethodName] = mapFunc
+        }
     }
 
     override fun enterMethodCall(ctx: JavaParser.MethodCallContext?) {
