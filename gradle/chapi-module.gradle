@@ -1,4 +1,5 @@
 apply plugin: "java"
+apply plugin: "maven-publish"
 apply from: "$rootDir/gradle/publications.gradle"
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -13,12 +14,23 @@ task javadocJar(type: Jar) {
     from javadoc
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
+subprojects {
+    apply plugin: "maven-publish"
+    publishing {
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/phodal/chapi")
+                credentials {
+                    username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                    password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+                }
+            }
+        }
+        publications {
+            gpr(MavenPublication) {
+                from(components.java)
+            }
         }
     }
 }
