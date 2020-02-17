@@ -41,7 +41,7 @@ TBC:
 
 ### Import by Jitpack
 
-```
+```groovy
 allprojects {
     repositories {
         ...
@@ -57,7 +57,7 @@ dependencies {
 ### Import by GitHub Packages
 
 
-```
+```xml
 <dependency>
   <groupId>com.phodal</groupId>
   <artifactId>chapi-domain</artifactId>
@@ -73,7 +73,7 @@ dependencies {
 
 ### Usage
 
-```
+```kotlin
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeDataStruct
 import chapi.app.analyser
