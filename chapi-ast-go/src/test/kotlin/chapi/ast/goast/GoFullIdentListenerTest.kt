@@ -219,7 +219,6 @@ func main() {
         assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters.size, 1)
     }
 
-
     @Test
     internal fun shouldIdentifyFunctionLocalVars() {
         var code = """
@@ -235,6 +234,22 @@ func VarDecls() {
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables.size, 4)
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[1].TypeType, "float64")
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[1].TypeValue, "b")
+    }
+
+    @Test
+    internal fun shouldIdentifyFunctionShortVars() {
+        var code = """
+package main
+
+
+
+func ShortDecls() {
+    a, b := 0, 10
+	c := func() int { return 7 }
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables.size, 3)
     }
 
 }

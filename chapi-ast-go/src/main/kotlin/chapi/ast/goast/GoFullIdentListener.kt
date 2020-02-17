@@ -196,7 +196,9 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterShortVarDecl(ctx: GoParser.ShortVarDeclContext?) {
-
+        for (terminalNode in ctx!!.identifierList().IDENTIFIER()) {
+            localVars[terminalNode.text] = ""
+        }
     }
 
     fun getNodeInfo(): CodeContainer {
