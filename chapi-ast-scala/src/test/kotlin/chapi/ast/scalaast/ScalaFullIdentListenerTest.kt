@@ -90,4 +90,18 @@ class CapComer(val transformation: SparktacusTransformation) extends Transformat
     internal fun shouldIdentMultipleTraitName() {
 
     }
+
+    @Test
+    internal fun shouldIdentInstantiateObject() {
+val code = """
+ class VanillaDonut(name: String) extends Donut(name) {
+   override def printName: Unit = println(name)
+ }
+ object VanillaDonut {
+   def apply(name: String): Donut = {
+     new VanillaDonut(name)
+   }
+}
+"""
+    }
 }
