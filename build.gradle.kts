@@ -1,3 +1,5 @@
+import com.jfrog.bintray.gradle.BintrayExtension
+
 plugins {
     base
 
@@ -9,7 +11,10 @@ plugins {
     jacoco
     id("com.github.kt3k.coveralls") version "2.9.0"
     id("maven-publish")
+
     id("com.jfrog.artifactory") version "4.1.1"
+    id("com.jfrog.bintray") version "1.8.0"
+
     // todo: erich domain testing & logic
     id("nl.fabianm.kotlin.plugin.generated") version "1.5.0" // hack for jacoco generate code coverage
 }
