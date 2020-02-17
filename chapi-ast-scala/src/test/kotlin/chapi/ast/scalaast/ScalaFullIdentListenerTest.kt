@@ -14,13 +14,13 @@ object HelloWorld {
 }        
 """
 
-@Test
-internal fun shouldIdentObjectName() {
-    val container = ScalaAnalyser().analysis(helloworld, "hello.scala")
-    assertEquals(container.DataStructures.size, 1)
-    assertEquals(container.DataStructures[0].NodeName, "HelloWorld")
-    assertEquals(container.DataStructures[0].Type, DataStructType.OBJECT)
-}
+    @Test
+    internal fun shouldIdentObjectName() {
+        val container = ScalaAnalyser().analysis(helloworld, "hello.scala")
+        assertEquals(container.DataStructures.size, 1)
+        assertEquals(container.DataStructures[0].NodeName, "HelloWorld")
+        assertEquals(container.DataStructures[0].Type, DataStructType.OBJECT)
+    }
 
     @Test
     internal fun shouldIdentClassName() {
@@ -83,17 +83,47 @@ class CapComer(val transformation: SparktacusTransformation) extends Transformat
 
     @Test
     internal fun shouldIdentTraitName() {
+        val code = """
+trait Iterator[A] {
+  def hasNext: Boolean
+  def next(): A
+}
+
+class IntIterator(to: Int) extends Iterator[Int] {
+  private var current = 0
+  override def hasNext: Boolean = current < to   
+}
+"""
 
     }
 
     @Test
     internal fun shouldIdentMultipleTraitName() {
+        val code = """
+abstract class Animal {
+  def speak
+}
+
+trait WaggingTail {
+  def startTail
+  def stopTail
+}
+
+trait FourLeggedAnimal {
+  def walk
+  def run
+}
+
+class Dog extends Animal with WaggingTail with FourLeggedAnimal {
+  // implementation code here ...
+}
+"""
 
     }
 
     @Test
     internal fun shouldIdentInstantiateObject() {
-val code = """
+        val code = """
  class VanillaDonut(name: String) extends Donut(name) {
    override def printName: Unit = println(name)
  }
