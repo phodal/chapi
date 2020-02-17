@@ -27,11 +27,18 @@ Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript |
 | Other      | Fortran, Swift, Matlab, ...| Swift?, Fortran? |
 
+Dependencies Stages :
+
+| Tools / Language | Groovy (Java) | Maven (Java) | NPM (node.js) | Kotlin Script | Go Modules | Scala Sbt |
+|-------| -------|-------|-------|-------|-------|-------|
+|       |        |       |       |       |       |       | 
+
 Todo:
 
  - [x] Migrate [Coca](https://github.com/phodal/coca) ast
- - [ ] Pluggable
- - [ ] Publish to Maven / GitHub
+ - [x] Pluggable
+ - [x] Publish to Maven / GitHub
+ - [ ] Dependencies Analyser
 
 TBC:
 
