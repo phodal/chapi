@@ -14,21 +14,3 @@ task javadocJar(type: Jar) {
     archiveClassifier.set("javadoc")
     from javadoc
 }
-
-bintray {
-    user = findProperty("bintray.user")
-    key = findProperty("bintray.key")
-    publish = true
-    pkg {
-        repo = "chapi"
-        name = "chapi"
-        userOrg = "phodal"
-        websiteUrl = "https://www.phodal.com"
-        githubRepo = "phodal/chapi"
-        vcsUrl = "https://github.com/phodal/chapi"
-        description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
-        setLabels("kotlin")
-        setLicenses("MPL 2.0")
-        desc = description
-    }
-}

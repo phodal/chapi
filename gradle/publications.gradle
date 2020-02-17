@@ -19,6 +19,8 @@ publishing {
 //            from(components.java)
 //        }
         mavenJava(MavenPublication) {
+            from components.java
+            version project.version
             pom {
                 afterEvaluate {
                     name = project.description
@@ -50,6 +52,32 @@ publishing {
                     fromResolutionResult()
                 }
             }
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintray.user') ? project.property('bintray.user') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintray.key') ? project.property('bintray.key') : System.getenv('BINTRAY_API_KEY')
+    publish = true
+    configurations = ['archives']
+    publications = ['mavenJava']
+    pkg {
+        repo = "chapi"
+        name = "chapi"
+        userOrg = "phodal"
+        websiteUrl = "https://www.phodal.com"
+        githubRepo = "phodal/chapi"
+        licenses = ['MPL 2.0']
+        vcsUrl = "https://github.com/phodal/chapi"
+        description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
+        desc = description
+        publicDownloadNumbers = true
+        version {
+            name = "chapi"
+            vcsTag = project.version
+            desc = project.description
+            released = new Date()
         }
     }
 }
