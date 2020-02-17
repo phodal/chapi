@@ -38,7 +38,40 @@ TBC:
 
 ## Usage
 
-TBC
+
+### Import by Jitpack
+
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    implementation 'com.github.phodal:chapi:Tag'
+}
+```
+
+### Import by GitHub Packages
+
+
+```
+<dependency>
+  <groupId>com.phodal</groupId>
+  <artifactId>chapi-domain</artifactId>
+  <version>0.0.3</version>
+</dependency>
+
+<dependency>
+  <groupId>com.phodal</groupId>
+  <artifactId>chapi-ast-java</artifactId>
+  <version>0.0.3</version>
+</dependency>
+```
+
+### Usage
 
 ```
 import chapi.domain.core.CodeCall

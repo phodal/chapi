@@ -1,4 +1,49 @@
-# [](https://github.com/phodal/chapi/compare/v0.0.1...v) (2020-02-13)
+# [](https://github.com/phodal/chapi/compare/v0.0.3...v) (2020-02-17)
+
+
+
+## [0.0.3](https://github.com/phodal/chapi/compare/v0.0.1...v0.0.3) (2020-02-17)
+
+
+### Bug Fixes
+
+* fix refactor issue ([217d040](https://github.com/phodal/chapi/commit/217d040899447794c3def60a9075f969f50df223))
+* fix rename issue ([0033afc](https://github.com/phodal/chapi/commit/0033afc360473884a2700465c7015c8c83ab057e))
+
+
+### Features
+
+* <C#> add basic import support ([5a43504](https://github.com/phodal/chapi/commit/5a43504da96641dd9c2f5632b4076fbc329cfdeb))
+* <c#> add basic namespace support ([e65afed](https://github.com/phodal/chapi/commit/e65afed0d9f308aee87e5a8604ee5ad210789263))
+* <C#> add basic parameters support ([c97f5b3](https://github.com/phodal/chapi/commit/c97f5b39765a9483efe982d0c4f7c3f1ae010e0b))
+* <C#> add class function modifier support ([f8ea7c2](https://github.com/phodal/chapi/commit/f8ea7c247c3b22ca79561ad8463997dab3e37ff0))
+* <C#> add class function name support ([94bcf52](https://github.com/phodal/chapi/commit/94bcf525752bcc52a4700aa00420090a7a3ceb88))
+* <C#> add class int namespcae in namespcae support ([0e010e7](https://github.com/phodal/chapi/commit/0e010e75965804e95f5fdee324920f89fc999b36))
+* <C#> add className support ([9cb7a37](https://github.com/phodal/chapi/commit/9cb7a37926ee2d39b4983652de08964f46a07d32))
+* <C#> add compile all testing for not exception ([f032f95](https://github.com/phodal/chapi/commit/f032f9550974c710cebce5860779ac3ffecb196f))
+* <C#> add import as support ([256570c](https://github.com/phodal/chapi/commit/256570c7e32f18452893189753088c0994b686ac))
+* <C#> add multiple class in same file support ([b36f839](https://github.com/phodal/chapi/commit/b36f83983c95e8d5f42572a563309901fcef9aa1))
+* <C#> add namespcae as container support ([9844b97](https://github.com/phodal/chapi/commit/9844b971f45e6f33ec913ae990220d03580ebe57))
+* <C#> add namespcae in namespace support ([4b4d33b](https://github.com/phodal/chapi/commit/4b4d33b0c7f2ef08b735455ec168a44001329933))
+* <C#> add testing for namespace import ([29e9e65](https://github.com/phodal/chapi/commit/29e9e65573ccae50b49f240e2619d983de6cda8f))
+* <C#> add void return type support ([c00cc42](https://github.com/phodal/chapi/commit/c00cc42858150cb823ca27e9a39b2826d76a0785))
+* <C#> thiking in namespace ([0860886](https://github.com/phodal/chapi/commit/0860886b18df4414bbef29544465729aff52da13))
+* <core> thinking in multiple package in files ([4a0f83d](https://github.com/phodal/chapi/commit/4a0f83d2164da7ca74d29e3bd1ab189714b2f893))
+* <domain> add abstract class type ([27bf3f8](https://github.com/phodal/chapi/commit/27bf3f887d4397d051a1badfef04816a1767b2ec))
+* <domain> add containers for C# ([7643fbc](https://github.com/phodal/chapi/commit/7643fbc63ffe2e54f6f9dc979ba06352dcd01a3e))
+* <domain> add struct type for python ([3f7647d](https://github.com/phodal/chapi/commit/3f7647db165d0c6c0f12a3e06bafcdabaff29e45))
+* <domain> change type to enum type ([1b10fe4](https://github.com/phodal/chapi/commit/1b10fe4dd9f59a7bb4f63f25eeae70f4bbb08720))
+* <domain> remove unused ImportName ([0e98bf3](https://github.com/phodal/chapi/commit/0e98bf31be543536ca92b2914455e45efc184c3c))
+* <scala> add class name support ([80b02e5](https://github.com/phodal/chapi/commit/80b02e52a5b27ce6288db12d9ea405ffa1c65c2d))
+* <scala> add class parameter support ([fb65773](https://github.com/phodal/chapi/commit/fb657736ef7f26749b7ddf7f38b28a51d2e94867))
+* <scala> add extend support ([0ecdbde](https://github.com/phodal/chapi/commit/0ecdbde9cafcfc75ae3e11ee536b9a4501625e63))
+* <scala> add inner object support ([cde2f0d](https://github.com/phodal/chapi/commit/cde2f0dc20545d66a2cb5debe88872505d0956f0))
+* <SCALA> add object name support ([7a3850e](https://github.com/phodal/chapi/commit/7a3850e37b22b31a4e0c6c6668d2bacaf568e9cf))
+* <scala> add object type for project ([1582c7a](https://github.com/phodal/chapi/commit/1582c7a940458aceafac23d2654dd6fb3198ddd3))
+* <SCALA> add parameters for class for scala ([6431e34](https://github.com/phodal/chapi/commit/6431e34cfcb6efa4ed28d572f70140de697ac1e0))
+* <scala> add some dsl use case ([c9b7427](https://github.com/phodal/chapi/commit/c9b74275ab55b86cd9097f69267c8cf3ddab0a56))
+* <scala> init code analyser ([62bb42f](https://github.com/phodal/chapi/commit/62bb42f577d64a02330c8aa575e589af1a98c025))
+* <scala> init for function programming ([6733a89](https://github.com/phodal/chapi/commit/6733a8977b3d3ad4f0894dabfd91109edef55c5d))
 
 
 
