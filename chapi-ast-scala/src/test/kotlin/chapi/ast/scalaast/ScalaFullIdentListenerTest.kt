@@ -71,7 +71,14 @@ class Outer(i : Int) {
 
     @Test
     internal fun shouldIdentExtendClassName() {
+        val code = """
+class CapComer(val transformation: SparktacusTransformation) extends TransformationTrait{
 
+}
+        """
+        val container = ScalaAnalyser().analysis(code, "hello.scala")
+        assertEquals(container.DataStructures[0].NodeName, "CapComer")
+        assertEquals(container.DataStructures[0].Extend, "TransformationTrait")
     }
 
     @Test

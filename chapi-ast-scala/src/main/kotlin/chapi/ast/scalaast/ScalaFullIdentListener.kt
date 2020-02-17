@@ -46,6 +46,13 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
 
         codeDataStruct.Parameters = this.buildParameters(ctx.classParamClauses())
 
+        if (ctx.classTemplateOpt() != null) {
+            if (ctx.classTemplateOpt().classTemplate() != null) {
+                val extend = ctx.classTemplateOpt().classTemplate().text
+                codeDataStruct.Extend = extend
+            }
+        }
+
         updateStruct(codeDataStruct)
     }
 
