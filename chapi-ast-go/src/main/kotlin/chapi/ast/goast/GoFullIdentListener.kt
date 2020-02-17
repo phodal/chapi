@@ -11,6 +11,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
     private var structMap = mutableMapOf<String, CodeDataStruct>()
+    private var localVars = mutableMapOf<String, String>()
 
     private var currentFunction = CodeFunction(IsConstructor = false)
 
@@ -53,6 +54,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun exitFunctionDecl(ctx: GoParser.FunctionDeclContext?) {
+        currentFunction.addVarsFromMap(localVars)
         defaultNode.Functions += currentFunction
         currentFunction = CodeFunction()
     }
@@ -78,8 +80,9 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
         val receiverName = this.getStructNameFromReceiver(ctx!!.receiver().parameters())!!
-        this.addReceiverToStruct(receiverName, currentFunction)
+        currentFunction.addVarsFromMap(localVars)
         currentFunction = CodeFunction()
+        this.addReceiverToStruct(receiverName, currentFunction)
     }
 
     private fun addReceiverToStruct(receiverName: String, codeFunction: CodeFunction) {
@@ -180,8 +183,23 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
-    fun getNodeInfo(): CodeContainer {
+    override fun enterVarDecl(ctx: GoParser.VarDeclContext?) {
+        for (varSpecContext in ctx!!.varSpec()) {
+            var varType = ""
+            if (varSpecContext.type_() != null) {
+                varType = varSpecContext.type_().text
+            }
+            for (terminalNode in varSpecContext.identifierList().IDENTIFIER()) {
+                localVars[terminalNode.text] = varType
+            }
+        }
+    }
 
+    override fun enterShortVarDecl(ctx: GoParser.ShortVarDeclContext?) {
+
+    }
+
+    fun getNodeInfo(): CodeContainer {
         for (entry in structMap) {
             codeContainer.DataStructures += entry.value
         }

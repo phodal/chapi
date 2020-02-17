@@ -246,12 +246,7 @@ open class JavaFullIdentListener(
         val currentMethodName = getMethodMapName(currentFunction)
         val mapFunc = methodMap[currentMethodName]
         if (mapFunc != null) {
-            var vars: Array<CodeProperty> = arrayOf()
-            for (entry in localVars) {
-                val param = CodeProperty(TypeValue = entry.key, TypeType = entry.value)
-                vars += param
-            }
-            mapFunc.LocalVariables = vars
+            mapFunc.addVarsFromMap(localVars)
             methodMap[currentMethodName] = mapFunc
         }
     }

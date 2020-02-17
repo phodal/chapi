@@ -89,4 +89,14 @@ open class CodeFunction(
     override fun toString(): String {
         return Json(JsonConfiguration.Stable).stringify(serializer(), this)
     }
+
+    fun addVarsFromMap(localVars: MutableMap<String, String>) {
+        var vars: Array<CodeProperty> = arrayOf()
+        for (entry in localVars) {
+            val param = CodeProperty(TypeValue = entry.key, TypeType = entry.value)
+            vars += param
+        }
+
+        this.LocalVariables = vars
+    }
 }

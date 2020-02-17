@@ -218,4 +218,23 @@ func main() {
         assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].NodeName, "fmt.Println")
         assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters.size, 1)
     }
+
+
+    @Test
+    internal fun shouldIdentifyFunctionLocalVars() {
+        var code = """
+package main
+
+func VarDecls() {
+	var a int        // +
+	var b, c float64 // + strange extra levels
+	var d = 1        // + doesn't show zero value
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables.size, 4)
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[1].TypeType, "float64")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[1].TypeValue, "b")
+    }
+
 }
