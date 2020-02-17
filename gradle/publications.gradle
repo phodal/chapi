@@ -68,13 +68,13 @@ bintray {
         userOrg = "phodal"
         websiteUrl = "https://www.phodal.com"
         githubRepo = "phodal/chapi"
-        licenses = ['MPL 2.0']
+        licenses = ['MPL-2.0']
         vcsUrl = "https://github.com/phodal/chapi"
         description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
         desc = description
         publicDownloadNumbers = true
         version {
-            name = "chapi"
+            name = project.version
             vcsTag = project.version
             desc = project.description
             released = new Date()
@@ -83,5 +83,5 @@ bintray {
 }
 
 artifactoryPublish {
-    publications(publishing.publications.mavenJava)
+    publications(publishing.publications.MavenJava)
 }
