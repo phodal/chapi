@@ -81,8 +81,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
         val receiverName = this.getStructNameFromReceiver(ctx!!.receiver().parameters())!!
         currentFunction.addVarsFromMap(localVars)
-        currentFunction = CodeFunction()
         this.addReceiverToStruct(receiverName, currentFunction)
+        currentFunction = CodeFunction()
     }
 
     private fun addReceiverToStruct(receiverName: String, codeFunction: CodeFunction) {
@@ -198,6 +198,18 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     override fun enterShortVarDecl(ctx: GoParser.ShortVarDeclContext?) {
         for (terminalNode in ctx!!.identifierList().IDENTIFIER()) {
             localVars[terminalNode.text] = ""
+        }
+    }
+
+    override fun enterConstDecl(ctx: GoParser.ConstDeclContext?) {
+        for (constSpecContext in ctx!!.constSpec()) {
+            var varType = ""
+            if (constSpecContext.type_() != null) {
+                varType = constSpecContext.type_().text
+            }
+            for (terminalNode in constSpecContext.identifierList().IDENTIFIER()) {
+                localVars[terminalNode.text] = varType
+            }
         }
     }
 

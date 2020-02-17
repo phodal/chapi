@@ -241,8 +241,6 @@ func VarDecls() {
         var code = """
 package main
 
-
-
 func ShortDecls() {
     a, b := 0, 10
 	c := func() int { return 7 }
@@ -252,4 +250,23 @@ func ShortDecls() {
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables.size, 3)
     }
 
+    @Test
+    internal fun shouldIdentifyFunctionConstVars() {
+        var code = """
+package main
+
+func ConstDecls() {
+	const Pi float64 = 3.14159265358979323846
+	const zero = 0.0         // untyped floating-point constant
+	const (
+		size int64 = 1024
+		eof        = -1  // untyped integer constant
+	)
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables.size, 4)
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeType, "")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeValue, "eof")
+    }
 }
