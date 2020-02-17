@@ -56,9 +56,15 @@ publishing {
     }
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+println(properties.getProperty('bintray.user'))
+println(properties.getProperty('bintray.key'))
+
 bintray {
-    user = project.hasProperty('bintray.user') ? project.property('bintray.user') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintray.key') ? project.property('bintray.key') : System.getenv('BINTRAY_API_KEY')
+    user = properties.getProperty('bintray.user')
+    key = properties.getProperty('bintray.key')
     publish = true
     configurations = ['archives']
     publications = ['mavenJava']
