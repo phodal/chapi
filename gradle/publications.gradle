@@ -83,5 +83,5 @@ bintray {
 }
 
 artifactoryPublish {
-    publications(publishing.publications.MavenJava)
+    publications(publishing.publications.mavenJava)
 }
