@@ -3,6 +3,17 @@ apply plugin: "maven-publish"
 apply plugin: 'com.jfrog.artifactory'
 
 publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/phodal/chapi")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+
     publications {
         mavenJava(MavenPublication) {
             pom {
@@ -10,14 +21,14 @@ publishing {
                     name = project.description
                     description = project.description
                 }
-                url = "https://github.com/phodal/chapi"
+                url.set("https://github.com/phodal/chapi.git")
                 organization {
                     name = "Phodal"
                     url = "https://www.phodal.com/"
                 }
                 licenses {
                     license {
-                        name = "MPL"
+                        name = "MPL 2.0"
                         url = "https://github.com/phodal/chapi/blob/master/LICENSE"
                         distribution = "repo"
                     }
@@ -26,17 +37,6 @@ publishing {
                     url = "https://github.com/phodal/chapi"
                     connection = "scm:git:git://github.com/phodal/chapi"
                     developerConnection = "scm:git:git://github.com/phodal/chapi"
-                }
-                developers {
-                    developer {
-                        id = "jhoeller"
-                        name = "Juergen Hoeller"
-                        email = "jhoeller@pivotal.io"
-                    }
-                }
-                issueManagement {
-                    system = "GitHub"
-                    url = "https://github.com/phodal/chapi/issues"
                 }
             }
             versionMapping {

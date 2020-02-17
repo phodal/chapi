@@ -14,24 +14,29 @@ task javadocJar(type: Jar) {
     from javadoc
 }
 
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/phodal/chapi")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-    publications {
-        register("jar", MavenPublication) {
-            from(components["java"])
-            pom {
-                url.set("https://github.com/phodal/chapi.git")
-            }
-        }
-    }
-}
+//
+//publishing {
+//    publications {
+//        register("jar", MavenPublication) {
+//            from(components["java"])
+//            pom {
+//                groupId = "com.phodal"
+//                artifactId = "chapi"
+//                version = "0.0.1"
+////                description = provider { project.description }
+//                inceptionYear = '2020`'
+//                licenses {
+//                    license {
+//                        name = 'MPL 2.0'
+//                        url = 'https://github.com/phodal/chapi/blob/master/LICENSE'
+//                    }
+//                }
+//                organization {
+//                    name = 'Phodal Huang'
+//                    url = 'https://www.phodal.com'
+//                }
+//                url.set("https://github.com/phodal/chapi.git")
+//            }
+//        }
+//    }
+//}
