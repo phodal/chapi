@@ -269,4 +269,30 @@ func ConstDecls() {
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeType, "")
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeValue, "eof")
     }
+
+    @Test
+    internal fun shouldIdentifyStructFunctionLocalVars() {
+        var code = """
+package main
+
+import "fmt"
+
+type Animal struct {
+	Age int
+}
+
+func (a *Animal) Move() {
+	const zero = 0.0
+    a, b := 0, 10
+    var c int
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        println(codeFile.DataStructures[0])
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables.size, 4)
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[0].TypeValue, "zero")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[1].TypeValue, "a")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[2].TypeValue, "b")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeValue, "c")
+    }
 }
