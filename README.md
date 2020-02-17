@@ -32,7 +32,8 @@ Dependencies Stages :
 
 | Tools / Language | Groovy (Java) | Maven (Java) | NPM (node.js) | Kotlin Script | Go Modules | Scala Sbt |
 |-------| -------|-------|-------|-------|-------|-------|
-|       |        |       |       |       |       |       | 
+| parser |        |       |       |       |       |       |
+| analysis |        |       |       |       |       |       |
 
 Todo:
 
@@ -47,37 +48,29 @@ TBC:
 
 ## Usage
 
-
-### Import by Jitpack
+1. add to package manager ``repositories``
 
 ```groovy
 allprojects {
     repositories {
         ...
-        maven { url 'https://jitpack.io' }
+        maven {
+            url  "https://dl.bintray.com/phodal/chapi"
+        }
     }
-}
-
-dependencies {
-    implementation 'com.github.phodal:chapi:Tag'
 }
 ```
 
-### Import by GitHub Packages
+2. add to ``dependencies``
 
+```
+dependencies {
+    implementation 'com.phodal:chapi-domain:0.0.3'
+    implementation 'com.phodal:chapi-application:0.0.3'
 
-```xml
-<dependency>
-  <groupId>com.phodal</groupId>
-  <artifactId>chapi-domain</artifactId>
-  <version>0.0.3</version>
-</dependency>
-
-<dependency>
-  <groupId>com.phodal</groupId>
-  <artifactId>chapi-ast-java</artifactId>
-  <version>0.0.3</version>
-</dependency>
+    // choose languages target
+    implementation 'com.phodal:chapi-ast-java:0.0.3'
+}
 ```
 
 ### Usage
