@@ -67,7 +67,10 @@ bintray {
         name = "chapi"
         userOrg = "phodal"
         websiteUrl = "https://www.phodal.com"
+        issueTrackerUrl = 'https://github.com/phodal/chapi/issues'
+        labels = ["meta-language", "meta-data", "meta-programming", "meta-analysis", "meta-model", "modeling"]
         githubRepo = "phodal/chapi"
+        githubReleaseNotesFile = 'README.md'
         licenses = ['MPL-2.0']
         vcsUrl = "https://github.com/phodal/chapi"
         description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
@@ -81,6 +84,7 @@ bintray {
         }
     }
 }
+
 
 artifactoryPublish {
     publications(publishing.publications.mavenJava)
