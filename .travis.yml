@@ -21,6 +21,9 @@ before_install:
 
 install: true
 
+before_script:
+  - touch local.properties
+
 script:
   - ./gradlew check
 
