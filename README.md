@@ -63,11 +63,11 @@ allprojects {
 
 ```
 dependencies {
-    implementation 'com.phodal:chapi-application:0.0.3'
+    implementation 'com.phodal.chapi:chapi-application:0.0.5'
 
     // or choose languages target
-    implementation 'com.phodal:chapi-ast-java:0.0.3'
-    implementation 'com.phodal:chapi-domain:0.0.3'
+    implementation 'com.phodal.chapi:chapi-ast-java:0.0.5'
+    implementation 'com.phodal.chapi:chapi-domain:0.0.5'
 }
 ```
 
