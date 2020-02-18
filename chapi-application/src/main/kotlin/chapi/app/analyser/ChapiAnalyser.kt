@@ -27,6 +27,9 @@ open class ChapiAnalyser(
             "typescript" -> {
                 return TypeScriptAnalyserApp(config)
             }
+            "scala" -> {
+                return ScalaAnalyserApp(config)
+            }
             else -> {
                 return JavaAnalyserApp(config)
             }
