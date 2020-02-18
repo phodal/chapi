@@ -6,10 +6,10 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class KotlinIdentApp {
+open class KotlinAnalyser {
     open fun analysis(str: String) {
         val context = this.parse(str).kotlinFile()
-        val listener = KotlinIdentListener()
+        val listener = KotlinFullIdentListener()
 
         ParseTreeWalker().walk(listener, context)
 
