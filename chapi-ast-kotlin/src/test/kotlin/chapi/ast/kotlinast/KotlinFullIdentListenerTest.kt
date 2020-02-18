@@ -4,12 +4,8 @@ import org.junit.jupiter.api.Test
 
 internal class KotlinFullIdentListenerTest {
     @Test
-    fun analysis() {
-val helloworld = """
-fun main(args : Array<String>) {
-    println("Hello, World!")
-}
-"""
-        KotlinAnalyser().analysis(helloworld)
+    fun shouldNotCrashForGrammarFile() {
+        val code = this::class.java.getResource("/grammar/AllInOneKotlin.kt").readText()
+        KotlinAnalyser().analysis(code)
     }
 }

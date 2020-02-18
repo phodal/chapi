@@ -7,8 +7,8 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class KotlinAnalyser {
-    open fun analysis(str: String) {
-        val context = this.parse(str).kotlinFile()
+    open fun analysis(code: String) {
+        val context = this.parse(code).kotlinFile()
         val listener = KotlinFullIdentListener()
 
         ParseTreeWalker().walk(listener, context)
