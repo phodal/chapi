@@ -1,4 +1,13 @@
-# [](https://github.com/phodal/chapi/compare/v0.0.3...v) (2020-02-18)
+# [](https://github.com/phodal/chapi/compare/v0.0.5...v) (2020-02-18)
+
+
+
+## [0.0.5](https://github.com/phodal/chapi/compare/v0.0.3...v0.0.5) (2020-02-18)
+
+
+### Bug Fixes
+
+* fix target ttype issue ([cc0c77e](https://github.com/phodal/chapi/commit/cc0c77ea10f5ccbdfe708cfa97df1791d2f405eb))
 
 
 ### Features
