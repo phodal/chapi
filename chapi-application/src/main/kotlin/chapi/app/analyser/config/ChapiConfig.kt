@@ -1,5 +1,8 @@
 package chapi.app.analyser.config
 
-class ChapiConfig {
+data class ChapiConfig(
+    var language: String = "",
+    var withoutTest: Boolean = false
+) {
 
 }

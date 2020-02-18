@@ -15,7 +15,14 @@ repositories {
 dependencies {
     // project deps
     implementation(project(":chapi-domain"))
+
+    // languages
     implementation(project(":chapi-ast-java"))
+    implementation(project(":chapi-ast-go"))
+    implementation(project(":chapi-ast-typescript"))
+    implementation(project(":chapi-ast-python"))
+    implementation(project(":chapi-ast-scala"))
+    implementation(project(":chapi-ast-c"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0") // JVM dependency
 

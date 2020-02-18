@@ -40,9 +40,7 @@ internal class JavaAnalyserAppTest {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
         val path = Paths.get(resource!!.toURI()).toFile()
 
-        val nodes = JavaAnalyserApp().analysisByPath(path.absolutePath)
-        println(nodes.toList().toString())
-
+        val nodes = JavaAnalyserApp().analysisNodeByPath(path.absolutePath)
         assertEquals(nodes.size, 14)
     }
 
@@ -51,7 +49,7 @@ internal class JavaAnalyserAppTest {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
         val path = Paths.get(resource!!.toURI()).toFile()
 
-        val nodes = JavaAnalyserApp().analysisByPath(path.absolutePath)
+        val nodes = JavaAnalyserApp().analysisNodeByPath(path.absolutePath)
         var nodeMap: HashMap<String, CodeDataStruct> = HashMap()
         for (node in nodes) {
             nodeMap[node.getClassFullName()] = node
@@ -67,7 +65,7 @@ internal class JavaAnalyserAppTest {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
         val path = Paths.get(resource!!.toURI()).toFile()
 
-        val nodes = JavaAnalyserApp().analysisByPath(path.absolutePath)
+        val nodes = JavaAnalyserApp().analysisNodeByPath(path.absolutePath)
         var nodeMap: HashMap<String, CodeDataStruct> = HashMap()
         for (node in nodes) {
             nodeMap[node.getClassFullName()] = node
