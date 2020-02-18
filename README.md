@@ -271,6 +271,23 @@ code_call        // 函数调用，如 fmt.Println
     2. parameter call
     3. field call
 
+### 提交信息格式
+
+`<type>: <message>`，示例：`feat: <grammars> init python & go grammars Phodal Huang 2020/2/2, 5:01 PM`
+
+所有的 type 见：
+
+ - build: 影响构建系统或外部依赖关系的更改（示例范围：gulp，broccoli，npm）
+ - ci: 更改我们的持续集成文件和脚本（示例范围：Travis，Circle，BrowserStack，SauceLabs）
+ - docs: 仅文档更改
+ - feat: 一个新功能
+ - fix: 修复错误
+ - perf: 改进性能的代码更改
+ - refactor: 代码更改，既不修复错误也不添加功能
+ - style: 不影响代码含义的变化（空白，格式化，缺少分号等）
+ - test: 添加缺失测试或更正现有测试
+
+
 Refs
 ---
 
