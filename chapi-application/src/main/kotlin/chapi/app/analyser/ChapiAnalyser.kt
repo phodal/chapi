@@ -21,6 +21,12 @@ open class ChapiAnalyser(
             "go" -> {
                 return GoAnalyserApp(config)
             }
+            "python" -> {
+                return PythonAnalyserApp(config)
+            }
+            "typescript" -> {
+                return TypeScriptAnalyserApp(config)
+            }
             else -> {
                 return JavaAnalyserApp(config)
             }

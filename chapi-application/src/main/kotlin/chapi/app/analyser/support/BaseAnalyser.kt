@@ -23,7 +23,7 @@ abstract class BaseAnalyser(private var config: ChapiConfig) : IAnalyser {
     private fun getFilesByPath(path: String): Array<AbstractFile> {
         var files: Array<AbstractFile> = arrayOf()
         for (file in File(path).walk()) {
-            val isCorrectLanguage = FileFilter.filterByLanguage(file.absolutePath, config.language)
+            val isCorrectLanguage = FileFilter.filterByLanguage(file.absolutePath, config)
             if (isCorrectLanguage) {
                 files += AbstractFile.toAbstractFile(file)
             }
