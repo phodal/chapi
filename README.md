@@ -54,9 +54,7 @@ TBC:
 allprojects {
     repositories {
         ...
-        maven {
-            url  "https://dl.bintray.com/phodal/chapi"
-        }
+        jcenter()
     }
 }
 ```
@@ -65,11 +63,11 @@ allprojects {
 
 ```
 dependencies {
-    implementation 'com.phodal:chapi-domain:0.0.3'
     implementation 'com.phodal:chapi-application:0.0.3'
 
-    // choose languages target
+    // or choose languages target
     implementation 'com.phodal:chapi-ast-java:0.0.3'
+    implementation 'com.phodal:chapi-domain:0.0.3'
 }
 ```
 
