@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class JavaIdentCallAppTest {
+    @Test
+    fun shouldNotCrashForGrammarFile() {
+        val code = this::class.java.getResource("/grammar/AllInOne8.java").readText()
+        JavaAnalyser().identFullInfo(code, "AllInOne8.java")
+    }
+
     private val helloworld = """
 public class HelloWorld {
     public static void main(String []args) {
