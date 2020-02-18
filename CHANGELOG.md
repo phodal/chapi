@@ -1,4 +1,15 @@
-# [](https://github.com/phodal/chapi/compare/v0.0.3...v) (2020-02-17)
+# [](https://github.com/phodal/chapi/compare/v0.0.3...v) (2020-02-18)
+
+
+### Features
+
+* <app> add basic multiple language support ([cd24a18](https://github.com/phodal/chapi/commit/cd24a18ec66fca26e0aaba737dc3539df098d6ec))
+* <app> add more content ([d13377f](https://github.com/phodal/chapi/commit/d13377f3e5d457fb74239fdb623f09f74e04c4cd))
+* <app> add more languages ([a8a0250](https://github.com/phodal/chapi/commit/a8a02505967952ea5631d91e63ae8d2cabedfbef))
+* <go> add const decl for localvars for [#1](https://github.com/phodal/chapi/issues/1) ([c4ff3ea](https://github.com/phodal/chapi/commit/c4ff3ea66dbc7b627ee421f0a80ba3f687712a83))
+* <go> add short decl to localvars supoprt for [#1](https://github.com/phodal/chapi/issues/1) ([ced0906](https://github.com/phodal/chapi/commit/ced09066580911a1b930c980247ef15ae2752191))
+* <go> add var decl to local vars support ([258ade1](https://github.com/phodal/chapi/commit/258ade1de14576e8295043d6ae025fbccdf64883))
+* <java> add local vars to function for [#1](https://github.com/phodal/chapi/issues/1) ([f35b143](https://github.com/phodal/chapi/commit/f35b14324b470832b2449a065f155b93ff9ad6e2))
 
 
 
