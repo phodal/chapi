@@ -35,65 +35,65 @@ parser grammar GroovyParser;
 
 options {
     tokenVocab = GroovyLexer;
-//    contextSuperClass = GroovyParserRuleContext;
-//    superClass = AbstractParser;
+    contextSuperClass = GroovyParserRuleContext;
+    superClass = AbstractParser;
 }
-//
-//@header {
-//    import java.util.Map;
-//    import org.codehaus.groovy.ast.NodeMetaDataHandler;
-//    import org.apache.groovy.parser.antlr4.SemanticPredicates;
-//}
-//
-//@members {
-//
-//    public static class GroovyParserRuleContext extends ParserRuleContext implements NodeMetaDataHandler {
-//        private Map metaDataMap = null;
-//
-//        public GroovyParserRuleContext() {}
-//
-//        public GroovyParserRuleContext(ParserRuleContext parent, int invokingStateNumber) {
-//            super(parent, invokingStateNumber);
-//        }
-//
-//        @Override
-//        public Map<?, ?> getMetaDataMap() {
-//            return this.metaDataMap;
-//        }
-//
-//        @Override
-//        public void setMetaDataMap(Map<?, ?> metaDataMap) {
-//            this.metaDataMap = metaDataMap;
-//        }
-//    }
-//
-//    @Override
-//    public int getSyntaxErrorSource() {
-//        return GroovySyntaxError.PARSER;
-//    }
-//
-//    @Override
-//    public int getErrorLine() {
-//        Token token = _input.LT(-1);
-//
-//        if (null == token) {
-//            return -1;
-//        }
-//
-//        return token.getLine();
-//    }
-//
-//    @Override
-//    public int getErrorColumn() {
-//        Token token = _input.LT(-1);
-//
-//        if (null == token) {
-//            return -1;
-//        }
-//
-//        return token.getCharPositionInLine() + 1 + token.getText().length();
-//    }
-//}
+
+@header {
+    import java.util.Map;
+    import org.codehaus.groovy.ast.NodeMetaDataHandler;
+    import org.apache.groovy.parser.antlr4.SemanticPredicates;
+}
+
+@members {
+
+    public static class GroovyParserRuleContext extends ParserRuleContext implements NodeMetaDataHandler {
+        private Map metaDataMap = null;
+
+        public GroovyParserRuleContext() {}
+
+        public GroovyParserRuleContext(ParserRuleContext parent, int invokingStateNumber) {
+            super(parent, invokingStateNumber);
+        }
+
+        @Override
+        public Map<?, ?> getMetaDataMap() {
+            return this.metaDataMap;
+        }
+
+        @Override
+        public void setMetaDataMap(Map<?, ?> metaDataMap) {
+            this.metaDataMap = metaDataMap;
+        }
+    }
+
+    @Override
+    public int getSyntaxErrorSource() {
+        return GroovySyntaxError.PARSER;
+    }
+
+    @Override
+    public int getErrorLine() {
+        Token token = _input.LT(-1);
+
+        if (null == token) {
+            return -1;
+        }
+
+        return token.getLine();
+    }
+
+    @Override
+    public int getErrorColumn() {
+        Token token = _input.LT(-1);
+
+        if (null == token) {
+            return -1;
+        }
+
+        return token.getCharPositionInLine() + 1 + token.getText().length();
+    }
+}
 
 // starting point for parsing a groovy file
 compilationUnit
@@ -136,19 +136,21 @@ modifier
     ;
 
 modifiersOpt
-    :   modifiers?
+    :   (modifiers nls)?
     ;
 
 modifiers
-    :   (modifier nls)+
+    :   modifier (nls modifier)*
     ;
 
 classOrInterfaceModifiersOpt
-    :   classOrInterfaceModifiers?
+    :   (classOrInterfaceModifiers
+            NL* /* Use `NL*` here for better performance, so DON'T replace it with `nls` */
+        )?
     ;
 
 classOrInterfaceModifiers
-    :   (classOrInterfaceModifier nls)+
+    :   classOrInterfaceModifier (nls classOrInterfaceModifier)*
     ;
 
 classOrInterfaceModifier
@@ -184,11 +186,11 @@ variableModifier
     ;
 
 variableModifiersOpt
-    :   variableModifiers?
+    :   (variableModifiers nls)?
     ;
 
 variableModifiers
-    :   (variableModifier nls)+
+    :   variableModifier (nls variableModifier)*
     ;
 
 typeParameters
@@ -200,11 +202,11 @@ typeParameter
     ;
 
 typeBound
-    :   typeType (BITAND nls typeType)*
+    :   type (BITAND nls type)*
     ;
 
 typeList
-    :   typeType (COMMA nls typeType)*
+    :   type (COMMA nls type)*
     ;
 
 
@@ -223,24 +225,24 @@ locals[ int t ]
 
         (
             { 3 != $t }?
-            typeParameters? nls
+            (typeParameters nls)?
             (
                 { 2 != $t }?
-                (EXTENDS nls
+                EXTENDS nls
                     (
                         // Only interface can extend more than one super class
                         {1 == $t}? scs=typeList
                     |
-                        sc=typeType
+                        sc=type
                     )
-                nls)?
+                nls
             |
                 /* enum should not have type parameters and extends */
             )
 
             (
                 {1 != $t}?
-                (IMPLEMENTS nls is=typeList nls)?
+                IMPLEMENTS nls is=typeList nls
             |
                 /* interface should not implement other interfaces */
             )
@@ -257,15 +259,14 @@ classBody[int t]
         (
             /* Only enum can have enum constants */
             { 2 == $t }?
-            enumConstants? sep?
+            enumConstants (nls COMMA)? sep?
         |
-
         )
-        classBodyDeclaration[$t]? (sep classBodyDeclaration[$t])* sep? RBRACE
+        (classBodyDeclaration[$t] (sep classBodyDeclaration[$t])*)? sep? RBRACE
     ;
 
 enumConstants
-    :   enumConstant (nls COMMA nls enumConstant)* (nls COMMA)?
+    :   enumConstant (nls COMMA nls enumConstant)*
     ;
 
 enumConstant
@@ -273,8 +274,7 @@ enumConstant
     ;
 
 classBodyDeclaration[int t]
-    :   SEMI
-    |   (STATIC nls)? block
+    :   (STATIC nls)? block
     |   memberDeclaration[$t]
     ;
 
@@ -291,12 +291,14 @@ memberDeclaration[int t]
  *  ct  9: script, other see the comment of classDeclaration
  */
 methodDeclaration[int t, int ct]
-    :   { 3 == $ct }?
-        returnType[$ct] methodName LPAREN rparen (DEFAULT nls elementValue)?
-    |
-        modifiersOpt typeParameters? returnType[$ct]?
-        methodName formalParameters (nls THROWS nls qualifiedClassNameList)?
-        nls methodBody?
+    :   modifiersOpt
+        (   { 3 == $ct }?
+            returnType[$ct] methodName LPAREN rparen (DEFAULT nls elementValue)?
+        |
+            typeParameters? returnType[$ct]?
+            methodName formalParameters (nls THROWS nls qualifiedClassNameList)?
+            (nls methodBody)?
+        )
     ;
 
 methodName
@@ -307,9 +309,7 @@ methodName
 returnType[int ct]
     :
         standardType
-    |
-        // annotation method can not have void return type
-        { 3 != $ct }? VOID
+    |   VOID
     ;
 
 fieldDeclaration
@@ -333,29 +333,29 @@ variableInitializer
     ;
 
 variableInitializers
-    :   variableInitializer nls (COMMA nls variableInitializer nls)* nls COMMA?
+    :   variableInitializer (nls COMMA nls variableInitializer)* nls COMMA?
     ;
 
-dims
+emptyDims
     :   (annotationsOpt LBRACK RBRACK)+
     ;
 
-dimsOpt
-    :   dims?
+emptyDimsOpt
+    :   emptyDims?
     ;
 
 standardType
-options { baseContext = typeType; }
+options { baseContext = type; }
     :   annotationsOpt
         (
             primitiveType
         |
             standardClassOrInterfaceType
         )
-        dimsOpt
+        emptyDimsOpt
     ;
 
-typeType
+type
     :   annotationsOpt
         (
             (
@@ -367,7 +367,7 @@ typeType
         |
                 generalClassOrInterfaceType
         )
-        dimsOpt
+        emptyDimsOpt
     ;
 
 classOrInterfaceType
@@ -395,8 +395,8 @@ typeArguments
     ;
 
 typeArgument
-    :   typeType
-    |   annotationsOpt QUESTION ((EXTENDS | SUPER) nls typeType)?
+    :   type
+    |   annotationsOpt QUESTION ((EXTENDS | SUPER) nls type)?
     ;
 
 annotatedQualifiedClassName
@@ -416,11 +416,11 @@ formalParameterList
     ;
 
 thisFormalParameter
-    :   typeType THIS
+    :   type THIS
     ;
 
 formalParameter
-    :   variableModifiersOpt typeType? ELLIPSIS? variableDeclaratorId (nls ASSIGN nls expression)?
+    :   variableModifiersOpt type? ELLIPSIS? variableDeclaratorId (nls ASSIGN nls expression)?
     ;
 
 methodBody
@@ -459,8 +459,8 @@ literal
     :   IntegerLiteral                                                                      #integerLiteralAlt
     |   FloatingPointLiteral                                                                #floatingPointLiteralAlt
     |   stringLiteral                                                                       #stringLiteralAlt
-    |   BooleanLiteral                                                                      #boolLiteralAlt
-    |   NullLiteral                                                                         #nilLiteralAlt
+    |   BooleanLiteral                                                                      #booleanLiteralAlt
+    |   NullLiteral                                                                         #nullLiteralAlt
     ;
 
 // GSTRING
@@ -532,11 +532,11 @@ blockStatements
 // ANNOTATIONS
 
 annotationsOpt
-    :   (annotation nls)*
+    :   (annotation (nls annotation)* nls)?
     ;
 
 annotation
-    :   AT annotationName ( LPAREN elementValues? rparen )?
+    :   AT annotationName ( LPAREN elementValues? rparen)?
     ;
 
 elementValues
@@ -567,13 +567,13 @@ elementValue
     ;
 
 elementValueArrayInitializer
-    :   LBRACK (elementValue (COMMA elementValue)*)? (COMMA)? RBRACK
+    :   LBRACK (elementValue (COMMA elementValue)* COMMA?)? RBRACK
     ;
 
 // STATEMENTS / BLOCKS
 
 block
-    :   LBRACE (nls | sep*) blockStatementsOpt RBRACE
+    :   LBRACE sep? blockStatementsOpt RBRACE
     ;
 
 blockStatement
@@ -582,28 +582,20 @@ blockStatement
     ;
 
 localVariableDeclaration
-    : //  { !SemanticPredicates.isInvalidLocalVariableDeclaration(_input) }?
+    :   { !SemanticPredicates.isInvalidLocalVariableDeclaration(_input) }?
         variableDeclaration[0]
     ;
-
-classifiedModifiers[int t]
-    :   { 0 == $t }? variableModifiers
-    |   { 1 == $t }? modifiers
-    ;
-
 
 /**
  *  t   0: local variable declaration; 1: field declaration
  */
 variableDeclaration[int t]
-@leftfactor { classifiedModifiers }
-    :   classifiedModifiers[$t]
-        (   typeType? variableDeclarators
+    :   modifiers nls
+        (   type? variableDeclarators
         |   typeNamePairs nls ASSIGN nls variableInitializer
         )
     |
-        classifiedModifiers[$t]?
-        typeType variableDeclarators
+        type variableDeclarators
     ;
 
 typeNamePairs
@@ -611,7 +603,7 @@ typeNamePairs
     ;
 
 typeNamePair
-    :   typeType? variableDeclaratorId
+    :   type? variableDeclaratorId
     ;
 
 variableNames
@@ -628,7 +620,7 @@ ifElseStatement
     ;
 
 switchStatement
-    :   SWITCH expressionInPar nls LBRACE nls switchBlockStatementGroup* nls RBRACE
+    :   SWITCH expressionInPar nls LBRACE nls (switchBlockStatementGroup+ nls)? RBRACE
     ;
 
 loopStatement
@@ -661,27 +653,21 @@ statement
     :   block                                                                                               #blockStmtAlt
     |   conditionalStatement                                                                                #conditionalStmtAlt
     |   loopStatement                                                                                       #loopStmtAlt
-
     |   tryCatchStatement                                                                                   #tryCatchStmtAlt
-
     |   SYNCHRONIZED expressionInPar nls block                                                              #synchronizedStmtAlt
     |   RETURN expression?                                                                                  #returnStmtAlt
     |   THROW expression                                                                                    #throwStmtAlt
-
     |   breakStatement                                                                                      #breakStmtAlt
     |   continueStatement                                                                                   #continueStmtAlt
-
     |   identifier COLON nls statement                                                                      #labeledStmtAlt
-
     |   assertStatement                                                                                     #assertStmtAlt
-
     |   localVariableDeclaration                                                                            #localVariableDeclarationStmtAlt
 
     // validate the method in the AstBuilder#visitMethodDeclaration, e.g. method without method body is not allowed
-    |  methodDeclaration[3, 9]                                                                             #methodDeclarationStmtAlt
+    |   { !SemanticPredicates.isInvalidMethodDeclaration(_input) }?
+        methodDeclaration[3, 9]                                                                             #methodDeclarationStmtAlt
 
     |   statementExpression                                                                                 #expressionStmtAlt
-
     |   SEMI                                                                                                #emptyStmtAlt
     ;
 
@@ -715,7 +701,7 @@ resource
  *  To handle empty cases at the end, we add switchLabel* to statement.
  */
 switchBlockStatementGroup
-    :   (switchLabel nls)+ blockStatements
+    :   switchLabel (nls switchLabel)* nls blockStatements
     ;
 
 switchLabel
@@ -729,7 +715,7 @@ forControl
     ;
 
 enhancedForControl
-    :   variableModifiersOpt typeType? variableDeclaratorId (COLON | IN) expression
+    :   variableModifiersOpt type? variableDeclaratorId (COLON | IN) expression
     ;
 
 classicalForControl
@@ -749,7 +735,7 @@ forUpdate
 // EXPRESSIONS
 
 castParExpression
-    :   LPAREN typeType rparen
+    :   LPAREN type rparen
     ;
 
 parExpression
@@ -760,12 +746,12 @@ expressionInPar
     :   LPAREN enhancedStatementExpression rparen
     ;
 
-expressionList[bool canSpread]
+expressionList[boolean canSpread]
     :   expressionListElement[$canSpread] (COMMA expressionListElement[$canSpread])*
     ;
 
-expressionListElement[bool canSpread]
-    :   (MUL | ) expression
+expressionListElement[boolean canSpread]
+    :   MUL? expression
     ;
 
 enhancedStatementExpression
@@ -784,17 +770,17 @@ postfixExpression
 expression
     // qualified names, array expressions, method invocation, post inc/dec, type casting (level 1)
     // The cast expression must be put before pathExpression to resovle the ambiguities between type casting and call on parentheses expression, e.g. (int)(1 / 2)
-    :   castParExpression castOperandExpression                                             #castExprAltForExpr
-    |   postfixExpression                                                                   #postfixExprAltForExpr
+    :   castParExpression castOperandExpression                                             #castExprAlt
+    |   postfixExpression                                                                   #postfixExprAlt
 
     // ~(BNOT)/!(LNOT) (level 1)
-    |   (BITNOT | NOT) nls expression                                                       #unaryNotExprAltForExpr
+    |   (BITNOT | NOT) nls expression                                                       #unaryNotExprAlt
 
     // math power operator (**) (level 2)
     |   left=expression op=POWER nls right=expression                                       #powerExprAlt
 
     // ++(prefix)/--(prefix)/+(unary)/-(unary) (level 3)
-    |   op=(INC | DEC | ADD | SUB) expression                                               #unaryAddExprAltForExpr
+    |   op=(INC | DEC | ADD | SUB) expression                                               #unaryAddExprAlt
 
     // multiplication/division/modulo (level 4)
     |   left=expression nls op=(MUL | DIV | MOD) nls right=expression                       #multiplicativeExprAlt
@@ -815,7 +801,7 @@ expression
         right=expression                                                                    #shiftExprAlt
 
     // boolean relational expressions (level 7)
-    |   left=expression nls op=(AS | INSTANCEOF | NOT_INSTANCEOF) nls typeType                  #relationalExprAlt
+    |   left=expression nls op=(AS | INSTANCEOF | NOT_INSTANCEOF) nls type                  #relationalExprAlt
     |   left=expression nls op=(LE | GE | GT | LT | IN | NOT_IN)  nls right=expression      #relationalExprAlt
 
     // equality/inequality (==/!=) (level 8)
@@ -882,23 +868,18 @@ castOperandExpression
 options { baseContext = expression; }
     :   castParExpression castOperandExpression                                             #castExprAlt
     |   postfixExpression                                                                   #postfixExprAlt
+
     // ~(BNOT)/!(LNOT) (level 1)
     |   (BITNOT | NOT) nls castOperandExpression                                            #unaryNotExprAlt
+
     // ++(prefix)/--(prefix)/+(unary)/-(unary) (level 3)
     |   op=(INC | DEC | ADD | SUB) castOperandExpression                                    #unaryAddExprAlt
     ;
 
-
-/*
-enhancedExpression
-    :   expression
-    |   standardLambdaExpression
-    ;
-*/
-
 commandExpression
     :   expression
         (
+            { !SemanticPredicates.isFollowingArgumentsOrClosure($expression.ctx) }?
             argumentList
         |
             /* if pathExpression is a method call, no need to have any more arguments */
@@ -946,30 +927,32 @@ pathExpression returns [int t]
 
 pathElement returns [int t]
     :   nls
-
-        // AT: foo.@bar selects the field (or attribute), not property
         (
-            (   DOT                 // The all-powerful dot.
-            |   SPREAD_DOT          // Spread operator:  x*.y  ===  x?.collect{it.y}
-            |   SAFE_DOT            // Optional-null operator:  x?.y  === (x==null)?null:x.y
-            |   SAFE_CHAIN_DOT      // Optional-null chain operator:  x??.y.z  === x?.y?.z
-            ) nls (AT | nonWildcardTypeArguments)?
+            // AT: foo.@bar selects the field (or attribute), not property
+            (
+                (   DOT                 // The all-powerful dot.
+                |   SPREAD_DOT          // Spread operator:  x*.y  ===  x?.collect{it.y}
+                |   SAFE_DOT            // Optional-null operator:  x?.y  === (x==null)?null:x.y
+                |   SAFE_CHAIN_DOT      // Optional-null chain operator:  x??.y.z  === x?.y?.z
+                ) nls (AT | nonWildcardTypeArguments)?
+            |
+                METHOD_POINTER nls      // Method pointer operator: foo.&y == foo.metaClass.getMethodPointer(foo, "y")
+            |
+                METHOD_REFERENCE nls    // Method reference: System.out::println
+            )
+            namePart
+            { $t = 1; }
         |
-            METHOD_POINTER nls      // Method pointer operator: foo.&y == foo.metaClass.getMethodPointer(foo, "y")
-        |
-            METHOD_REFERENCE nls    // Method reference: System.out::println
+            DOT nls NEW creator[1]
+            { $t = 6; }
+
+            // Can always append a block, as foo{bar}
+        |   closureOrLambdaExpression
+            { $t = 3; }
         )
-        namePart
-        { $t = 1; }
-    |
-        nls DOT nls NEW creator[1]
-        { $t = 6; }
+
     |   arguments
         { $t = 2; }
-
-    // Can always append a block, as foo{bar}
-    |   nls closureOrLambdaExpression
-        { $t = 3; }
 
     // Element selection is always an option, too.
     // In Groovy, the stuff between brackets is a general argument list,
@@ -1040,7 +1023,7 @@ primary
     |   parExpression                                                                       #parenPrmrAlt
     |   closureOrLambdaExpression                                                           #closureOrLambdaExpressionPrmrAlt
     |   list                                                                                #listPrmrAlt
-    |   normalMap                                                                                 #mapPrmrAlt
+    |   map                                                                                 #mapPrmrAlt
     |   builtInType                                                                         #builtInTypePrmrAlt
     ;
 
@@ -1048,7 +1031,7 @@ list
     :   LBRACK expressionList[true]? COMMA? RBRACK
     ;
 
-normalMap
+map
     :   LBRACK
         (   mapEntryList COMMA?
         |   COLON
@@ -1075,14 +1058,17 @@ mapEntryLabel
  */
 creator[int t]
     :   createdName
-        (   {0 == $t || 1 == $t}? nls arguments anonymousInnerClassDeclaration[0]?
-        |   {0 == $t}?            (annotationsOpt LBRACK expression RBRACK)+ dimsOpt
-        |   {0 == $t}?            dims nls arrayInitializer
+        (   nls arguments anonymousInnerClassDeclaration[0]?
+        |   dim+ (nls arrayInitializer)?
         )
     ;
 
+dim
+    :   annotationsOpt LBRACK expression? RBRACK
+    ;
+
 arrayInitializer
-    :   LBRACE nls variableInitializers? nls RBRACE
+    :   LBRACE nls (variableInitializers nls)? RBRACE
     ;
 
 /**
@@ -1151,14 +1137,14 @@ identifier
     :   Identifier
     |   CapitalizedIdentifier
     |   VAR
-    |
-        // if 'static' followed by DOT, we can treat them as identifiers, e.g. static.unused = { -> }
-//        { DOT == _input.LT(2).getType() }?
-        STATIC
     |   IN
 //    |   DEF
     |   TRAIT
     |   AS
+    |
+        // if 'static' followed by DOT, we can treat them as identifiers, e.g. static.unused = { -> }
+        { DOT == _input.LT(2).getType() }?
+        STATIC
     ;
 
 builtInType
@@ -1227,7 +1213,7 @@ rparen
     :   RPAREN
     |
         // !!!Error Alternative, impact the performance of parsing
-//        { require(false, "Missing ')'"); }
+        { require(false, "Missing ')'"); }
     ;
 
 nls
