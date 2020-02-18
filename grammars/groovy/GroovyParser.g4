@@ -345,7 +345,7 @@ emptyDimsOpt
     ;
 
 standardType
-options { baseContext = type; }
+//options { baseContext = type; }
     :   annotationsOpt
         (
             primitiveType
@@ -377,12 +377,12 @@ classOrInterfaceType
     ;
 
 generalClassOrInterfaceType
-options { baseContext = classOrInterfaceType; }
+//options { baseContext = classOrInterfaceType; }
     :   qualifiedClassName typeArguments?
     ;
 
 standardClassOrInterfaceType
-options { baseContext = classOrInterfaceType; }
+//options { baseContext = classOrInterfaceType; }
     :   qualifiedStandardClassName typeArguments?
     ;
 
@@ -482,7 +482,7 @@ gstringPath
 
 // LAMBDA EXPRESSION
 lambdaExpression
-options { baseContext = standardLambdaExpression; }
+//options { baseContext = standardLambdaExpression; }
 	:	lambdaParameters nls ARROW nls lambdaBody
 	;
 
@@ -492,7 +492,7 @@ standardLambdaExpression
 	;
 
 lambdaParameters
-options { baseContext = standardLambdaParameters; }
+//options { baseContext = standardLambdaParameters; }
     :   formalParameters
 
     // { a -> a * 2 } can be parsed as a lambda expression in a block, but we expect a closure.
@@ -865,15 +865,15 @@ expression
 
 
 castOperandExpression
-options { baseContext = expression; }
-    :   castParExpression castOperandExpression                                             #castExprAlt
-    |   postfixExpression                                                                   #postfixExprAlt
+//options { baseContext = expression; }
+    :   castParExpression castOperandExpression                                             #castOprExprAlt
+    |   postfixExpression                                                                   #postfixOprExprAlt
 
     // ~(BNOT)/!(LNOT) (level 1)
-    |   (BITNOT | NOT) nls castOperandExpression                                            #unaryNotExprAlt
+    |   (BITNOT | NOT) nls castOperandExpression                                            #unaryNotOprExprAlt
 
     // ++(prefix)/--(prefix)/+(unary)/-(unary) (level 3)
-    |   op=(INC | DEC | ADD | SUB) castOperandExpression                                    #unaryAddExprAlt
+    |   op=(INC | DEC | ADD | SUB) castOperandExpression                                    #unaryAddOprExprAlt
     ;
 
 commandExpression
@@ -1099,7 +1099,7 @@ arguments
     ;
 
 argumentList
-options { baseContext = enhancedArgumentList; }
+//options { baseContext = enhancedArgumentList; }
     :   argumentListElement
         (   COMMA nls
             argumentListElement
@@ -1114,7 +1114,7 @@ enhancedArgumentList
     ;
 
 argumentListElement
-options { baseContext = enhancedArgumentListElement; }
+//options { baseContext = enhancedArgumentListElement; }
     :   expressionListElement[true]
     |   mapEntry
     ;
