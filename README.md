@@ -209,6 +209,68 @@ code_property
 code_call
 ```
 
+## Development（Chinese Version）
+
+环境准备：Intellij IDEA、JDK 1.8、Antlr CLI（可选，参见[Antlr](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md))
+
+1. Clone 代码：``git clone https://github.com/phodal/chapi``
+
+2. 执行构建：``./gradlew build``
+
+### 参与开发
+
+为了保证不易出现 bug，项目采用 TDD 的方式进行，即先编写对应的语法测试，然后实现代码。通过尽可能高的测试覆盖率，降低 bug 的出现。
+
+项目主要由 domain + 各种语言的 AST + application 构建：
+
+ - domain，构建统一的代码模型
+ - 各语言 AST
+ - application，对外暴露的简易 API
+
+每个 AST 项目的入口是 ``xxAnalyser``，返回的是一个 CodeContainer，即代码容器。在非 C# 语言里，等同于 CodeFile，即代码文件。
+
+CodeContainer 内对应的领域模型如下所示：
+
+```
+// class-first or function-first
+code_data_struct // 类、struct、interface 等
+code_function    // 函数。如果是头等函数的语言（first-class function”），会用 NodeName = "default" 包在 code_data_struct 模型中
+
+// function or class detail
+code_annotation  // 注解
+code_field       // 全局变量
+code_import      // 包依赖
+code_member      // 保留字段
+code_position    // 位置信息
+code_property    // 参数相关
+
+// method call information
+code_call        // 函数调用，如 fmt.Println
+```
+
+### 加入开发
+
+1. 寻找感兴趣的语言 / 添加新的语言 AST
+
+通过 TDD 的方式一点点实现下面的功能（可以考虑按顺序）：
+
+ 1. package name
+ 2. import name
+ 3. class / data struct
+    1. struct name
+    2. struct parameters
+    3. function name
+    4. return types
+    5. function parameters
+ 4. function
+    1. function name
+    2. return types
+    3. function parameters
+ 5. method call
+    1. new instance call
+    2. parameter call
+    3. field call
+
 Refs
 ---
 
