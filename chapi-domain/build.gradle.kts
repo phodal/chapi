@@ -6,12 +6,6 @@ plugins {
     `jacoco-conventions`
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    jcenter()
-}
-
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0") // JVM dependency
     implementation(kotlin("stdlib-jdk8"))

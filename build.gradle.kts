@@ -23,10 +23,6 @@ jacoco {
     toolVersion = "0.8.5"
 }
 
-repositories {
-    jcenter()
-}
-
 allprojects {
     group = "com.phodal"
     version = "0.0.3"

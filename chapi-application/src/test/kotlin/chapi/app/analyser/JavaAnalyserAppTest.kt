@@ -1,5 +1,6 @@
 package chapi.app.analyser
 
+import chapi.app.analyser.support.AbstractFile
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeDataStruct
 import org.junit.jupiter.api.Test
@@ -11,7 +12,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.file.Paths
 
-internal class ChapiAnalyserTest {
+internal class JavaAnalyserAppTest {
     @Throws(IOException::class)
     fun getResourceFiles(path: String): List<String> = getResourceAsStream(path).use {
         return if (it == null) emptyList() else BufferedReader(InputStreamReader(it)).readLines()
@@ -30,7 +31,7 @@ internal class ChapiAnalyserTest {
         val toAbstractFile = AbstractFile.toAbstractFile(file)
         files += toAbstractFile
 
-        val nodes = ChapiAnalyser().analysisByFiles(files)
+        val nodes = JavaAnalyserApp().analysisByFiles(files)
         assertEquals(nodes.size, 1)
     }
 
@@ -39,7 +40,7 @@ internal class ChapiAnalyserTest {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
         val path = Paths.get(resource!!.toURI()).toFile()
 
-        val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
+        val nodes = JavaAnalyserApp().analysisByPath(path.absolutePath)
         println(nodes.toList().toString())
 
         assertEquals(nodes.size, 14)
@@ -50,7 +51,7 @@ internal class ChapiAnalyserTest {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
         val path = Paths.get(resource!!.toURI()).toFile()
 
-        val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
+        val nodes = JavaAnalyserApp().analysisByPath(path.absolutePath)
         var nodeMap: HashMap<String, CodeDataStruct> = HashMap()
         for (node in nodes) {
             nodeMap[node.getClassFullName()] = node
@@ -66,7 +67,7 @@ internal class ChapiAnalyserTest {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/")
         val path = Paths.get(resource!!.toURI()).toFile()
 
-        val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
+        val nodes = JavaAnalyserApp().analysisByPath(path.absolutePath)
         var nodeMap: HashMap<String, CodeDataStruct> = HashMap()
         for (node in nodes) {
             nodeMap[node.getClassFullName()] = node

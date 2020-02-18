@@ -1,4 +1,4 @@
-package chapi.app.analyser
+package chapi.app.analyser.support
 
 import java.io.File
 
