@@ -312,7 +312,7 @@ open class JavaFullIdentListener(
         var methodName = callee
 
         var targetTypeStr = _targetType
-        val targetType = this.warpTargetFullType(targetTypeStr)
+        var targetType = this.warpTargetFullType(targetTypeStr)
         var callType = targetType.callType
         var fullType = targetType.targetType
 
@@ -326,7 +326,7 @@ open class JavaFullIdentListener(
             packageName = removeTarget(fullType)
             methodName = callee
         } else {
-            val targetTypePackage = this.handleEmptyFullType(ctx, targetType, methodName, packageName)
+            val targetTypePackage = this.handleEmptyFullType(ctx, targetTypeStr!!, methodName, packageName)
             if (targetTypePackage.packageName != "") {
                 packageName = targetTypePackage.packageName
             }
@@ -339,6 +339,9 @@ open class JavaFullIdentListener(
         if (this.isChainCall(targetTypeStr)) {
             val split = targetTypeStr!!.split(".")
             targetTypeStr = parseTargetType(split[0])
+
+            val splitQuote = targetTypeStr!!.split("(")
+            targetTypeStr = splitQuote[0]
         }
 
         codeCall.Package = packageName
@@ -348,12 +351,12 @@ open class JavaFullIdentListener(
 
     private fun handleEmptyFullType(
         ctx: JavaParser.MethodCallContext,
-        targetTypeObj: JavaTargetType,
+        targetTypeObj: String,
         methodName: String,
         packageName: String
     ): TargetTypePackage {
         var pkgName = packageName
-        var target = targetTypeObj.targetType
+        var target: String = targetTypeObj
 
         if (ctx.text == target) {
             var clz: String = currentClz
@@ -734,6 +737,4 @@ open class JavaFullIdentListener(
     }
 }
 
-class TargetTypePackage(val targetType: String, val packageName: String) {
-
-}
+data class TargetTypePackage(val targetType: String, val packageName: String) {}

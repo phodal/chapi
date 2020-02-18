@@ -148,4 +148,13 @@ public class BlogRepositoryImpl {
         assertEquals(functionCalls[0].NodeName, "BlogPO")
         assertEquals(functionCalls[0].FunctionName, "toDomainModel")
     }
+
+    @Test
+    fun shouldSuccessGetFunctionCallNodeName() {
+        val code = this::class.java.getResource("/regression/CallAssertInClassTests.java").readText()
+        val codeContainer = JavaAnalyser().identFullInfo(code, "CallAssertInClassTests.java")
+
+        val firstFunc = codeContainer.DataStructures[0].Functions[0]
+        assertEquals(firstFunc.FunctionCalls[0].NodeName, "CallAssertInClassTests")
+    }
 }
