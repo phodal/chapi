@@ -1,14 +1,16 @@
 package chapi.ast.kotlinast
 
 import chapi.ast.antlr.KotlinParser
-import chapi.ast.antlr.KotlinParserBaseListener
+import chapi.domain.core.CodeContainer
 
-class KotlinFullIdentListener() : KotlinAstListener() {
+class KotlinFullIdentListener(fileName: String) : KotlinAstListener() {
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+
     override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext?) {
         super.enterFunctionDeclaration(ctx)
     }
 
-    fun getNodeInfo() {
-
+    fun getNodeInfo(): CodeContainer {
+        return codeContainer
     }
 }
