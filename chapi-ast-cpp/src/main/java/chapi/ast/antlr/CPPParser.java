@@ -1,4 +1,4 @@
-// Generated from CPP14.g4 by ANTLR 4.8
+// Generated from CPP.g4 by ANTLR 4.8
 package chapi.ast.antlr;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class CPP14Parser extends Parser {
+public class CPPParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -255,7 +255,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "CPP14.g4"; }
+	public String getGrammarFileName() { return "CPP.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -266,13 +266,13 @@ public class CPP14Parser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-	public CPP14Parser(TokenStream input) {
+	public CPPParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	public static class TranslationunitContext extends ParserRuleContext {
-		public TerminalNode EOF() { return getToken(CPP14Parser.EOF, 0); }
+		public TerminalNode EOF() { return getToken(CPPParser.EOF, 0); }
 		public DeclarationseqContext declarationseq() {
 			return getRuleContext(DeclarationseqContext.class,0);
 		}
@@ -282,15 +282,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_translationunit; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTranslationunit(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTranslationunit(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTranslationunit(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTranslationunit(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTranslationunit(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTranslationunit(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -331,12 +331,12 @@ public class CPP14Parser extends Parser {
 		public LiteralContext literal() {
 			return getRuleContext(LiteralContext.class,0);
 		}
-		public TerminalNode This() { return getToken(CPP14Parser.This, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode This() { return getToken(CPPParser.This, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public IdexpressionContext idexpression() {
 			return getRuleContext(IdexpressionContext.class,0);
 		}
@@ -349,15 +349,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_primaryexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPrimaryexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPrimaryexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPrimaryexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPrimaryexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPrimaryexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPrimaryexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -450,15 +450,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_idexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterIdexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterIdexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitIdexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitIdexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitIdexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitIdexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -498,7 +498,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class UnqualifiedidContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public OperatorfunctionidContext operatorfunctionid() {
 			return getRuleContext(OperatorfunctionidContext.class,0);
 		}
@@ -508,7 +508,7 @@ public class CPP14Parser extends Parser {
 		public LiteraloperatoridContext literaloperatorid() {
 			return getRuleContext(LiteraloperatoridContext.class,0);
 		}
-		public TerminalNode Tilde() { return getToken(CPP14Parser.Tilde, 0); }
+		public TerminalNode Tilde() { return getToken(CPPParser.Tilde, 0); }
 		public ClassnameContext classname() {
 			return getRuleContext(ClassnameContext.class,0);
 		}
@@ -524,15 +524,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_unqualifiedid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterUnqualifiedid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterUnqualifiedid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitUnqualifiedid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitUnqualifiedid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitUnqualifiedid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitUnqualifiedid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -617,22 +617,22 @@ public class CPP14Parser extends Parser {
 		public UnqualifiedidContext unqualifiedid() {
 			return getRuleContext(UnqualifiedidContext.class,0);
 		}
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
 		public QualifiedidContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_qualifiedid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterQualifiedid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterQualifiedid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitQualifiedid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitQualifiedid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitQualifiedid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitQualifiedid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -672,7 +672,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NestednamespecifierContext extends ParserRuleContext {
-		public TerminalNode Doublecolon() { return getToken(CPP14Parser.Doublecolon, 0); }
+		public TerminalNode Doublecolon() { return getToken(CPPParser.Doublecolon, 0); }
 		public ThetypenameContext thetypename() {
 			return getRuleContext(ThetypenameContext.class,0);
 		}
@@ -685,26 +685,26 @@ public class CPP14Parser extends Parser {
 		public NestednamespecifierContext nestednamespecifier() {
 			return getRuleContext(NestednamespecifierContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public SimpletemplateidContext simpletemplateid() {
 			return getRuleContext(SimpletemplateidContext.class,0);
 		}
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
 		public NestednamespecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_nestednamespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNestednamespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNestednamespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNestednamespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNestednamespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNestednamespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNestednamespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -841,15 +841,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_lambdaexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLambdaexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLambdaexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLambdaexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLambdaexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLambdaexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLambdaexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -889,8 +889,8 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class LambdaintroducerContext extends ParserRuleContext {
-		public TerminalNode LeftBracket() { return getToken(CPP14Parser.LeftBracket, 0); }
-		public TerminalNode RightBracket() { return getToken(CPP14Parser.RightBracket, 0); }
+		public TerminalNode LeftBracket() { return getToken(CPPParser.LeftBracket, 0); }
+		public TerminalNode RightBracket() { return getToken(CPPParser.RightBracket, 0); }
 		public LambdacaptureContext lambdacapture() {
 			return getRuleContext(LambdacaptureContext.class,0);
 		}
@@ -900,15 +900,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_lambdaintroducer; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLambdaintroducer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLambdaintroducer(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLambdaintroducer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLambdaintroducer(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLambdaintroducer(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLambdaintroducer(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -954,22 +954,22 @@ public class CPP14Parser extends Parser {
 		public CapturelistContext capturelist() {
 			return getRuleContext(CapturelistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public LambdacaptureContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lambdacapture; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLambdacapture(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLambdacapture(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLambdacapture(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLambdacapture(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLambdacapture(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLambdacapture(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1020,23 +1020,23 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class CapturedefaultContext extends ParserRuleContext {
-		public TerminalNode And() { return getToken(CPP14Parser.And, 0); }
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
+		public TerminalNode And() { return getToken(CPPParser.And, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
 		public CapturedefaultContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_capturedefault; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCapturedefault(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCapturedefault(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCapturedefault(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCapturedefault(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCapturedefault(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCapturedefault(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1075,26 +1075,26 @@ public class CPP14Parser extends Parser {
 		public CaptureContext capture() {
 			return getRuleContext(CaptureContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public CapturelistContext capturelist() {
 			return getRuleContext(CapturelistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public CapturelistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_capturelist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCapturelist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCapturelist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCapturelist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCapturelist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCapturelist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCapturelist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1189,15 +1189,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_capture; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCapture(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCapture(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCapture(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCapture(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCapture(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCapture(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1237,24 +1237,24 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class SimplecaptureContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode And() { return getToken(CPP14Parser.And, 0); }
-		public TerminalNode This() { return getToken(CPP14Parser.This, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode And() { return getToken(CPPParser.And, 0); }
+		public TerminalNode This() { return getToken(CPPParser.This, 0); }
 		public SimplecaptureContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_simplecapture; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterSimplecapture(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterSimplecapture(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitSimplecapture(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitSimplecapture(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitSimplecapture(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitSimplecapture(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1305,26 +1305,26 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class InitcaptureContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public InitializerContext initializer() {
 			return getRuleContext(InitializerContext.class,0);
 		}
-		public TerminalNode And() { return getToken(CPP14Parser.And, 0); }
+		public TerminalNode And() { return getToken(CPPParser.And, 0); }
 		public InitcaptureContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_initcapture; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterInitcapture(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterInitcapture(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitInitcapture(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitInitcapture(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitInitcapture(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitInitcapture(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1372,12 +1372,12 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class LambdadeclaratorContext extends ParserRuleContext {
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ParameterdeclarationclauseContext parameterdeclarationclause() {
 			return getRuleContext(ParameterdeclarationclauseContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
-		public TerminalNode Mutable() { return getToken(CPP14Parser.Mutable, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
+		public TerminalNode Mutable() { return getToken(CPPParser.Mutable, 0); }
 		public ExceptionspecificationContext exceptionspecification() {
 			return getRuleContext(ExceptionspecificationContext.class,0);
 		}
@@ -1393,15 +1393,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_lambdadeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLambdadeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLambdadeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLambdadeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLambdadeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLambdadeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLambdadeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1479,8 +1479,8 @@ public class CPP14Parser extends Parser {
 		public SimpletypespecifierContext simpletypespecifier() {
 			return getRuleContext(SimpletypespecifierContext.class,0);
 		}
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public ExpressionlistContext expressionlist() {
 			return getRuleContext(ExpressionlistContext.class,0);
 		}
@@ -1490,52 +1490,52 @@ public class CPP14Parser extends Parser {
 		public BracedinitlistContext bracedinitlist() {
 			return getRuleContext(BracedinitlistContext.class,0);
 		}
-		public TerminalNode Dynamic_cast() { return getToken(CPP14Parser.Dynamic_cast, 0); }
-		public TerminalNode Less() { return getToken(CPP14Parser.Less, 0); }
+		public TerminalNode Dynamic_cast() { return getToken(CPPParser.Dynamic_cast, 0); }
+		public TerminalNode Less() { return getToken(CPPParser.Less, 0); }
 		public ThetypeidContext thetypeid() {
 			return getRuleContext(ThetypeidContext.class,0);
 		}
-		public TerminalNode Greater() { return getToken(CPP14Parser.Greater, 0); }
+		public TerminalNode Greater() { return getToken(CPPParser.Greater, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode Static_cast() { return getToken(CPP14Parser.Static_cast, 0); }
-		public TerminalNode Reinterpret_cast() { return getToken(CPP14Parser.Reinterpret_cast, 0); }
-		public TerminalNode Const_cast() { return getToken(CPP14Parser.Const_cast, 0); }
+		public TerminalNode Static_cast() { return getToken(CPPParser.Static_cast, 0); }
+		public TerminalNode Reinterpret_cast() { return getToken(CPPParser.Reinterpret_cast, 0); }
+		public TerminalNode Const_cast() { return getToken(CPPParser.Const_cast, 0); }
 		public TypeidofthetypeidContext typeidofthetypeid() {
 			return getRuleContext(TypeidofthetypeidContext.class,0);
 		}
 		public PostfixexpressionContext postfixexpression() {
 			return getRuleContext(PostfixexpressionContext.class,0);
 		}
-		public TerminalNode LeftBracket() { return getToken(CPP14Parser.LeftBracket, 0); }
-		public TerminalNode RightBracket() { return getToken(CPP14Parser.RightBracket, 0); }
-		public TerminalNode Dot() { return getToken(CPP14Parser.Dot, 0); }
+		public TerminalNode LeftBracket() { return getToken(CPPParser.LeftBracket, 0); }
+		public TerminalNode RightBracket() { return getToken(CPPParser.RightBracket, 0); }
+		public TerminalNode Dot() { return getToken(CPPParser.Dot, 0); }
 		public IdexpressionContext idexpression() {
 			return getRuleContext(IdexpressionContext.class,0);
 		}
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
-		public TerminalNode Arrow() { return getToken(CPP14Parser.Arrow, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
+		public TerminalNode Arrow() { return getToken(CPPParser.Arrow, 0); }
 		public PseudodestructornameContext pseudodestructorname() {
 			return getRuleContext(PseudodestructornameContext.class,0);
 		}
-		public TerminalNode PlusPlus() { return getToken(CPP14Parser.PlusPlus, 0); }
-		public TerminalNode MinusMinus() { return getToken(CPP14Parser.MinusMinus, 0); }
+		public TerminalNode PlusPlus() { return getToken(CPPParser.PlusPlus, 0); }
+		public TerminalNode MinusMinus() { return getToken(CPPParser.MinusMinus, 0); }
 		public PostfixexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_postfixexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPostfixexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPostfixexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPostfixexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPostfixexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPostfixexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPostfixexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1889,22 +1889,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TypeidofexprContext extends ParserRuleContext {
-		public TerminalNode Typeid_() { return getToken(CPP14Parser.Typeid_, 0); }
+		public TerminalNode Typeid_() { return getToken(CPPParser.Typeid_, 0); }
 		public TypeidofexprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_typeidofexpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTypeidofexpr(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTypeidofexpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTypeidofexpr(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTypeidofexpr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTypeidofexpr(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTypeidofexpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1931,22 +1931,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TypeidofthetypeidContext extends ParserRuleContext {
-		public TerminalNode Typeid_() { return getToken(CPP14Parser.Typeid_, 0); }
+		public TerminalNode Typeid_() { return getToken(CPPParser.Typeid_, 0); }
 		public TypeidofthetypeidContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_typeidofthetypeid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTypeidofthetypeid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTypeidofthetypeid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTypeidofthetypeid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTypeidofthetypeid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTypeidofthetypeid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTypeidofthetypeid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1982,15 +1982,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_expressionlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExpressionlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExpressionlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExpressionlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExpressionlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExpressionlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExpressionlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2023,12 +2023,12 @@ public class CPP14Parser extends Parser {
 		public ThetypenameContext thetypename(int i) {
 			return getRuleContext(ThetypenameContext.class,i);
 		}
-		public TerminalNode Doublecolon() { return getToken(CPP14Parser.Doublecolon, 0); }
-		public TerminalNode Tilde() { return getToken(CPP14Parser.Tilde, 0); }
+		public TerminalNode Doublecolon() { return getToken(CPPParser.Doublecolon, 0); }
+		public TerminalNode Tilde() { return getToken(CPPParser.Tilde, 0); }
 		public NestednamespecifierContext nestednamespecifier() {
 			return getRuleContext(NestednamespecifierContext.class,0);
 		}
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
 		public SimpletemplateidContext simpletemplateid() {
 			return getRuleContext(SimpletemplateidContext.class,0);
 		}
@@ -2041,15 +2041,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_pseudodestructorname; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPseudodestructorname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPseudodestructorname(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPseudodestructorname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPseudodestructorname(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPseudodestructorname(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPseudodestructorname(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2147,26 +2147,26 @@ public class CPP14Parser extends Parser {
 		public PostfixexpressionContext postfixexpression() {
 			return getRuleContext(PostfixexpressionContext.class,0);
 		}
-		public TerminalNode PlusPlus() { return getToken(CPP14Parser.PlusPlus, 0); }
+		public TerminalNode PlusPlus() { return getToken(CPPParser.PlusPlus, 0); }
 		public CastexpressionContext castexpression() {
 			return getRuleContext(CastexpressionContext.class,0);
 		}
-		public TerminalNode MinusMinus() { return getToken(CPP14Parser.MinusMinus, 0); }
+		public TerminalNode MinusMinus() { return getToken(CPPParser.MinusMinus, 0); }
 		public UnaryoperatorContext unaryoperator() {
 			return getRuleContext(UnaryoperatorContext.class,0);
 		}
-		public TerminalNode Sizeof() { return getToken(CPP14Parser.Sizeof, 0); }
+		public TerminalNode Sizeof() { return getToken(CPPParser.Sizeof, 0); }
 		public UnaryexpressionContext unaryexpression() {
 			return getRuleContext(UnaryexpressionContext.class,0);
 		}
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ThetypeidContext thetypeid() {
 			return getRuleContext(ThetypeidContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode Alignof() { return getToken(CPP14Parser.Alignof, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode Alignof() { return getToken(CPPParser.Alignof, 0); }
 		public NoexceptexpressionContext noexceptexpression() {
 			return getRuleContext(NoexceptexpressionContext.class,0);
 		}
@@ -2182,15 +2182,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_unaryexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterUnaryexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterUnaryexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitUnaryexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitUnaryexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitUnaryexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitUnaryexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2321,27 +2321,27 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class UnaryoperatorContext extends ParserRuleContext {
-		public TerminalNode Or() { return getToken(CPP14Parser.Or, 0); }
-		public TerminalNode Star() { return getToken(CPP14Parser.Star, 0); }
-		public TerminalNode And() { return getToken(CPP14Parser.And, 0); }
-		public TerminalNode Plus() { return getToken(CPP14Parser.Plus, 0); }
-		public TerminalNode Tilde() { return getToken(CPP14Parser.Tilde, 0); }
-		public TerminalNode Minus() { return getToken(CPP14Parser.Minus, 0); }
+		public TerminalNode Or() { return getToken(CPPParser.Or, 0); }
+		public TerminalNode Star() { return getToken(CPPParser.Star, 0); }
+		public TerminalNode And() { return getToken(CPPParser.And, 0); }
+		public TerminalNode Plus() { return getToken(CPPParser.Plus, 0); }
+		public TerminalNode Tilde() { return getToken(CPPParser.Tilde, 0); }
+		public TerminalNode Minus() { return getToken(CPPParser.Minus, 0); }
 		public UnaryoperatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_unaryoperator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterUnaryoperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterUnaryoperator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitUnaryoperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitUnaryoperator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitUnaryoperator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitUnaryoperator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2377,37 +2377,37 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NewexpressionContext extends ParserRuleContext {
-		public TerminalNode New() { return getToken(CPP14Parser.New, 0); }
+		public TerminalNode New() { return getToken(CPPParser.New, 0); }
 		public NewtypeidContext newtypeid() {
 			return getRuleContext(NewtypeidContext.class,0);
 		}
-		public TerminalNode Doublecolon() { return getToken(CPP14Parser.Doublecolon, 0); }
+		public TerminalNode Doublecolon() { return getToken(CPPParser.Doublecolon, 0); }
 		public NewplacementContext newplacement() {
 			return getRuleContext(NewplacementContext.class,0);
 		}
 		public NewinitializerContext newinitializer() {
 			return getRuleContext(NewinitializerContext.class,0);
 		}
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ThetypeidContext thetypeid() {
 			return getRuleContext(ThetypeidContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public NewexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_newexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNewexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNewexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNewexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNewexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNewexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNewexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2516,26 +2516,26 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NewplacementContext extends ParserRuleContext {
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ExpressionlistContext expressionlist() {
 			return getRuleContext(ExpressionlistContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public NewplacementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_newplacement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNewplacement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNewplacement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNewplacement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNewplacement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNewplacement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNewplacement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2578,15 +2578,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_newtypeid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNewtypeid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNewtypeid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNewtypeid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNewtypeid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNewtypeid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNewtypeid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2638,15 +2638,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_newdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNewdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNewdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNewdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNewdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNewdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNewdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2703,11 +2703,11 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NoptrnewdeclaratorContext extends ParserRuleContext {
-		public TerminalNode LeftBracket() { return getToken(CPP14Parser.LeftBracket, 0); }
+		public TerminalNode LeftBracket() { return getToken(CPPParser.LeftBracket, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode RightBracket() { return getToken(CPP14Parser.RightBracket, 0); }
+		public TerminalNode RightBracket() { return getToken(CPPParser.RightBracket, 0); }
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
@@ -2723,15 +2723,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_noptrnewdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNoptrnewdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNoptrnewdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNoptrnewdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNoptrnewdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNoptrnewdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNoptrnewdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2820,8 +2820,8 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NewinitializerContext extends ParserRuleContext {
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public ExpressionlistContext expressionlist() {
 			return getRuleContext(ExpressionlistContext.class,0);
 		}
@@ -2834,15 +2834,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_newinitializer; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNewinitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNewinitializer(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNewinitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNewinitializer(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNewinitializer(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNewinitializer(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2897,28 +2897,28 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class DeleteexpressionContext extends ParserRuleContext {
-		public TerminalNode Delete() { return getToken(CPP14Parser.Delete, 0); }
+		public TerminalNode Delete() { return getToken(CPPParser.Delete, 0); }
 		public CastexpressionContext castexpression() {
 			return getRuleContext(CastexpressionContext.class,0);
 		}
-		public TerminalNode Doublecolon() { return getToken(CPP14Parser.Doublecolon, 0); }
-		public TerminalNode LeftBracket() { return getToken(CPP14Parser.LeftBracket, 0); }
-		public TerminalNode RightBracket() { return getToken(CPP14Parser.RightBracket, 0); }
+		public TerminalNode Doublecolon() { return getToken(CPPParser.Doublecolon, 0); }
+		public TerminalNode LeftBracket() { return getToken(CPPParser.LeftBracket, 0); }
+		public TerminalNode RightBracket() { return getToken(CPPParser.RightBracket, 0); }
 		public DeleteexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_deleteexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDeleteexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDeleteexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDeleteexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDeleteexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDeleteexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDeleteexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2987,27 +2987,27 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NoexceptexpressionContext extends ParserRuleContext {
-		public TerminalNode Noexcept() { return getToken(CPP14Parser.Noexcept, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode Noexcept() { return getToken(CPPParser.Noexcept, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public NoexceptexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_noexceptexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNoexceptexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNoexceptexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNoexceptexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNoexceptexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNoexceptexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNoexceptexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3043,11 +3043,11 @@ public class CPP14Parser extends Parser {
 		public UnaryexpressionContext unaryexpression() {
 			return getRuleContext(UnaryexpressionContext.class,0);
 		}
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ThetypeidContext thetypeid() {
 			return getRuleContext(ThetypeidContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public CastexpressionContext castexpression() {
 			return getRuleContext(CastexpressionContext.class,0);
 		}
@@ -3057,15 +3057,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_castexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCastexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCastexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCastexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCastexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCastexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCastexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3117,23 +3117,23 @@ public class CPP14Parser extends Parser {
 		public PmexpressionContext pmexpression() {
 			return getRuleContext(PmexpressionContext.class,0);
 		}
-		public TerminalNode DotStar() { return getToken(CPP14Parser.DotStar, 0); }
-		public TerminalNode ArrowStar() { return getToken(CPP14Parser.ArrowStar, 0); }
+		public TerminalNode DotStar() { return getToken(CPPParser.DotStar, 0); }
+		public TerminalNode ArrowStar() { return getToken(CPPParser.ArrowStar, 0); }
 		public PmexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pmexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPmexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPmexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPmexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPmexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPmexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPmexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3220,24 +3220,24 @@ public class CPP14Parser extends Parser {
 		public MultiplicativeexpressionContext multiplicativeexpression() {
 			return getRuleContext(MultiplicativeexpressionContext.class,0);
 		}
-		public TerminalNode Star() { return getToken(CPP14Parser.Star, 0); }
-		public TerminalNode Div() { return getToken(CPP14Parser.Div, 0); }
-		public TerminalNode Mod() { return getToken(CPP14Parser.Mod, 0); }
+		public TerminalNode Star() { return getToken(CPPParser.Star, 0); }
+		public TerminalNode Div() { return getToken(CPPParser.Div, 0); }
+		public TerminalNode Mod() { return getToken(CPPParser.Mod, 0); }
 		public MultiplicativeexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_multiplicativeexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterMultiplicativeexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterMultiplicativeexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitMultiplicativeexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitMultiplicativeexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitMultiplicativeexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitMultiplicativeexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3336,23 +3336,23 @@ public class CPP14Parser extends Parser {
 		public AdditiveexpressionContext additiveexpression() {
 			return getRuleContext(AdditiveexpressionContext.class,0);
 		}
-		public TerminalNode Plus() { return getToken(CPP14Parser.Plus, 0); }
-		public TerminalNode Minus() { return getToken(CPP14Parser.Minus, 0); }
+		public TerminalNode Plus() { return getToken(CPPParser.Plus, 0); }
+		public TerminalNode Minus() { return getToken(CPPParser.Minus, 0); }
 		public AdditiveexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_additiveexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAdditiveexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAdditiveexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAdditiveexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAdditiveexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAdditiveexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAdditiveexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3448,15 +3448,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_shiftexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterShiftexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterShiftexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitShiftexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitShiftexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitShiftexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitShiftexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3519,23 +3519,23 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ShiftoperatorContext extends ParserRuleContext {
-		public TerminalNode RightShift() { return getToken(CPP14Parser.RightShift, 0); }
-		public TerminalNode LeftShift() { return getToken(CPP14Parser.LeftShift, 0); }
+		public TerminalNode RightShift() { return getToken(CPPParser.RightShift, 0); }
+		public TerminalNode LeftShift() { return getToken(CPPParser.LeftShift, 0); }
 		public ShiftoperatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_shiftoperator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterShiftoperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterShiftoperator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitShiftoperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitShiftoperator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitShiftoperator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitShiftoperator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3577,25 +3577,25 @@ public class CPP14Parser extends Parser {
 		public RelationalexpressionContext relationalexpression() {
 			return getRuleContext(RelationalexpressionContext.class,0);
 		}
-		public TerminalNode Less() { return getToken(CPP14Parser.Less, 0); }
-		public TerminalNode Greater() { return getToken(CPP14Parser.Greater, 0); }
-		public TerminalNode LessEqual() { return getToken(CPP14Parser.LessEqual, 0); }
-		public TerminalNode GreaterEqual() { return getToken(CPP14Parser.GreaterEqual, 0); }
+		public TerminalNode Less() { return getToken(CPPParser.Less, 0); }
+		public TerminalNode Greater() { return getToken(CPPParser.Greater, 0); }
+		public TerminalNode LessEqual() { return getToken(CPPParser.LessEqual, 0); }
+		public TerminalNode GreaterEqual() { return getToken(CPPParser.GreaterEqual, 0); }
 		public RelationalexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_relationalexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterRelationalexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterRelationalexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitRelationalexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitRelationalexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitRelationalexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitRelationalexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3706,23 +3706,23 @@ public class CPP14Parser extends Parser {
 		public EqualityexpressionContext equalityexpression() {
 			return getRuleContext(EqualityexpressionContext.class,0);
 		}
-		public TerminalNode Equal() { return getToken(CPP14Parser.Equal, 0); }
-		public TerminalNode NotEqual() { return getToken(CPP14Parser.NotEqual, 0); }
+		public TerminalNode Equal() { return getToken(CPPParser.Equal, 0); }
+		public TerminalNode NotEqual() { return getToken(CPPParser.NotEqual, 0); }
 		public EqualityexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_equalityexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEqualityexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEqualityexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEqualityexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEqualityexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEqualityexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEqualityexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3809,22 +3809,22 @@ public class CPP14Parser extends Parser {
 		public AndexpressionContext andexpression() {
 			return getRuleContext(AndexpressionContext.class,0);
 		}
-		public TerminalNode And() { return getToken(CPP14Parser.And, 0); }
+		public TerminalNode And() { return getToken(CPPParser.And, 0); }
 		public AndexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_andexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAndexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAndexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAndexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAndexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAndexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAndexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3893,22 +3893,22 @@ public class CPP14Parser extends Parser {
 		public ExclusiveorexpressionContext exclusiveorexpression() {
 			return getRuleContext(ExclusiveorexpressionContext.class,0);
 		}
-		public TerminalNode Caret() { return getToken(CPP14Parser.Caret, 0); }
+		public TerminalNode Caret() { return getToken(CPPParser.Caret, 0); }
 		public ExclusiveorexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_exclusiveorexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExclusiveorexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExclusiveorexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExclusiveorexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExclusiveorexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExclusiveorexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExclusiveorexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3977,22 +3977,22 @@ public class CPP14Parser extends Parser {
 		public InclusiveorexpressionContext inclusiveorexpression() {
 			return getRuleContext(InclusiveorexpressionContext.class,0);
 		}
-		public TerminalNode Or() { return getToken(CPP14Parser.Or, 0); }
+		public TerminalNode Or() { return getToken(CPPParser.Or, 0); }
 		public InclusiveorexpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_inclusiveorexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterInclusiveorexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterInclusiveorexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitInclusiveorexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitInclusiveorexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitInclusiveorexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitInclusiveorexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4067,15 +4067,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_logicalandexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLogicalandexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLogicalandexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLogicalandexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLogicalandexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLogicalandexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLogicalandexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4168,15 +4168,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_logicalorexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLogicalorexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLogicalorexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLogicalorexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLogicalorexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLogicalorexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLogicalorexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4260,11 +4260,11 @@ public class CPP14Parser extends Parser {
 		public LogicalorexpressionContext logicalorexpression() {
 			return getRuleContext(LogicalorexpressionContext.class,0);
 		}
-		public TerminalNode Question() { return getToken(CPP14Parser.Question, 0); }
+		public TerminalNode Question() { return getToken(CPPParser.Question, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode Colon() { return getToken(CPP14Parser.Colon, 0); }
+		public TerminalNode Colon() { return getToken(CPPParser.Colon, 0); }
 		public AssignmentexpressionContext assignmentexpression() {
 			return getRuleContext(AssignmentexpressionContext.class,0);
 		}
@@ -4274,15 +4274,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_conditionalexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterConditionalexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterConditionalexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitConditionalexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitConditionalexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitConditionalexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitConditionalexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4351,15 +4351,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_assignmentexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAssignmentexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAssignmentexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAssignmentexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAssignmentexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAssignmentexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAssignmentexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4410,32 +4410,32 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AssignmentoperatorContext extends ParserRuleContext {
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
-		public TerminalNode StarAssign() { return getToken(CPP14Parser.StarAssign, 0); }
-		public TerminalNode DivAssign() { return getToken(CPP14Parser.DivAssign, 0); }
-		public TerminalNode ModAssign() { return getToken(CPP14Parser.ModAssign, 0); }
-		public TerminalNode PlusAssign() { return getToken(CPP14Parser.PlusAssign, 0); }
-		public TerminalNode MinusAssign() { return getToken(CPP14Parser.MinusAssign, 0); }
-		public TerminalNode RightShiftAssign() { return getToken(CPP14Parser.RightShiftAssign, 0); }
-		public TerminalNode LeftShiftAssign() { return getToken(CPP14Parser.LeftShiftAssign, 0); }
-		public TerminalNode AndAssign() { return getToken(CPP14Parser.AndAssign, 0); }
-		public TerminalNode XorAssign() { return getToken(CPP14Parser.XorAssign, 0); }
-		public TerminalNode OrAssign() { return getToken(CPP14Parser.OrAssign, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
+		public TerminalNode StarAssign() { return getToken(CPPParser.StarAssign, 0); }
+		public TerminalNode DivAssign() { return getToken(CPPParser.DivAssign, 0); }
+		public TerminalNode ModAssign() { return getToken(CPPParser.ModAssign, 0); }
+		public TerminalNode PlusAssign() { return getToken(CPPParser.PlusAssign, 0); }
+		public TerminalNode MinusAssign() { return getToken(CPPParser.MinusAssign, 0); }
+		public TerminalNode RightShiftAssign() { return getToken(CPPParser.RightShiftAssign, 0); }
+		public TerminalNode LeftShiftAssign() { return getToken(CPPParser.LeftShiftAssign, 0); }
+		public TerminalNode AndAssign() { return getToken(CPPParser.AndAssign, 0); }
+		public TerminalNode XorAssign() { return getToken(CPPParser.XorAssign, 0); }
+		public TerminalNode OrAssign() { return getToken(CPPParser.OrAssign, 0); }
 		public AssignmentoperatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_assignmentoperator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAssignmentoperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAssignmentoperator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAssignmentoperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAssignmentoperator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAssignmentoperator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAssignmentoperator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4477,22 +4477,22 @@ public class CPP14Parser extends Parser {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4564,15 +4564,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_constantexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterConstantexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterConstantexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitConstantexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitConstantexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitConstantexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitConstantexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4632,15 +4632,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_statement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterStatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitStatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitStatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4783,34 +4783,34 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class LabeledstatementContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode Colon() { return getToken(CPP14Parser.Colon, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode Colon() { return getToken(CPPParser.Colon, 0); }
 		public StatementContext statement() {
 			return getRuleContext(StatementContext.class,0);
 		}
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
-		public TerminalNode Case() { return getToken(CPP14Parser.Case, 0); }
+		public TerminalNode Case() { return getToken(CPPParser.Case, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
-		public TerminalNode Default() { return getToken(CPP14Parser.Default, 0); }
+		public TerminalNode Default() { return getToken(CPPParser.Default, 0); }
 		public LabeledstatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_labeledstatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLabeledstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLabeledstatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLabeledstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLabeledstatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLabeledstatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLabeledstatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4902,7 +4902,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ExpressionstatementContext extends ParserRuleContext {
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
@@ -4912,15 +4912,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_expressionstatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExpressionstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExpressionstatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExpressionstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExpressionstatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExpressionstatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExpressionstatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4958,8 +4958,8 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class CompoundstatementContext extends ParserRuleContext {
-		public TerminalNode LeftBrace() { return getToken(CPP14Parser.LeftBrace, 0); }
-		public TerminalNode RightBrace() { return getToken(CPP14Parser.RightBrace, 0); }
+		public TerminalNode LeftBrace() { return getToken(CPPParser.LeftBrace, 0); }
+		public TerminalNode RightBrace() { return getToken(CPPParser.RightBrace, 0); }
 		public StatementseqContext statementseq() {
 			return getRuleContext(StatementseqContext.class,0);
 		}
@@ -4969,15 +4969,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_compoundstatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCompoundstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCompoundstatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCompoundstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCompoundstatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCompoundstatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCompoundstatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5029,15 +5029,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_statementseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterStatementseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterStatementseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitStatementseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitStatementseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitStatementseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitStatementseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5098,35 +5098,35 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class SelectionstatementContext extends ParserRuleContext {
-		public TerminalNode If() { return getToken(CPP14Parser.If, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode If() { return getToken(CPPParser.If, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ConditionContext condition() {
 			return getRuleContext(ConditionContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
 		}
 		public StatementContext statement(int i) {
 			return getRuleContext(StatementContext.class,i);
 		}
-		public TerminalNode Else() { return getToken(CPP14Parser.Else, 0); }
-		public TerminalNode Switch() { return getToken(CPP14Parser.Switch, 0); }
+		public TerminalNode Else() { return getToken(CPPParser.Else, 0); }
+		public TerminalNode Switch() { return getToken(CPPParser.Switch, 0); }
 		public SelectionstatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_selectionstatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterSelectionstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterSelectionstatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitSelectionstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitSelectionstatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitSelectionstatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitSelectionstatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5210,7 +5210,7 @@ public class CPP14Parser extends Parser {
 		public DeclaratorContext declarator() {
 			return getRuleContext(DeclaratorContext.class,0);
 		}
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
 		public InitializerclauseContext initializerclause() {
 			return getRuleContext(InitializerclauseContext.class,0);
 		}
@@ -5226,15 +5226,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_condition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCondition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCondition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCondition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCondition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCondition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCondition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5312,28 +5312,28 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class IterationstatementContext extends ParserRuleContext {
-		public TerminalNode While() { return getToken(CPP14Parser.While, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode While() { return getToken(CPPParser.While, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ConditionContext condition() {
 			return getRuleContext(ConditionContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public StatementContext statement() {
 			return getRuleContext(StatementContext.class,0);
 		}
-		public TerminalNode Do() { return getToken(CPP14Parser.Do, 0); }
+		public TerminalNode Do() { return getToken(CPPParser.Do, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
-		public TerminalNode For() { return getToken(CPP14Parser.For, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
+		public TerminalNode For() { return getToken(CPPParser.For, 0); }
 		public ForinitstatementContext forinitstatement() {
 			return getRuleContext(ForinitstatementContext.class,0);
 		}
 		public ForrangedeclarationContext forrangedeclaration() {
 			return getRuleContext(ForrangedeclarationContext.class,0);
 		}
-		public TerminalNode Colon() { return getToken(CPP14Parser.Colon, 0); }
+		public TerminalNode Colon() { return getToken(CPPParser.Colon, 0); }
 		public ForrangeinitializerContext forrangeinitializer() {
 			return getRuleContext(ForrangeinitializerContext.class,0);
 		}
@@ -5343,15 +5343,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_iterationstatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterIterationstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterIterationstatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitIterationstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitIterationstatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitIterationstatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitIterationstatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5480,15 +5480,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_forinitstatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterForinitstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterForinitstatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitForinitstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitForinitstatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitForinitstatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitForinitstatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5543,15 +5543,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_forrangedeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterForrangedeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterForrangedeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitForrangedeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitForrangedeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitForrangedeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitForrangedeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5603,15 +5603,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_forrangeinitializer; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterForrangeinitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterForrangeinitializer(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitForrangeinitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitForrangeinitializer(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitForrangeinitializer(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitForrangeinitializer(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5706,33 +5706,33 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class JumpstatementContext extends ParserRuleContext {
-		public TerminalNode Break() { return getToken(CPP14Parser.Break, 0); }
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
-		public TerminalNode Continue() { return getToken(CPP14Parser.Continue, 0); }
-		public TerminalNode Return() { return getToken(CPP14Parser.Return, 0); }
+		public TerminalNode Break() { return getToken(CPPParser.Break, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
+		public TerminalNode Continue() { return getToken(CPPParser.Continue, 0); }
+		public TerminalNode Return() { return getToken(CPPParser.Return, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public BracedinitlistContext bracedinitlist() {
 			return getRuleContext(BracedinitlistContext.class,0);
 		}
-		public TerminalNode Goto() { return getToken(CPP14Parser.Goto, 0); }
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Goto() { return getToken(CPPParser.Goto, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public JumpstatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_jumpstatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterJumpstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterJumpstatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitJumpstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitJumpstatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitJumpstatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitJumpstatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5827,15 +5827,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_declarationstatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDeclarationstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDeclarationstatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDeclarationstatement(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDeclarationstatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDeclarationstatement(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDeclarationstatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5874,15 +5874,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_declarationseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDeclarationseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDeclarationseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDeclarationseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDeclarationseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDeclarationseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDeclarationseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5976,15 +5976,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_declaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6103,15 +6103,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_blockdeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBlockdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBlockdeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBlockdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBlockdeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBlockdeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBlockdeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6193,13 +6193,13 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AliasdeclarationContext extends ParserRuleContext {
-		public TerminalNode Using() { return getToken(CPP14Parser.Using, 0); }
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
+		public TerminalNode Using() { return getToken(CPPParser.Using, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
 		public ThetypeidContext thetypeid() {
 			return getRuleContext(ThetypeidContext.class,0);
 		}
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
@@ -6209,15 +6209,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_aliasdeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAliasdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAliasdeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAliasdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAliasdeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAliasdeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAliasdeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6263,7 +6263,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class SimpledeclarationContext extends ParserRuleContext {
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public DeclspecifierseqContext declspecifierseq() {
 			return getRuleContext(DeclspecifierseqContext.class,0);
 		}
@@ -6279,15 +6279,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_simpledeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterSimpledeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterSimpledeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitSimpledeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitSimpledeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitSimpledeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitSimpledeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6407,30 +6407,30 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class Static_assertdeclarationContext extends ParserRuleContext {
-		public TerminalNode Static_assert() { return getToken(CPP14Parser.Static_assert, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode Static_assert() { return getToken(CPPParser.Static_assert, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
-		public TerminalNode Stringliteral() { return getToken(CPP14Parser.Stringliteral, 0); }
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
+		public TerminalNode Stringliteral() { return getToken(CPPParser.Stringliteral, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public Static_assertdeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_static_assertdeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterStatic_assertdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterStatic_assertdeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitStatic_assertdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitStatic_assertdeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitStatic_assertdeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitStatic_assertdeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6469,22 +6469,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class EmptydeclarationContext extends ParserRuleContext {
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public EmptydeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_emptydeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEmptydeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEmptydeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEmptydeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEmptydeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEmptydeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEmptydeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6514,22 +6514,22 @@ public class CPP14Parser extends Parser {
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public AttributedeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributedeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttributedeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttributedeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttributedeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttributedeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttributedeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttributedeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6567,24 +6567,24 @@ public class CPP14Parser extends Parser {
 		public FunctionspecifierContext functionspecifier() {
 			return getRuleContext(FunctionspecifierContext.class,0);
 		}
-		public TerminalNode Friend() { return getToken(CPP14Parser.Friend, 0); }
-		public TerminalNode Typedef() { return getToken(CPP14Parser.Typedef, 0); }
-		public TerminalNode Constexpr() { return getToken(CPP14Parser.Constexpr, 0); }
+		public TerminalNode Friend() { return getToken(CPPParser.Friend, 0); }
+		public TerminalNode Typedef() { return getToken(CPPParser.Typedef, 0); }
+		public TerminalNode Constexpr() { return getToken(CPPParser.Constexpr, 0); }
 		public DeclspecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_declspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDeclspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDeclspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDeclspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDeclspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDeclspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDeclspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6698,15 +6698,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_declspecifierseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDeclspecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDeclspecifierseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDeclspecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDeclspecifierseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDeclspecifierseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDeclspecifierseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6758,26 +6758,26 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class StorageclassspecifierContext extends ParserRuleContext {
-		public TerminalNode Register() { return getToken(CPP14Parser.Register, 0); }
-		public TerminalNode Static() { return getToken(CPP14Parser.Static, 0); }
-		public TerminalNode Thread_local() { return getToken(CPP14Parser.Thread_local, 0); }
-		public TerminalNode Extern() { return getToken(CPP14Parser.Extern, 0); }
-		public TerminalNode Mutable() { return getToken(CPP14Parser.Mutable, 0); }
+		public TerminalNode Register() { return getToken(CPPParser.Register, 0); }
+		public TerminalNode Static() { return getToken(CPPParser.Static, 0); }
+		public TerminalNode Thread_local() { return getToken(CPPParser.Thread_local, 0); }
+		public TerminalNode Extern() { return getToken(CPPParser.Extern, 0); }
+		public TerminalNode Mutable() { return getToken(CPPParser.Mutable, 0); }
 		public StorageclassspecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_storageclassspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterStorageclassspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterStorageclassspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitStorageclassspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitStorageclassspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitStorageclassspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitStorageclassspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6813,24 +6813,24 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class FunctionspecifierContext extends ParserRuleContext {
-		public TerminalNode Inline() { return getToken(CPP14Parser.Inline, 0); }
-		public TerminalNode Virtual() { return getToken(CPP14Parser.Virtual, 0); }
-		public TerminalNode Explicit() { return getToken(CPP14Parser.Explicit, 0); }
+		public TerminalNode Inline() { return getToken(CPPParser.Inline, 0); }
+		public TerminalNode Virtual() { return getToken(CPPParser.Virtual, 0); }
+		public TerminalNode Explicit() { return getToken(CPPParser.Explicit, 0); }
 		public FunctionspecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterFunctionspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterFunctionspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitFunctionspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitFunctionspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitFunctionspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitFunctionspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6866,22 +6866,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TypedefnameContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public TypedefnameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_typedefname; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTypedefname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTypedefname(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTypedefname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTypedefname(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTypedefname(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTypedefname(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6923,15 +6923,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_typespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTypespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTypespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTypespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTypespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6996,15 +6996,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_trailingtypespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTrailingtypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTrailingtypespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTrailingtypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTrailingtypespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTrailingtypespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTrailingtypespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7095,15 +7095,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_typespecifierseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTypespecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTypespecifierseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTypespecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTypespecifierseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTypespecifierseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTypespecifierseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7170,15 +7170,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_trailingtypespecifierseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTrailingtypespecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTrailingtypespecifierseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTrailingtypespecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTrailingtypespecifierseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTrailingtypespecifierseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTrailingtypespecifierseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7236,24 +7236,24 @@ public class CPP14Parser extends Parser {
 		public NestednamespecifierContext nestednamespecifier() {
 			return getRuleContext(NestednamespecifierContext.class,0);
 		}
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
 		public SimpletemplateidContext simpletemplateid() {
 			return getRuleContext(SimpletemplateidContext.class,0);
 		}
-		public TerminalNode Char() { return getToken(CPP14Parser.Char, 0); }
-		public TerminalNode Char16() { return getToken(CPP14Parser.Char16, 0); }
-		public TerminalNode Char32() { return getToken(CPP14Parser.Char32, 0); }
-		public TerminalNode Wchar() { return getToken(CPP14Parser.Wchar, 0); }
-		public TerminalNode Bool() { return getToken(CPP14Parser.Bool, 0); }
-		public TerminalNode Short() { return getToken(CPP14Parser.Short, 0); }
-		public TerminalNode Int() { return getToken(CPP14Parser.Int, 0); }
-		public TerminalNode Long() { return getToken(CPP14Parser.Long, 0); }
-		public TerminalNode Signed() { return getToken(CPP14Parser.Signed, 0); }
-		public TerminalNode Unsigned() { return getToken(CPP14Parser.Unsigned, 0); }
-		public TerminalNode Float() { return getToken(CPP14Parser.Float, 0); }
-		public TerminalNode Double() { return getToken(CPP14Parser.Double, 0); }
-		public TerminalNode Void() { return getToken(CPP14Parser.Void, 0); }
-		public TerminalNode Auto() { return getToken(CPP14Parser.Auto, 0); }
+		public TerminalNode Char() { return getToken(CPPParser.Char, 0); }
+		public TerminalNode Char16() { return getToken(CPPParser.Char16, 0); }
+		public TerminalNode Char32() { return getToken(CPPParser.Char32, 0); }
+		public TerminalNode Wchar() { return getToken(CPPParser.Wchar, 0); }
+		public TerminalNode Bool() { return getToken(CPPParser.Bool, 0); }
+		public TerminalNode Short() { return getToken(CPPParser.Short, 0); }
+		public TerminalNode Int() { return getToken(CPPParser.Int, 0); }
+		public TerminalNode Long() { return getToken(CPPParser.Long, 0); }
+		public TerminalNode Signed() { return getToken(CPPParser.Signed, 0); }
+		public TerminalNode Unsigned() { return getToken(CPPParser.Unsigned, 0); }
+		public TerminalNode Float() { return getToken(CPPParser.Float, 0); }
+		public TerminalNode Double() { return getToken(CPPParser.Double, 0); }
+		public TerminalNode Void() { return getToken(CPPParser.Void, 0); }
+		public TerminalNode Auto() { return getToken(CPPParser.Auto, 0); }
 		public DecltypespecifierContext decltypespecifier() {
 			return getRuleContext(DecltypespecifierContext.class,0);
 		}
@@ -7263,15 +7263,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_simpletypespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterSimpletypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterSimpletypespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitSimpletypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitSimpletypespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitSimpletypespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitSimpletypespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7448,15 +7448,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_thetypename; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterThetypename(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterThetypename(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitThetypename(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitThetypename(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitThetypename(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitThetypename(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7510,28 +7510,28 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class DecltypespecifierContext extends ParserRuleContext {
-		public TerminalNode Decltype() { return getToken(CPP14Parser.Decltype, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode Decltype() { return getToken(CPPParser.Decltype, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
-		public TerminalNode Auto() { return getToken(CPP14Parser.Auto, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
+		public TerminalNode Auto() { return getToken(CPPParser.Auto, 0); }
 		public DecltypespecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_decltypespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDecltypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDecltypespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDecltypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDecltypespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDecltypespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDecltypespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7586,7 +7586,7 @@ public class CPP14Parser extends Parser {
 		public ClasskeyContext classkey() {
 			return getRuleContext(ClasskeyContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
@@ -7596,23 +7596,23 @@ public class CPP14Parser extends Parser {
 		public SimpletemplateidContext simpletemplateid() {
 			return getRuleContext(SimpletemplateidContext.class,0);
 		}
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
-		public TerminalNode Enum() { return getToken(CPP14Parser.Enum, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
+		public TerminalNode Enum() { return getToken(CPPParser.Enum, 0); }
 		public ElaboratedtypespecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_elaboratedtypespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterElaboratedtypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterElaboratedtypespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitElaboratedtypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitElaboratedtypespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitElaboratedtypespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitElaboratedtypespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7717,22 +7717,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class EnumnameContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public EnumnameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumname; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEnumname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEnumname(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEnumname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEnumname(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEnumname(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEnumname(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7762,27 +7762,27 @@ public class CPP14Parser extends Parser {
 		public EnumheadContext enumhead() {
 			return getRuleContext(EnumheadContext.class,0);
 		}
-		public TerminalNode LeftBrace() { return getToken(CPP14Parser.LeftBrace, 0); }
-		public TerminalNode RightBrace() { return getToken(CPP14Parser.RightBrace, 0); }
+		public TerminalNode LeftBrace() { return getToken(CPPParser.LeftBrace, 0); }
+		public TerminalNode RightBrace() { return getToken(CPPParser.RightBrace, 0); }
 		public EnumeratorlistContext enumeratorlist() {
 			return getRuleContext(EnumeratorlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public EnumspecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEnumspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEnumspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEnumspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEnumspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEnumspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEnumspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7851,7 +7851,7 @@ public class CPP14Parser extends Parser {
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public EnumbaseContext enumbase() {
 			return getRuleContext(EnumbaseContext.class,0);
 		}
@@ -7864,15 +7864,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_enumhead; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEnumhead(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEnumhead(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEnumhead(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEnumhead(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEnumhead(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEnumhead(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7970,8 +7970,8 @@ public class CPP14Parser extends Parser {
 		public EnumkeyContext enumkey() {
 			return getRuleContext(EnumkeyContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
@@ -7984,15 +7984,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_opaqueenumdeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterOpaqueenumdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterOpaqueenumdeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitOpaqueenumdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitOpaqueenumdeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitOpaqueenumdeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitOpaqueenumdeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8044,24 +8044,24 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class EnumkeyContext extends ParserRuleContext {
-		public TerminalNode Enum() { return getToken(CPP14Parser.Enum, 0); }
-		public TerminalNode Class() { return getToken(CPP14Parser.Class, 0); }
-		public TerminalNode Struct() { return getToken(CPP14Parser.Struct, 0); }
+		public TerminalNode Enum() { return getToken(CPPParser.Enum, 0); }
+		public TerminalNode Class() { return getToken(CPPParser.Class, 0); }
+		public TerminalNode Struct() { return getToken(CPPParser.Struct, 0); }
 		public EnumkeyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumkey; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEnumkey(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEnumkey(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEnumkey(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEnumkey(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEnumkey(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEnumkey(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8112,7 +8112,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class EnumbaseContext extends ParserRuleContext {
-		public TerminalNode Colon() { return getToken(CPP14Parser.Colon, 0); }
+		public TerminalNode Colon() { return getToken(CPPParser.Colon, 0); }
 		public TypespecifierseqContext typespecifierseq() {
 			return getRuleContext(TypespecifierseqContext.class,0);
 		}
@@ -8122,15 +8122,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_enumbase; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEnumbase(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEnumbase(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEnumbase(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEnumbase(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEnumbase(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEnumbase(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8165,22 +8165,22 @@ public class CPP14Parser extends Parser {
 		public EnumeratorlistContext enumeratorlist() {
 			return getRuleContext(EnumeratorlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public EnumeratorlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumeratorlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEnumeratorlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEnumeratorlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEnumeratorlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEnumeratorlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEnumeratorlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEnumeratorlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8246,7 +8246,7 @@ public class CPP14Parser extends Parser {
 		public EnumeratorContext enumerator() {
 			return getRuleContext(EnumeratorContext.class,0);
 		}
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
@@ -8256,15 +8256,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_enumeratordefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEnumeratordefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEnumeratordefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEnumeratordefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEnumeratordefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEnumeratordefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEnumeratordefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8308,22 +8308,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class EnumeratorContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public EnumeratorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumerator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterEnumerator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterEnumerator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitEnumerator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitEnumerator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitEnumerator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitEnumerator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8362,15 +8362,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_namespacename; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNamespacename(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNamespacename(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNamespacename(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNamespacename(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNamespacename(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNamespacename(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8410,22 +8410,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class OriginalnamespacenameContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public OriginalnamespacenameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_originalnamespacename; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterOriginalnamespacename(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterOriginalnamespacename(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitOriginalnamespacename(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitOriginalnamespacename(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitOriginalnamespacename(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitOriginalnamespacename(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8464,15 +8464,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_namespacedefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNamespacedefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNamespacedefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNamespacedefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNamespacedefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8524,15 +8524,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_namednamespacedefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNamednamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNamednamespacedefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNamednamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNamednamespacedefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNamednamespacedefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNamednamespacedefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8572,29 +8572,29 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class OriginalnamespacedefinitionContext extends ParserRuleContext {
-		public TerminalNode Namespace() { return getToken(CPP14Parser.Namespace, 0); }
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode LeftBrace() { return getToken(CPP14Parser.LeftBrace, 0); }
+		public TerminalNode Namespace() { return getToken(CPPParser.Namespace, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode LeftBrace() { return getToken(CPPParser.LeftBrace, 0); }
 		public NamespacebodyContext namespacebody() {
 			return getRuleContext(NamespacebodyContext.class,0);
 		}
-		public TerminalNode RightBrace() { return getToken(CPP14Parser.RightBrace, 0); }
-		public TerminalNode Inline() { return getToken(CPP14Parser.Inline, 0); }
+		public TerminalNode RightBrace() { return getToken(CPPParser.RightBrace, 0); }
+		public TerminalNode Inline() { return getToken(CPPParser.Inline, 0); }
 		public OriginalnamespacedefinitionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_originalnamespacedefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterOriginalnamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterOriginalnamespacedefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitOriginalnamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitOriginalnamespacedefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitOriginalnamespacedefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitOriginalnamespacedefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8640,31 +8640,31 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ExtensionnamespacedefinitionContext extends ParserRuleContext {
-		public TerminalNode Namespace() { return getToken(CPP14Parser.Namespace, 0); }
+		public TerminalNode Namespace() { return getToken(CPPParser.Namespace, 0); }
 		public OriginalnamespacenameContext originalnamespacename() {
 			return getRuleContext(OriginalnamespacenameContext.class,0);
 		}
-		public TerminalNode LeftBrace() { return getToken(CPP14Parser.LeftBrace, 0); }
+		public TerminalNode LeftBrace() { return getToken(CPPParser.LeftBrace, 0); }
 		public NamespacebodyContext namespacebody() {
 			return getRuleContext(NamespacebodyContext.class,0);
 		}
-		public TerminalNode RightBrace() { return getToken(CPP14Parser.RightBrace, 0); }
-		public TerminalNode Inline() { return getToken(CPP14Parser.Inline, 0); }
+		public TerminalNode RightBrace() { return getToken(CPPParser.RightBrace, 0); }
+		public TerminalNode Inline() { return getToken(CPPParser.Inline, 0); }
 		public ExtensionnamespacedefinitionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_extensionnamespacedefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExtensionnamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExtensionnamespacedefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExtensionnamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExtensionnamespacedefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExtensionnamespacedefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExtensionnamespacedefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8710,28 +8710,28 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class UnnamednamespacedefinitionContext extends ParserRuleContext {
-		public TerminalNode Namespace() { return getToken(CPP14Parser.Namespace, 0); }
-		public TerminalNode LeftBrace() { return getToken(CPP14Parser.LeftBrace, 0); }
+		public TerminalNode Namespace() { return getToken(CPPParser.Namespace, 0); }
+		public TerminalNode LeftBrace() { return getToken(CPPParser.LeftBrace, 0); }
 		public NamespacebodyContext namespacebody() {
 			return getRuleContext(NamespacebodyContext.class,0);
 		}
-		public TerminalNode RightBrace() { return getToken(CPP14Parser.RightBrace, 0); }
-		public TerminalNode Inline() { return getToken(CPP14Parser.Inline, 0); }
+		public TerminalNode RightBrace() { return getToken(CPPParser.RightBrace, 0); }
+		public TerminalNode Inline() { return getToken(CPPParser.Inline, 0); }
 		public UnnamednamespacedefinitionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_unnamednamespacedefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterUnnamednamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterUnnamednamespacedefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitUnnamednamespacedefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitUnnamednamespacedefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitUnnamednamespacedefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitUnnamednamespacedefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8784,15 +8784,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_namespacebody; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNamespacebody(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNamespacebody(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNamespacebody(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNamespacebody(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNamespacebody(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNamespacebody(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8828,22 +8828,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NamespacealiasContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public NamespacealiasContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_namespacealias; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNamespacealias(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNamespacealias(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNamespacealias(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNamespacealias(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNamespacealias(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNamespacealias(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8870,28 +8870,28 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NamespacealiasdefinitionContext extends ParserRuleContext {
-		public TerminalNode Namespace() { return getToken(CPP14Parser.Namespace, 0); }
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
+		public TerminalNode Namespace() { return getToken(CPPParser.Namespace, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
 		public QualifiednamespacespecifierContext qualifiednamespacespecifier() {
 			return getRuleContext(QualifiednamespacespecifierContext.class,0);
 		}
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public NamespacealiasdefinitionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_namespacealiasdefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNamespacealiasdefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNamespacealiasdefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNamespacealiasdefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNamespacealiasdefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNamespacealiasdefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNamespacealiasdefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8938,15 +8938,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_qualifiednamespacespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterQualifiednamespacespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterQualifiednamespacespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitQualifiednamespacespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitQualifiednamespacespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitQualifiednamespacespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitQualifiednamespacespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -8983,31 +8983,31 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class UsingdeclarationContext extends ParserRuleContext {
-		public TerminalNode Using() { return getToken(CPP14Parser.Using, 0); }
+		public TerminalNode Using() { return getToken(CPPParser.Using, 0); }
 		public NestednamespecifierContext nestednamespecifier() {
 			return getRuleContext(NestednamespecifierContext.class,0);
 		}
 		public UnqualifiedidContext unqualifiedid() {
 			return getRuleContext(UnqualifiedidContext.class,0);
 		}
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
-		public TerminalNode Typename_() { return getToken(CPP14Parser.Typename_, 0); }
-		public TerminalNode Doublecolon() { return getToken(CPP14Parser.Doublecolon, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
+		public TerminalNode Typename_() { return getToken(CPPParser.Typename_, 0); }
+		public TerminalNode Doublecolon() { return getToken(CPPParser.Doublecolon, 0); }
 		public UsingdeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_usingdeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterUsingdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterUsingdeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitUsingdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitUsingdeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitUsingdeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitUsingdeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9070,12 +9070,12 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class UsingdirectiveContext extends ParserRuleContext {
-		public TerminalNode Using() { return getToken(CPP14Parser.Using, 0); }
-		public TerminalNode Namespace() { return getToken(CPP14Parser.Namespace, 0); }
+		public TerminalNode Using() { return getToken(CPPParser.Using, 0); }
+		public TerminalNode Namespace() { return getToken(CPPParser.Namespace, 0); }
 		public NamespacenameContext namespacename() {
 			return getRuleContext(NamespacenameContext.class,0);
 		}
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
@@ -9088,15 +9088,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_usingdirective; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterUsingdirective(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterUsingdirective(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitUsingdirective(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitUsingdirective(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitUsingdirective(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitUsingdirective(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9150,26 +9150,26 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AsmdefinitionContext extends ParserRuleContext {
-		public TerminalNode Asm() { return getToken(CPP14Parser.Asm, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
-		public TerminalNode Stringliteral() { return getToken(CPP14Parser.Stringliteral, 0); }
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Asm() { return getToken(CPPParser.Asm, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
+		public TerminalNode Stringliteral() { return getToken(CPPParser.Stringliteral, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public AsmdefinitionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_asmdefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAsmdefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAsmdefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAsmdefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAsmdefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAsmdefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAsmdefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9204,10 +9204,10 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class LinkagespecificationContext extends ParserRuleContext {
-		public TerminalNode Extern() { return getToken(CPP14Parser.Extern, 0); }
-		public TerminalNode Stringliteral() { return getToken(CPP14Parser.Stringliteral, 0); }
-		public TerminalNode LeftBrace() { return getToken(CPP14Parser.LeftBrace, 0); }
-		public TerminalNode RightBrace() { return getToken(CPP14Parser.RightBrace, 0); }
+		public TerminalNode Extern() { return getToken(CPPParser.Extern, 0); }
+		public TerminalNode Stringliteral() { return getToken(CPPParser.Stringliteral, 0); }
+		public TerminalNode LeftBrace() { return getToken(CPPParser.LeftBrace, 0); }
+		public TerminalNode RightBrace() { return getToken(CPPParser.RightBrace, 0); }
 		public DeclarationseqContext declarationseq() {
 			return getRuleContext(DeclarationseqContext.class,0);
 		}
@@ -9220,15 +9220,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_linkagespecification; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLinkagespecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLinkagespecification(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLinkagespecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLinkagespecification(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLinkagespecification(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLinkagespecification(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9301,15 +9301,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_attributespecifierseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttributespecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttributespecifierseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttributespecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttributespecifierseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttributespecifierseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttributespecifierseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9370,16 +9370,16 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AttributespecifierContext extends ParserRuleContext {
-		public List<TerminalNode> LeftBracket() { return getTokens(CPP14Parser.LeftBracket); }
+		public List<TerminalNode> LeftBracket() { return getTokens(CPPParser.LeftBracket); }
 		public TerminalNode LeftBracket(int i) {
-			return getToken(CPP14Parser.LeftBracket, i);
+			return getToken(CPPParser.LeftBracket, i);
 		}
 		public AttributelistContext attributelist() {
 			return getRuleContext(AttributelistContext.class,0);
 		}
-		public List<TerminalNode> RightBracket() { return getTokens(CPP14Parser.RightBracket); }
+		public List<TerminalNode> RightBracket() { return getTokens(CPPParser.RightBracket); }
 		public TerminalNode RightBracket(int i) {
-			return getToken(CPP14Parser.RightBracket, i);
+			return getToken(CPPParser.RightBracket, i);
 		}
 		public AlignmentspecifierContext alignmentspecifier() {
 			return getRuleContext(AlignmentspecifierContext.class,0);
@@ -9390,15 +9390,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_attributespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttributespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttributespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttributespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttributespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttributespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttributespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9448,13 +9448,13 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AlignmentspecifierContext extends ParserRuleContext {
-		public TerminalNode Alignas() { return getToken(CPP14Parser.Alignas, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode Alignas() { return getToken(CPPParser.Alignas, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ThetypeidContext thetypeid() {
 			return getRuleContext(ThetypeidContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
@@ -9464,15 +9464,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_alignmentspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAlignmentspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAlignmentspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAlignmentspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAlignmentspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAlignmentspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAlignmentspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9548,26 +9548,26 @@ public class CPP14Parser extends Parser {
 		public AttributeContext attribute() {
 			return getRuleContext(AttributeContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public AttributelistContext attributelist() {
 			return getRuleContext(AttributelistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public AttributelistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributelist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttributelist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttributelist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttributelist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttributelist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttributelist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttributelist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9692,15 +9692,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_attribute; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttribute(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttribute(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttribute(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttribute(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttribute(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttribute(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9737,7 +9737,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AttributetokenContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public AttributescopedtokenContext attributescopedtoken() {
 			return getRuleContext(AttributescopedtokenContext.class,0);
 		}
@@ -9747,15 +9747,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_attributetoken; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttributetoken(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttributetoken(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttributetoken(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttributetoken(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttributetoken(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttributetoken(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9798,23 +9798,23 @@ public class CPP14Parser extends Parser {
 		public AttributenamespaceContext attributenamespace() {
 			return getRuleContext(AttributenamespaceContext.class,0);
 		}
-		public TerminalNode Doublecolon() { return getToken(CPP14Parser.Doublecolon, 0); }
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Doublecolon() { return getToken(CPPParser.Doublecolon, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public AttributescopedtokenContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributescopedtoken; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttributescopedtoken(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttributescopedtoken(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttributescopedtoken(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttributescopedtoken(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttributescopedtoken(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttributescopedtoken(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9845,22 +9845,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AttributenamespaceContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public AttributenamespaceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributenamespace; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttributenamespace(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttributenamespace(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttributenamespace(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttributenamespace(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttributenamespace(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttributenamespace(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9887,26 +9887,26 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AttributeargumentclauseContext extends ParserRuleContext {
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public BalancedtokenseqContext balancedtokenseq() {
 			return getRuleContext(BalancedtokenseqContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public AttributeargumentclauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributeargumentclause; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAttributeargumentclause(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAttributeargumentclause(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAttributeargumentclause(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAttributeargumentclause(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAttributeargumentclause(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAttributeargumentclause(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -9949,15 +9949,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_balancedtokenseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBalancedtokenseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBalancedtokenseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBalancedtokenseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBalancedtokenseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBalancedtokenseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBalancedtokenseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10026,32 +10026,32 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class BalancedtokenContext extends ParserRuleContext {
-		public List<TerminalNode> LeftParen() { return getTokens(CPP14Parser.LeftParen); }
+		public List<TerminalNode> LeftParen() { return getTokens(CPPParser.LeftParen); }
 		public TerminalNode LeftParen(int i) {
-			return getToken(CPP14Parser.LeftParen, i);
+			return getToken(CPPParser.LeftParen, i);
 		}
 		public BalancedtokenseqContext balancedtokenseq() {
 			return getRuleContext(BalancedtokenseqContext.class,0);
 		}
-		public List<TerminalNode> RightParen() { return getTokens(CPP14Parser.RightParen); }
+		public List<TerminalNode> RightParen() { return getTokens(CPPParser.RightParen); }
 		public TerminalNode RightParen(int i) {
-			return getToken(CPP14Parser.RightParen, i);
+			return getToken(CPPParser.RightParen, i);
 		}
-		public List<TerminalNode> LeftBracket() { return getTokens(CPP14Parser.LeftBracket); }
+		public List<TerminalNode> LeftBracket() { return getTokens(CPPParser.LeftBracket); }
 		public TerminalNode LeftBracket(int i) {
-			return getToken(CPP14Parser.LeftBracket, i);
+			return getToken(CPPParser.LeftBracket, i);
 		}
-		public List<TerminalNode> RightBracket() { return getTokens(CPP14Parser.RightBracket); }
+		public List<TerminalNode> RightBracket() { return getTokens(CPPParser.RightBracket); }
 		public TerminalNode RightBracket(int i) {
-			return getToken(CPP14Parser.RightBracket, i);
+			return getToken(CPPParser.RightBracket, i);
 		}
-		public List<TerminalNode> LeftBrace() { return getTokens(CPP14Parser.LeftBrace); }
+		public List<TerminalNode> LeftBrace() { return getTokens(CPPParser.LeftBrace); }
 		public TerminalNode LeftBrace(int i) {
-			return getToken(CPP14Parser.LeftBrace, i);
+			return getToken(CPPParser.LeftBrace, i);
 		}
-		public List<TerminalNode> RightBrace() { return getTokens(CPP14Parser.RightBrace); }
+		public List<TerminalNode> RightBrace() { return getTokens(CPPParser.RightBrace); }
 		public TerminalNode RightBrace(int i) {
-			return getToken(CPP14Parser.RightBrace, i);
+			return getToken(CPPParser.RightBrace, i);
 		}
 		public BalancedtokenContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -10059,15 +10059,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_balancedtoken; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBalancedtoken(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBalancedtoken(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBalancedtoken(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBalancedtoken(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBalancedtoken(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBalancedtoken(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10312,22 +10312,22 @@ public class CPP14Parser extends Parser {
 		public InitdeclaratorlistContext initdeclaratorlist() {
 			return getRuleContext(InitdeclaratorlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public InitdeclaratorlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_initdeclaratorlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterInitdeclaratorlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterInitdeclaratorlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitInitdeclaratorlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitInitdeclaratorlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitInitdeclaratorlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitInitdeclaratorlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10402,15 +10402,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_initdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterInitdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterInitdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitInitdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitInitdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitInitdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitInitdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10465,15 +10465,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_declarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10532,15 +10532,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_ptrdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPtrdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPtrdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPtrdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPtrdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPtrdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPtrdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10588,19 +10588,19 @@ public class CPP14Parser extends Parser {
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public PtrdeclaratorContext ptrdeclarator() {
 			return getRuleContext(PtrdeclaratorContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public NoptrdeclaratorContext noptrdeclarator() {
 			return getRuleContext(NoptrdeclaratorContext.class,0);
 		}
 		public ParametersandqualifiersContext parametersandqualifiers() {
 			return getRuleContext(ParametersandqualifiersContext.class,0);
 		}
-		public TerminalNode LeftBracket() { return getToken(CPP14Parser.LeftBracket, 0); }
-		public TerminalNode RightBracket() { return getToken(CPP14Parser.RightBracket, 0); }
+		public TerminalNode LeftBracket() { return getToken(CPPParser.LeftBracket, 0); }
+		public TerminalNode RightBracket() { return getToken(CPPParser.RightBracket, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
@@ -10610,15 +10610,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_noptrdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNoptrdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNoptrdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNoptrdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNoptrdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNoptrdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNoptrdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10751,11 +10751,11 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ParametersandqualifiersContext extends ParserRuleContext {
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ParameterdeclarationclauseContext parameterdeclarationclause() {
 			return getRuleContext(ParameterdeclarationclauseContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public CvqualifierseqContext cvqualifierseq() {
 			return getRuleContext(CvqualifierseqContext.class,0);
 		}
@@ -10774,15 +10774,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_parametersandqualifiers; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterParametersandqualifiers(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterParametersandqualifiers(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitParametersandqualifiers(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitParametersandqualifiers(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitParametersandqualifiers(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitParametersandqualifiers(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10853,7 +10853,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TrailingreturntypeContext extends ParserRuleContext {
-		public TerminalNode Arrow() { return getToken(CPP14Parser.Arrow, 0); }
+		public TerminalNode Arrow() { return getToken(CPPParser.Arrow, 0); }
 		public TrailingtypespecifierseqContext trailingtypespecifierseq() {
 			return getRuleContext(TrailingtypespecifierseqContext.class,0);
 		}
@@ -10866,15 +10866,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_trailingreturntype; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTrailingreturntype(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTrailingreturntype(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTrailingreturntype(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTrailingreturntype(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTrailingreturntype(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTrailingreturntype(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -10913,14 +10913,14 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class PtroperatorContext extends ParserRuleContext {
-		public TerminalNode Star() { return getToken(CPP14Parser.Star, 0); }
+		public TerminalNode Star() { return getToken(CPPParser.Star, 0); }
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
 		public CvqualifierseqContext cvqualifierseq() {
 			return getRuleContext(CvqualifierseqContext.class,0);
 		}
-		public TerminalNode And() { return getToken(CPP14Parser.And, 0); }
+		public TerminalNode And() { return getToken(CPPParser.And, 0); }
 		public NestednamespecifierContext nestednamespecifier() {
 			return getRuleContext(NestednamespecifierContext.class,0);
 		}
@@ -10930,15 +10930,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_ptroperator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPtroperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPtroperator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPtroperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPtroperator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPtroperator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPtroperator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11070,15 +11070,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_cvqualifierseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCvqualifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCvqualifierseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCvqualifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCvqualifierseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCvqualifierseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCvqualifierseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11115,23 +11115,23 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class CvqualifierContext extends ParserRuleContext {
-		public TerminalNode Const() { return getToken(CPP14Parser.Const, 0); }
-		public TerminalNode Volatile() { return getToken(CPP14Parser.Volatile, 0); }
+		public TerminalNode Const() { return getToken(CPPParser.Const, 0); }
+		public TerminalNode Volatile() { return getToken(CPPParser.Volatile, 0); }
 		public CvqualifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_cvqualifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCvqualifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCvqualifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCvqualifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCvqualifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCvqualifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCvqualifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11167,22 +11167,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class RefqualifierContext extends ParserRuleContext {
-		public TerminalNode And() { return getToken(CPP14Parser.And, 0); }
+		public TerminalNode And() { return getToken(CPPParser.And, 0); }
 		public RefqualifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_refqualifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterRefqualifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterRefqualifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitRefqualifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitRefqualifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitRefqualifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitRefqualifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11221,22 +11221,22 @@ public class CPP14Parser extends Parser {
 		public IdexpressionContext idexpression() {
 			return getRuleContext(IdexpressionContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public DeclaratoridContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_declaratorid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDeclaratorid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDeclaratorid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDeclaratorid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDeclaratorid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDeclaratorid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDeclaratorid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11286,15 +11286,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_thetypeid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterThetypeid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterThetypeid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitThetypeid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitThetypeid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitThetypeid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitThetypeid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11352,15 +11352,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_abstractdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAbstractdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAbstractdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAbstractdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAbstractdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAbstractdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAbstractdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11434,15 +11434,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_ptrabstractdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPtrabstractdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPtrabstractdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPtrabstractdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPtrabstractdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPtrabstractdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPtrabstractdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11503,19 +11503,19 @@ public class CPP14Parser extends Parser {
 		public ParametersandqualifiersContext parametersandqualifiers() {
 			return getRuleContext(ParametersandqualifiersContext.class,0);
 		}
-		public TerminalNode LeftBracket() { return getToken(CPP14Parser.LeftBracket, 0); }
-		public TerminalNode RightBracket() { return getToken(CPP14Parser.RightBracket, 0); }
+		public TerminalNode LeftBracket() { return getToken(CPPParser.LeftBracket, 0); }
+		public TerminalNode RightBracket() { return getToken(CPPParser.RightBracket, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public PtrabstractdeclaratorContext ptrabstractdeclarator() {
 			return getRuleContext(PtrabstractdeclaratorContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public NoptrabstractdeclaratorContext noptrabstractdeclarator() {
 			return getRuleContext(NoptrabstractdeclaratorContext.class,0);
 		}
@@ -11525,15 +11525,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_noptrabstractdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNoptrabstractdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNoptrabstractdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNoptrabstractdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNoptrabstractdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNoptrabstractdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNoptrabstractdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11692,15 +11692,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_abstractpackdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAbstractpackdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAbstractpackdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAbstractpackdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAbstractpackdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAbstractpackdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAbstractpackdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11749,15 +11749,15 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NoptrabstractpackdeclaratorContext extends ParserRuleContext {
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public NoptrabstractpackdeclaratorContext noptrabstractpackdeclarator() {
 			return getRuleContext(NoptrabstractpackdeclaratorContext.class,0);
 		}
 		public ParametersandqualifiersContext parametersandqualifiers() {
 			return getRuleContext(ParametersandqualifiersContext.class,0);
 		}
-		public TerminalNode LeftBracket() { return getToken(CPP14Parser.LeftBracket, 0); }
-		public TerminalNode RightBracket() { return getToken(CPP14Parser.RightBracket, 0); }
+		public TerminalNode LeftBracket() { return getToken(CPPParser.LeftBracket, 0); }
+		public TerminalNode RightBracket() { return getToken(CPPParser.RightBracket, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
@@ -11770,15 +11770,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_noptrabstractpackdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNoptrabstractpackdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNoptrabstractpackdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNoptrabstractpackdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNoptrabstractpackdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNoptrabstractpackdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNoptrabstractpackdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11881,23 +11881,23 @@ public class CPP14Parser extends Parser {
 		public ParameterdeclarationlistContext parameterdeclarationlist() {
 			return getRuleContext(ParameterdeclarationlistContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public ParameterdeclarationclauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_parameterdeclarationclause; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterParameterdeclarationclause(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterParameterdeclarationclause(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitParameterdeclarationclause(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitParameterdeclarationclause(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitParameterdeclarationclause(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitParameterdeclarationclause(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -11966,22 +11966,22 @@ public class CPP14Parser extends Parser {
 		public ParameterdeclarationlistContext parameterdeclarationlist() {
 			return getRuleContext(ParameterdeclarationlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public ParameterdeclarationlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_parameterdeclarationlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterParameterdeclarationlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterParameterdeclarationlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitParameterdeclarationlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitParameterdeclarationlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitParameterdeclarationlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitParameterdeclarationlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12053,7 +12053,7 @@ public class CPP14Parser extends Parser {
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
 		public InitializerclauseContext initializerclause() {
 			return getRuleContext(InitializerclauseContext.class,0);
 		}
@@ -12066,15 +12066,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_parameterdeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterParameterdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterParameterdeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitParameterdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitParameterdeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitParameterdeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitParameterdeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12222,15 +12222,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_functiondefinition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterFunctiondefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterFunctiondefinition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitFunctiondefinition(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitFunctiondefinition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitFunctiondefinition(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitFunctiondefinition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12299,25 +12299,25 @@ public class CPP14Parser extends Parser {
 		public FunctiontryblockContext functiontryblock() {
 			return getRuleContext(FunctiontryblockContext.class,0);
 		}
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
-		public TerminalNode Default() { return getToken(CPP14Parser.Default, 0); }
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
-		public TerminalNode Delete() { return getToken(CPP14Parser.Delete, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
+		public TerminalNode Default() { return getToken(CPPParser.Default, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
+		public TerminalNode Delete() { return getToken(CPPParser.Delete, 0); }
 		public FunctionbodyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionbody; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterFunctionbody(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterFunctionbody(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitFunctionbody(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitFunctionbody(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitFunctionbody(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitFunctionbody(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12393,26 +12393,26 @@ public class CPP14Parser extends Parser {
 		public BraceorequalinitializerContext braceorequalinitializer() {
 			return getRuleContext(BraceorequalinitializerContext.class,0);
 		}
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ExpressionlistContext expressionlist() {
 			return getRuleContext(ExpressionlistContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public InitializerContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_initializer; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterInitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterInitializer(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitInitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitInitializer(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitInitializer(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitInitializer(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12459,7 +12459,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class BraceorequalinitializerContext extends ParserRuleContext {
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
 		public InitializerclauseContext initializerclause() {
 			return getRuleContext(InitializerclauseContext.class,0);
 		}
@@ -12472,15 +12472,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_braceorequalinitializer; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBraceorequalinitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBraceorequalinitializer(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBraceorequalinitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBraceorequalinitializer(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBraceorequalinitializer(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBraceorequalinitializer(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12536,15 +12536,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_initializerclause; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterInitializerclause(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterInitializerclause(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitInitializerclause(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitInitializerclause(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitInitializerclause(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitInitializerclause(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12642,26 +12642,26 @@ public class CPP14Parser extends Parser {
 		public InitializerclauseContext initializerclause() {
 			return getRuleContext(InitializerclauseContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public InitializerlistContext initializerlist() {
 			return getRuleContext(InitializerlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public InitializerlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_initializerlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterInitializerlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterInitializerlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitInitializerlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitInitializerlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitInitializerlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitInitializerlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12744,27 +12744,27 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class BracedinitlistContext extends ParserRuleContext {
-		public TerminalNode LeftBrace() { return getToken(CPP14Parser.LeftBrace, 0); }
+		public TerminalNode LeftBrace() { return getToken(CPPParser.LeftBrace, 0); }
 		public InitializerlistContext initializerlist() {
 			return getRuleContext(InitializerlistContext.class,0);
 		}
-		public TerminalNode RightBrace() { return getToken(CPP14Parser.RightBrace, 0); }
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode RightBrace() { return getToken(CPPParser.RightBrace, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public BracedinitlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_bracedinitlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBracedinitlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBracedinitlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBracedinitlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBracedinitlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBracedinitlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBracedinitlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12821,7 +12821,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ClassnameContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public SimpletemplateidContext simpletemplateid() {
 			return getRuleContext(SimpletemplateidContext.class,0);
 		}
@@ -12831,15 +12831,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_classname; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterClassname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterClassname(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitClassname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitClassname(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitClassname(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitClassname(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12882,8 +12882,8 @@ public class CPP14Parser extends Parser {
 		public ClassheadContext classhead() {
 			return getRuleContext(ClassheadContext.class,0);
 		}
-		public TerminalNode LeftBrace() { return getToken(CPP14Parser.LeftBrace, 0); }
-		public TerminalNode RightBrace() { return getToken(CPP14Parser.RightBrace, 0); }
+		public TerminalNode LeftBrace() { return getToken(CPPParser.LeftBrace, 0); }
+		public TerminalNode RightBrace() { return getToken(CPPParser.RightBrace, 0); }
 		public MemberspecificationContext memberspecification() {
 			return getRuleContext(MemberspecificationContext.class,0);
 		}
@@ -12893,15 +12893,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_classspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterClassspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterClassspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitClassspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitClassspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitClassspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitClassspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -12964,15 +12964,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_classhead; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterClasshead(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterClasshead(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitClasshead(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitClasshead(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitClasshead(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitClasshead(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13077,15 +13077,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_classheadname; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterClassheadname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterClassheadname(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitClassheadname(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitClassheadname(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitClassheadname(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitClassheadname(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13122,22 +13122,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ClassvirtspecifierContext extends ParserRuleContext {
-		public TerminalNode Final() { return getToken(CPP14Parser.Final, 0); }
+		public TerminalNode Final() { return getToken(CPPParser.Final, 0); }
 		public ClassvirtspecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classvirtspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterClassvirtspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterClassvirtspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitClassvirtspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitClassvirtspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitClassvirtspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitClassvirtspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13164,24 +13164,24 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ClasskeyContext extends ParserRuleContext {
-		public TerminalNode Class() { return getToken(CPP14Parser.Class, 0); }
-		public TerminalNode Struct() { return getToken(CPP14Parser.Struct, 0); }
-		public TerminalNode Union() { return getToken(CPP14Parser.Union, 0); }
+		public TerminalNode Class() { return getToken(CPPParser.Class, 0); }
+		public TerminalNode Struct() { return getToken(CPPParser.Struct, 0); }
+		public TerminalNode Union() { return getToken(CPPParser.Union, 0); }
 		public ClasskeyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classkey; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterClasskey(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterClasskey(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitClasskey(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitClasskey(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitClasskey(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitClasskey(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13226,22 +13226,22 @@ public class CPP14Parser extends Parser {
 		public AccessspecifierContext accessspecifier() {
 			return getRuleContext(AccessspecifierContext.class,0);
 		}
-		public TerminalNode Colon() { return getToken(CPP14Parser.Colon, 0); }
+		public TerminalNode Colon() { return getToken(CPPParser.Colon, 0); }
 		public MemberspecificationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_memberspecification; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterMemberspecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterMemberspecification(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitMemberspecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitMemberspecification(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitMemberspecification(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitMemberspecification(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13356,7 +13356,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class MemberdeclarationContext extends ParserRuleContext {
-		public TerminalNode Semi() { return getToken(CPP14Parser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(CPPParser.Semi, 0); }
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
@@ -13390,15 +13390,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_memberdeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterMemberdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterMemberdeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitMemberdeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitMemberdeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitMemberdeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitMemberdeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13510,22 +13510,22 @@ public class CPP14Parser extends Parser {
 		public MemberdeclaratorlistContext memberdeclaratorlist() {
 			return getRuleContext(MemberdeclaratorlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public MemberdeclaratorlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_memberdeclaratorlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterMemberdeclaratorlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterMemberdeclaratorlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitMemberdeclaratorlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitMemberdeclaratorlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitMemberdeclaratorlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitMemberdeclaratorlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13600,11 +13600,11 @@ public class CPP14Parser extends Parser {
 		public BraceorequalinitializerContext braceorequalinitializer() {
 			return getRuleContext(BraceorequalinitializerContext.class,0);
 		}
-		public TerminalNode Colon() { return getToken(CPP14Parser.Colon, 0); }
+		public TerminalNode Colon() { return getToken(CPPParser.Colon, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
@@ -13614,15 +13614,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_memberdeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterMemberdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterMemberdeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitMemberdeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitMemberdeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitMemberdeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitMemberdeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13734,15 +13734,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_virtspecifierseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterVirtspecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterVirtspecifierseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitVirtspecifierseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitVirtspecifierseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitVirtspecifierseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitVirtspecifierseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13803,23 +13803,23 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class VirtspecifierContext extends ParserRuleContext {
-		public TerminalNode Override() { return getToken(CPP14Parser.Override, 0); }
-		public TerminalNode Final() { return getToken(CPP14Parser.Final, 0); }
+		public TerminalNode Override() { return getToken(CPPParser.Override, 0); }
+		public TerminalNode Final() { return getToken(CPPParser.Final, 0); }
 		public VirtspecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_virtspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterVirtspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterVirtspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitVirtspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitVirtspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitVirtspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitVirtspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13856,23 +13856,23 @@ public class CPP14Parser extends Parser {
 
 	public static class PurespecifierContext extends ParserRuleContext {
 		public Token val;
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
-		public TerminalNode Octalliteral() { return getToken(CPP14Parser.Octalliteral, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
+		public TerminalNode Octalliteral() { return getToken(CPPParser.Octalliteral, 0); }
 		public PurespecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_purespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPurespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPurespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPurespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPurespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPurespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPurespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13902,7 +13902,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class BaseclauseContext extends ParserRuleContext {
-		public TerminalNode Colon() { return getToken(CPP14Parser.Colon, 0); }
+		public TerminalNode Colon() { return getToken(CPPParser.Colon, 0); }
 		public BasespecifierlistContext basespecifierlist() {
 			return getRuleContext(BasespecifierlistContext.class,0);
 		}
@@ -13912,15 +13912,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_baseclause; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBaseclause(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBaseclause(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBaseclause(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBaseclause(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBaseclause(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBaseclause(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -13952,26 +13952,26 @@ public class CPP14Parser extends Parser {
 		public BasespecifierContext basespecifier() {
 			return getRuleContext(BasespecifierContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public BasespecifierlistContext basespecifierlist() {
 			return getRuleContext(BasespecifierlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public BasespecifierlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_basespecifierlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBasespecifierlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBasespecifierlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBasespecifierlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBasespecifierlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBasespecifierlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBasespecifierlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14060,7 +14060,7 @@ public class CPP14Parser extends Parser {
 		public AttributespecifierseqContext attributespecifierseq() {
 			return getRuleContext(AttributespecifierseqContext.class,0);
 		}
-		public TerminalNode Virtual() { return getToken(CPP14Parser.Virtual, 0); }
+		public TerminalNode Virtual() { return getToken(CPPParser.Virtual, 0); }
 		public AccessspecifierContext accessspecifier() {
 			return getRuleContext(AccessspecifierContext.class,0);
 		}
@@ -14070,15 +14070,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_basespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBasespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBasespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBasespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBasespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBasespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBasespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14195,15 +14195,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_classordecltype; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterClassordecltype(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterClassordecltype(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitClassordecltype(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitClassordecltype(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitClassordecltype(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitClassordecltype(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14262,15 +14262,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_basetypespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBasetypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBasetypespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBasetypespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBasetypespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBasetypespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBasetypespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14297,24 +14297,24 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class AccessspecifierContext extends ParserRuleContext {
-		public TerminalNode Private() { return getToken(CPP14Parser.Private, 0); }
-		public TerminalNode Protected() { return getToken(CPP14Parser.Protected, 0); }
-		public TerminalNode Public() { return getToken(CPP14Parser.Public, 0); }
+		public TerminalNode Private() { return getToken(CPPParser.Private, 0); }
+		public TerminalNode Protected() { return getToken(CPPParser.Protected, 0); }
+		public TerminalNode Public() { return getToken(CPPParser.Public, 0); }
 		public AccessspecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_accessspecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterAccessspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterAccessspecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitAccessspecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitAccessspecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitAccessspecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitAccessspecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14350,7 +14350,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ConversionfunctionidContext extends ParserRuleContext {
-		public TerminalNode Operator() { return getToken(CPP14Parser.Operator, 0); }
+		public TerminalNode Operator() { return getToken(CPPParser.Operator, 0); }
 		public ConversiontypeidContext conversiontypeid() {
 			return getRuleContext(ConversiontypeidContext.class,0);
 		}
@@ -14360,15 +14360,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_conversionfunctionid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterConversionfunctionid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterConversionfunctionid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitConversionfunctionid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitConversionfunctionid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitConversionfunctionid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitConversionfunctionid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14409,15 +14409,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_conversiontypeid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterConversiontypeid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterConversiontypeid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitConversiontypeid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitConversiontypeid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitConversiontypeid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitConversiontypeid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14466,15 +14466,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_conversiondeclarator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterConversiondeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterConversiondeclarator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitConversiondeclarator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitConversiondeclarator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitConversiondeclarator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitConversiondeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14511,7 +14511,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class CtorinitializerContext extends ParserRuleContext {
-		public TerminalNode Colon() { return getToken(CPP14Parser.Colon, 0); }
+		public TerminalNode Colon() { return getToken(CPPParser.Colon, 0); }
 		public MeminitializerlistContext meminitializerlist() {
 			return getRuleContext(MeminitializerlistContext.class,0);
 		}
@@ -14521,15 +14521,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_ctorinitializer; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterCtorinitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterCtorinitializer(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitCtorinitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitCtorinitializer(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitCtorinitializer(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitCtorinitializer(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14561,8 +14561,8 @@ public class CPP14Parser extends Parser {
 		public MeminitializerContext meminitializer() {
 			return getRuleContext(MeminitializerContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public MeminitializerlistContext meminitializerlist() {
 			return getRuleContext(MeminitializerlistContext.class,0);
 		}
@@ -14572,15 +14572,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_meminitializerlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterMeminitializerlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterMeminitializerlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitMeminitializerlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitMeminitializerlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitMeminitializerlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitMeminitializerlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14648,8 +14648,8 @@ public class CPP14Parser extends Parser {
 		public MeminitializeridContext meminitializerid() {
 			return getRuleContext(MeminitializeridContext.class,0);
 		}
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public ExpressionlistContext expressionlist() {
 			return getRuleContext(ExpressionlistContext.class,0);
 		}
@@ -14662,15 +14662,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_meminitializer; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterMeminitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterMeminitializer(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitMeminitializer(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitMeminitializer(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitMeminitializer(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitMeminitializer(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14730,22 +14730,22 @@ public class CPP14Parser extends Parser {
 		public ClassordecltypeContext classordecltype() {
 			return getRuleContext(ClassordecltypeContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public MeminitializeridContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_meminitializerid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterMeminitializerid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterMeminitializerid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitMeminitializerid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitMeminitializerid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitMeminitializerid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitMeminitializerid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14785,7 +14785,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class OperatorfunctionidContext extends ParserRuleContext {
-		public TerminalNode Operator() { return getToken(CPP14Parser.Operator, 0); }
+		public TerminalNode Operator() { return getToken(CPPParser.Operator, 0); }
 		public TheoperatorContext theoperator() {
 			return getRuleContext(TheoperatorContext.class,0);
 		}
@@ -14795,15 +14795,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_operatorfunctionid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterOperatorfunctionid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterOperatorfunctionid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitOperatorfunctionid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitOperatorfunctionid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitOperatorfunctionid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitOperatorfunctionid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14832,25 +14832,25 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class LiteraloperatoridContext extends ParserRuleContext {
-		public TerminalNode Operator() { return getToken(CPP14Parser.Operator, 0); }
-		public TerminalNode Stringliteral() { return getToken(CPP14Parser.Stringliteral, 0); }
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode Userdefinedstringliteral() { return getToken(CPP14Parser.Userdefinedstringliteral, 0); }
+		public TerminalNode Operator() { return getToken(CPPParser.Operator, 0); }
+		public TerminalNode Stringliteral() { return getToken(CPPParser.Stringliteral, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode Userdefinedstringliteral() { return getToken(CPPParser.Userdefinedstringliteral, 0); }
 		public LiteraloperatoridContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_literaloperatorid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLiteraloperatorid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLiteraloperatorid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLiteraloperatorid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLiteraloperatorid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLiteraloperatorid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLiteraloperatorid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14896,12 +14896,12 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TemplatedeclarationContext extends ParserRuleContext {
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
-		public TerminalNode Less() { return getToken(CPP14Parser.Less, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
+		public TerminalNode Less() { return getToken(CPPParser.Less, 0); }
 		public TemplateparameterlistContext templateparameterlist() {
 			return getRuleContext(TemplateparameterlistContext.class,0);
 		}
-		public TerminalNode Greater() { return getToken(CPP14Parser.Greater, 0); }
+		public TerminalNode Greater() { return getToken(CPPParser.Greater, 0); }
 		public DeclarationContext declaration() {
 			return getRuleContext(DeclarationContext.class,0);
 		}
@@ -14911,15 +14911,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_templatedeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTemplatedeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTemplatedeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTemplatedeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTemplatedeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTemplatedeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTemplatedeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -14960,22 +14960,22 @@ public class CPP14Parser extends Parser {
 		public TemplateparameterlistContext templateparameterlist() {
 			return getRuleContext(TemplateparameterlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public TemplateparameterlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_templateparameterlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTemplateparameterlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTemplateparameterlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTemplateparameterlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTemplateparameterlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTemplateparameterlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTemplateparameterlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15050,15 +15050,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_templateparameter; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTemplateparameter(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTemplateparameter(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTemplateparameter(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTemplateparameter(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTemplateparameter(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTemplateparameter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15098,20 +15098,20 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TypeparameterContext extends ParserRuleContext {
-		public TerminalNode Class() { return getToken(CPP14Parser.Class, 0); }
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
+		public TerminalNode Class() { return getToken(CPPParser.Class, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
 		public ThetypeidContext thetypeid() {
 			return getRuleContext(ThetypeidContext.class,0);
 		}
-		public TerminalNode Typename_() { return getToken(CPP14Parser.Typename_, 0); }
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
-		public TerminalNode Less() { return getToken(CPP14Parser.Less, 0); }
+		public TerminalNode Typename_() { return getToken(CPPParser.Typename_, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
+		public TerminalNode Less() { return getToken(CPPParser.Less, 0); }
 		public TemplateparameterlistContext templateparameterlist() {
 			return getRuleContext(TemplateparameterlistContext.class,0);
 		}
-		public TerminalNode Greater() { return getToken(CPP14Parser.Greater, 0); }
+		public TerminalNode Greater() { return getToken(CPPParser.Greater, 0); }
 		public IdexpressionContext idexpression() {
 			return getRuleContext(IdexpressionContext.class,0);
 		}
@@ -15121,15 +15121,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_typeparameter; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTypeparameter(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTypeparameter(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTypeparameter(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTypeparameter(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTypeparameter(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTypeparameter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15319,8 +15319,8 @@ public class CPP14Parser extends Parser {
 		public TemplatenameContext templatename() {
 			return getRuleContext(TemplatenameContext.class,0);
 		}
-		public TerminalNode Less() { return getToken(CPP14Parser.Less, 0); }
-		public TerminalNode Greater() { return getToken(CPP14Parser.Greater, 0); }
+		public TerminalNode Less() { return getToken(CPPParser.Less, 0); }
+		public TerminalNode Greater() { return getToken(CPPParser.Greater, 0); }
 		public TemplateargumentlistContext templateargumentlist() {
 			return getRuleContext(TemplateargumentlistContext.class,0);
 		}
@@ -15330,15 +15330,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_simpletemplateid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterSimpletemplateid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterSimpletemplateid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitSimpletemplateid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitSimpletemplateid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitSimpletemplateid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitSimpletemplateid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15386,8 +15386,8 @@ public class CPP14Parser extends Parser {
 		public OperatorfunctionidContext operatorfunctionid() {
 			return getRuleContext(OperatorfunctionidContext.class,0);
 		}
-		public TerminalNode Less() { return getToken(CPP14Parser.Less, 0); }
-		public TerminalNode Greater() { return getToken(CPP14Parser.Greater, 0); }
+		public TerminalNode Less() { return getToken(CPPParser.Less, 0); }
+		public TerminalNode Greater() { return getToken(CPPParser.Greater, 0); }
 		public TemplateargumentlistContext templateargumentlist() {
 			return getRuleContext(TemplateargumentlistContext.class,0);
 		}
@@ -15400,15 +15400,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_templateid; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTemplateid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTemplateid(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTemplateid(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTemplateid(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTemplateid(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTemplateid(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15484,22 +15484,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TemplatenameContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public TemplatenameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_templatename; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTemplatename(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTemplatename(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTemplatename(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTemplatename(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTemplatename(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTemplatename(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15529,26 +15529,26 @@ public class CPP14Parser extends Parser {
 		public TemplateargumentContext templateargument() {
 			return getRuleContext(TemplateargumentContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public TemplateargumentlistContext templateargumentlist() {
 			return getRuleContext(TemplateargumentlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public TemplateargumentlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_templateargumentlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTemplateargumentlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTemplateargumentlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTemplateargumentlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTemplateargumentlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTemplateargumentlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTemplateargumentlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15646,15 +15646,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_templateargument; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTemplateargument(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTemplateargument(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTemplateargument(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTemplateargument(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTemplateargument(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTemplateargument(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15701,30 +15701,30 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TypenamespecifierContext extends ParserRuleContext {
-		public TerminalNode Typename_() { return getToken(CPP14Parser.Typename_, 0); }
+		public TerminalNode Typename_() { return getToken(CPPParser.Typename_, 0); }
 		public NestednamespecifierContext nestednamespecifier() {
 			return getRuleContext(NestednamespecifierContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(CPP14Parser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(CPPParser.Identifier, 0); }
 		public SimpletemplateidContext simpletemplateid() {
 			return getRuleContext(SimpletemplateidContext.class,0);
 		}
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
 		public TypenamespecifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_typenamespecifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTypenamespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTypenamespecifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTypenamespecifier(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTypenamespecifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTypenamespecifier(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTypenamespecifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15783,26 +15783,26 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ExplicitinstantiationContext extends ParserRuleContext {
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
 		public DeclarationContext declaration() {
 			return getRuleContext(DeclarationContext.class,0);
 		}
-		public TerminalNode Extern() { return getToken(CPP14Parser.Extern, 0); }
+		public TerminalNode Extern() { return getToken(CPPParser.Extern, 0); }
 		public ExplicitinstantiationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_explicitinstantiation; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExplicitinstantiation(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExplicitinstantiation(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExplicitinstantiation(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExplicitinstantiation(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExplicitinstantiation(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExplicitinstantiation(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15842,9 +15842,9 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ExplicitspecializationContext extends ParserRuleContext {
-		public TerminalNode Template() { return getToken(CPP14Parser.Template, 0); }
-		public TerminalNode Less() { return getToken(CPP14Parser.Less, 0); }
-		public TerminalNode Greater() { return getToken(CPP14Parser.Greater, 0); }
+		public TerminalNode Template() { return getToken(CPPParser.Template, 0); }
+		public TerminalNode Less() { return getToken(CPPParser.Less, 0); }
+		public TerminalNode Greater() { return getToken(CPPParser.Greater, 0); }
 		public DeclarationContext declaration() {
 			return getRuleContext(DeclarationContext.class,0);
 		}
@@ -15854,15 +15854,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_explicitspecialization; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExplicitspecialization(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExplicitspecialization(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExplicitspecialization(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExplicitspecialization(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExplicitspecialization(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExplicitspecialization(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15895,7 +15895,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TryblockContext extends ParserRuleContext {
-		public TerminalNode Try() { return getToken(CPP14Parser.Try, 0); }
+		public TerminalNode Try() { return getToken(CPPParser.Try, 0); }
 		public CompoundstatementContext compoundstatement() {
 			return getRuleContext(CompoundstatementContext.class,0);
 		}
@@ -15908,15 +15908,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_tryblock; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTryblock(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTryblock(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTryblock(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTryblock(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTryblock(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTryblock(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -15947,7 +15947,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class FunctiontryblockContext extends ParserRuleContext {
-		public TerminalNode Try() { return getToken(CPP14Parser.Try, 0); }
+		public TerminalNode Try() { return getToken(CPPParser.Try, 0); }
 		public CompoundstatementContext compoundstatement() {
 			return getRuleContext(CompoundstatementContext.class,0);
 		}
@@ -15963,15 +15963,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_functiontryblock; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterFunctiontryblock(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterFunctiontryblock(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitFunctiontryblock(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitFunctiontryblock(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitFunctiontryblock(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitFunctiontryblock(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16025,15 +16025,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_handlerseq; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterHandlerseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterHandlerseq(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitHandlerseq(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitHandlerseq(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitHandlerseq(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitHandlerseq(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16070,12 +16070,12 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class HandlerContext extends ParserRuleContext {
-		public TerminalNode Catch() { return getToken(CPP14Parser.Catch, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode Catch() { return getToken(CPPParser.Catch, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ExceptiondeclarationContext exceptiondeclaration() {
 			return getRuleContext(ExceptiondeclarationContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public CompoundstatementContext compoundstatement() {
 			return getRuleContext(CompoundstatementContext.class,0);
 		}
@@ -16085,15 +16085,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_handler; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterHandler(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterHandler(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitHandler(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitHandler(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitHandler(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitHandler(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16140,22 +16140,22 @@ public class CPP14Parser extends Parser {
 		public AbstractdeclaratorContext abstractdeclarator() {
 			return getRuleContext(AbstractdeclaratorContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public ExceptiondeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_exceptiondeclaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExceptiondeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExceptiondeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExceptiondeclaration(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExceptiondeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExceptiondeclaration(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExceptiondeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16235,7 +16235,7 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class ThrowexpressionContext extends ParserRuleContext {
-		public TerminalNode Throw() { return getToken(CPP14Parser.Throw, 0); }
+		public TerminalNode Throw() { return getToken(CPPParser.Throw, 0); }
 		public AssignmentexpressionContext assignmentexpression() {
 			return getRuleContext(AssignmentexpressionContext.class,0);
 		}
@@ -16245,15 +16245,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_throwexpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterThrowexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterThrowexpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitThrowexpression(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitThrowexpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitThrowexpression(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitThrowexpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16302,15 +16302,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_exceptionspecification; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterExceptionspecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterExceptionspecification(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitExceptionspecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitExceptionspecification(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitExceptionspecification(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitExceptionspecification(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16352,9 +16352,9 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class DynamicexceptionspecificationContext extends ParserRuleContext {
-		public TerminalNode Throw() { return getToken(CPP14Parser.Throw, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode Throw() { return getToken(CPPParser.Throw, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public TypeidlistContext typeidlist() {
 			return getRuleContext(TypeidlistContext.class,0);
 		}
@@ -16364,15 +16364,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_dynamicexceptionspecification; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterDynamicexceptionspecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterDynamicexceptionspecification(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitDynamicexceptionspecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitDynamicexceptionspecification(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitDynamicexceptionspecification(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitDynamicexceptionspecification(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16417,26 +16417,26 @@ public class CPP14Parser extends Parser {
 		public ThetypeidContext thetypeid() {
 			return getRuleContext(ThetypeidContext.class,0);
 		}
-		public TerminalNode Ellipsis() { return getToken(CPP14Parser.Ellipsis, 0); }
+		public TerminalNode Ellipsis() { return getToken(CPPParser.Ellipsis, 0); }
 		public TypeidlistContext typeidlist() {
 			return getRuleContext(TypeidlistContext.class,0);
 		}
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
 		public TypeidlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_typeidlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTypeidlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTypeidlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTypeidlist(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTypeidlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTypeidlist(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTypeidlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16519,27 +16519,27 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class NoexceptspecificationContext extends ParserRuleContext {
-		public TerminalNode Noexcept() { return getToken(CPP14Parser.Noexcept, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
+		public TerminalNode Noexcept() { return getToken(CPPParser.Noexcept, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
 		public ConstantexpressionContext constantexpression() {
 			return getRuleContext(ConstantexpressionContext.class,0);
 		}
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public NoexceptspecificationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_noexceptspecification; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterNoexceptspecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterNoexceptspecification(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitNoexceptspecification(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitNoexceptspecification(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitNoexceptspecification(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitNoexceptspecification(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16585,60 +16585,60 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class TheoperatorContext extends ParserRuleContext {
-		public TerminalNode New() { return getToken(CPP14Parser.New, 0); }
-		public TerminalNode Delete() { return getToken(CPP14Parser.Delete, 0); }
-		public TerminalNode LeftBracket() { return getToken(CPP14Parser.LeftBracket, 0); }
-		public TerminalNode RightBracket() { return getToken(CPP14Parser.RightBracket, 0); }
-		public TerminalNode Plus() { return getToken(CPP14Parser.Plus, 0); }
-		public TerminalNode Minus() { return getToken(CPP14Parser.Minus, 0); }
-		public TerminalNode Star() { return getToken(CPP14Parser.Star, 0); }
-		public TerminalNode Div() { return getToken(CPP14Parser.Div, 0); }
-		public TerminalNode Mod() { return getToken(CPP14Parser.Mod, 0); }
-		public TerminalNode Caret() { return getToken(CPP14Parser.Caret, 0); }
-		public TerminalNode And() { return getToken(CPP14Parser.And, 0); }
-		public TerminalNode Or() { return getToken(CPP14Parser.Or, 0); }
-		public TerminalNode Tilde() { return getToken(CPP14Parser.Tilde, 0); }
-		public TerminalNode Assign() { return getToken(CPP14Parser.Assign, 0); }
-		public TerminalNode Less() { return getToken(CPP14Parser.Less, 0); }
-		public TerminalNode Greater() { return getToken(CPP14Parser.Greater, 0); }
-		public TerminalNode PlusAssign() { return getToken(CPP14Parser.PlusAssign, 0); }
-		public TerminalNode MinusAssign() { return getToken(CPP14Parser.MinusAssign, 0); }
-		public TerminalNode StarAssign() { return getToken(CPP14Parser.StarAssign, 0); }
-		public TerminalNode DivAssign() { return getToken(CPP14Parser.DivAssign, 0); }
-		public TerminalNode ModAssign() { return getToken(CPP14Parser.ModAssign, 0); }
-		public TerminalNode XorAssign() { return getToken(CPP14Parser.XorAssign, 0); }
-		public TerminalNode AndAssign() { return getToken(CPP14Parser.AndAssign, 0); }
-		public TerminalNode OrAssign() { return getToken(CPP14Parser.OrAssign, 0); }
-		public TerminalNode LeftShift() { return getToken(CPP14Parser.LeftShift, 0); }
-		public TerminalNode RightShift() { return getToken(CPP14Parser.RightShift, 0); }
-		public TerminalNode RightShiftAssign() { return getToken(CPP14Parser.RightShiftAssign, 0); }
-		public TerminalNode LeftShiftAssign() { return getToken(CPP14Parser.LeftShiftAssign, 0); }
-		public TerminalNode Equal() { return getToken(CPP14Parser.Equal, 0); }
-		public TerminalNode NotEqual() { return getToken(CPP14Parser.NotEqual, 0); }
-		public TerminalNode LessEqual() { return getToken(CPP14Parser.LessEqual, 0); }
-		public TerminalNode GreaterEqual() { return getToken(CPP14Parser.GreaterEqual, 0); }
-		public TerminalNode PlusPlus() { return getToken(CPP14Parser.PlusPlus, 0); }
-		public TerminalNode MinusMinus() { return getToken(CPP14Parser.MinusMinus, 0); }
-		public TerminalNode Comma() { return getToken(CPP14Parser.Comma, 0); }
-		public TerminalNode ArrowStar() { return getToken(CPP14Parser.ArrowStar, 0); }
-		public TerminalNode Arrow() { return getToken(CPP14Parser.Arrow, 0); }
-		public TerminalNode LeftParen() { return getToken(CPP14Parser.LeftParen, 0); }
-		public TerminalNode RightParen() { return getToken(CPP14Parser.RightParen, 0); }
+		public TerminalNode New() { return getToken(CPPParser.New, 0); }
+		public TerminalNode Delete() { return getToken(CPPParser.Delete, 0); }
+		public TerminalNode LeftBracket() { return getToken(CPPParser.LeftBracket, 0); }
+		public TerminalNode RightBracket() { return getToken(CPPParser.RightBracket, 0); }
+		public TerminalNode Plus() { return getToken(CPPParser.Plus, 0); }
+		public TerminalNode Minus() { return getToken(CPPParser.Minus, 0); }
+		public TerminalNode Star() { return getToken(CPPParser.Star, 0); }
+		public TerminalNode Div() { return getToken(CPPParser.Div, 0); }
+		public TerminalNode Mod() { return getToken(CPPParser.Mod, 0); }
+		public TerminalNode Caret() { return getToken(CPPParser.Caret, 0); }
+		public TerminalNode And() { return getToken(CPPParser.And, 0); }
+		public TerminalNode Or() { return getToken(CPPParser.Or, 0); }
+		public TerminalNode Tilde() { return getToken(CPPParser.Tilde, 0); }
+		public TerminalNode Assign() { return getToken(CPPParser.Assign, 0); }
+		public TerminalNode Less() { return getToken(CPPParser.Less, 0); }
+		public TerminalNode Greater() { return getToken(CPPParser.Greater, 0); }
+		public TerminalNode PlusAssign() { return getToken(CPPParser.PlusAssign, 0); }
+		public TerminalNode MinusAssign() { return getToken(CPPParser.MinusAssign, 0); }
+		public TerminalNode StarAssign() { return getToken(CPPParser.StarAssign, 0); }
+		public TerminalNode DivAssign() { return getToken(CPPParser.DivAssign, 0); }
+		public TerminalNode ModAssign() { return getToken(CPPParser.ModAssign, 0); }
+		public TerminalNode XorAssign() { return getToken(CPPParser.XorAssign, 0); }
+		public TerminalNode AndAssign() { return getToken(CPPParser.AndAssign, 0); }
+		public TerminalNode OrAssign() { return getToken(CPPParser.OrAssign, 0); }
+		public TerminalNode LeftShift() { return getToken(CPPParser.LeftShift, 0); }
+		public TerminalNode RightShift() { return getToken(CPPParser.RightShift, 0); }
+		public TerminalNode RightShiftAssign() { return getToken(CPPParser.RightShiftAssign, 0); }
+		public TerminalNode LeftShiftAssign() { return getToken(CPPParser.LeftShiftAssign, 0); }
+		public TerminalNode Equal() { return getToken(CPPParser.Equal, 0); }
+		public TerminalNode NotEqual() { return getToken(CPPParser.NotEqual, 0); }
+		public TerminalNode LessEqual() { return getToken(CPPParser.LessEqual, 0); }
+		public TerminalNode GreaterEqual() { return getToken(CPPParser.GreaterEqual, 0); }
+		public TerminalNode PlusPlus() { return getToken(CPPParser.PlusPlus, 0); }
+		public TerminalNode MinusMinus() { return getToken(CPPParser.MinusMinus, 0); }
+		public TerminalNode Comma() { return getToken(CPPParser.Comma, 0); }
+		public TerminalNode ArrowStar() { return getToken(CPPParser.ArrowStar, 0); }
+		public TerminalNode Arrow() { return getToken(CPPParser.Arrow, 0); }
+		public TerminalNode LeftParen() { return getToken(CPPParser.LeftParen, 0); }
+		public TerminalNode RightParen() { return getToken(CPPParser.RightParen, 0); }
 		public TheoperatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_theoperator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterTheoperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterTheoperator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitTheoperator(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitTheoperator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitTheoperator(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitTheoperator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -16991,10 +16991,10 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class LiteralContext extends ParserRuleContext {
-		public TerminalNode Integerliteral() { return getToken(CPP14Parser.Integerliteral, 0); }
-		public TerminalNode Characterliteral() { return getToken(CPP14Parser.Characterliteral, 0); }
-		public TerminalNode Floatingliteral() { return getToken(CPP14Parser.Floatingliteral, 0); }
-		public TerminalNode Stringliteral() { return getToken(CPP14Parser.Stringliteral, 0); }
+		public TerminalNode Integerliteral() { return getToken(CPPParser.Integerliteral, 0); }
+		public TerminalNode Characterliteral() { return getToken(CPPParser.Characterliteral, 0); }
+		public TerminalNode Floatingliteral() { return getToken(CPPParser.Floatingliteral, 0); }
+		public TerminalNode Stringliteral() { return getToken(CPPParser.Stringliteral, 0); }
 		public BooleanliteralContext booleanliteral() {
 			return getRuleContext(BooleanliteralContext.class,0);
 		}
@@ -17010,15 +17010,15 @@ public class CPP14Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_literal; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterLiteral(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitLiteral(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitLiteral(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -17099,23 +17099,23 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class BooleanliteralContext extends ParserRuleContext {
-		public TerminalNode False() { return getToken(CPP14Parser.False, 0); }
-		public TerminalNode True() { return getToken(CPP14Parser.True, 0); }
+		public TerminalNode False() { return getToken(CPPParser.False, 0); }
+		public TerminalNode True() { return getToken(CPPParser.True, 0); }
 		public BooleanliteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_booleanliteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterBooleanliteral(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterBooleanliteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitBooleanliteral(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitBooleanliteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitBooleanliteral(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitBooleanliteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -17151,22 +17151,22 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class PointerliteralContext extends ParserRuleContext {
-		public TerminalNode Nullptr() { return getToken(CPP14Parser.Nullptr, 0); }
+		public TerminalNode Nullptr() { return getToken(CPPParser.Nullptr, 0); }
 		public PointerliteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pointerliteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterPointerliteral(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterPointerliteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitPointerliteral(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitPointerliteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitPointerliteral(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitPointerliteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -17193,25 +17193,25 @@ public class CPP14Parser extends Parser {
 	}
 
 	public static class UserdefinedliteralContext extends ParserRuleContext {
-		public TerminalNode Userdefinedintegerliteral() { return getToken(CPP14Parser.Userdefinedintegerliteral, 0); }
-		public TerminalNode Userdefinedfloatingliteral() { return getToken(CPP14Parser.Userdefinedfloatingliteral, 0); }
-		public TerminalNode Userdefinedstringliteral() { return getToken(CPP14Parser.Userdefinedstringliteral, 0); }
-		public TerminalNode Userdefinedcharacterliteral() { return getToken(CPP14Parser.Userdefinedcharacterliteral, 0); }
+		public TerminalNode Userdefinedintegerliteral() { return getToken(CPPParser.Userdefinedintegerliteral, 0); }
+		public TerminalNode Userdefinedfloatingliteral() { return getToken(CPPParser.Userdefinedfloatingliteral, 0); }
+		public TerminalNode Userdefinedstringliteral() { return getToken(CPPParser.Userdefinedstringliteral, 0); }
+		public TerminalNode Userdefinedcharacterliteral() { return getToken(CPPParser.Userdefinedcharacterliteral, 0); }
 		public UserdefinedliteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_userdefinedliteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).enterUserdefinedliteral(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).enterUserdefinedliteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CPP14Listener ) ((CPP14Listener)listener).exitUserdefinedliteral(this);
+			if ( listener instanceof CPPListener ) ((CPPListener)listener).exitUserdefinedliteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CPP14Visitor ) return ((CPP14Visitor<? extends T>)visitor).visitUserdefinedliteral(this);
+			if ( visitor instanceof CPPVisitor ) return ((CPPVisitor<? extends T>)visitor).visitUserdefinedliteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}

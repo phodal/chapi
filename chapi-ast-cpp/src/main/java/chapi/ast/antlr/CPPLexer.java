@@ -1,4 +1,4 @@
-// Generated from CPP14.g4 by ANTLR 4.8
+// Generated from CPP.g4 by ANTLR 4.8
 package chapi.ast.antlr;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class CPP14Lexer extends Lexer {
+public class CPPLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -173,13 +173,13 @@ public class CPP14Lexer extends Lexer {
 	}
 
 
-	public CPP14Lexer(CharStream input) {
+	public CPPLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "CPP14.g4"; }
+	public String getGrammarFileName() { return "CPP.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
