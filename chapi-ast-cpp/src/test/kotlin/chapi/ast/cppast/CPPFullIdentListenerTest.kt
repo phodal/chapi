@@ -28,8 +28,24 @@ using namespace std;
 
 int main(){}
 """
-
         val container = CPPAnalyser().analysis(code, "helloworld.cpp")
         assertEquals(container.DataStructures[0].Functions[0].ReturnType, "int")
+    }
+
+    @Test
+    internal fun shouldIdentFunctionParameters() {
+        val code = """
+#include <iostream>
+
+void display(char c, int n) {
+    for(int i = 1; i <= n; ++i) {
+        cout << c;
+    }
+    cout << endl;
+}
+"""
+        val container = CPPAnalyser().analysis(code, "helloworld.cpp")
+        assertEquals(container.DataStructures[0].Functions[0].ReturnType, "void")
+        assertEquals(container.DataStructures[0].Functions[0].Parameters.size, 2)
     }
 }

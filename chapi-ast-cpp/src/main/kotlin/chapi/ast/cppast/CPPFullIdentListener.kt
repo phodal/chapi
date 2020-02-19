@@ -5,6 +5,7 @@ import chapi.ast.antlr.CPPParser
 import chapi.domain.core.CodeContainer
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeFunction
+import chapi.domain.core.CodeProperty
 
 class CPPFullIdentListener(fileName: String) : CPPBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -29,13 +30,38 @@ class CPPFullIdentListener(fileName: String) : CPPBaseListener() {
     private fun tryFunctionBuild(firstPtrDecl: CPPParser.PtrdeclaratorContext, method: CodeFunction) {
         val parametersandqualifiers = firstPtrDecl.noptrdeclarator().parametersandqualifiers()
         if (parametersandqualifiers != null) {
-
             val functionName = firstPtrDecl.noptrdeclarator().noptrdeclarator().text
             method.Name = functionName
+
+            if (parametersandqualifiers.parameterdeclarationclause() != null) {
+                buildParameters(parametersandqualifiers.parameterdeclarationclause(), method)
+            }
+
             defaultNode.Functions += method
         }
+    }
 
+    private fun buildParameters(paramDecl: CPPParser.ParameterdeclarationclauseContext, method: CodeFunction) {
+        if (paramDecl.parameterdeclarationlist() != null) {
+            buildParameter(paramDecl.parameterdeclarationlist()!!, method)
+        }
+    }
 
+    private fun buildParameter(
+        paramDeclCtx: CPPParser.ParameterdeclarationlistContext,
+        method: CodeFunction
+    ) {
+        if (paramDeclCtx.parameterdeclarationlist() != null) {
+            buildParameter(paramDeclCtx.parameterdeclarationlist(), method)
+        }
+        if (paramDeclCtx.parameterdeclaration() != null) {
+            val declspecifierseq = paramDeclCtx.parameterdeclaration().declspecifierseq()
+            if (declspecifierseq != null) {
+                val type = declspecifierseq.declspecifier().typespecifier().text
+                val param = CodeProperty(TypeType = "", TypeValue = type)
+                method.Parameters += param
+            }
+        }
     }
 
     fun getNodeInfo(): CodeContainer {
