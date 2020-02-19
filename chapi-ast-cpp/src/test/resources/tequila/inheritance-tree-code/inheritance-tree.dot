@@ -1,0 +1,14 @@
+digraph g {
+	node[style = filled, color = orange];
+
+	AggregateRootA[label="AggregateRootA\l<AR>", comment=AR, shape=box]
+	AggregateRootB[label="AggregateRootB\l<AR>", comment=AR, shape=box]
+	EntityB[label="EntityB\l<E>", comment=E, shape=box]
+	EntityC[label="EntityB\l<E>", comment=E, shape=box]
+	ValueObjectC[label="ValueObjectC\l<VO>", comment=VO, shape=box, color=lightblue]
+	ValueObjectD[label="ValueObjectD\l<VO>", comment=VO, shape=box, color=lightblue]
+	AggregateRootA -> EntityB
+	AggregateRootA -> EntityC
+	AggregateRootA -> ValueObjectC
+	EntityB -> ValueObjectD
+}
