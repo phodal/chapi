@@ -1,11 +1,13 @@
 package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
-import chapi.ast.javaast.model.JavaTargetType
 import chapi.domain.core.*
 import chapi.domain.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
+
+data class TargetTypePackage(val targetType: String, val packageName: String) {}
+data class JavaTargetType(var targetType: String = "", var callType: String = "") {}
 
 open class JavaFullIdentListener(
     fileName: String,
@@ -733,5 +735,3 @@ open class JavaFullIdentListener(
         return codeContainer
     }
 }
-
-data class TargetTypePackage(val targetType: String, val packageName: String) {}
