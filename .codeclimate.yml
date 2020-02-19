@@ -4,12 +4,20 @@ exclude_patterns:
   - "**/resources/**"
   - "tests/"
 
+checks:
+  identical-code:
+    config:
+      threshold: 25
+  similar-code:
+    config:
+      threshold: 50
+
 plugins:
   duplication:
     enabled: true
     config:
       languages:
         kotlin:
-          patterns:
+          exclude_patterns:
             - "**/*Analyser.kt"
             - "**/*Test.kt"
