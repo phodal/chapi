@@ -442,9 +442,7 @@ open class JavaFullIdentListener(
             )
         }
 
-        val split = targetType!!.split(".")
-        val pureTargetType = split[0].replace("[", "").replace("]", "")
-
+        val pureTargetType = buildPureTargetType(targetType)
         if (pureTargetType != "") {
             for (imp in imports) {
                 if (imp.Source.endsWith(pureTargetType)) {
@@ -457,7 +455,6 @@ open class JavaFullIdentListener(
             }
         }
 
-        // todo: add ident clzs
         for (clz in classes) {
             if (clz.endsWith(".$pureTargetType")) {
                 callType = "same package"
@@ -482,6 +479,12 @@ open class JavaFullIdentListener(
 
         // todo: add identMap
         return JavaTargetType(callType = callType)
+    }
+
+    private fun buildPureTargetType(targetType: String?): String {
+        val split = targetType!!.split(".")
+        val pureTargetType = split[0].replace("[", "").replace("]", "")
+        return pureTargetType
     }
 
     override fun exitFormalParameter(ctx: JavaParser.FormalParameterContext?) {
