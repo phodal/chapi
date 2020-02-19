@@ -46,6 +46,12 @@ TBC:
 
  - SQL (refs: [antlr4-oracle](https://github.com/alris/antlr4-oracle) && [sqlgraph](https://github.com/dengdaiyemanren/sqlgraph))
 
+## Chapi-base projects
+
+PS: welcome to PR to send your projects
+
+- [Chapi-TBS](https://github.com/phodal/chapi-tbs) a simple example with Chapi to Analysis Java project's bad smell.
+
 ## Usage
 
 1. add to package manager ``repositories``
