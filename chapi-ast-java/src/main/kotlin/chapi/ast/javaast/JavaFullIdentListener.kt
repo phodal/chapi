@@ -143,7 +143,6 @@ open class JavaFullIdentListener(
         currentClz = ""
         currentClzExtend = ""
         currentFunction = CodeFunction(IsConstructor = false)
-//        currentNode.FunctionCalls = arrayOf()
 
         methodMap = mutableMapOf<String, CodeFunction>()
         methodCalls = arrayOf<CodeCall>()
@@ -279,8 +278,7 @@ open class JavaFullIdentListener(
         if (ctx.expressionList() != null) {
             var parameters = arrayOf<CodeProperty>()
             for (exprCtx in ctx.expressionList().expression()) {
-                val parameter =
-                    CodeProperty(TypeType = "", TypeValue = exprCtx.text)
+                val parameter = CodeProperty(TypeType = "", TypeValue = exprCtx.text)
                 parameters += parameter
             }
 
@@ -398,12 +396,16 @@ open class JavaFullIdentListener(
         val localVarType = localVars[targetType]
         val formalType = formalParameters[targetType]
 
-        if (fieldType != null && fieldType != "") {
-            targetType = fieldType
-        } else if (formalType != null && formalType != "") {
-            targetType = formalType
-        } else if (localVarType != null && localVarType != "") {
-            targetType = localVarType
+        when {
+            fieldType != null && fieldType != "" -> {
+                targetType = fieldType
+            }
+            formalType != null && formalType != "" -> {
+                targetType = formalType
+            }
+            localVarType != null && localVarType != "" -> {
+                targetType = localVarType
+            }
         }
 
         return targetType
@@ -448,8 +450,7 @@ open class JavaFullIdentListener(
         }
 
         val split = targetType!!.split(".")
-        var first = split[0]
-        val pureTargetType = first.replace("[", "").replace("]", "")
+        val pureTargetType = split[0].replace("[", "").replace("]", "")
 
         if (pureTargetType != "") {
             for (imp in imports) {
@@ -543,7 +544,7 @@ open class JavaFullIdentListener(
         index: Int
     ): JavaParser.ClassOrInterfaceTypeContext? {
         var newTypeCtx = typeCtx
-        var child = typeType.getChild(index)
+        val child = typeType.getChild(index)
         when (child::class.simpleName) {
             "ClassOrInterfaceTypeContext" -> {
                 newTypeCtx = child as JavaParser.ClassOrInterfaceTypeContext
