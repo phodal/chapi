@@ -181,17 +181,10 @@ open class JavaFullIdentListener(
         val name = ctx!!.IDENTIFIER().text
         val typeType = ctx.typeTypeOrVoid().text
 
-        val codePosition = CodePosition(
-            StartLine = ctx.start.line,
-            StartLinePosition = ctx.IDENTIFIER().symbol.startIndex,
-            StopLine = ctx.stop.line,
-            StopLinePosition = ctx.IDENTIFIER().symbol.stopIndex
-        )
-
         var codeFunction = CodeFunction(
             Name = name,
             ReturnType = typeType,
-            Position = codePosition,
+            Position = buildPosition(ctx),
             IsConstructor = false
         )
 
