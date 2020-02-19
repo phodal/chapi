@@ -11,24 +11,31 @@ class CPPFullIdentListener(fileName: String) : CPPBaseListener() {
     private var defaultNode = CodeDataStruct()
 
     override fun enterFunctiondefinition(ctx: CPPParser.FunctiondefinitionContext?) {
+        val method = CodeFunction()
         val context = ctx!!
+
+        if (context.declspecifierseq() != null) {
+            method.ReturnType = context.declspecifierseq().text
+        }
+
         val firstPtrDecl = context.declarator().ptrdeclarator()
         if (firstPtrDecl != null) {
             if (firstPtrDecl.noptrdeclarator() != null) {
-                tryFunctionBuild(firstPtrDecl)
+                tryFunctionBuild(firstPtrDecl, method)
             }
         }
     }
 
-    private fun tryFunctionBuild(firstPtrDecl: CPPParser.PtrdeclaratorContext) {
+    private fun tryFunctionBuild(firstPtrDecl: CPPParser.PtrdeclaratorContext, method: CodeFunction) {
         val parametersandqualifiers = firstPtrDecl.noptrdeclarator().parametersandqualifiers()
         if (parametersandqualifiers != null) {
-            val codeFunction = CodeFunction()
 
             val functionName = firstPtrDecl.noptrdeclarator().noptrdeclarator().text
-            codeFunction.Name = functionName
-            defaultNode.Functions += codeFunction
+            method.Name = functionName
+            defaultNode.Functions += method
         }
+
+
     }
 
     fun getNodeInfo(): CodeContainer {

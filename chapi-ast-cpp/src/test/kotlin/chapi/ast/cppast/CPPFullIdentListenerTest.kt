@@ -19,4 +19,17 @@ internal class CPPFullIdentListenerTest {
         assertEquals(container.DataStructures[0].Functions.size, 1)
         assertEquals(container.DataStructures[0].Functions[0].Name, "main")
     }
+
+    @Test
+    internal fun shouldIdentFunctionReturnType() {
+        val code = """
+#include <iostream>
+using namespace std;
+
+int main(){}
+"""
+
+        val container = CPPAnalyser().analysis(code, "helloworld.cpp")
+        assertEquals(container.DataStructures[0].Functions[0].ReturnType, "int")
+    }
 }
