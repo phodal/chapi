@@ -172,8 +172,7 @@ Syntax Parse Identify Rules:
     2. parameter call
     3. field call
 
-
-### Setup
+### Build Antlr Grammar
 
 1. setup Antlr: `brew install antlr`
 2. run compile: `./scripts/compile-antlr.sh`
@@ -252,7 +251,7 @@ code_call        // 函数调用，如 fmt.Println
 
 1. 寻找感兴趣的语言 / 添加新的语言 AST
 
-通过 TDD 的方式一点点实现下面的功能（可以考虑按顺序）：
+通过 TDD 的方式一点点实现下面的功能（可以考虑按顺序），参照示例见 [JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
 
  1. package name
  2. import name
@@ -270,8 +269,11 @@ code_call        // 函数调用，如 fmt.Println
     1. new instance call
     2. parameter call
     3. field call
+    4. other calls...
 
 ### 提交信息格式
+
+用于发布时，使用标准的 [CHANGELOG.md](CHANGELOG.md)
 
 `<type>: <message>`，示例：`feat: <grammars> init python & go grammars Phodal Huang 2020/2/2, 5:01 PM`
 
@@ -286,7 +288,6 @@ code_call        // 函数调用，如 fmt.Println
  - refactor: 代码更改，既不修复错误也不添加功能
  - style: 不影响代码含义的变化（空白，格式化，缺少分号等）
  - test: 添加缺失测试或更正现有测试
-
 
 Refs
 ---
