@@ -14,6 +14,7 @@ include(
     ":chapi-ast-c",
     ":chapi-ast-csharp",
     ":chapi-ast-kotlin",
-    ":chapi-ast-scala"
+    ":chapi-ast-scala",
+    ":chapi-ast-cpp"
 )
 
