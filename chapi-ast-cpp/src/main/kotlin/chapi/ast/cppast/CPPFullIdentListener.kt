@@ -54,13 +54,17 @@ class CPPFullIdentListener(fileName: String) : CPPBaseListener() {
         if (paramDeclCtx.parameterdeclarationlist() != null) {
             buildParameter(paramDeclCtx.parameterdeclarationlist(), method)
         }
-        if (paramDeclCtx.parameterdeclaration() != null) {
-            val declspecifierseq = paramDeclCtx.parameterdeclaration().declspecifierseq()
-            if (declspecifierseq != null) {
-                val type = declspecifierseq.declspecifier().typespecifier().text
-                val param = CodeProperty(TypeType = "", TypeValue = type)
-                method.Parameters += param
+        val paramDecl = paramDeclCtx.parameterdeclaration()
+        if (paramDecl != null) {
+            val declspecifierseq = paramDecl.declspecifierseq()
+            val type = declspecifierseq.declspecifier().typespecifier().text
+            val param = CodeProperty(TypeType = type, TypeValue = "")
+
+            if (paramDecl.declarator() != null) {
+                param.TypeValue = paramDecl.declarator().text
             }
+
+            method.Parameters += param
         }
     }
 

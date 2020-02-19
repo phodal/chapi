@@ -46,6 +46,12 @@ void display(char c, int n) {
 """
         val container = CPPAnalyser().analysis(code, "helloworld.cpp")
         assertEquals(container.DataStructures[0].Functions[0].ReturnType, "void")
-        assertEquals(container.DataStructures[0].Functions[0].Parameters.size, 2)
+        val params = container.DataStructures[0].Functions[0].Parameters
+
+        assertEquals(params.size, 2)
+        assertEquals(params[0].TypeType, "char")
+        assertEquals(params[0].TypeValue, "c")
+        assertEquals(params[1].TypeType, "int")
+        assertEquals(params[1].TypeValue, "n")
     }
 }
