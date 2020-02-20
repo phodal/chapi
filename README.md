@@ -78,6 +78,19 @@ dependencies {
 }
 ```
 
+3. add aliyun gradle and maven repo ``mirror`` to build file
+
+```
+allprojects {
+    ...
+    repositories {
+        maven{ setUrl("http://maven.aliyun.com/nexus/content/groups/public/") }
+        maven{ setUrl("http://maven.aliyun.com/nexus/content/repositories/jcenter")}
+        ...
+    }
+}
+```
+
 ### Usage
 
 ```kotlin
