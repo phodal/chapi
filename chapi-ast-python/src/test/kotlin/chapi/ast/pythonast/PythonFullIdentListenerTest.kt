@@ -9,13 +9,15 @@ internal class PythonFullIdentListenerTest {
     internal fun shouldAnalysisPython2() {
         val python2HelloWorld = """print("Hello, World!")"""
 
-        PythonAnalyser().analysis(python2HelloWorld, "")
+        val codeContainer = PythonAnalyser().analysis(python2HelloWorld, "py2.py")
+        assertEquals(codeContainer.FullName, "py2.py")
     }
 
     @Test
     internal fun shouldAnalysisPython3() {
         val py3HelloWorld = """print "Hello, World!""""
-        PythonAnalyser().analysis(py3HelloWorld, "")
+        val codeContainer = PythonAnalyser().analysis(py3HelloWorld, "py3.py")
+        assertEquals(codeContainer.FullName, "py3.py")
     }
 
     @Test
