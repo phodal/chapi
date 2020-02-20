@@ -70,8 +70,8 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     override fun enterInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
         hasEnterClass = true
         currentNode = CodeDataStruct(
-            Type = DataStructType.INTERFACE,
             NodeName = ctx!!.IDENTIFIER().text,
+            Type = DataStructType.INTERFACE,
             Package = codeContainer.PackageName
         )
     }

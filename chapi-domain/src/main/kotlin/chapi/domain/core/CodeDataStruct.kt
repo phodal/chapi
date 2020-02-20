@@ -24,23 +24,21 @@ open class CodeDataStruct(
     var Type: DataStructType = DataStructType.EMPTY,
     var Package: String = "",
     var FilePath: String = "",
-    var Fields: Array<CodeField> = arrayOf<CodeField>(),
-    var MultipleExtend: Array<String> = arrayOf<String>(),
-    var Implements: Array<String> = arrayOf<String>(),
+    var Fields: Array<CodeField> = arrayOf(),
+    var MultipleExtend: Array<String> = arrayOf(),
+    var Implements: Array<String> = arrayOf(),
     var Extend: String = "",
-    var Functions: Array<CodeFunction> = arrayOf<CodeFunction>(),
-    var InnerStructures: Array<CodeDataStruct> = arrayOf<CodeDataStruct>(),
-    var Annotations: Array<CodeAnnotation> = arrayOf<CodeAnnotation>(),
-    var FunctionCalls: Array<CodeCall> = arrayOf<CodeCall>(),
+    var Functions: Array<CodeFunction> = arrayOf(),
+    var InnerStructures: Array<CodeDataStruct> = arrayOf(),
+    var Annotations: Array<CodeAnnotation> = arrayOf(),
+    var FunctionCalls: Array<CodeCall> = arrayOf(),
 
     @Deprecated(message = "looking for constructor method for SCALA")
     var Parameters: Array<CodeProperty> = arrayOf(), // for Scala
 
-    @Deprecated(message = "need to figure why")
-    var InOutProperties: Array<CodeProperty> = arrayOf<CodeProperty>(),
+    var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
 
     // todo: select node useonly imports
-    var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
     var Extension: JsonElement = JsonObject(HashMap())
 ) {
     open fun isUtilClass(): Boolean {

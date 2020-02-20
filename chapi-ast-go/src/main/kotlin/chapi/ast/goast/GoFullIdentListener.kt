@@ -128,8 +128,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     private fun createStructByName(identifyName: String): CodeDataStruct {
         val struct = CodeDataStruct(
-            Type = DataStructType.STRUCT,
             NodeName = identifyName,
+            Type = DataStructType.STRUCT,
             Package = codeContainer.PackageName,
             FilePath = codeContainer.FullName
         )
