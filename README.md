@@ -20,9 +20,10 @@ Languages Stages (Welcome to PR your usage languages)
 
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
+Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily)
+
 |            | Languages     |  plan support    |
 |------------|---------------|-------------|
-| Algol      | Ada, Delphi, Pascal, ALGOL, ... |  Pascal? |
 | C family	 | C#, Java, Go, C, C++,  Objective-C, Rust, ... | C++, C, Java, C#, Rust? |
 | Functional | Scheme, Lisp, Clojure, Scala, ...| Scala  |
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript |
