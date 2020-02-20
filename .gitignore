@@ -32,3 +32,5 @@ venv/
 keystore.gradle
 local.properties
 chapi.json
+*.ipr
+*.iws
