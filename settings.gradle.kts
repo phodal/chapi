@@ -2,8 +2,7 @@ rootProject.name = "chapi"
 
 include(
     ":chapi-domain",
-    ":chapi-application",
-    ":chapi-testing"
+    ":chapi-application"
 )
 
 include(
