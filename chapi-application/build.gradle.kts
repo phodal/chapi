@@ -1,4 +1,6 @@
 plugins {
+    application
+
     java
     kotlin("jvm")
     kotlin("plugin.serialization") version "1.3.61"
@@ -10,6 +12,18 @@ repositories {
     mavenCentral()
     mavenLocal()
     jcenter()
+}
+
+application {
+    mainClassName = "chapi.app.cli.Main"
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = application.mainClassName
+    }
+
+    from(configurations.runtime.get().map {if (it.isDirectory) it else zipTree(it)})
 }
 
 dependencies {

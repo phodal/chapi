@@ -31,3 +31,4 @@ build
 venv/
 keystore.gradle
 local.properties
+chapi.json
