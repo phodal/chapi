@@ -2,7 +2,7 @@ package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
 import chapi.domain.core.*
-import chapi.domain.infra.Stack
+import chapi.infra.Stack
 
 class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)

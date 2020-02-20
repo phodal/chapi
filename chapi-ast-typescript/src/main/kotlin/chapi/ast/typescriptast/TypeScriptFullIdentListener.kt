@@ -2,7 +2,7 @@ package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
 import chapi.domain.core.*
-import chapi.domain.infra.Stack
+import chapi.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
     private var localVars = mutableMapOf<String, String>()

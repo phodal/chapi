@@ -4,7 +4,7 @@ import chapi.ast.antlr.ScalaParser
 import chapi.domain.core.CodeContainer
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.DataStructType
-import chapi.domain.infra.Stack
+import chapi.infra.Stack
 
 class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
     private val structStack: Stack<CodeDataStruct> = Stack()

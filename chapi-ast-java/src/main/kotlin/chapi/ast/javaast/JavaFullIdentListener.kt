@@ -2,7 +2,7 @@ package chapi.ast.javaast
 
 import chapi.ast.antlr.JavaParser
 import chapi.domain.core.*
-import chapi.domain.infra.Stack
+import chapi.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 

@@ -1,4 +1,4 @@
-package chapi.domain.infra
+package chapi.infra
 
 import chapi.domain.core.CodeDataStruct
 import org.junit.jupiter.api.Assertions.*

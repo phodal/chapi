@@ -1,4 +1,4 @@
-package chapi.domain.infra
+package chapi.infra
 
 class Stack<T> {
     val elements: MutableList<T> = mutableListOf()
