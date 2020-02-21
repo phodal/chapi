@@ -668,9 +668,9 @@ open class JavaFullIdentListener(
             val text = ctx.createdName().text
             currentType = DataStructType.CREATORCLASS
             val creatorNode = CodeDataStruct(
-                Package = codeContainer.PackageName,
                 NodeName = text,
-                Type = currentType
+                Type = currentType,
+                Package = codeContainer.PackageName
             )
 
             currentCreatorNode = creatorNode

@@ -27,7 +27,7 @@ internal class CodeFunctionTest {
 
     @Test
     internal fun shouldEnableBuildFullName() {
-        val dataStruct = CodeDataStruct(Package = "package", NodeName = "nodeName")
+        val dataStruct = CodeDataStruct(NodeName = "nodeName", Package = "package")
 
         val fullMethodName = CodeFunction(Name = "getFunc", IsConstructor = false).buildFullMethodName(dataStruct)
 

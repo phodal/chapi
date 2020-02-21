@@ -59,9 +59,9 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     override fun enterClassdef(ctx: PythonParser.ClassdefContext?) {
         hasEnterClass = true
         currentNode = CodeDataStruct(
+            NodeName = ctx!!.name().text,
             Type = DataStructType.CLASS,
-            FilePath = codeContainer.FullName,
-            NodeName = ctx!!.name().text
+            FilePath = codeContainer.FullName
         )
 
         if (ctx.arglist() != null) {
