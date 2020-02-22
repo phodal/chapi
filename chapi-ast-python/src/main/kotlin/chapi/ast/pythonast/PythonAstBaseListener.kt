@@ -8,6 +8,8 @@ import chapi.domain.core.CodeProperty
 import org.antlr.v4.runtime.tree.ParseTree
 
 open class PythonAstBaseListener : PythonParserBaseListener() {
+    private var localVars = mutableMapOf<String, String>()
+
     fun buildParameters(listCtx: PythonParser.TypedargslistContext?): Array<CodeProperty> {
         var parameters: Array<CodeProperty> = arrayOf()
         for (defParameters in listCtx!!.def_parameters()) {
@@ -89,11 +91,26 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     }
 
     fun buildExprStmt(exprCtx: PythonParser.Expr_stmtContext) {
+        var leftPart = ""
         val starExpr = exprCtx.getChild(0) as PythonParser.Testlist_star_exprContext
-        println(starExpr.text)
-
-        if (exprCtx.assign_part() != null) {
-            println(exprCtx.assign_part().text)
+        val childType = starExpr.getChild(0)::class.java.simpleName
+        if (childType == "TestlistContext") {
+            for (testContext in starExpr.testlist().test()) {
+                buildTestContext(testContext)
+                leftPart = testContext.text
+            }
         }
+
+        val assignPartCtx = exprCtx.assign_part()
+        if (assignPartCtx != null) {
+            if (assignPartCtx.ASSIGN() != null) {
+//                println(assignPartCtx.getChild(1).text)
+            }
+        }
+    }
+
+    private fun buildTestContext(testContext: PythonParser.TestContext) {
+//        println(testContext.getChild(0).getChild(0)::class.java.simpleName)
+//        println(testContext.getChild(0).text)
     }
 }

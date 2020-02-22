@@ -114,7 +114,6 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     override fun enterSimple_stmt(ctx: PythonParser.Simple_stmtContext?) {
         for (smallStmtCtx in ctx!!.small_stmt()) {
             val stmtType = smallStmtCtx::class.java.simpleName
-            println(stmtType)
             when (stmtType) {
                 "Expr_stmtContext" -> {
                     this.buildExprStmt(smallStmtCtx as PythonParser.Expr_stmtContext)
