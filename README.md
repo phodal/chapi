@@ -17,6 +17,7 @@ Languages Stages (Welcome to PR your usage languages)
 | function call graph |    ✅  |          |      |         |            |       |     |   |    |
 | arch/package graph  |    ✅  |          |      |         |            |       |     |   |    |
 | real world validate |    ✅  |          |      |         |            |       |     |   |    |
+| expression  (TBD)   |        |          |      |         |            |       |     |   |    |
 
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
