@@ -14,8 +14,8 @@ def build():
         val codeFile = PythonAnalyser().analysis(code, "")
         val firstFunc = codeFile.DataStructures[0].Functions[0]
         assertEquals(firstFunc.FunctionCalls.size, 3)
-//        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "setName")
-//        assertEquals(firstFunc.FunctionCalls[1].FunctionName, "setAge")
-//        assertEquals(firstFunc.FunctionCalls[2].FunctionName, "setSSN")
+        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "setName")
+        assertEquals(firstFunc.FunctionCalls[1].FunctionName, "setAge")
+        assertEquals(firstFunc.FunctionCalls[2].FunctionName, "setSSN")
     }
 }

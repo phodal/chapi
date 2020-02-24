@@ -128,7 +128,10 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         var funcCalls : Array<CodeCall> = arrayOf()
         val localVarName = exprCtx.atom().text
         for (trailerContext in exprCtx.trailer()) {
-            val caller = trailerContext.text
+            var caller = trailerContext.text
+            if (trailerContext.name() != null) {
+                caller = trailerContext.name().text
+            }
             funcCalls += CodeCall(
                 NodeName = localVarName,
                 FunctionName = caller
