@@ -18,4 +18,18 @@ def build():
         assertEquals(firstFunc.FunctionCalls[1].FunctionName, "setAge")
         assertEquals(firstFunc.FunctionCalls[2].FunctionName, "setSSN")
     }
+
+    @Test
+    internal fun shouldPrintFunCall() {
+        val code = """
+async def show(str):
+    print(str)
+"""
+
+        val codeFile = PythonAnalyser().analysis(code, "")
+        val firstFunc = codeFile.DataStructures[0].Functions[0]
+        assertEquals(firstFunc.FunctionCalls.size, 1)
+        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "print")
+        assertEquals(firstFunc.FunctionCalls[0].NodeName, "")
+    }
 }

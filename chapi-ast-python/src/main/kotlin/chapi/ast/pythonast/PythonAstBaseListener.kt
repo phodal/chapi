@@ -126,16 +126,23 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
 
     private fun buildAtomExpr(exprCtx: PythonParser.ExprContext) {
         var funcCalls : Array<CodeCall> = arrayOf()
-        val localVarName = exprCtx.atom().text
+        val atomName = exprCtx.atom().text
         for (trailerContext in exprCtx.trailer()) {
-            var caller = trailerContext.text
-            if (trailerContext.name() != null) {
-                caller = trailerContext.name().text
+            if (trailerContext.DOT() != null) {
+                var caller = ""
+                if (trailerContext.name() != null) {
+                    caller = trailerContext.name().text
+                }
+                funcCalls += CodeCall(
+                    NodeName = atomName,
+                    FunctionName = caller
+                )
+            } else {
+                funcCalls += CodeCall(
+                    NodeName = "",
+                    FunctionName = atomName
+                )
             }
-            funcCalls += CodeCall(
-                NodeName = localVarName,
-                FunctionName = caller
-            )
         }
 
         currentFunction.FunctionCalls = funcCalls
