@@ -2,12 +2,11 @@ package chapi.ast.pythonast
 
 import chapi.ast.antlr.PythonParser
 import chapi.ast.antlr.PythonParserBaseListener
-import chapi.domain.core.AnnotationKeyValue
-import chapi.domain.core.CodeAnnotation
-import chapi.domain.core.CodeProperty
+import chapi.domain.core.*
 import org.antlr.v4.runtime.tree.ParseTree
 
 open class PythonAstBaseListener : PythonParserBaseListener() {
+    var currentFunction: CodeFunction = CodeFunction()
     private var localVars = mutableMapOf<String, String>()
 
     fun buildParameters(listCtx: PythonParser.TypedargslistContext?): Array<CodeProperty> {
@@ -110,7 +109,32 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     }
 
     private fun buildTestContext(testContext: PythonParser.TestContext) {
-//        println(testContext.getChild(0).getChild(0)::class.java.simpleName)
-//        println(testContext.getChild(0).text)
+        val exprCtx = testContext.getChild(0).getChild(0).getChild(0)
+        val expr = exprCtx::class.java.simpleName
+        when(expr) {
+            "ExprContext" -> {
+                val exprCtx = exprCtx as PythonParser.ExprContext
+                val exprChild = exprCtx.getChild(0)::class.java.simpleName
+                when (exprChild) {
+                    "AtomContext" -> {
+                        buildAtomExpr(exprCtx)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun buildAtomExpr(exprCtx: PythonParser.ExprContext) {
+        var funcCalls : Array<CodeCall> = arrayOf()
+        val localVarName = exprCtx.atom().text
+        for (trailerContext in exprCtx.trailer()) {
+            val caller = trailerContext.text
+            funcCalls += CodeCall(
+                NodeName = localVarName,
+                FunctionName = caller
+            )
+        }
+
+        currentFunction.FunctionCalls = funcCalls
     }
 }

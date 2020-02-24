@@ -4,7 +4,6 @@ import chapi.ast.antlr.PythonParser
 import chapi.domain.core.*
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
-    private var currentFunction: CodeFunction = CodeFunction()
     private var hasEnterClass = false
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
