@@ -7,7 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTree
 
 open class PythonAstBaseListener : PythonParserBaseListener() {
     var currentFunction: CodeFunction = CodeFunction()
-    private var localVars = mutableMapOf<String, String>()
+    var localVars = mutableMapOf<String, String>()
 
     fun buildParameters(listCtx: PythonParser.TypedargslistContext?): Array<CodeProperty> {
         var parameters: Array<CodeProperty> = arrayOf()
@@ -103,29 +103,53 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         val assignPartCtx = exprCtx.assign_part()
         if (assignPartCtx != null) {
             if (assignPartCtx.ASSIGN() != null) {
-//                println(assignPartCtx.getChild(1).text)
+                val rightObj = buildAssignPart(assignPartCtx)
+                localVars[leftPart] = rightObj
             }
         }
     }
 
-    private fun buildTestContext(testContext: PythonParser.TestContext) {
+    private fun buildAssignPart(assignPartCtx: PythonParser.Assign_partContext): String {
+        var returnAtom = ""
+        for (starExprCtx in assignPartCtx.testlist_star_expr()) {
+            val child = starExprCtx.getChild(0)
+            when (child::class.java.simpleName) {
+                "TestlistContext" -> {
+                    val testlistCtx = child as PythonParser.TestlistContext
+                    for (testContext in testlistCtx.test()) {
+                        returnAtom = this.buildTestContext(testContext)
+                    }
+                }
+            }
+        }
+
+        return returnAtom
+    }
+
+    private fun buildTestContext(testContext: PythonParser.TestContext): String {
+        var returnType = ""
         val exprCtx = testContext.getChild(0).getChild(0).getChild(0)
-        val expr = exprCtx::class.java.simpleName
-        when(expr) {
+        val exprType = exprCtx::class.java.simpleName
+        when (exprType) {
             "ExprContext" -> {
                 val exprCtx = exprCtx as PythonParser.ExprContext
                 val exprChild = exprCtx.getChild(0)::class.java.simpleName
                 when (exprChild) {
                     "AtomContext" -> {
-                        buildAtomExpr(exprCtx)
+                        returnType = buildAtomExpr(exprCtx)
                     }
                 }
             }
+            else -> {
+                println("buildTestContext -> " + exprType)
+            }
         }
+
+        return returnType
     }
 
-    private fun buildAtomExpr(exprCtx: PythonParser.ExprContext) {
-        var funcCalls : Array<CodeCall> = arrayOf()
+    private fun buildAtomExpr(exprCtx: PythonParser.ExprContext): String {
+        var funcCalls: Array<CodeCall> = arrayOf()
         val atomName = exprCtx.atom().text
         for (trailerContext in exprCtx.trailer()) {
             if (trailerContext.DOT() != null) {
@@ -146,5 +170,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         }
 
         currentFunction.FunctionCalls = funcCalls
+
+        return atomName
     }
 }

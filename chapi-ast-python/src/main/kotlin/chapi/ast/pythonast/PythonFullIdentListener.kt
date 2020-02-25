@@ -102,6 +102,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     }
 
     override fun exitFuncdef(ctx: PythonParser.FuncdefContext?) {
+        currentFunction.addVarsFromMap(this.localVars)
         if (currentNode.NodeName == "") {
             defaultNode.Functions += currentFunction
         } else {
