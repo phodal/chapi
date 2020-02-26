@@ -8,11 +8,17 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class KotlinAnalyser {
-    open fun analysis(code: String, fileName: String): CodeContainer {
-        val context = this.parse(code).kotlinFile()
+    open fun analysis(code: String, fileName: String, type: String = "file"): CodeContainer {
         val listener = KotlinFullIdentListener(fileName)
 
-        ParseTreeWalker().walk(listener, context)
+        val isKotlinScript = type == "script"
+        if (isKotlinScript) {
+            val context = this.parse(code).script()
+            ParseTreeWalker().walk(listener, context)
+        } else {
+            val context = this.parse(code).kotlinFile()
+            ParseTreeWalker().walk(listener, context)
+        }
 
         return listener.getNodeInfo()
     }
