@@ -3,14 +3,14 @@ exclude_patterns:
   - "**/src/main/java/chapi/ast/antlr/"
   - "**/resources/**"
   - "tests/"
-
-checks:
-  identical-code:
-    config:
-      threshold: 25
-  similar-code:
-    config:
-      threshold: 50
+#
+#checks:
+#  identical-code:
+#    config:
+#      threshold: 25
+#  similar-code:
+#    config:
+#      threshold: 50
 
 plugins:
   duplication:
