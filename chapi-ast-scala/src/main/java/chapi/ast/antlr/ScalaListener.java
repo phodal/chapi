@@ -1057,4 +1057,14 @@ public interface ScalaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCompilationUnit(ScalaParser.CompilationUnitContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ScalaParser#packageDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterPackageDecl(ScalaParser.PackageDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ScalaParser#packageDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitPackageDecl(ScalaParser.PackageDeclContext ctx);
 }

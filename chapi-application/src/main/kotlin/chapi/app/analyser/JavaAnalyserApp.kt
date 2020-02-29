@@ -26,6 +26,16 @@ open class JavaAnalyserApp(var config: ChapiConfig = ChapiConfig(language = "jav
             classes += basicNode.getClassFullName()
         }
 
+        var nodeInfos: Array<CodeDataStruct> = buildNodeInfos(files, classes, basicNodes)
+
+        return nodeInfos
+    }
+
+    private fun buildNodeInfos(
+        files: Array<AbstractFile>,
+        classes: Array<String>,
+        basicNodes: Array<CodeDataStruct>
+    ): Array<CodeDataStruct> {
         var nodeInfos: Array<CodeDataStruct> = arrayOf()
         for (file in files) {
             val fileContent = readFileAsString(file.absolutePath)
@@ -35,7 +45,6 @@ open class JavaAnalyserApp(var config: ChapiConfig = ChapiConfig(language = "jav
                 nodeInfos += dataStructure
             }
         }
-
         return nodeInfos
     }
 

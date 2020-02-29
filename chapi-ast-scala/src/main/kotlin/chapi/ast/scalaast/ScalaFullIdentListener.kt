@@ -56,6 +56,11 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
         updateStruct(codeDataStruct)
     }
 
+    override fun enterPackageDecl(ctx: ScalaParser.PackageDeclContext?) {
+        val packageName = ctx!!.qualId().text
+        codeContainer.PackageName = packageName
+    }
+
     fun getNodeInfo(): CodeContainer {
         return this.codeContainer
     }

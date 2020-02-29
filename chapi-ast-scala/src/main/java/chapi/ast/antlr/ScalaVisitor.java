@@ -640,4 +640,10 @@ public interface ScalaVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitCompilationUnit(ScalaParser.CompilationUnitContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ScalaParser#packageDecl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPackageDecl(ScalaParser.PackageDeclContext ctx);
 }

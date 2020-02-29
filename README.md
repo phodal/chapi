@@ -14,9 +14,10 @@ Languages Stages (Welcome to PR your usage languages)
 | Features/Languages  |   Java |  Python  | Go  |  Kotlin | TypeScript | C     | C# | Scala | C++ |
 |---------------------|--------|----------|-----|---------|------------|-------|----|-------|-------|
 | syntax parse        |    ✅  |      ✅  |   ✅ |   TBC   |     ✅     | TBC   |  🆕 | 🆕 | 🆕 |
-| function call graph |    ✅  |          |      |         |            |       |     |   |    |
-| arch/package graph  |    ✅  |          |      |         |            |       |     |   |    |
+| function call       |    ✅  |     🆕  |      |         |            |       |     |   |    |
+| arch/package        |    ✅  |          |      |         |            |       |     |   |    |
 | real world validate |    ✅  |          |      |         |            |       |     |   |    |
+| expression  (TBD)   |        |          |      |         |            |       |     |   |    |
 
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
