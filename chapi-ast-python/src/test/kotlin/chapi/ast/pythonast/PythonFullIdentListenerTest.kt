@@ -131,9 +131,7 @@ class foo:
 @decorator
 class foo:
     pass
-
 """
-
         val codeFile = PythonAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures[0].NodeName, "foo")
         assertEquals(codeFile.DataStructures[0].Annotations.size, 2)
@@ -149,7 +147,6 @@ class multiple_annotation():
     pass
 
 """
-
         val codeFile = PythonAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures[0].Annotations[0].Name, "cache")
         assertEquals(codeFile.DataStructures[0].Annotations[0].KeyValues[0].Key, "key")
@@ -163,9 +160,7 @@ class multiple_annotation():
 @returns(float)
 def bar(low,high):
     pass
-
 """
-
         val codeFile = PythonAnalyser().analysis(code, "")
         val firstFunc = codeFile.DataStructures[0].Functions[0]
 
@@ -182,9 +177,7 @@ def bar(low,high):
     internal fun shouldIdentImportDottedName() {
         val code = """
 import collections.abc
-
 """
-
         val codeFile = PythonAnalyser().analysis(code, "")
 
         assertEquals(codeFile.Imports.size, 1)
@@ -196,9 +189,7 @@ import collections.abc
     internal fun shouldIdentImportAs() {
         val code = """
 import collections.abc as ss, itertools
-
 """
-
         val codeFile = PythonAnalyser().analysis(code, "")
 
         assertEquals(codeFile.Imports.size, 1)
@@ -210,11 +201,7 @@ import collections.abc as ss, itertools
 
     @Test
     internal fun shouldIdentFromImport() {
-        val code = """
-from . import bar
-
-"""
-
+        val code = """from . import bar"""
         val codeFile = PythonAnalyser().analysis(code, "")
 
         assertEquals(codeFile.Imports.size, 1)
@@ -226,9 +213,7 @@ from . import bar
     internal fun shouldIdentFromImportAs() {
         val code = """
 from classdef import bar as b
-
 """
-
         val codeFile = PythonAnalyser().analysis(code, "")
 
         assertEquals(codeFile.Imports.size, 1)
@@ -246,7 +231,6 @@ class Employee:
  
 emp = Employee("Zara")
 """
-
         val codeFile = PythonAnalyser().analysis(code, "")
     }
 }

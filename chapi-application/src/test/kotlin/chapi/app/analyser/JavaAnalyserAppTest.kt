@@ -66,12 +66,12 @@ internal class JavaAnalyserAppTest {
         val path = Paths.get(resource!!.toURI()).toFile()
 
         val nodes = JavaAnalyserApp().analysisNodeByPath(path.absolutePath)
-        var nodeMap: HashMap<String, CodeDataStruct> = HashMap()
+        val nodeMap: HashMap<String, CodeDataStruct> = HashMap()
         for (node in nodes) {
             nodeMap[node.getClassFullName()] = node
         }
 
-        var mainFunCallMap: HashMap<String, CodeCall> = HashMap()
+        val mainFunCallMap: HashMap<String, CodeCall> = HashMap()
         val mainFunc = nodeMap[".Main"]!!.Functions[0]
         for (function in mainFunc.FunctionCalls) {
             mainFunCallMap[function.NodeName] = function

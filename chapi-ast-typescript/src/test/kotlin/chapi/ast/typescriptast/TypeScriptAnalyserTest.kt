@@ -47,4 +47,20 @@ internal class TypeScriptAnalyserTest {
         val functions = codeFile.DataStructures[0].Functions
         assertEquals(functions.size, 9)
     }
+
+    @Test
+    internal fun shouldIdentTypeScriptHelloWorldFunCall() {
+        val content = """
+let greeting = function() {
+    console.log("Hello TypeScript!");
+};
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
+
+        val firstFunc = codeFile.DataStructures[0].Functions[0]
+//        assertEquals(firstFunc.FunctionCalls.size, 1)
+//        assertEquals(firstFunc.FunctionCalls[0].NodeName, "console")
+//        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "log")
+    }
 }

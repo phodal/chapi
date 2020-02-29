@@ -4,7 +4,6 @@ import chapi.ast.antlr.PythonParser
 import chapi.domain.core.*
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
-    private var currentFunction: CodeFunction = CodeFunction()
     private var hasEnterClass = false
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
@@ -103,6 +102,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     }
 
     override fun exitFuncdef(ctx: PythonParser.FuncdefContext?) {
+        currentFunction.addVarsFromMap(this.localVars)
         if (currentNode.NodeName == "") {
             defaultNode.Functions += currentFunction
         } else {
@@ -114,7 +114,6 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     override fun enterSimple_stmt(ctx: PythonParser.Simple_stmtContext?) {
         for (smallStmtCtx in ctx!!.small_stmt()) {
             val stmtType = smallStmtCtx::class.java.simpleName
-            println(stmtType)
             when (stmtType) {
                 "Expr_stmtContext" -> {
                     this.buildExprStmt(smallStmtCtx as PythonParser.Expr_stmtContext)

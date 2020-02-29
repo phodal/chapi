@@ -6,7 +6,6 @@ import chapi.domain.core.CodeDataStruct
 import java.io.BufferedReader
 import java.io.File
 
-
 abstract class BaseAnalyser(private var config: ChapiConfig) : IAnalyser {
     override fun analysisNodeByPath(path: String): Array<CodeDataStruct> {
         val files = getFilesByPath(path)

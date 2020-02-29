@@ -1271,6 +1271,18 @@ public class ScalaBaseListener implements ScalaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCompilationUnit(ScalaParser.CompilationUnitContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPackageDecl(ScalaParser.PackageDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPackageDecl(ScalaParser.PackageDeclContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
