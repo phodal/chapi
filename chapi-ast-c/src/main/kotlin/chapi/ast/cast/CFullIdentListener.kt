@@ -108,7 +108,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
                 }
                 val directDeclaratorType = directDeclarator.directDeclarator()::class.java.simpleName
                 if(directDeclaratorType == "IdentifierDirectDeclaratorContext") {
-                    name = (directDeclarator.directDeclarator() as CParser.IdentifierDirectDeclaratorContext).Identifier().text
+                    name = (directDeclarator.directDeclarator() as CParser.IdentifierDirectDeclaratorContext).Identifier().text + '*'
                 }
                 if (name != null && type != null) {
                     currentFunction.Parameters += CodeProperty(
