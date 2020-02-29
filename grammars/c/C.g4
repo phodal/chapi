@@ -327,16 +327,16 @@ declarator
     ;
 
 directDeclarator
-    :   Identifier
-    |   '(' declarator ')'
-    |   directDeclarator '[' typeQualifierList? assignmentExpression? ']'
-    |   directDeclarator '[' 'static' typeQualifierList? assignmentExpression ']'
-    |   directDeclarator '[' typeQualifierList 'static' assignmentExpression ']'
-    |   directDeclarator '[' typeQualifierList? '*' ']'
-    |   directDeclarator '(' parameterTypeList ')'
-    |   directDeclarator '(' identifierList? ')'
-    |   Identifier ':' DigitSequence  // bit field
-    |   '(' typeSpecifier? pointer directDeclarator ')' // function pointer like: (__cdecl *f)
+    :   Identifier #identifierDirectDeclarator
+    |   '(' declarator ')'  #declaratorDirectDeclarator
+    |   directDeclarator '[' typeQualifierList? assignmentExpression? ']'   #assignmentExpressionDirectDeclarator
+    |   directDeclarator '[' 'static' typeQualifierList? assignmentExpression ']'   #preStaticAssignmentExpressionDirectDeclarator
+    |   directDeclarator '[' typeQualifierList 'static' assignmentExpression ']'    #postStaticAssignmentExpressionDirectDeclarator
+    |   directDeclarator '[' typeQualifierList? '*' ']' #typeQualifierListPointerDirectDeclarator
+    |   directDeclarator '(' parameterTypeList ')'  #parammeterDirectDeclarator
+    |   directDeclarator '(' identifierList? ')'   #identifierListDirectDeclarator
+    |   Identifier ':' DigitSequence #bitFieldDirectDeclarator  // bit field
+    |   '(' typeSpecifier? pointer directDeclarator ')' #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
     ;
 
 gccDeclaratorExtension

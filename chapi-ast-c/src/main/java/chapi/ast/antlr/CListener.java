@@ -488,15 +488,125 @@ public interface CListener extends ParseTreeListener {
 	 */
 	void exitDeclarator(CParser.DeclaratorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CParser#directDeclarator}.
+	 * Enter a parse tree produced by the {@code bitFieldDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
 	 * @param ctx the parse tree
 	 */
-	void enterDirectDeclarator(CParser.DirectDeclaratorContext ctx);
+	void enterBitFieldDirectDeclarator(CParser.BitFieldDirectDeclaratorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CParser#directDeclarator}.
+	 * Exit a parse tree produced by the {@code bitFieldDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
 	 * @param ctx the parse tree
 	 */
-	void exitDirectDeclarator(CParser.DirectDeclaratorContext ctx);
+	void exitBitFieldDirectDeclarator(CParser.BitFieldDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code assignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignmentExpressionDirectDeclarator(CParser.AssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code assignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignmentExpressionDirectDeclarator(CParser.AssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code preStaticAssignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterPreStaticAssignmentExpressionDirectDeclarator(CParser.PreStaticAssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code preStaticAssignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitPreStaticAssignmentExpressionDirectDeclarator(CParser.PreStaticAssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code postStaticAssignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterPostStaticAssignmentExpressionDirectDeclarator(CParser.PostStaticAssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code postStaticAssignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitPostStaticAssignmentExpressionDirectDeclarator(CParser.PostStaticAssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code typeQualifierListPointerDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeQualifierListPointerDirectDeclarator(CParser.TypeQualifierListPointerDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code typeQualifierListPointerDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeQualifierListPointerDirectDeclarator(CParser.TypeQualifierListPointerDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code declaratorDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclaratorDirectDeclarator(CParser.DeclaratorDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code declaratorDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclaratorDirectDeclarator(CParser.DeclaratorDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code functionPointerDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionPointerDirectDeclarator(CParser.FunctionPointerDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code functionPointerDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionPointerDirectDeclarator(CParser.FunctionPointerDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code identifierListDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierListDirectDeclarator(CParser.IdentifierListDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code identifierListDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierListDirectDeclarator(CParser.IdentifierListDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code parammeterDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code parammeterDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code identifierDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierDirectDeclarator(CParser.IdentifierDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code identifierDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierDirectDeclarator(CParser.IdentifierDirectDeclaratorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CParser#gccDeclaratorExtension}.
 	 * @param ctx the parse tree

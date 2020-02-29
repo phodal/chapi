@@ -299,11 +299,75 @@ public interface CVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclarator(CParser.DeclaratorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CParser#directDeclarator}.
+	 * Visit a parse tree produced by the {@code bitFieldDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDirectDeclarator(CParser.DirectDeclaratorContext ctx);
+	T visitBitFieldDirectDeclarator(CParser.BitFieldDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code assignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentExpressionDirectDeclarator(CParser.AssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code preStaticAssignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPreStaticAssignmentExpressionDirectDeclarator(CParser.PreStaticAssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code postStaticAssignmentExpressionDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPostStaticAssignmentExpressionDirectDeclarator(CParser.PostStaticAssignmentExpressionDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code typeQualifierListPointerDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTypeQualifierListPointerDirectDeclarator(CParser.TypeQualifierListPointerDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code declaratorDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclaratorDirectDeclarator(CParser.DeclaratorDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code functionPointerDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionPointerDirectDeclarator(CParser.FunctionPointerDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code identifierListDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierListDirectDeclarator(CParser.IdentifierListDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code parammeterDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code identifierDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierDirectDeclarator(CParser.IdentifierDirectDeclaratorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CParser#gccDeclaratorExtension}.
 	 * @param ctx the parse tree
