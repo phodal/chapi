@@ -59,9 +59,9 @@ struct list_el {
         val code = """
 struct Person {
     int age;
-}
+};
 
-int is_old(Person* p) {
+int is_old(Person* p, int age) {
     return p->age > 60;
 }
 """
@@ -108,6 +108,17 @@ struct Info{
 };
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
+    }
+
+    @Test
+    internal fun shouldIdentifyFunctionName() {
+        val code = """
+int is_old(Person* p) {
+    return p->age > 60;
+}
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "is_old")
     }
 
     @Test

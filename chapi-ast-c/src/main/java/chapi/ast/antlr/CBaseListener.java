@@ -1,4 +1,4 @@
-// Generated from C.g4 by ANTLR 4.8
+// Generated from C.g4 by ANTLR 4.7.2
 package chapi.ast.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -592,13 +592,121 @@ public class CBaseListener implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDirectDeclarator(CParser.DirectDeclaratorContext ctx) { }
+	@Override public void enterBitFieldDirectDeclarator(CParser.BitFieldDirectDeclaratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDirectDeclarator(CParser.DirectDeclaratorContext ctx) { }
+	@Override public void exitBitFieldDirectDeclarator(CParser.BitFieldDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssignmentExpressionDirectDeclarator(CParser.AssignmentExpressionDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignmentExpressionDirectDeclarator(CParser.AssignmentExpressionDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPreStaticAssignmentExpressionDirectDeclarator(CParser.PreStaticAssignmentExpressionDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPreStaticAssignmentExpressionDirectDeclarator(CParser.PreStaticAssignmentExpressionDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPostStaticAssignmentExpressionDirectDeclarator(CParser.PostStaticAssignmentExpressionDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPostStaticAssignmentExpressionDirectDeclarator(CParser.PostStaticAssignmentExpressionDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTypeQualifierListPointerDirectDeclarator(CParser.TypeQualifierListPointerDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypeQualifierListPointerDirectDeclarator(CParser.TypeQualifierListPointerDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDeclaratorDirectDeclarator(CParser.DeclaratorDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclaratorDirectDeclarator(CParser.DeclaratorDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctionPointerDirectDeclarator(CParser.FunctionPointerDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionPointerDirectDeclarator(CParser.FunctionPointerDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifierListDirectDeclarator(CParser.IdentifierListDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifierListDirectDeclarator(CParser.IdentifierListDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifierDirectDeclarator(CParser.IdentifierDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifierDirectDeclarator(CParser.IdentifierDirectDeclaratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

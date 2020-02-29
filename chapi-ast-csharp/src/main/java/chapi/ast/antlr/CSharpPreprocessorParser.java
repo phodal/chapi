@@ -1,4 +1,4 @@
-// Generated from CSharpPreprocessorParser.g4 by ANTLR 4.8
+// Generated from CSharpPreprocessorParser.g4 by ANTLR 4.7.2
 package chapi.ast.antlr;
 import java.util.Stack;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class CSharpPreprocessorParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
