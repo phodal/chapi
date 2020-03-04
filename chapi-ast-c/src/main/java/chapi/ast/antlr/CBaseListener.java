@@ -628,6 +628,18 @@ public class CBaseListener implements CListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterParameterDirectDeclarator(CParser.ParameterDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParameterDirectDeclarator(CParser.ParameterDirectDeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPostStaticAssignmentExpressionDirectDeclarator(CParser.PostStaticAssignmentExpressionDirectDeclaratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -683,18 +695,6 @@ public class CBaseListener implements CListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIdentifierListDirectDeclarator(CParser.IdentifierListDirectDeclaratorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

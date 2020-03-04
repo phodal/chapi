@@ -320,6 +320,13 @@ public interface CVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPreStaticAssignmentExpressionDirectDeclarator(CParser.PreStaticAssignmentExpressionDirectDeclaratorContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code parameterDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParameterDirectDeclarator(CParser.ParameterDirectDeclaratorContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code postStaticAssignmentExpressionDirectDeclarator}
 	 * labeled alternative in {@link CParser#directDeclarator}.
 	 * @param ctx the parse tree
@@ -354,13 +361,6 @@ public interface CVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIdentifierListDirectDeclarator(CParser.IdentifierListDirectDeclaratorContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code parammeterDirectDeclarator}
-	 * labeled alternative in {@link CParser#directDeclarator}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code identifierDirectDeclarator}
 	 * labeled alternative in {@link CParser#directDeclarator}.

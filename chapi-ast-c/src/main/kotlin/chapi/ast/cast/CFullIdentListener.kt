@@ -57,9 +57,9 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     fun parseDirectDeclarator(ctx: CParser.DirectDeclaratorContext) {
         val directDeclaratorType = ctx::class.java.simpleName
         when(directDeclaratorType) {
-            "ParammeterDirectDeclaratorContext" -> {
+            "ParameterDirectDeclaratorContext" -> {
                 currentFunction.Parameters = arrayOf<CodeProperty>()
-                val directDeclarator = ctx as CParser.ParammeterDirectDeclaratorContext
+                val directDeclarator = ctx as CParser.ParameterDirectDeclaratorContext
                 parseDirectDeclarator(ctx.directDeclarator())
                 val parameterTypeList = directDeclarator.parameterTypeList().parameterList()
                 var parameters: MutableList<CParser.ParameterDeclarationContext> = ArrayList()
@@ -108,12 +108,12 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
                 }
                 val directDeclaratorType = directDeclarator.directDeclarator()::class.java.simpleName
                 if(directDeclaratorType == "IdentifierDirectDeclaratorContext") {
-                    name = (directDeclarator.directDeclarator() as CParser.IdentifierDirectDeclaratorContext).Identifier().text + '*'
+                    name = (directDeclarator.directDeclarator() as CParser.IdentifierDirectDeclaratorContext).Identifier().text
                 }
                 if (name != null && type != null) {
                     currentFunction.Parameters += CodeProperty(
                         TypeValue = name,
-                        TypeType = type
+                        TypeType = "$type*"
                     )
                 }
             }

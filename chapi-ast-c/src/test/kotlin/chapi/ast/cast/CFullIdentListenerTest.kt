@@ -122,6 +122,40 @@ int is_old(Person* p) {
     }
 
     @Test
+    internal fun shouldIdentifyFunctionSingleParameter() {
+        val code = """
+int is_old(Person* p) {
+    return p->age > 60;
+}
+        """
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        val parameters = codeFile.DataStructures[0].Functions[0].Parameters
+        assertEquals(parameters.size, 1)
+        assertEquals(parameters[0].TypeType, "Person*")
+        assertEquals(parameters[0].TypeValue, "p")
+    }
+
+    @Test
+    internal fun shouldIdentifyFunctionMultiParameters() {
+        val code = """
+int is_old(Person* p, int a, double b) {
+    return p->age > 60;
+}
+        """
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        val parameters = codeFile.DataStructures[0].Functions[0].Parameters
+        assertEquals(parameters.size, 3)
+        assertEquals(parameters[0].TypeType, "Person*")
+        assertEquals(parameters[0].TypeValue, "p")
+
+        assertEquals(parameters[1].TypeType, "int")
+        assertEquals(parameters[1].TypeValue, "a")
+
+        assertEquals(parameters[2].TypeType, "double")
+        assertEquals(parameters[2].TypeValue, "b")
+    }
+
+    @Test
     internal fun shouldIdentifyForwardDeclaration() {
         val code = """
 struct context;

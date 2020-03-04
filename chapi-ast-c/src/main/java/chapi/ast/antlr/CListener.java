@@ -524,6 +524,18 @@ public interface CListener extends ParseTreeListener {
 	 */
 	void exitPreStaticAssignmentExpressionDirectDeclarator(CParser.PreStaticAssignmentExpressionDirectDeclaratorContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code parameterDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterParameterDirectDeclarator(CParser.ParameterDirectDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code parameterDirectDeclarator}
+	 * labeled alternative in {@link CParser#directDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitParameterDirectDeclarator(CParser.ParameterDirectDeclaratorContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code postStaticAssignmentExpressionDirectDeclarator}
 	 * labeled alternative in {@link CParser#directDeclarator}.
 	 * @param ctx the parse tree
@@ -583,18 +595,6 @@ public interface CListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIdentifierListDirectDeclarator(CParser.IdentifierListDirectDeclaratorContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code parammeterDirectDeclarator}
-	 * labeled alternative in {@link CParser#directDeclarator}.
-	 * @param ctx the parse tree
-	 */
-	void enterParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code parammeterDirectDeclarator}
-	 * labeled alternative in {@link CParser#directDeclarator}.
-	 * @param ctx the parse tree
-	 */
-	void exitParammeterDirectDeclarator(CParser.ParammeterDirectDeclaratorContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code identifierDirectDeclarator}
 	 * labeled alternative in {@link CParser#directDeclarator}.
