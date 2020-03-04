@@ -4545,6 +4545,30 @@ public class CParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class ParameterDirectDeclaratorContext extends DirectDeclaratorContext {
+		public DirectDeclaratorContext directDeclarator() {
+			return getRuleContext(DirectDeclaratorContext.class,0);
+		}
+		public TerminalNode LeftParen() { return getToken(CParser.LeftParen, 0); }
+		public ParameterTypeListContext parameterTypeList() {
+			return getRuleContext(ParameterTypeListContext.class,0);
+		}
+		public TerminalNode RightParen() { return getToken(CParser.RightParen, 0); }
+		public ParameterDirectDeclaratorContext(DirectDeclaratorContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof CListener ) ((CListener)listener).enterParameterDirectDeclarator(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof CListener ) ((CListener)listener).exitParameterDirectDeclarator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof CVisitor ) return ((CVisitor<? extends T>)visitor).visitParameterDirectDeclarator(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class PostStaticAssignmentExpressionDirectDeclaratorContext extends DirectDeclaratorContext {
 		public DirectDeclaratorContext directDeclarator() {
 			return getRuleContext(DirectDeclaratorContext.class,0);
@@ -4667,30 +4691,6 @@ public class CParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof CVisitor ) return ((CVisitor<? extends T>)visitor).visitIdentifierListDirectDeclarator(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class ParammeterDirectDeclaratorContext extends DirectDeclaratorContext {
-		public DirectDeclaratorContext directDeclarator() {
-			return getRuleContext(DirectDeclaratorContext.class,0);
-		}
-		public TerminalNode LeftParen() { return getToken(CParser.LeftParen, 0); }
-		public ParameterTypeListContext parameterTypeList() {
-			return getRuleContext(ParameterTypeListContext.class,0);
-		}
-		public TerminalNode RightParen() { return getToken(CParser.RightParen, 0); }
-		public ParammeterDirectDeclaratorContext(DirectDeclaratorContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CListener ) ((CListener)listener).enterParammeterDirectDeclarator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CListener ) ((CListener)listener).exitParammeterDirectDeclarator(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof CVisitor ) return ((CVisitor<? extends T>)visitor).visitParammeterDirectDeclarator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4907,7 +4907,7 @@ public class CParser extends Parser {
 						break;
 					case 5:
 						{
-						_localctx = new ParammeterDirectDeclaratorContext(new DirectDeclaratorContext(_parentctx, _parentState));
+						_localctx = new ParameterDirectDeclaratorContext(new DirectDeclaratorContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_directDeclarator);
 						setState(782);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");

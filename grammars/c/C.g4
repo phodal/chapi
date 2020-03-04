@@ -333,7 +333,7 @@ directDeclarator
     |   directDeclarator '[' 'static' typeQualifierList? assignmentExpression ']'   #preStaticAssignmentExpressionDirectDeclarator
     |   directDeclarator '[' typeQualifierList 'static' assignmentExpression ']'    #postStaticAssignmentExpressionDirectDeclarator
     |   directDeclarator '[' typeQualifierList? '*' ']' #typeQualifierListPointerDirectDeclarator
-    |   directDeclarator '(' parameterTypeList ')'  #parammeterDirectDeclarator
+    |   directDeclarator '(' parameterTypeList ')'  #parameterDirectDeclarator
     |   directDeclarator '(' identifierList? ')'   #identifierListDirectDeclarator
     |   Identifier ':' DigitSequence #bitFieldDirectDeclarator  // bit field
     |   '(' typeSpecifier? pointer directDeclarator ')' #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
