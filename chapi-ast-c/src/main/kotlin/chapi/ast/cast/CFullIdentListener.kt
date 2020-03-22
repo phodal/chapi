@@ -56,32 +56,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         val directDeclaratorType = ctx::class.java.simpleName
         when(directDeclaratorType) {
             "ParameterDirectDeclaratorContext" -> {
-                currentFunction.Parameters = arrayOf<CodeProperty>()
-                val directDeclarator = ctx as CParser.ParameterDirectDeclaratorContext
-                parseDirectDeclarator(ctx.directDeclarator())
-                val parameterTypeList = directDeclarator.parameterTypeList().parameterList()
-                var parameters: MutableList<CParser.ParameterDeclarationContext> = ArrayList()
-                this.buildParameters(parameterTypeList, parameters)
-                for(parameter in parameters) {
-                    var type: String? = null
-                    var name: String? = null
-                    for(specifier in parameter.declarationSpecifiers().declarationSpecifier()) {
-                        if (specifier.typeSpecifier().text != null) {
-                            type = specifier.typeSpecifier().text
-                        }
-                    }
-                    val declarator = parameter.declarator().directDeclarator() as CParser.IdentifierDirectDeclaratorContext
-                    if (declarator.Identifier().text != null) {
-                        name = declarator.Identifier().text
-                    }
-                    if (type != null && name != null) {
-                        val codeParameter = CodeProperty(
-                            TypeValue = name,
-                            TypeType = type
-                        )
-                        currentFunction.Parameters += codeParameter
-                    }
-                }
+                handleParamDirectDeclCtx(ctx)
             }
             "IdentifierDirectDeclaratorContext" -> {
                 val directDeclarator = ctx as CParser.IdentifierDirectDeclaratorContext
@@ -97,24 +72,57 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
             "IdentifierListDirectDeclaratorContext" -> {}
             "BitFieldDirectDeclaratorContext" -> {}
             "FunctionPointerDirectDeclaratorContext" -> {
-                currentFunction.Parameters = arrayOf<CodeProperty>()
-                var name: String? = null
-                var type: String? = null
-                val directDeclarator = ctx as CParser.FunctionPointerDirectDeclaratorContext
-                if (directDeclarator.typeSpecifier() != null) {
-                    type = directDeclarator.typeSpecifier().text
-                }
-                val directDeclaratorType = directDeclarator.directDeclarator()::class.java.simpleName
-                if(directDeclaratorType == "IdentifierDirectDeclaratorContext") {
-                    name = (directDeclarator.directDeclarator() as CParser.IdentifierDirectDeclaratorContext).Identifier().text
-                }
-                if (name != null && type != null) {
-                    currentFunction.Parameters += CodeProperty(
-                        TypeValue = name,
-                        TypeType = "$type*"
-                    )
+                handleFuncPointerDirectDeclCtx(ctx)
+            }
+        }
+    }
+
+    private fun handleParamDirectDeclCtx(ctx: CParser.DirectDeclaratorContext) {
+        currentFunction.Parameters = arrayOf<CodeProperty>()
+        val directDeclarator = ctx as CParser.ParameterDirectDeclaratorContext
+        parseDirectDeclarator(ctx.directDeclarator())
+        val parameterTypeList = directDeclarator.parameterTypeList().parameterList()
+        var parameters: MutableList<CParser.ParameterDeclarationContext> = ArrayList()
+        this.buildParameters(parameterTypeList, parameters)
+        for (parameter in parameters) {
+            var type: String? = null
+            var name: String? = null
+            for (specifier in parameter.declarationSpecifiers().declarationSpecifier()) {
+                if (specifier.typeSpecifier().text != null) {
+                    type = specifier.typeSpecifier().text
                 }
             }
+            val declarator = parameter.declarator().directDeclarator() as CParser.IdentifierDirectDeclaratorContext
+            if (declarator.Identifier().text != null) {
+                name = declarator.Identifier().text
+            }
+            if (type != null && name != null) {
+                val codeParameter = CodeProperty(
+                    TypeValue = name,
+                    TypeType = type
+                )
+                currentFunction.Parameters += codeParameter
+            }
+        }
+    }
+
+    private fun handleFuncPointerDirectDeclCtx(ctx: CParser.DirectDeclaratorContext) {
+        currentFunction.Parameters = arrayOf<CodeProperty>()
+        var name: String? = null
+        var type: String? = null
+        val directDeclarator = ctx as CParser.FunctionPointerDirectDeclaratorContext
+        if (directDeclarator.typeSpecifier() != null) {
+            type = directDeclarator.typeSpecifier().text
+        }
+        val directDeclaratorType = directDeclarator.directDeclarator()::class.java.simpleName
+        if (directDeclaratorType == "IdentifierDirectDeclaratorContext") {
+            name = (directDeclarator.directDeclarator() as CParser.IdentifierDirectDeclaratorContext).Identifier().text
+        }
+        if (name != null && type != null) {
+            currentFunction.Parameters += CodeProperty(
+                TypeValue = name,
+                TypeType = "$type*"
+            )
         }
     }
 
