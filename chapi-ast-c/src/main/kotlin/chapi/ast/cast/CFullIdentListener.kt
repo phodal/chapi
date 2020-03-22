@@ -48,9 +48,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
             }
 
         }
-        if (codeDataStruct.NodeName != null) {
-            structMap[codeDataStruct.NodeName] = codeDataStruct
-        }
+        structMap[codeDataStruct.NodeName] = codeDataStruct
         codeContainer.DataStructures += codeDataStruct
     }
 
@@ -137,7 +135,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         }
 
         parseDirectDeclarator(ctx.declarator().directDeclarator())
-        if (currentFunction.Parameters.size != 0) {
+        if (currentFunction.Parameters.isNotEmpty()) {
             val firstParameter = currentFunction.Parameters[0]
             if(firstParameter.TypeType.endsWith('*')) {
                 val pointerIndex = firstParameter.TypeType.length - 1
