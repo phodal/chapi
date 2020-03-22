@@ -438,7 +438,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             text = text.split(".")[0]
         }
 
-        if (localVars[text] != "") {
+        if (localVars[text] != null && localVars[text] != "") {
             text = localVars[text]
         }
 

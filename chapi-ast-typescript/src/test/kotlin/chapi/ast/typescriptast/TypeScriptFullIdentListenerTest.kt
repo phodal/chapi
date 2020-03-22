@@ -388,7 +388,7 @@ function helloworld() {
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)
         assertEquals(functionCalls[0].FunctionName, "log")
-//        assertEquals(functionCalls[0].NodeName, "console")
+        assertEquals(functionCalls[0].NodeName, "console")
         assertEquals(functionCalls[0].Parameters[0].TypeValue, "\"hello, world\"")
     }
 
