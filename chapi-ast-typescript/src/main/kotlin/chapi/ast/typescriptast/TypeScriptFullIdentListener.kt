@@ -478,6 +478,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private fun buildArguments(arguments: TypeScriptParser.ArgumentsContext?): Array<CodeProperty> {
         var args: Array<CodeProperty> = arrayOf()
         val value = arguments!!.getChild(1).text
+        if (value == ")") {
+            return args;
+        }
         val arg = CodeProperty(
             TypeValue = value,
             TypeType = ""
