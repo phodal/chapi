@@ -27,8 +27,8 @@ allprojects {
     description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
 
     repositories {
-        maven{ setUrl("http://maven.aliyun.com/nexus/content/groups/public/") }
-        maven{ setUrl("http://maven.aliyun.com/nexus/content/repositories/jcenter")}
+//        maven{ setUrl("http://maven.aliyun.com/nexus/content/groups/public/") }
+//        maven{ setUrl("http://maven.aliyun.com/nexus/content/repositories/jcenter")}
         mavenCentral()
         mavenLocal()
         jcenter()
