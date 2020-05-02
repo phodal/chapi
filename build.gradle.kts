@@ -1,7 +1,7 @@
 plugins {
     base
 
-    val kotlinVersion = "1.3.61"
+    val kotlinVersion = "1.3.72"
     kotlin("jvm") version kotlinVersion apply false
 
     java
