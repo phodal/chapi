@@ -7,13 +7,6 @@ antlr -Dlanguage=Java -listener -visitor JavaParser.g4 -o ../../chapi-ast-java/s
 
 cd ../..
 
-cd grammars/typescript
-
-antlr -Dlanguage=Java -listener -visitor TypeScriptLexer.g4 -o  ../../chapi-ast-typescript/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
-antlr -Dlanguage=Java -listener -visitor TypeScriptParser.g4 -o ../../chapi-ast-typescript/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
-
-cd ../..
-
 cd grammars/go
 
 antlr -Dlanguage=Java -listener -visitor GoLexer.g4 -o  ../../chapi-ast-go/src/main/java/chapi/ast/antlr -package chapi.ast.antlr
