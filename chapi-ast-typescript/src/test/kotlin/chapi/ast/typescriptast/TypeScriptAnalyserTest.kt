@@ -59,8 +59,8 @@ let greeting = function() {
         val codeFile = TypeScriptAnalyser().analysis(content, "")
 
         val firstFunc = codeFile.DataStructures[0].Functions[0]
-//        assertEquals(firstFunc.FunctionCalls.size, 1)
-//        assertEquals(firstFunc.FunctionCalls[0].NodeName, "console")
-//        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "log")
+        assertEquals(firstFunc.FunctionCalls.size, 1)
+        assertEquals(firstFunc.FunctionCalls[0].NodeName, "console")
+        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "log")
     }
 }
