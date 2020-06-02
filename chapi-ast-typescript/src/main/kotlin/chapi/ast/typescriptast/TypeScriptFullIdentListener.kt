@@ -66,24 +66,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         this.buildConstructorMethod(childCtx as TypeScriptParser.ConstructorDeclarationContext)
                     currentNode.Functions += codeFunction
                 }
-                "PropertyMemberDeclarationContext" -> {
-                    this.buildPropertyMember(childCtx as TypeScriptParser.PropertyMemberDeclarationContext)
-                }
-                else -> {
-                    println("handleClassBodyElements -> childElementType : $childElementType")
-                }
-            }
-        }
-    }
-
-    private fun buildPropertyMember(originCtx: TypeScriptParser.PropertyMemberDeclarationContext) {
-        val childType = originCtx::class.java.simpleName
-
-        when (childType) {
-            "PropertyDeclarationExpressionContext" -> {
-                val ctx = originCtx as TypeScriptParser.PropertyDeclarationExpressionContext
-                val isField = ctx.propertyName() != null
-                if (isField) {
+                "PropertyDeclarationExpressionContext" -> {
+                    val ctx = childCtx as TypeScriptParser.PropertyDeclarationExpressionContext
                     val codeField = CodeField(
                         TypeValue = ctx.propertyName().text
                     )
@@ -98,20 +82,35 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
                     currentNode.Fields += codeField
                 }
-            }
-            "MethodDeclarationExpressionContext" -> {
-                val ctx = originCtx as TypeScriptParser.MethodDeclarationExpressionContext
-                val codeFunction = CodeFunction(
-                    Name = ctx.propertyName().text,
-                    Position = buildPosition(ctx)
-                )
-                val callSignCtx = ctx.callSignature()
+                "MethodDeclarationExpressionContext" -> {
+                    val ctx = childCtx as TypeScriptParser.MethodDeclarationExpressionContext
+                    val codeFunction = CodeFunction(
+                        Name = ctx.propertyName().text,
+                        Position = buildPosition(ctx)
+                    )
+                    val callSignCtx = ctx.callSignature()
 
-                if (callSignCtx.typeAnnotation() != null) {
-                    codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
+                    if (callSignCtx.typeAnnotation() != null) {
+                        codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
+                    }
+
+                    currentNode.Functions += codeFunction
                 }
+                else -> {
+                    println("handleClassBodyElements -> childElementType : $childElementType")
+                }
+            }
+        }
+    }
 
-                currentNode.Functions += codeFunction
+    private fun buildPropertyMember(originCtx: TypeScriptParser.PropertyMemberDeclarationContext) {
+        val childType = originCtx::class.java.simpleName.toString()
+
+        print(childType)
+        when (childType) {
+
+            else -> {
+                println("handleClassBody -> buildPropertyMember")
             }
         }
     }
