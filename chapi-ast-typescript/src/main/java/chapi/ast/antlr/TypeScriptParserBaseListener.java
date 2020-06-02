@@ -520,6 +520,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterParameterList(TypeScriptParser.ParameterListContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -544,13 +556,25 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParameter(TypeScriptParser.ParameterContext ctx) { }
+	@Override public void enterRequiredParameter(TypeScriptParser.RequiredParameterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitParameter(TypeScriptParser.ParameterContext ctx) { }
+	@Override public void exitRequiredParameter(TypeScriptParser.RequiredParameterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOptionalParameterList(TypeScriptParser.OptionalParameterListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOptionalParameterList(TypeScriptParser.OptionalParameterListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -575,30 +599,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitRestParameter(TypeScriptParser.RestParameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterRequiredParameter(TypeScriptParser.RequiredParameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitRequiredParameter(TypeScriptParser.RequiredParameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

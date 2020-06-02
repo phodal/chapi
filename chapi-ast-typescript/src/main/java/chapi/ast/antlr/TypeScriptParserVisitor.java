@@ -275,6 +275,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCallSignature(TypeScriptParser.CallSignatureContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#accessibilityModifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#parameterList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -287,11 +293,17 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRequiredParameterList(TypeScriptParser.RequiredParameterListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#parameter}.
+	 * Visit a parse tree produced by {@link TypeScriptParser#requiredParameter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParameter(TypeScriptParser.ParameterContext ctx);
+	T visitRequiredParameter(TypeScriptParser.RequiredParameterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#optionalParameterList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOptionalParameterList(TypeScriptParser.OptionalParameterListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#optionalParameter}.
 	 * @param ctx the parse tree
@@ -304,18 +316,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRestParameter(TypeScriptParser.RestParameterContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#requiredParameter}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRequiredParameter(TypeScriptParser.RequiredParameterContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#accessibilityModifier}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#identifierOrPattern}.
 	 * @param ctx the parse tree

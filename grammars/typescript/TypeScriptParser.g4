@@ -202,18 +202,33 @@ callSignature
     : typeParameters? '(' parameterList? ')' typeAnnotation?
     ;
 
+
+
+
+accessibilityModifier
+    : Public
+    | Private
+    | Protected
+    ;
+
+
 parameterList
     : restParameter
-    | parameter (',' parameter)* (',' restParameter)?
+    | predefinedType (',' predefinedType)*
+    | optionalParameterList (',' restParameter)?
+    | requiredParameterList (',' (optionalParameterList (',' restParameter)? | restParameter))?
     ;
 
 requiredParameterList
     : requiredParameter (',' requiredParameter)*
     ;
 
-parameter
-    : requiredParameter
-    | optionalParameter
+requiredParameter
+    : decoratorList? accessibilityModifier? identifierOrPattern typeAnnotation?
+    ;
+
+optionalParameterList
+    : optionalParameter (',' optionalParameter)*
     ;
 
 optionalParameter
@@ -221,17 +236,7 @@ optionalParameter
     ;
 
 restParameter
-    : '...' singleExpression typeAnnotation?
-    ;
-
-requiredParameter
-    : decoratorList? accessibilityModifier? identifierOrPattern typeAnnotation?
-    ;
-
-accessibilityModifier
-    : Public
-    | Private
-    | Protected
+    : '...' singleExpression
     ;
 
 identifierOrPattern

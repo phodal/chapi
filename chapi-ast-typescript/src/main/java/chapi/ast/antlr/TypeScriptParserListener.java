@@ -452,6 +452,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitCallSignature(TypeScriptParser.CallSignatureContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#accessibilityModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#accessibilityModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#parameterList}.
 	 * @param ctx the parse tree
 	 */
@@ -472,15 +482,25 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitRequiredParameterList(TypeScriptParser.RequiredParameterListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#parameter}.
+	 * Enter a parse tree produced by {@link TypeScriptParser#requiredParameter}.
 	 * @param ctx the parse tree
 	 */
-	void enterParameter(TypeScriptParser.ParameterContext ctx);
+	void enterRequiredParameter(TypeScriptParser.RequiredParameterContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#parameter}.
+	 * Exit a parse tree produced by {@link TypeScriptParser#requiredParameter}.
 	 * @param ctx the parse tree
 	 */
-	void exitParameter(TypeScriptParser.ParameterContext ctx);
+	void exitRequiredParameter(TypeScriptParser.RequiredParameterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#optionalParameterList}.
+	 * @param ctx the parse tree
+	 */
+	void enterOptionalParameterList(TypeScriptParser.OptionalParameterListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#optionalParameterList}.
+	 * @param ctx the parse tree
+	 */
+	void exitOptionalParameterList(TypeScriptParser.OptionalParameterListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#optionalParameter}.
 	 * @param ctx the parse tree
@@ -501,26 +521,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitRestParameter(TypeScriptParser.RestParameterContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#requiredParameter}.
-	 * @param ctx the parse tree
-	 */
-	void enterRequiredParameter(TypeScriptParser.RequiredParameterContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#requiredParameter}.
-	 * @param ctx the parse tree
-	 */
-	void exitRequiredParameter(TypeScriptParser.RequiredParameterContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#accessibilityModifier}.
-	 * @param ctx the parse tree
-	 */
-	void enterAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#accessibilityModifier}.
-	 * @param ctx the parse tree
-	 */
-	void exitAccessibilityModifier(TypeScriptParser.AccessibilityModifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#identifierOrPattern}.
 	 * @param ctx the parse tree
