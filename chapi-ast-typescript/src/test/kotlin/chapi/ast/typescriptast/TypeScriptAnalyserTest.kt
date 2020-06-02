@@ -2,6 +2,7 @@ package chapi.ast.typescriptast
 
 import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class TypeScriptAnalyserTest {
@@ -62,5 +63,23 @@ let greeting = function() {
         assertEquals(firstFunc.FunctionCalls.size, 1)
         assertEquals(firstFunc.FunctionCalls[0].NodeName, "console")
         assertEquals(firstFunc.FunctionCalls[0].FunctionName, "log")
+    }
+
+    @Test @Disabled
+    internal fun shouldIndentTypeScriptAnnotation() {
+        val content = """
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class LedgeStorageService {
+  get storage() {
+    return window.localStorage;
+  }
+}
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
+        val annotations = codeFile.DataStructures[0].Annotations
+        assertEquals(annotations.size, 1)
     }
 }
