@@ -65,21 +65,21 @@ let greeting = function() {
         assertEquals(firstFunc.FunctionCalls[0].FunctionName, "log")
     }
 
-//    @Test
-//    internal fun shouldIndentTypeScriptAnnotation() {
-//        val content = """
-//import { Injectable } from '@angular/core';
-//
-//@Injectable()
-//export class LedgeStorageService {
-//  get storage() {
-//    return window.localStorage;
-//  }
-//}
-//        """
-//
-//        val codeFile = TypeScriptAnalyser().analysis(content, "")
-//        val annotations = codeFile.DataStructures[0].Annotations
-//        assertEquals(annotations.size, 1)
-//    }
+    @Test @Disabled
+    internal fun shouldIndentTypeScriptAnnotation() {
+        val content = """
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class LedgeStorageService {
+  get storage() {
+    return window.localStorage;
+  }
+}
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
+        val annotations = codeFile.DataStructures[0].Annotations
+        assertEquals(annotations.size, 1)
+    }
 }
