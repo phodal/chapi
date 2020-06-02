@@ -65,7 +65,7 @@ let greeting = function() {
         assertEquals(firstFunc.FunctionCalls[0].FunctionName, "log")
     }
 
-    @Test @Disabled
+    @Test
     internal fun shouldIndentTypeScriptAnnotation() {
         val content = """
 import { Injectable } from '@angular/core';

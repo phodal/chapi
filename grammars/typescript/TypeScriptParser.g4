@@ -340,6 +340,7 @@ statement
     | exportStatement
     | emptyStatement
     | abstractDeclaration //ADDED
+    | decoratorList
     | classDeclaration
     | interfaceDeclaration //ADDED
     | namespaceDeclaration //ADDED
