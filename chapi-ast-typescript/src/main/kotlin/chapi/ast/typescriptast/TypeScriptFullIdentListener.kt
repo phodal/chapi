@@ -76,49 +76,44 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
     }
 
-    private fun buildPropertyMember(ctx: TypeScriptParser.PropertyMemberDeclarationContext) {
-        val isField = ctx.propertyName() != null
-        if (isField) {
-            val codeField = CodeField(
-                TypeValue = ctx.propertyName().text
-            )
+    private fun buildPropertyMember(originCtx: TypeScriptParser.PropertyMemberDeclarationContext) {
+        val childType = originCtx::class.java.simpleName
 
-            val modifier = ctx.propertyMemberBase().text
-            if (modifier != "") {
-                codeField.Modifiers += modifier
-            }
-            if (ctx.typeAnnotation() != null) {
-                codeField.TypeType = this.buildTypeAnnotation(ctx.typeAnnotation())!!
-            }
+        when (childType) {
+            "PropertyDeclarationExpressionContext" -> {
+                val ctx = originCtx as TypeScriptParser.PropertyDeclarationExpressionContext
+                val isField = ctx.propertyName() != null
+                if (isField) {
+                    val codeField = CodeField(
+                        TypeValue = ctx.propertyName().text
+                    )
 
-            currentNode.Fields += codeField
-        }
-
-        val callSignaturePos = 3
-        if (ctx.childCount >= callSignaturePos) {
-            val callSignCtxPos = 2
-            when (ctx.getChild(callSignCtxPos)::class.java.simpleName) {
-                "CallSignatureContext" -> {
-                    val codeFunction = buildMemberMethod(ctx)
-                    val callSignCtx = ctx.callSignature()
-
-                    if (callSignCtx.typeAnnotation() != null) {
-                        codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
+                    val modifier = ctx.propertyMemberBase().text
+                    if (modifier != "") {
+                        codeField.Modifiers += modifier
+                    }
+                    if (ctx.typeAnnotation() != null) {
+                        codeField.TypeType = this.buildTypeAnnotation(ctx.typeAnnotation())!!
                     }
 
-                    currentNode.Functions += codeFunction
+                    currentNode.Fields += codeField
                 }
             }
+            "MethodDeclarationExpressionContext" -> {
+                val ctx = originCtx as TypeScriptParser.MethodDeclarationExpressionContext
+                val codeFunction = CodeFunction(
+                    Name = ctx.propertyName().text,
+                    Position = buildPosition(ctx)
+                )
+                val callSignCtx = ctx.callSignature()
+
+                if (callSignCtx.typeAnnotation() != null) {
+                    codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
+                }
+
+                currentNode.Functions += codeFunction
+            }
         }
-    }
-
-    private fun buildMemberMethod(ctx: TypeScriptParser.PropertyMemberDeclarationContext): CodeFunction {
-        val codeFunction = CodeFunction(
-            Name = ctx.propertyName().text,
-            Position = this.buildPosition(ctx)
-        )
-
-        return codeFunction
     }
 
     private fun buildConstructorMethod(ctx: TypeScriptParser.ConstructorDeclarationContext): CodeFunction {
@@ -309,7 +304,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         when (statementParent::class.java.simpleName) {
             "VariableDeclarationContext" -> {
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
-                currentFunction.Name = varDeclCtx.Identifier().text
+                currentFunction.Name = varDeclCtx.identifierOrKeyWord().text
                 if (ctx.formalParameterList() != null) {
                     currentFunction.Parameters = this.buildParameters(ctx.formalParameterList())
                 }
@@ -336,7 +331,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         when (statementParent::class.java.simpleName) {
             "VariableDeclarationContext" -> {
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
-                currentFunction.Name = varDeclCtx.Identifier().text
+                currentFunction.Name = varDeclCtx.identifierOrKeyWord().text
                 this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
                 currentFunction.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
 

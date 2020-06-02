@@ -153,10 +153,10 @@ String: 'string';
 Symbol: 'symbol';
 
 
-Type: 'type';
+TypeAlias : 'type';
 
-Get: 'get ';
-Set: 'set ';
+Get: 'get';
+Set: 'set';
 
 Constructor: 'constructor';
 Namespace: 'namespace';

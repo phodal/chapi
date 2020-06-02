@@ -14,7 +14,7 @@ open class TypeScriptAstListener() : TypeScriptParserBaseListener() {
         for (argCtx in formalParameterListContext!!.formalParameterArg()) {
             val typeType = this.buildTypeAnnotation(argCtx.typeAnnotation())
             val parameter = CodeProperty(
-                TypeValue = argCtx.Identifier().text,
+                TypeValue = argCtx.identifierOrKeyWord().text,
                 TypeType = typeType!!
             )
 
