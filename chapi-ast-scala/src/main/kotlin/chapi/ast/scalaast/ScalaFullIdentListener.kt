@@ -22,6 +22,7 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
         updateStruct(codeDataStruct)
     }
 
+    // todo: refactor to same with java
     private fun updateStruct(codeDataStruct: CodeDataStruct) {
         currentDataStruct = codeDataStruct
 
