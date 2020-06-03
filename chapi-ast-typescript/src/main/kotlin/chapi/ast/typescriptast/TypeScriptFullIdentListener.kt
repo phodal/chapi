@@ -51,10 +51,33 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             currentNode.Extend = refCtx.typeName().text
         }
 
+        tryGetAnnotation(ctx)
+
         this.handleClassBodyElements(ctx.classTail())
 
         classNodeStack.push(currentNode)
         nodeMap[nodeName] = currentNode
+    }
+
+    private fun tryGetAnnotation(ctx: TypeScriptParser.ClassDeclarationContext) {
+        val leftChild = ctx.parent.parent.getChild(0)
+        println(leftChild::class.java.simpleName)
+        val name = leftChild::class.java.simpleName.toString()
+        if (name == "DecoratorListContext") {
+            val decoratorList = leftChild as TypeScriptParser.DecoratorListContext
+            for(decorator in decoratorList.decorator()) {
+                val decoratorMemberExpression = decorator.decoratorMemberExpression()
+                if (decoratorMemberExpression != null) {
+                    val codeAnnotation = CodeAnnotation(decoratorMemberExpression.Identifier().text)
+                    currentNode.Annotations += codeAnnotation
+                }
+                if (decorator.decoratorCallExpression() != null) {
+                    val member = decorator.decoratorCallExpression().decoratorMemberExpression()
+                    val codeAnnotation = CodeAnnotation(member.Identifier().text)
+                    currentNode.Annotations += codeAnnotation
+                }
+            }
+        }
     }
 
     private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassTailContext?) {
