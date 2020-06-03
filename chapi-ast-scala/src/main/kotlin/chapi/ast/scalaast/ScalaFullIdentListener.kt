@@ -56,6 +56,19 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
         updateStruct(codeDataStruct)
     }
 
+
+    override fun enterTraitDef(ctx: ScalaParser.TraitDefContext?) {
+        val className = ctx!!.Id().text
+
+        val codeDataStruct = CodeDataStruct(
+            NodeName = className,
+            Type = DataStructType.TRAIT,
+            FilePath = codeContainer.FullName
+        )
+
+        updateStruct(codeDataStruct)
+    }
+
     override fun enterPackageDecl(ctx: ScalaParser.PackageDeclContext?) {
         val packageName = ctx!!.qualId().text
         codeContainer.PackageName = packageName

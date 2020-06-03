@@ -95,6 +95,9 @@ class IntIterator(to: Int) extends Iterator[Int] {
 }
 """
 
+        val container = ScalaAnalyser().analysis(code, "hello.scala")
+        assertEquals(container.DataStructures[0].NodeName, "Iterator")
+        assertEquals(container.DataStructures[0].Type, DataStructType.TRAIT)
     }
 
     @Test
