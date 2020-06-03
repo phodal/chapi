@@ -2,11 +2,12 @@ package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
 import chapi.ast.antlr.TypeScriptParserBaseListener
+import chapi.domain.core.CodeAnnotation
 import chapi.domain.core.CodePosition
 import chapi.domain.core.CodeProperty
 import org.antlr.v4.runtime.ParserRuleContext
 
-open class TypeScriptAstListener() : TypeScriptParserBaseListener() {
+open class TypeScriptAstListener : TypeScriptParserBaseListener() {
     fun buildParameters(
         formalParameterListContext: TypeScriptParser.FormalParameterListContext?
     ): Array<CodeProperty> {
@@ -112,7 +113,7 @@ open class TypeScriptAstListener() : TypeScriptParserBaseListener() {
     }
 
     private fun buildRequireParameter(paramCtx: TypeScriptParser.RequiredParameterContext?): CodeProperty {
-        var paramType: String = ""
+        var paramType = ""
         if (paramCtx!!.typeAnnotation() != null) {
             paramType = buildTypeAnnotation(paramCtx.typeAnnotation())!!
         }
@@ -123,5 +124,20 @@ open class TypeScriptAstListener() : TypeScriptParserBaseListener() {
         )
 
         return parameter
+    }
+
+    override fun buildAnnotation(decorator: TypeScriptParser.DecoratorContext): CodeAnnotation {
+        val annotation = CodeAnnotation()
+        val memberExpression = decorator.decoratorMemberExpression()
+        val callExpression = decorator.decoratorCallExpression()
+
+        if (memberExpression != null) {
+            annotation.Name = memberExpression.Identifier().text
+        }
+        if (callExpression != null) {
+            val member = callExpression.decoratorMemberExpression()
+            annotation.Name = member.Identifier().text
+        }
+        return annotation
     }
 }

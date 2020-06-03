@@ -71,21 +71,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
     }
 
-    private fun buildAnnotation(decorator: TypeScriptParser.DecoratorContext): CodeAnnotation {
-        val annotation = CodeAnnotation()
-        val memberExpression = decorator.decoratorMemberExpression()
-        val callExpression = decorator.decoratorCallExpression()
-
-        if (memberExpression != null) {
-            annotation.Name = memberExpression.Identifier().text
-        }
-        if (callExpression != null) {
-            val member = callExpression.decoratorMemberExpression()
-            annotation.Name = member.Identifier().text
-        }
-        return annotation
-    }
-
     private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassTailContext?) {
         for (clzElementCtx in classTailCtx!!.classElement()) {
             val childCtx = clzElementCtx.getChild(0)
