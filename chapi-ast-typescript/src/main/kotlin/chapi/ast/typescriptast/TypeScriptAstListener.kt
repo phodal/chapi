@@ -126,7 +126,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         return parameter
     }
 
-    override fun buildAnnotation(decorator: TypeScriptParser.DecoratorContext): CodeAnnotation {
+    fun buildAnnotation(decorator: TypeScriptParser.DecoratorContext): CodeAnnotation {
         val annotation = CodeAnnotation()
         val memberExpression = decorator.decoratorMemberExpression()
         val callExpression = decorator.decoratorCallExpression()

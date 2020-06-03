@@ -66,7 +66,7 @@ let greeting = function() {
     }
 
     @Test
-    internal fun shouldIndentTypeScriptAnnotation() {
+    internal fun shouldIndentTypeScriptDecorator() {
         val content = """
 import { Injectable } from '@angular/core';
 
@@ -76,6 +76,29 @@ export class LedgeStorageService {
     return window.localStorage;
   }
 }
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
+        val annotations = codeFile.DataStructures[0].Annotations
+        assertEquals(annotations.size, 1)
+        assertEquals(annotations[0].Name, "Injectable")
+    }
+
+
+    @Test @Disabled
+    internal fun shouldIndentTypeScriptDecoratorKeyValues() {
+        val content = """
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-design',
+  templateUrl: './design.component.html',
+  styleUrls: ['./design.component.scss'],
+})
+export class DesignComponent {
+
+}
+
         """
 
         val codeFile = TypeScriptAnalyser().analysis(content, "")

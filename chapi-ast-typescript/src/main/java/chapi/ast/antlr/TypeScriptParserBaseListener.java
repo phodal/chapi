@@ -2594,10 +2594,4 @@ public abstract class TypeScriptParserBaseListener implements TypeScriptParserLi
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void visitErrorNode(ErrorNode node) { }
-
-    @NotNull
-    protected abstract CodeAnnotation buildAnnotation(@NotNull TypeScriptParser.DecoratorContext decorator);
-
-	@NotNull
-	protected abstract CodeAnnotation buildAnnotation(@NotNull TypeScriptParser.DecoratorContext decorator);
 }
