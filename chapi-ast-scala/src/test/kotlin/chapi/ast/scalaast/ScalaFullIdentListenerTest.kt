@@ -140,17 +140,13 @@ class Dog extends Animal with WaggingTail with FourLeggedAnimal {
 
     @Test
     internal fun shouldIdentifyPackageName() {
-        //given
         val code = """
 package  xxx.yy.zz.aa.bb.commons.transformation
 
 import chapi
 """
 
-        //when
         val container = ScalaAnalyser().analysis(code, "hello.scala")
-
-        //then
         assertEquals(container.PackageName, "xxx.yy.zz.aa.bb.commons.transformation")
     }
 }
