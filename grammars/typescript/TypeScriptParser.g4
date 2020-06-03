@@ -339,7 +339,7 @@ program
     ;
 
 sourceElement
-    : decoratorList? Export? statement
+    : Export? statement
     ;
 
 statement

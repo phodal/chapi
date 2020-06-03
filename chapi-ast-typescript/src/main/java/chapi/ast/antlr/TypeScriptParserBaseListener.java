@@ -1,18 +1,16 @@
 // Generated from TypeScriptParser.g4 by ANTLR 4.8
 package chapi.ast.antlr;
 
-import chapi.domain.core.CodeAnnotation;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class provides an empty implementation of {@link TypeScriptParserListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-public abstract class TypeScriptParserBaseListener implements TypeScriptParserListener {
+public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	/**
 	 * {@inheritDoc}
 	 *
