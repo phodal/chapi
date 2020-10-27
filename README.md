@@ -11,7 +11,7 @@
 
 Languages Stages (Welcome to PR your usage languages)
 
-| Features/Languages  |   Java |  Python  | Go  |  Kotlin | TypeScript | C     | C# | Scala | C++ |
+| Features/Languages  |   Java |  [Python](chapi-ast-python/src/main/kotlin/chapi/ast/pythonast)  | Go  |  Kotlin | [TypeScript](chapi-ast-typescript/src/main/kotlin/chapi/ast/typescriptast) | C     | C# | Scala | C++ |
 |---------------------|--------|----------|-----|---------|------------|-------|----|-------|-------|
 | syntax parse        |    ✅  |      ✅  |   ✅ |   🆕    |     ✅     | 🆕    |  🆕 | 🆕 | 🆕 |
 | function call       |    ✅  |     🆕   |      |         |   🆕       |       |     |   |    |
