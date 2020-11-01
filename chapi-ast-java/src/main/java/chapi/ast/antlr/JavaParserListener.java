@@ -508,6 +508,16 @@ public interface JavaParserListener extends ParseTreeListener {
 	 */
 	void exitFloatLiteral(JavaParser.FloatLiteralContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link JavaParser#altAnnotationQualifiedName}.
+	 * @param ctx the parse tree
+	 */
+	void enterAltAnnotationQualifiedName(JavaParser.AltAnnotationQualifiedNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JavaParser#altAnnotationQualifiedName}.
+	 * @param ctx the parse tree
+	 */
+	void exitAltAnnotationQualifiedName(JavaParser.AltAnnotationQualifiedNameContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link JavaParser#annotation}.
 	 * @param ctx the parse tree
 	 */

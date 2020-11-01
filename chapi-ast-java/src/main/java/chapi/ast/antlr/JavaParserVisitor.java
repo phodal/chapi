@@ -311,6 +311,12 @@ public interface JavaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFloatLiteral(JavaParser.FloatLiteralContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JavaParser#altAnnotationQualifiedName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAltAnnotationQualifiedName(JavaParser.AltAnnotationQualifiedNameContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JavaParser#annotation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

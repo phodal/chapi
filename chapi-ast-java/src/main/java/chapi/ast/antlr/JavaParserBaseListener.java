@@ -616,6 +616,18 @@ public class JavaParserBaseListener implements JavaParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAltAnnotationQualifiedName(JavaParser.AltAnnotationQualifiedNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAltAnnotationQualifiedName(JavaParser.AltAnnotationQualifiedNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAnnotation(JavaParser.AnnotationContext ctx) { }
 	/**
 	 * {@inheritDoc}
