@@ -11,24 +11,24 @@
 
 Languages Stages (Welcome to PR your usage languages)
 
-| Features/Languages  | [Java](chapi-ast-java/src/main/kotlin/chapi/ast/javaast) |  [Python](chapi-ast-python/src/main/kotlin/chapi/ast/pythonast)  | [Go](chapi-ast-go/src/main/kotlin/chapi/ast/goast)  | [Kotlin](chapi-ast-kotlin/src/main/kotlin/chapi/ast/kotlinast) | [TypeScript](chapi-ast-typescript/src/main/kotlin/chapi/ast/typescriptast) | [C](chapi-ast-c/src/main/kotlin/chapi/ast/cast)     | [C#](chapi-ast-csharp/src/main/kotlin/chapi/ast/csharpast) | [Scala](chapi-ast-scala/src/main/kotlin/chapi/ast/scalaast) | [C++](chapi-ast-cpp/src/main/kotlin/chapi/ast/cppast) |
-|---------------------|--------|----------|-----|---------|------------|-------|----|-------|-------|
-| syntax parse        |    ✅  |      ✅  |   ✅ |   🆕    |     ✅     | 🆕    |  🆕 | 🆕 | 🆕 |
-| function call       |    ✅  |     🆕   |      |         |   🆕       |       |     |   |    |
-| arch/package        |    ✅  |          |      |         |            |       |     |   |    |
-| real world validate |    ✅  |          |      |         |            |       |     |   |    |
-| expression  (TBD)   |        |          |      |         |            |       |     |   |    |
+| Features/Languages  | [Java](chapi-ast-java/src/main/kotlin/chapi/ast/javaast) | [Python](chapi-ast-python/src/main/kotlin/chapi/ast/pythonast) | [Go](chapi-ast-go/src/main/kotlin/chapi/ast/goast) | [Kotlin](chapi-ast-kotlin/src/main/kotlin/chapi/ast/kotlinast) | [TypeScript](chapi-ast-typescript/src/main/kotlin/chapi/ast/typescriptast) | [C](chapi-ast-c/src/main/kotlin/chapi/ast/cast) | [C#](chapi-ast-csharp/src/main/kotlin/chapi/ast/csharpast) | [Scala](chapi-ast-scala/src/main/kotlin/chapi/ast/scalaast) | [C++](chapi-ast-cpp/src/main/kotlin/chapi/ast/cppast) |
+|---------------------|----------------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------|-------------------------------------------------|------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------|
+| syntax parse        | ✅                                                        | ✅                                                              | ✅                                                  | 🆕                                                             | ✅                                                                          | 🆕                                              | 🆕                                                         | 🆕                                                          | 🆕                                                    |
+| function call       | ✅                                                        | 🆕                                                             |                                                    |                                                                | 🆕                                                                         |                                                 |                                                            |                                                             |                                                       |
+| arch/package        | ✅                                                        |                                                                |                                                    |                                                                |                                                                            |                                                 |                                                            |                                                             |                                                       |
+| real world validate | ✅                                                        |                                                                |                                                    |                                                                |                                                                            |                                                 |                                                            |                                                             |                                                       |
+| expression  (TBD)   |                                                          |                                                                |                                                    |                                                                |                                                                            |                                                 |                                                            |                                                             |                                                       |
 
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
 Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily)
 
-|            | Languages     |  plan support    |
-|------------|---------------|-------------|
-| C family	 | C#, Java, Go, C, C++,  Objective-C, Rust, ... | C++, C, Java, C#, Rust? |
-| Functional | Scheme, Lisp, Clojure, Scala, ...| Scala  |
-| Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript |
-| Other      | Fortran, Swift, Matlab, ...| Swift?, Fortran? |
+|            | Languages                                     | plan support            |
+|------------|-----------------------------------------------|-------------------------|
+| C family	  | C#, Java, Go, C, C++,  Objective-C, Rust, ... | C++, C, Java, C#, Rust? |
+| Functional | Scheme, Lisp, Clojure, Scala, ...             | Scala                   |
+| Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript      |
+| Other      | Fortran, Swift, Matlab, ...                   | Swift?, Fortran?        |
 
 TBC:
 
