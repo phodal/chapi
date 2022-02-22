@@ -40,8 +40,8 @@ open class CodeDataStruct(
     var Extension: JsonElement = JsonObject(HashMap())
 ) {
     open fun isUtilClass(): Boolean {
-        return this.NodeName.toLowerCase().contains("util") ||
-                this.NodeName.toLowerCase().contains("utils")
+        return this.NodeName.lowercase().contains("util") ||
+                this.NodeName.lowercase().contains("utils")
     }
 
     fun setMethodsFromMap(methodMap: MutableMap<String, CodeFunction>) {

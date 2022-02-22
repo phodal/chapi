@@ -35,7 +35,7 @@ open class CodeCall(
     }
 
     open fun hasAssertion(): Boolean {
-        val methodName = this.FunctionName.toLowerCase()
+        val methodName = this.FunctionName.lowercase()
         for (assertion in DomainConstants.ASSERTION_LIST) {
             if (methodName.startsWith(assertion)) {
                 return true

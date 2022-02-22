@@ -170,7 +170,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
             val statementCtx = ctx.parent as JavaParser.StatementContext
             val firstChild = statementCtx.getChild(0).text
 
-            if (firstChild.toLowerCase() == "return") {
+            if (firstChild.lowercase() == "return") {
                 val isReturnNull = ctx.text == "null"
                 currentFunction.addExtension("IsReturnNull", isReturnNull.toString())
             }
