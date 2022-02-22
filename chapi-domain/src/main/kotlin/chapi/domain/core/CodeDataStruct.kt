@@ -1,8 +1,6 @@
 package chapi.domain.core
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
@@ -59,7 +57,4 @@ open class CodeDataStruct(
         return this.Package + "." + this.NodeName
     }
 
-    override fun toString(): String {
-        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
-    }
 }

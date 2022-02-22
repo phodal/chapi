@@ -1,7 +1,10 @@
 package chapi.domain.core
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonObject
 
 @Serializable
 open class CodeFunction(
@@ -86,9 +89,6 @@ open class CodeFunction(
         return this.Extension.jsonObject["IsReturnNull"] == JsonPrimitive("true")
     }
 
-    override fun toString(): String {
-        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
-    }
 
     fun addVarsFromMap(localVars: MutableMap<String, String>) {
         var vars: Array<CodeProperty> = arrayOf()

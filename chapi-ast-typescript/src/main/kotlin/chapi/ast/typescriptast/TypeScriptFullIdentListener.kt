@@ -1,10 +1,12 @@
 package chapi.ast.typescriptast
 
 import chapi.ast.antlr.TypeScriptParser
+import chapi.ast.antlr.TypeScriptParser.IdentifierExpressionContext
 import chapi.domain.core.*
 import chapi.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
+    private var currentExprIdent: String? = ""
     private var localVars = mutableMapOf<String, String>()
     private var dataStructQueue = arrayOf<CodeDataStruct>()
     private var hasEnterClass = false
@@ -64,7 +66,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         val name = leftChild::class.java.simpleName.toString()
         if (name == "DecoratorListContext") {
             val decoratorList = leftChild as TypeScriptParser.DecoratorListContext
-            for(decorator in decoratorList.decorator()) {
+            for (decorator in decoratorList.decorator()) {
                 val annotation = buildAnnotation(decorator)
                 currentNode.Annotations += annotation
             }
@@ -305,7 +307,111 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         fillMethodFromCallSignature(ctx.callSignature())
         currentFunction.Position = this.buildPosition(ctx)
 
+        for (context in ctx.functionBody().sourceElements().sourceElement()) {
+            parseStatement(context)
+        }
+
         defaultNode.Functions += currentFunction
+    }
+
+    private fun parseStatement(context: TypeScriptParser.SourceElementContext) {
+        val stmtChild = context.statement().getChild(0)
+        val childType = stmtChild::class.java.simpleName
+
+        when (childType) {
+            "ReturnStatementContext" -> {
+                val stmt = stmtChild as TypeScriptParser.ReturnStatementContext
+                for (singleExpressionContext in stmt.expressionSequence().singleExpression()) {
+                    parseSingleExpression(singleExpressionContext)
+                }
+            }
+            else -> {
+                println("childType -> :$childType")
+            }
+        }
+    }
+
+    private fun singleExpToText(ctx: TypeScriptParser.SingleExpressionContext): String {
+        val childType = ctx::class.java.simpleName
+        var text = ctx.text
+        when(childType) {
+            "LiteralExpressionContext" -> {
+                val singleStr = text.startsWith("'") && text.endsWith("'")
+                val doubleStr = text.startsWith("\"") && text.endsWith("\"")
+                if(singleStr || doubleStr) {
+                    text = text.drop(1).dropLast(1)
+                }
+            }
+        }
+
+        return text
+    }
+
+    private fun parseSingleExpression(ctx: TypeScriptParser.SingleExpressionContext?) {
+        val childType = ctx!!::class.java.simpleName
+        when(childType) {
+            "IdentifierExpressionContext" -> {
+                val context = ctx as IdentifierExpressionContext
+                currentExprIdent += context.identifierName().text
+
+                if (context.singleExpression() != null) {
+                    parseSingleExpression(context.singleExpression())
+                }
+            }
+            "GenericTypesContext" -> {
+                val context = ctx as TypeScriptParser.GenericTypesContext
+                parseExpressionSequence(context.expressionSequence())
+            }
+            "ParenthesizedExpressionContext" -> {
+                val context = ctx as TypeScriptParser.ParenthesizedExpressionContext
+                for (subSingle in context.expressionSequence().singleExpression()) {
+                    val simpleName = subSingle::class.java.simpleName
+                    when(simpleName) {
+                        "ObjectLiteralExpressionContext" -> {
+                            val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext;
+                            val objectLiteral = parseObjectLiteral(obj.objectLiteral())
+                            val parameter = CodeProperty(arrayOf(), "", subSingle.text, "object", ObjectValue = objectLiteral)
+                            currentFunction.FunctionCalls += CodeCall("", "", "", currentExprIdent.toString(), arrayOf(parameter))
+                        }
+                    }
+                }
+            }
+            else -> {
+                println("todo: need support type: $childType")
+            }
+        }
+    }
+
+    private fun parseObjectLiteral(objectLiteral: TypeScriptParser.ObjectLiteralContext): Array<CodeProperty> {
+        var root: Array<CodeProperty> = arrayOf();
+        objectLiteral.propertyAssignment().forEach { property ->
+            val propName = property::class.java.simpleName
+            when(propName) {
+                "PropertyExpressionAssignmentContext" -> {
+                    val assignCtx = property as TypeScriptParser.PropertyExpressionAssignmentContext
+                    val text = singleExpToText(assignCtx.singleExpression())
+
+                    val value = CodeProperty(TypeType = "value", TypeValue = text)
+
+                    val prop = CodeProperty(
+                        TypeType = "key",
+                        TypeValue = assignCtx.propertyName().text,
+                        ObjectValue = arrayOf(value)
+                    )
+                    root += prop
+                } else -> {
+                    println(propName)
+                }
+            }
+        }
+
+        return root
+    }
+
+    private fun parseExpressionSequence(ctx: TypeScriptParser.ExpressionSequenceContext) {
+        for (singleExpressionContext in ctx.singleExpression()) {
+            parseSingleExpression(singleExpressionContext)
+        }
     }
 
     override fun exitFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
@@ -419,6 +525,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     codeCall.Parameters = this.buildArguments(argsCtx.arguments())
                     codeCall.FunctionName = buildFunctionName(argsCtx)
                     codeCall.NodeName = wrapTargetType(argsCtx)
+
+                    codeCall.Position = this.buildPosition(ctx);
 
                     currentFunction.FunctionCalls += codeCall
                 }

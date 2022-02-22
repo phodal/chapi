@@ -3,7 +3,7 @@ plugins {
 
     java
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.3.72"
+    kotlin("plugin.serialization") version "1.6.10"
 
     `jacoco-conventions`
 }
@@ -18,13 +18,13 @@ application {
     mainClassName = "chapi.app.cli.Main"
 }
 
-tasks.withType<Jar> {
-    manifest {
-        attributes["Main-Class"] = application.mainClassName
-    }
-
-    from(configurations.runtime.get().map {if (it.isDirectory) it else zipTree(it)})
-}
+//tasks.withType<Jar> {
+//    manifest {
+//        attributes["Main-Class"] = application.mainClassName
+//    }
+//
+//    from(configurations.runtimeClasspath.get().map({ if (it.isDirectory) it else zipTree(it) }))
+//}
 
 dependencies {
     // project deps
@@ -38,7 +38,7 @@ dependencies {
     implementation(project(":chapi-ast-scala"))
     implementation(project(":chapi-ast-c"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0") // JVM dependency
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))

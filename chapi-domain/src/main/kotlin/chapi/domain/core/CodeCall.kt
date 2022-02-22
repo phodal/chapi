@@ -44,8 +44,4 @@ open class CodeCall(
 
         return false
     }
-
-    override fun toString(): String {
-        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
-    }
 }

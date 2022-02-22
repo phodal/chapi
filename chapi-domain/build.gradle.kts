@@ -1,13 +1,13 @@
 plugins {
     java
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.3.72"
+    kotlin("plugin.serialization") version "1.6.10"
 
     `jacoco-conventions`
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0") // JVM dependency
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     // Kotlin reflection.

@@ -1,6 +1,8 @@
 package chapi.ast.typescriptast
 
 import chapi.domain.core.DataStructType
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -390,5 +392,26 @@ function helloworld() {
         assertEquals(functionCalls[0].FunctionName, "log")
         assertEquals(functionCalls[0].NodeName, "console")
         assertEquals(functionCalls[0].Parameters[0].TypeValue, "\"hello, world\"")
+    }
+
+    @Test
+    internal fun shouldIdentifyApiFunctionCall() {
+        val code = """
+export function queryScannerConfig() {
+  return axios<ScannerConfigType>({
+    baseURL,
+    url: '/config',
+    method: "GET",
+  });
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+
+        println(Json.encodeToString(codeFile))
+
+//        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+//        assertEquals(functionCalls.size, 1)
+//        assertEquals(functionCalls[0].FunctionName, "log")
     }
 }
