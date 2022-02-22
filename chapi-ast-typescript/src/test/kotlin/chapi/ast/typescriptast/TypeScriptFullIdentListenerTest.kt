@@ -408,10 +408,13 @@ export function queryScannerConfig() {
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
 
-        println(Json.encodeToString(codeFile))
+        val firstCall = codeFile.DataStructures[0].Functions[0].FunctionCalls
 
-//        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
-//        assertEquals(functionCalls.size, 1)
-//        assertEquals(functionCalls[0].FunctionName, "log")
+        assertEquals(1, firstCall.size)
+        assertEquals("axios", firstCall[0].FunctionName);
+
+        val parameters = firstCall[0].Parameters
+        assertEquals(1, parameters.size);
+        assertEquals(3, parameters[0].ObjectValue.size)
     }
 }

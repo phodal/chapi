@@ -334,11 +334,11 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private fun singleExpToText(ctx: TypeScriptParser.SingleExpressionContext): String {
         val childType = ctx::class.java.simpleName
         var text = ctx.text
-        when(childType) {
+        when (childType) {
             "LiteralExpressionContext" -> {
                 val singleStr = text.startsWith("'") && text.endsWith("'")
                 val doubleStr = text.startsWith("\"") && text.endsWith("\"")
-                if(singleStr || doubleStr) {
+                if (singleStr || doubleStr) {
                     text = text.drop(1).dropLast(1)
                 }
             }
@@ -349,7 +349,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     private fun parseSingleExpression(ctx: TypeScriptParser.SingleExpressionContext?) {
         val childType = ctx!!::class.java.simpleName
-        when(childType) {
+        when (childType) {
             "IdentifierExpressionContext" -> {
                 val context = ctx as IdentifierExpressionContext
                 currentExprIdent += context.identifierName().text
@@ -366,12 +366,19 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 val context = ctx as TypeScriptParser.ParenthesizedExpressionContext
                 for (subSingle in context.expressionSequence().singleExpression()) {
                     val simpleName = subSingle::class.java.simpleName
-                    when(simpleName) {
+                    when (simpleName) {
                         "ObjectLiteralExpressionContext" -> {
                             val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext;
                             val objectLiteral = parseObjectLiteral(obj.objectLiteral())
-                            val parameter = CodeProperty(arrayOf(), "", subSingle.text, "object", ObjectValue = objectLiteral)
-                            currentFunction.FunctionCalls += CodeCall("", "", "", currentExprIdent.toString(), arrayOf(parameter))
+                            val parameter =
+                                CodeProperty(arrayOf(), "", subSingle.text, "object", ObjectValue = objectLiteral)
+                            currentFunction.FunctionCalls += CodeCall(
+                                "",
+                                "",
+                                "",
+                                currentExprIdent.toString(),
+                                arrayOf(parameter)
+                            )
                         }
                     }
                 }
@@ -386,7 +393,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         var root: Array<CodeProperty> = arrayOf();
         objectLiteral.propertyAssignment().forEach { property ->
             val propName = property::class.java.simpleName
-            when(propName) {
+            when (propName) {
                 "PropertyExpressionAssignmentContext" -> {
                     val assignCtx = property as TypeScriptParser.PropertyExpressionAssignmentContext
                     val text = singleExpToText(assignCtx.singleExpression())
@@ -399,7 +406,14 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         ObjectValue = arrayOf(value)
                     )
                     root += prop
-                } else -> {
+                }
+                "PropertyShorthandContext" -> {
+                    val short = (property as TypeScriptParser.PropertyShorthandContext).text
+                    val value = CodeProperty(TypeType = "value", TypeValue = short)
+                    val prop = CodeProperty(TypeType = "key", TypeValue = short, ObjectValue = arrayOf(value))
+                    root += prop
+                }
+                else -> {
                     println(propName)
                 }
             }
