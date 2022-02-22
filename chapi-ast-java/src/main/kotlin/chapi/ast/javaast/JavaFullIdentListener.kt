@@ -11,8 +11,7 @@ data class JavaTargetType(var targetType: String = "", var callType: String = ""
 
 open class JavaFullIdentListener(
     fileName: String,
-    val classes: Array<String>,
-    basicNodes: Array<CodeDataStruct>
+    val classes: Array<String>
 ) : JavaAstListener() {
     private var currentCreatorNode: CodeDataStruct =
         CodeDataStruct()

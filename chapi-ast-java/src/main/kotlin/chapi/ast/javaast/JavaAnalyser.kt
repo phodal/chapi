@@ -16,7 +16,7 @@ open class JavaAnalyser {
         basicNodes: Array<CodeDataStruct> = arrayOf()
     ): CodeContainer {
         val context = this.parse(str).compilationUnit()
-        val listener = JavaFullIdentListener(fileName, classes, basicNodes)
+        val listener = JavaFullIdentListener(fileName, classes)
 
         ParseTreeWalker().walk(listener, context)
 
