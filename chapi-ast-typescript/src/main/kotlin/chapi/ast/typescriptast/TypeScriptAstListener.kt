@@ -131,7 +131,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         val memberExpression = decorator.decoratorMemberExpression()
         val callExpression = decorator.decoratorCallExpression()
 
-        if (memberExpression != null) {
+        if (memberExpression?.Identifier() != null) {
             annotation.Name = memberExpression.Identifier().text
         }
         if (callExpression != null) {

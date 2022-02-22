@@ -20,7 +20,7 @@ open class FileFilter {
                     path.endsWith(".py")
                 }
                 "typescript" -> {
-                    path.endsWith(".ts")
+                    path.endsWith(".ts") || path.endsWith(".tsx")
                 }
                 "scala" -> {
                     path.endsWith(".scala")
