@@ -8,10 +8,9 @@ plugins {
 
     jacoco
     id("com.github.kt3k.coveralls") version "2.9.0"
-    id("maven-publish")
-
-    id("com.jfrog.artifactory") version "4.1.1"
-    id("com.jfrog.bintray") version "1.8.4"
+//    id("maven-publish")
+//    id("com.jfrog.artifactory") version "4.1.1"
+//    id("com.jfrog.bintray") version "1.8.4"
 
     // todo: erich domain testing & logic
     id("nl.fabianm.kotlin.plugin.generated") version "1.5.0" // hack for jacoco generate code coverage
@@ -27,8 +26,6 @@ allprojects {
     description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
 
     repositories {
-//        maven{ setUrl("http://maven.aliyun.com/nexus/content/groups/public/") }
-//        maven{ setUrl("http://maven.aliyun.com/nexus/content/repositories/jcenter")}
         mavenCentral()
         mavenLocal()
         jcenter()

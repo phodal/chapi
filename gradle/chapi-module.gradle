@@ -1,13 +1,13 @@
 apply plugin: "java"
-apply plugin: "maven-publish"
-apply plugin: "com.jfrog.bintray"
-apply from: "$rootDir/gradle/publications.gradle"
+//apply plugin: "maven-publish"
+//apply plugin: "com.jfrog.bintray"
+//apply from: "$rootDir/gradle/publications.gradle"
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-}
+//buildscript {
+//    repositories {
+//        jcenter()
+//    }
+//}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
