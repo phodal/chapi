@@ -38,7 +38,6 @@ configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
-
 sourceSets.main {
     java.srcDirs("${project.buildDir}/generated-src")
 }
@@ -51,6 +50,10 @@ tasks.generateGrammarSource {
 
 tasks.withType<AntlrTask> {
 
+}
+
+tasks.named("compileKotlin") {
+    dependsOn(tasks.withType<AntlrTask>())
 }
 
 tasks.withType<Test> {
