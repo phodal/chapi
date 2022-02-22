@@ -231,6 +231,6 @@ class Employee:
  
 emp = Employee("Zara")
 """
-        val codeFile = PythonAnalyser().analysis(code, "")
+        val _codeFile = PythonAnalyser().analysis(code, "")
     }
 }
