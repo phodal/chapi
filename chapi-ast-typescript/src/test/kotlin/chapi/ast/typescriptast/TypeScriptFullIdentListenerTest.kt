@@ -258,8 +258,9 @@ function Sum(x: number, y: number) : void {
 }
         """
 
-        val codeFile = TypeScriptAnalyser().analysis(normalClassFunction, "")
+        val codeFile = TypeScriptAnalyser().analysis(normalClassFunction, "demo.ts")
         assertEquals(codeFile.DataStructures[0].NodeName, "default")
+        assertEquals(codeFile.DataStructures[0].FilePath, "demo.ts")
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "Sum")
         assertEquals(codeFile.DataStructures[0].Functions[0].Parameters.size, 2)
         assertEquals(codeFile.DataStructures[0].Functions[0].MultipleReturns.size, 1)

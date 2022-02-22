@@ -6,7 +6,7 @@ import chapi.app.analyser.support.BaseAnalyser
 import chapi.ast.typescriptast.TypeScriptAnalyser
 import chapi.domain.core.CodeDataStruct
 
-class TypeScriptAnalyserApp(config: ChapiConfig) : BaseAnalyser(config) {
+class TypeScriptAnalyserApp(config: ChapiConfig = ChapiConfig(language = "typescript")) : BaseAnalyser(config) {
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> {
         var nodeInfos: Array<CodeDataStruct> = arrayOf()
         for (file in files) {

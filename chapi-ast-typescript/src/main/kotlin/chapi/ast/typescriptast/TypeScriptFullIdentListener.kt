@@ -7,14 +7,12 @@ import chapi.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
     private var hasAnnotation: Boolean = false;
+    private var hasEnterClass = false
     private var currentExprIdent: String? = ""
     private var localVars = mutableMapOf<String, String>()
-    private var dataStructQueue = arrayOf<CodeDataStruct>()
-    private var hasEnterClass = false
 
     private var nodeMap = mutableMapOf<String, CodeDataStruct>()
-    private var codeContainer: CodeContainer =
-        CodeContainer(FullName = node.fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = node.fileName)
 
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
@@ -22,9 +20,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var namespaceName: String = ""
     private var currentAnnotations = arrayOf<CodeAnnotation>()
 
-    private var classNodeStack =
-        Stack<CodeDataStruct>()
-    private var methodMap = mutableMapOf<String, CodeFunction>()
+    private var classNodeStack = Stack<CodeDataStruct>()
 
     override fun enterNamespaceDeclaration(ctx: TypeScriptParser.NamespaceDeclarationContext?) {
         this.namespaceName = ctx!!.namespaceName().text
@@ -358,7 +354,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         when (childType) {
             "IdentifierExpressionContext" -> {
                 val context = ctx as IdentifierExpressionContext
-                currentExprIdent += context.identifierName().text
+                currentExprIdent = context.identifierName().text
 
                 if (context.singleExpression() != null) {
                     parseSingleExpression(context.singleExpression())
@@ -552,10 +548,12 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     override fun enterExpressionStatement(ctx: TypeScriptParser.ExpressionStatementContext?) {
         println("enterExpressionStatement : " + ctx!!.text)
-        for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
-            val singleCtxType = singleExprCtx::class.java.simpleName
+        if(ctx.expressionSequence() == null) {
+            return
+        }
 
-            when (singleCtxType) {
+        for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
+            when (val singleCtxType = singleExprCtx::class.java.simpleName) {
                 "ArgumentsExpressionContext" -> {
                     val codeCall = CodeCall()
 
@@ -662,6 +660,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
         if (defaultNode.Functions.isNotEmpty()) {
             defaultNode.NodeName = "default"
+            defaultNode.FilePath = codeContainer.FullName
             codeContainer.DataStructures += defaultNode
         }
 

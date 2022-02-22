@@ -34,3 +34,4 @@ local.properties
 chapi.json
 *.ipr
 *.iws
+output.json
