@@ -3,6 +3,7 @@ package chapi.ast.typescriptast
 import chapi.domain.core.DataStructType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -438,8 +439,26 @@ async function getUser() {
 
         assertEquals(3, firstCall.size)
         assertEquals("axios.get", firstCall[0].FunctionName);
+    }
 
-//        val parameters = firstCall[0].Parameters
-//        assertEquals(1, parameters.size);
+    @Test
+    @Disabled
+    internal fun shouldIdentifyForType() {
+        val code = """
+export function queryModule() {
+  return axios<Module[]>({
+    baseURL,
+    url: "/logic-modules",
+    method: "GET",
+  }).then((res) => _.orderBy(res, ["status", "name"], ["desc", "asc"]));
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+
+        val firstCall = codeFile.DataStructures[0].Functions[0].FunctionCalls
+
+        assertEquals(1, firstCall.size)
+        assertEquals("axios", firstCall[0].FunctionName);
     }
 }

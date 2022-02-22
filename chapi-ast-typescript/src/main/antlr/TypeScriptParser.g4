@@ -775,6 +775,8 @@ numericLiteral
 identifierName
     : Identifier
     | reservedWord
+    | Lodash Lodash*
+    | Dollar Dollar*
     ;
 
 identifierOrKeyWord
