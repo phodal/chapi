@@ -32,7 +32,7 @@ parser grammar TypeScriptParser;
 
 options {
     tokenVocab=TypeScriptLexer;
-    superClass=TypeScriptBaseParser;
+    superClass=TypeScriptParserBase;
 }
 
 // SupportSyntax
@@ -202,33 +202,18 @@ callSignature
     : typeParameters? '(' parameterList? ')' typeAnnotation?
     ;
 
-
-
-
-accessibilityModifier
-    : Public
-    | Private
-    | Protected
-    ;
-
-
 parameterList
     : restParameter
-    | predefinedType (',' predefinedType)*
-    | optionalParameterList (',' restParameter)?
-    | requiredParameterList (',' (optionalParameterList (',' restParameter)? | restParameter))?
+    | parameter (',' parameter)* (',' restParameter)?
     ;
 
 requiredParameterList
     : requiredParameter (',' requiredParameter)*
     ;
 
-requiredParameter
-    : decoratorList? accessibilityModifier? identifierOrPattern typeAnnotation?
-    ;
-
-optionalParameterList
-    : optionalParameter (',' optionalParameter)*
+parameter
+    : requiredParameter
+    | optionalParameter
     ;
 
 optionalParameter
@@ -236,7 +221,17 @@ optionalParameter
     ;
 
 restParameter
-    : '...' singleExpression
+    : '...' singleExpression typeAnnotation?
+    ;
+
+requiredParameter
+    : decoratorList? accessibilityModifier? identifierOrPattern typeAnnotation?
+    ;
+
+accessibilityModifier
+    : Public
+    | Private
+    | Protected
     ;
 
 identifierOrPattern
@@ -339,15 +334,14 @@ program
     ;
 
 sourceElement
-    : decoratorList? Export? statement
+    : Export? statement
     ;
 
 statement
     : block
-    | variableStatement
     | importStatement
     | exportStatement
-    | emptyStatement
+    | emptyStatement_
     | abstractDeclaration //ADDED
     | decoratorList
     | classDeclaration
@@ -368,6 +362,7 @@ statement
     | functionDeclaration
     | arrowFunctionDeclaration
     | generatorFunctionDeclaration
+    | variableStatement
     | typeAliasDeclaration //ADDED
     | enumDeclaration      //ADDED
     | expressionStatement
@@ -416,7 +411,7 @@ variableDeclaration
     : ( identifierOrKeyWord | arrayLiteral | objectLiteral) typeAnnotation? singleExpression? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
     ;
 
-emptyStatement
+emptyStatement_
     : SemiColon
     ;
 
@@ -510,7 +505,7 @@ debuggerStatement
     ;
 
 functionDeclaration
-    : Function Identifier callSignature ( ('{' functionBody '}') | SemiColon)
+    : Function_ Identifier callSignature ( ('{' functionBody '}') | SemiColon)
     ;
 
 //Ovveride ECMA
@@ -562,7 +557,7 @@ generatorMethod
     ;
 
 generatorFunctionDeclaration
-    : Function '*' Identifier? '(' formalParameterList? ')' '{' functionBody '}'
+    : Function_ '*' Identifier? '(' formalParameterList? ')' '{' functionBody '}'
     ;
 
 generatorBlock
@@ -617,7 +612,7 @@ arrayElement                      // ECMAScript 6: Spread Operator
     ;
 
 objectLiteral
-    : '{' (propertyAssignment (',' propertyAssignment)*)? ','? '}'
+    : '{' (propertyAssignment (',' propertyAssignment)* ','?)? '}'
     ;
 
 // MODIFIED
@@ -662,7 +657,7 @@ expressionSequence
     ;
 
 functionExpressionDeclaration
-    : Function Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
+    : Function_ Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
     ;
 
 singleExpression
@@ -671,8 +666,10 @@ singleExpression
     | Class Identifier? classTail                                            # ClassExpression
     | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
     | singleExpression '.' identifierName nestedTypeGeneric?                 # MemberDotExpression
+    // Split to try `new Date()` first, then `new Date`.
+    | New singleExpression typeArguments? arguments                          # NewExpression
+    | New singleExpression typeArguments?                                    # NewExpression
     | singleExpression arguments                                             # ArgumentsExpression
-    | New singleExpression typeArguments? arguments?                         # NewExpression
     | singleExpression {this.notLineTerminator()}? '++'                      # PostIncrementExpression
     | singleExpression {this.notLineTerminator()}? '--'                      # PostDecreaseExpression
     | Delete singleExpression                                                # DeleteExpression
@@ -699,7 +696,7 @@ singleExpression
     | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
     | singleExpression '=' singleExpression                                  # AssignmentExpression
     | singleExpression assignmentOperator singleExpression                   # AssignmentOperatorExpression
-    | singleExpression TemplateStringLiteral                                 # TemplateStringExpression  // ECMAScript 6
+    | singleExpression templateStringLiteral                                 # TemplateStringExpression  // ECMAScript 6
     | iteratorBlock                                                          # IteratorsExpression // ECMAScript 6
     | generatorBlock                                                         # GeneratorsExpression // ECMAScript 6
     | generatorFunctionDeclaration                                           # GeneratorsFunctionExpression // ECMAScript 6
@@ -752,9 +749,18 @@ literal
     : NullLiteral
     | BooleanLiteral
     | StringLiteral
-    | TemplateStringLiteral
+    | templateStringLiteral
     | RegularExpressionLiteral
     | numericLiteral
+    ;
+
+templateStringLiteral
+    : BackTick templateStringAtom* BackTick
+    ;
+
+templateStringAtom
+    : TemplateStringAtom
+    | TemplateStringStartExpression singleExpression TemplateCloseBrace
     ;
 
 numericLiteral
@@ -800,7 +806,7 @@ keyword
     | Switch
     | While
     | Debugger
-    | Function
+    | Function_
     | This
     | With
     | Default
@@ -836,11 +842,11 @@ keyword
     ;
 
 getter
-    : Identifier{this.p("get")}? propertyName
+    : Get propertyName
     ;
 
 setter
-    : Identifier{this.p("set")}? propertyName
+    : Set propertyName
     ;
 
 eos

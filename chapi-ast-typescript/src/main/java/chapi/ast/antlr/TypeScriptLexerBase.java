@@ -1,6 +1,8 @@
 package chapi.ast.antlr;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.Token;
 
 import java.util.Stack;
 
@@ -8,7 +10,7 @@ import java.util.Stack;
  * All lexer methods that used in grammar (IsStrictMode)
  * should start with Upper Case Char similar to Lexer rules.
  */
-public abstract class TypeScriptBaseLexer extends Lexer
+public abstract class TypeScriptLexerBase extends Lexer
 {
     /**
      * Stores values of nested modes. By default mode is strict or
@@ -27,8 +29,18 @@ public abstract class TypeScriptBaseLexer extends Lexer
      * Can be defined during parsing, see StringFunctions.js and StringGlobal.js samples
      */
     private boolean useStrictCurrent = false;
+    /**
+     * Keeps track of the the current depth of nested template string backticks.
+     * E.g. after the X in:
+     *
+     * `${a ? `${X
+     *
+     * templateDepth will be 2. This variable is needed to determine if a `}` is a
+     * plain CloseBrace, or one that closes an expression inside a template string.
+     */
+    private int templateDepth = 0;
 
-    public TypeScriptBaseLexer(CharStream input) {
+    public TypeScriptLexerBase(CharStream input) {
         super(input);
     }
 
@@ -43,6 +55,10 @@ public abstract class TypeScriptBaseLexer extends Lexer
 
     public boolean IsStrictMode() {
         return useStrictCurrent;
+    }
+
+    public boolean IsInTemplateString() {
+        return this.templateDepth > 0;
     }
 
     /**
@@ -90,6 +106,14 @@ public abstract class TypeScriptBaseLexer extends Lexer
                 scopeStrictModes.push(useStrictCurrent);
             }
         }
+    }
+
+    protected void IncreaseTemplateDepth() {
+        this.templateDepth++;
+    }
+
+    protected void DecreaseTemplateDepth() {
+        this.templateDepth--;
     }
 
     /**

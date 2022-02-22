@@ -1,14 +1,17 @@
 package chapi.ast.antlr;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 
 /**
  * All parser methods that used in grammar (p, prev, notLineTerminator, etc.)
  * should start with lower case char similar to parser rules.
  */
-public abstract class TypeScriptBaseParser extends Parser
+public abstract class TypeScriptParserBase extends Parser
 {
-    public TypeScriptBaseParser(TokenStream input) {
+    public TypeScriptParserBase(TokenStream input) {
         super(input);
     }
 
@@ -46,7 +49,7 @@ public abstract class TypeScriptBaseParser extends Parser
 
     protected boolean notOpenBraceAndNotFunction() {
         int nextTokenType = _input.LT(1).getType();
-        return nextTokenType != TypeScriptParser.OpenBrace && nextTokenType != TypeScriptParser.Function;
+        return nextTokenType != TypeScriptParser.OpenBrace && nextTokenType != TypeScriptParser.Function_;
     }
 
     protected boolean closeBrace() {
