@@ -6,6 +6,7 @@ import chapi.domain.core.*
 import chapi.infra.Stack
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
+    private var hasAnnotation: Boolean = false;
     private var currentExprIdent: String? = ""
     private var localVars = mutableMapOf<String, String>()
     private var dataStructQueue = arrayOf<CodeDataStruct>()
@@ -18,8 +19,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
-    private var currentType: String = ""
     private var namespaceName: String = ""
+    private var currentAnnotations = arrayOf<CodeAnnotation>()
 
     private var classNodeStack =
         Stack<CodeDataStruct>()
@@ -33,8 +34,21 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         this.namespaceName = ""
     }
 
+    override fun enterDecoratorList(ctx: TypeScriptParser.DecoratorListContext?) {
+        if(!hasEnterClass) {
+            hasAnnotation = true;
+
+            for (decorator in ctx!!.decorator()) {
+                val annotation = buildAnnotation(decorator)
+                currentAnnotations += annotation
+            }
+        }
+    }
+
     override fun enterClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
         val nodeName = ctx!!.Identifier().text
+
+        hasEnterClass = true;
         currentNode = CodeDataStruct(
             NodeName = nodeName,
             Type = DataStructType.CLASS,
@@ -53,24 +67,15 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             currentNode.Extend = refCtx.typeName().text
         }
 
-        tryGetAnnotation(ctx)
+        // load annotations before class
+        currentNode.Annotations = currentAnnotations;
+        currentAnnotations = arrayOf();
+        hasAnnotation = false;
 
         this.handleClassBodyElements(ctx.classTail())
 
         classNodeStack.push(currentNode)
         nodeMap[nodeName] = currentNode
-    }
-
-    private fun tryGetAnnotation(ctx: TypeScriptParser.ClassDeclarationContext) {
-        val leftChild = ctx.parent.parent.getChild(0)
-        val name = leftChild::class.java.simpleName.toString()
-        if (name == "DecoratorListContext") {
-            val decoratorList = leftChild as TypeScriptParser.DecoratorListContext
-            for (decorator in decoratorList.decorator()) {
-                val annotation = buildAnnotation(decorator)
-                currentNode.Annotations += annotation
-            }
-        }
     }
 
     private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassTailContext?) {
@@ -157,6 +162,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     override fun exitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
+        hasEnterClass = false;
         classNodeStack.pop()
     }
 

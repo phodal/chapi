@@ -1,6 +1,7 @@
 package chapi.ast.javaast
 
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Test
 
 internal class JavaBasicIdentListenerTest {
