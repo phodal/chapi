@@ -362,6 +362,18 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 val context = ctx as TypeScriptParser.GenericTypesContext
                 parseExpressionSequence(context.expressionSequence())
             }
+            "ArgumentsExpressionContext" -> {
+                val argument = ctx as TypeScriptParser.ArgumentsExpressionContext
+                currentExprIdent = argument.singleExpression().text
+
+                currentFunction.FunctionCalls += CodeCall(
+                    "",
+                    "",
+                    "",
+                    currentExprIdent.toString(),
+                    arrayOf()
+                )
+            }
             "ParenthesizedExpressionContext" -> {
                 val context = ctx as TypeScriptParser.ParenthesizedExpressionContext
                 for (subSingle in context.expressionSequence().singleExpression()) {
@@ -372,6 +384,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                             val objectLiteral = parseObjectLiteral(obj.objectLiteral())
                             val parameter =
                                 CodeProperty(arrayOf(), "", subSingle.text, "object", ObjectValue = objectLiteral)
+
+                            // append code call
                             currentFunction.FunctionCalls += CodeCall(
                                 "",
                                 "",
@@ -379,6 +393,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                                 currentExprIdent.toString(),
                                 arrayOf(parameter)
                             )
+                        }
+                        else -> {
+                            println("todo -> ParenthesizedExpressionContext: $simpleName")
                         }
                     }
                 }
@@ -434,7 +451,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
         val statementParent = ctx!!.parent.parent
-        when (statementParent::class.java.simpleName) {
+        val parentName = statementParent::class.java.simpleName
+        when (parentName) {
             "VariableDeclarationContext" -> {
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
                 currentFunction.Name = varDeclCtx.identifierOrKeyWord().text
@@ -447,7 +465,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 }
             }
             else -> {
-                println("enterFunctionExpressionDeclaration -> ")
+                println("enterFunctionExpressionDeclaration.$parentName -> ")
             }
         }
 
@@ -595,6 +613,19 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                             val varType = identExprCtx.identifierName().text
 
                             localVars[varName] = varType
+                        }
+                    }
+                }
+                "IdentifierExpressionContext" -> {
+                    val identExpr = singleExprCtx as IdentifierExpressionContext;
+                    val identExprText = identExpr.identifierName().text
+                    when (identExprText) {
+                        "await" -> {
+                            val singleExpression = identExpr.singleExpression()
+                            parseSingleExpression(singleExpression)
+                        }
+                        else -> {
+                            println("others variable decl: $identExprText")
                         }
                     }
                 }
