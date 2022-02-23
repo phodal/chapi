@@ -11,7 +11,7 @@ open class CodeCall(
     var Type: String = "",
     var NodeName: String = "",
     var FunctionName: String = "",
-    var Parameters: Array<CodeProperty> = arrayOf<CodeProperty>(),
+    var Parameters: Array<CodeProperty> = arrayOf(),
     var Position: CodePosition = CodePosition()
 ) {
     open fun buildClassFullName(): String {

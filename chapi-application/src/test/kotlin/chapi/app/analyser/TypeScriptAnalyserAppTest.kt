@@ -8,7 +8,7 @@ import java.io.FileWriter
 
 internal class TypeScriptAnalyserAppTest {
     @Test
-    @Disabled
+//    @Disabled
     fun shouldIdentifySamePackage() {
         val testPath = "/Volumes/source/archguard/archguard-frontend/archguard/src/api"
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(testPath)

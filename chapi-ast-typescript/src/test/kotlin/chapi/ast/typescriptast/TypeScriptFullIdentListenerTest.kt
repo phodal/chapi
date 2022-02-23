@@ -3,7 +3,6 @@ package chapi.ast.typescriptast
 import chapi.domain.core.DataStructType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -442,7 +441,6 @@ async function getUser() {
     }
 
     @Test
-    @Disabled
     internal fun shouldIdentifyForType() {
         val code = """
 export function queryModule() {
@@ -456,9 +454,12 @@ export function queryModule() {
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
 
-        val firstCall = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        val calls = codeFile.DataStructures[0].Functions[0].FunctionCalls
 
-        assertEquals(1, firstCall.size)
-        assertEquals("axios", firstCall[0].FunctionName);
+        assertEquals(3, calls.size)
+        assertEquals("axios", calls[0].FunctionName);
+        assertEquals("axios->then", calls[1].FunctionName);
+
+        println(Json.encodeToString(calls))
     }
 }
