@@ -26,9 +26,10 @@ val jacocoTestReport by tasks.getting(JacocoReport::class) {
     }
 
     reports {
-        xml.setEnabled(true)
-        xml.setDestination(file("${project.buildDir}/${project.name}.xml"))
-        html.setEnabled(true)
+        xml.required.set(false)
+        csv.required.set(false)
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
 
 }
