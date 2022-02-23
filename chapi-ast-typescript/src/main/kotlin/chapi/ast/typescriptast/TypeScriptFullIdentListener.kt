@@ -235,10 +235,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
             currentNode.Functions += codeFunction
         } else {
-            val codeField = CodeField(
-                TypeType = typeType, TypeValue = typeValue
-            )
-
+            val codeField = CodeField(TypeType = typeType, TypeValue = typeValue)
             currentNode.Fields += codeField
         }
     }
