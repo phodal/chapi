@@ -91,7 +91,7 @@ subprojects {
             }
             maven {
                 name = "GitHubPackages"
-                url = "https://maven.pkg.github.com/modernizing/chapi"
+                url = uri("https://maven.pkg.github.com/modernizing/chapi")
                 credentials {
                     username = System.getenv("GITHUB_ACTOR")
                     password = System.getenv("GITHUB_TOKEN")
@@ -178,9 +178,11 @@ tasks.register("jacocoRootReports", JacocoReport::class) {
     }))
 
     reports {
-        xml.setEnabled(true)
-        html.setEnabled(true)
-        xml.setDestination(file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"))
+        xml.required.set(false)
+        csv.required.set(false)
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
+
     dependsOn(jacocoMerge)
 }
