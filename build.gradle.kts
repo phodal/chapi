@@ -86,6 +86,10 @@ subprojects {
                 val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
 
+                credentials {
+                    username = (project.findProperty("sonatypeUsername") ?: System.getenv("GITHUB_USERNAME")).toString()
+                    password = (project.findProperty("sonatypePassword") ?: System.getenv("GITHUB_TOKEN")).toString()
+                }
             }
         }
     }
