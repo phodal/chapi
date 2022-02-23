@@ -4,13 +4,15 @@ plugins {
     val kotlinVersion = "1.6.10"
     kotlin("jvm") version kotlinVersion apply false
 
-    java
+    id("java-library")
+    id("maven-publish")
+    publishing
+    signing
+//    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 
+    java
     jacoco
     id("com.github.kt3k.coveralls") version "2.9.0"
-//    id("maven-publish")
-//    id("com.jfrog.artifactory") version "4.1.1"
-//    id("com.jfrog.bintray") version "1.8.4"
 
     // todo: erich domain testing & logic
     id("nl.fabianm.kotlin.plugin.generated") version "1.5.0" // hack for jacoco generate code coverage
@@ -21,15 +23,76 @@ jacoco {
 }
 
 allprojects {
+
     group = "com.phodal.chapi"
-    version = "0.0.5"
-    description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
+    version = "0.0.6"
+    description =
+        "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
 
     repositories {
         mavenCentral()
         mavenLocal()
-        jcenter()
     }
+}
+
+subprojects {
+    apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
+    apply(plugin = "signing")
+    apply(plugin = "publishing")
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                artifactId = "com.phodal.chapi"
+                from(components["java"])
+                versionMapping {
+                    usage("java-api") {
+                        fromResolutionOf("runtimeClasspath")
+                    }
+                    usage("java-runtime") {
+                        fromResolutionResult()
+                    }
+                }
+                pom {
+                    name.set("Chapi")
+                    description.set("Chapi is A common language meta information convertor, convert different languages to same meta-data model")
+                    url.set("https://github.com/modernizing/chapi")
+                    licenses {
+                        license {
+                            name.set("MIT")
+                            url.set("https://github.com/modernizing/chapi/blob/master/LICENSE")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("Modernizing")
+                            name.set("Modernizing Team")
+                            email.set("h@phodal.com")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git:git://github.com/modernizing/chapi.git")
+                        developerConnection.set("scm:git:ssh://github.com/modernizing/chapi.git")
+                        url.set("https://github.com/modernizing/chapi/")
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+
+            }
+        }
+    }
+
+//    signing {
+//        sign(publishing.publications["mavenJava"])
+//    }
 }
 
 val jacocoReports by configurations.creating {
