@@ -1,7 +1,9 @@
-name: Java CI
+name: CD
 
-on: [push]
-
+on:
+  push:
+    tags:
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest
