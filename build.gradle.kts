@@ -85,8 +85,16 @@ subprojects {
                 url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
 
                 credentials {
-                    username = (project.findProperty("sonatypeUsername") ?: System.getenv("GITHUB_USERNAME")).toString()
-                    password = (project.findProperty("sonatypePassword") ?: System.getenv("GITHUB_TOKEN")).toString()
+                    username = (project.findProperty("sonatypeUsername") ?: System.getenv("OSSRH_USERNAME")).toString()
+                    password = (project.findProperty("sonatypePassword") ?: System.getenv("OSSRH_TOKEN")).toString()
+                }
+            }
+            maven {
+                name = "GitHubPackages"
+                url = "https://maven.pkg.github.com/modernizing/chapi"
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
                 }
             }
         }
