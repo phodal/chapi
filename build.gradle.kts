@@ -23,7 +23,6 @@ jacoco {
 }
 
 allprojects {
-
     group = "com.phodal.chapi"
     version = "0.0.6"
     description =
@@ -44,7 +43,6 @@ subprojects {
     publishing {
         publications {
             create<MavenPublication>("mavenJava") {
-                artifactId = "com.phodal.chapi"
                 from(components["java"])
                 versionMapping {
                     usage("java-api") {
