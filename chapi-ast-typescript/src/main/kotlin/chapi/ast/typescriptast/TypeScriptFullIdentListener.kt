@@ -31,6 +31,18 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         this.namespaceName = ""
     }
 
+    override fun enterVariableStatement(ctx: TypeScriptParser.VariableStatementContext?) {
+        if (ctx!!.variableDeclarationList() != null) {
+            ctx.variableDeclarationList().variableDeclaration().forEach {
+                if (it.Assign() != null) {
+                    val key = it.getChild(0).text
+                    val value = it.singleExpression().last().text
+                    codeContainer.Fields += CodeField(TypeKey = key, TypeValue = value)
+                }
+            }
+        }
+    }
+
     override fun enterDecoratorList(ctx: TypeScriptParser.DecoratorListContext?) {
         if (!hasEnterClass) {
             hasAnnotation = true;
@@ -116,18 +128,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 else -> {
                     println("handleClassBodyElements -> childElementType : $childElementType")
                 }
-            }
-        }
-    }
-
-    private fun buildPropertyMember(originCtx: TypeScriptParser.PropertyMemberDeclarationContext) {
-        val childType = originCtx::class.java.simpleName.toString()
-
-        print(childType)
-        when (childType) {
-
-            else -> {
-                println("handleClassBody -> buildPropertyMember")
             }
         }
     }

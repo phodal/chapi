@@ -16,6 +16,8 @@ internal class TypeScriptAnalyserAppTest {
 
         FileWriter("output.json").use { it.write(Json.encodeToString(nodes)) }
 
+
+        val sb = StringBuilder()
         nodes.forEach {
             it.Functions.forEach { func ->
                 run {
@@ -24,9 +26,9 @@ internal class TypeScriptAnalyserAppTest {
                             val nodeName = call.NodeName
                             if (!(nodeName == "axios" || nodeName.startsWith("axios."))) {
                                 if (call.Parameters.isNotEmpty()) {
-                                    println("$nodeName -> ${call.Parameters[0].TypeValue}")
+                                    sb.append("$nodeName -> ${call.Parameters[0].TypeValue}\n")
                                 } else {
-                                    println("${func.Name}.$nodeName")
+                                    sb.append("${func.Name}.$nodeName\n")
                                 }
                             }
                         }
@@ -34,5 +36,7 @@ internal class TypeScriptAnalyserAppTest {
                 }
             }
         }
+
+        println(sb)
     }
 }

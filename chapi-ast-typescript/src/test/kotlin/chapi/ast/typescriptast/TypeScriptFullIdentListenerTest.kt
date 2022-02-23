@@ -459,7 +459,28 @@ export function queryModule() {
         assertEquals(3, calls.size)
         assertEquals("axios", calls[0].FunctionName);
         assertEquals("axios->then", calls[1].FunctionName);
+    }
 
-        println(Json.encodeToString(calls))
+    @Test
+    internal fun shouldIdentifyLocalVars() {
+        val code = """
+const systemInfoApi = "/system-info";
+
+export function querySystemInfo() {
+  return axios<SystemInfo[]>({
+    baseURL,
+    url: systemInfoApi,
+    method: "GET",
+  });
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        val calls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+
+        assertEquals(1, calls.size)
+        assertEquals(1, codeFile.Fields.size);
+        assertEquals("systemInfoApi", codeFile.Fields[0].TypeKey);
+        assertEquals("\"/system-info\"", codeFile.Fields[0].TypeValue);
     }
 }

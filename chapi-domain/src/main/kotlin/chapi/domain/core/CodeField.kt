@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 open class CodeField(
     var TypeType: String = "",
     var TypeValue: String = "",
-    var Modifiers: Array<String> = arrayOf<String>()
-) {
-
-}
+    var TypeKey: String = "",
+    var Modifiers: Array<String> = arrayOf()
+)
