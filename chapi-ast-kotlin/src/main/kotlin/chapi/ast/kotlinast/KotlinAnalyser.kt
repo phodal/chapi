@@ -11,6 +11,7 @@ open class KotlinAnalyser {
     open fun analysis(code: String, fileName: String, type: String = "file"): CodeContainer {
         val listener = KotlinFullIdentListener(fileName)
 
+        // TODO .kt=file .kts=script
         val isKotlinScript = type == "script"
         if (isKotlinScript) {
             val context = this.parse(code).script()
