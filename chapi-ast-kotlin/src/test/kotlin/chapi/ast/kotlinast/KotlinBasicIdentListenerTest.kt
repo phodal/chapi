@@ -8,7 +8,7 @@ internal class KotlinBasicIdentListenerTest {
         KotlinAnalyser().analysis(code, fileName, AnalysisMode.Basic)
 
     @Test
-    internal fun shouldIdentifyKtFile() {
+    internal fun `should identify kt file`() {
         val code = """
 // this is a kotlin file            
 """
@@ -18,7 +18,17 @@ internal class KotlinBasicIdentListenerTest {
     }
 
     @Test
-    internal fun shouldIdentifyPackage() {
+    internal fun `should identify package`() {
+        val code = """
+package chapi.ast.kotlinast
+"""
+
+        val codeContainer = analyse(code)
+        assertEquals(codeContainer.PackageName, "chapi.ast.kotlinast")
+    }
+
+    @Test
+    internal fun `should identify package with useless semicolon`() {
         val code = """
 package chapi.ast.kotlinast;
 """
@@ -28,7 +38,7 @@ package chapi.ast.kotlinast;
     }
 
     @Test
-    internal fun shouldIdentifyKotlinClass() {
+    internal fun `should identify class`() {
         val code = """
 class Person(val name: String) {}
 """
