@@ -58,7 +58,7 @@ subprojects {
                     url.set("https://github.com/modernizing/chapi")
                     licenses {
                         license {
-                            name.set("MIT")
+                            name.set("MPL 2.0")
                             url.set("https://github.com/modernizing/chapi/blob/master/LICENSE")
                         }
                     }
