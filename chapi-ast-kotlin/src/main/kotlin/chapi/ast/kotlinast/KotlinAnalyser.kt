@@ -7,28 +7,31 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class KotlinAnalyser {
-    open fun analysis(code: String, fileName: String, type: String = "file"): CodeContainer {
-        val listener = KotlinFullIdentListener(fileName)
-
-        // TODO .kt=file .kts=script
-        val isKotlinScript = type == "script"
-        if (isKotlinScript) {
-            val context = this.parse(code).script()
-            ParseTreeWalker().walk(listener, context)
-        } else {
-            val context = this.parse(code).kotlinFile()
-            ParseTreeWalker().walk(listener, context)
+class KotlinAnalyser {
+    fun analysis(code: String, fileName: String, type: AnalysisMode = AnalysisMode.Basic): CodeContainer {
+        val listener = when (type) {
+            AnalysisMode.Basic -> KotlinBasicIdentListener(fileName)
+            AnalysisMode.Full -> KotlinFullIdentListener(fileName)
         }
+        val context = when (isKotlinScript(fileName)) {
+            true -> this.parse(code).script()
+            false -> this.parse(code).kotlinFile()
+        }
+
+        ParseTreeWalker().walk(listener, context)
 
         return listener.getNodeInfo()
     }
 
-    open fun parse(str: String): KotlinParser {
-        val fromString = CharStreams.fromString(str)
-        val lexer = KotlinLexer(fromString)
-        val tokenStream = CommonTokenStream(lexer)
-        val parser = KotlinParser(tokenStream)
-        return parser
-    }
+    private fun parse(str: String): KotlinParser =
+        CharStreams.fromString(str)
+            .let(::KotlinLexer)
+            .let(::CommonTokenStream)
+            .let(::KotlinParser)
+
+    private fun isKotlinScript(fileName: String): Boolean = fileName.endsWith(".kts")
+}
+
+enum class AnalysisMode {
+    Basic, Full
 }
