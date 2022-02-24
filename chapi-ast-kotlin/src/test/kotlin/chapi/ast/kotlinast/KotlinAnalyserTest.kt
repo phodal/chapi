@@ -1,33 +1,26 @@
 package chapi.ast.kotlinast
 
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 internal class KotlinAnalyserTest {
     @Test
-    internal fun shouldIdentifyKotlinScript() {
-        val code = """
-fun main() {
-  println("Hello")
-}
-"""
+    fun `should not crash for grammar file in basic identifier mode`() {
+        val fileName = "AllInOneKotlin.kt"
+        val code = readResource(fileName).readText()
+        val codeContainer = KotlinAnalyser().analysis(code, fileName, AnalysisMode.Basic)
 
-        val codeContainer = KotlinAnalyser().analysis(code, "hello.kt")
-        assertEquals(codeContainer.FullName, "hello.kt")
+        kotlin.test.assertEquals(codeContainer.FullName, fileName)
     }
 
     @Test
-    internal fun shouldIdentifyKotlinClass() {
-        val code = """
-class Person(val name: String) {
-    val children: MutableList<Person> = mutableListOf()
-    constructor(name: String, parent: Person) : this(name) {
-        parent.children.add(this)
-    }
-}
-"""
+    fun `should not crash for grammar file in full identifier mode`() {
+        val fileName = "AllInOneKotlin.kt"
+        val code = readResource(fileName).readText()
+        val codeContainer = KotlinAnalyser().analysis(code, fileName, AnalysisMode.Full)
 
-        val codeContainer = KotlinAnalyser().analysis(code, "hello.kt")
-        assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
+        kotlin.test.assertEquals(codeContainer.FullName, fileName)
     }
+
+    @Suppress("SameParameterValue")
+    private fun readResource(fileName: String) = this::class.java.getResource("/grammar/$fileName")!!
 }
