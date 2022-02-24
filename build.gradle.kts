@@ -103,6 +103,11 @@ subprojects {
     signing {
         sign(publishing.publications["mavenJava"])
     }
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
 }
 
 val jacocoReports by configurations.creating {
@@ -130,10 +135,6 @@ dependencies {
     subprojects.forEach {
         archives(it)
     }
-}
-
-configure(subprojects) {
-    apply("${rootDir}/gradle/chapi-module.gradle")
 }
 
 // refs: https://github.com/ben-manes/caffeine/blob/v2.6.2/build.gradle#L133
