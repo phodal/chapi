@@ -46,4 +46,19 @@ class Person(val name: String) {}
         val codeContainer = analyse(code)
         assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
     }
+
+    @Test
+    internal fun `should identify class with imported interface`() {
+        val code = """
+package chapi.ast.kotlinast
+
+import hello.Human;
+     
+class Person(val name: String) : Human {}
+"""
+
+        val codeContainer = analyse(code)
+        assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
+        assertEquals(codeContainer.DataStructures[0].Implements[0], "Human")
+    }
 }

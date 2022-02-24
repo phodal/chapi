@@ -38,6 +38,10 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
         currentNode.Type = DataStructType.CLASS
         currentNode.Package = codeContainer.PackageName
         currentNode.NodeName = ctx.simpleIdentifier().Identifier().text
+
+        ctx.delegationSpecifiers()?.let {
+            currentNode.Implements = arrayOf(it.text)
+        }
     }
 
     override fun exitClassDeclaration(ctx: KotlinParser.ClassDeclarationContext?) {
