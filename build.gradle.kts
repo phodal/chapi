@@ -100,9 +100,9 @@ subprojects {
         }
     }
 
-//    signing {
-//        sign(publishing.publications["mavenJava"])
-//    }
+    signing {
+        sign(publishing.publications["mavenJava"])
+    }
 }
 
 val jacocoReports by configurations.creating {
