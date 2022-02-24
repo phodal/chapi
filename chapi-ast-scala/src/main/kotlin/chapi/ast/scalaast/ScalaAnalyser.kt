@@ -13,16 +13,12 @@ open class ScalaAnalyser() {
         val listener = ScalaFullIdentListener(fileName = fileName)
 
         ParseTreeWalker().walk(listener, context)
-
-        val codeFile = listener.getNodeInfo()
-        return codeFile
+        return listener.getNodeInfo()
     }
 
-    private fun parse(str: String): ScalaParser {
-        val fromString = CharStreams.fromString(str)
-        val lexer = ScalaLexer(fromString)
-        val tokenStream = CommonTokenStream(lexer)
-        val parser = ScalaParser(tokenStream)
-        return parser
-    }
+    private fun parse(str: String): ScalaParser =
+        CharStreams.fromString(str)
+            .let(::ScalaLexer)
+            .let(::CommonTokenStream)
+            .let(::ScalaParser)
 }

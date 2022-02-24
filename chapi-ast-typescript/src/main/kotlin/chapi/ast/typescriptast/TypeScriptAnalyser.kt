@@ -17,10 +17,9 @@ open class TypeScriptAnalyser {
         return listener.getNodeInfo()
     }
 
-    private fun parse(str: String): TypeScriptParser {
-        val fromString = CharStreams.fromString(str)
-        val lexer = TypeScriptLexer(fromString)
-        val tokenStream = CommonTokenStream(lexer)
-        return TypeScriptParser(tokenStream)
-    }
+    private fun parse(str: String): TypeScriptParser =
+        CharStreams.fromString(str)
+            .let(::TypeScriptLexer)
+            .let(::CommonTokenStream)
+            .let(::TypeScriptParser)
 }
