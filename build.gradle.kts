@@ -156,7 +156,7 @@ tasks.register("jacocoRootReports", JacocoReport::class) {
 
     executionData(files(jacocoMerge))
     additionalClassDirs(files(subprojects.flatMap { project ->
-        listOf("java", "kotlin")
+        listOf("kotlin")
             .map {
                 project.buildDir.path + "/classes/$it/main"
             }
@@ -167,7 +167,7 @@ tasks.register("jacocoRootReports", JacocoReport::class) {
             }
     }))
     additionalSourceDirs(files(subprojects.flatMap { project ->
-        listOf("java", "kotlin")
+        listOf("kotlin")
             .map {
                 project.file("src/main/$it").absolutePath
             }
