@@ -122,24 +122,20 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
     private fun KotlinParser.ModifiersContext?.getAnnotations(): List<CodeAnnotation> =
         this?.annotation()?.map(::buildAnnotation) ?: emptyList()
 
-    private fun buildAnnotation(it: KotlinParser.AnnotationContext): CodeAnnotation =
-        CodeAnnotation(
-            Name = it.singleAnnotation()
-                .unescapedAnnotation()
-                .constructorInvocation()
-¡                .userType()
-                .simpleUserType().first()
-                .simpleIdentifier().Identifier().text,
-            KeyValues = it.singleAnnotation()
-                .unescapedAnnotation()
-                .constructorInvocation()
-                .valueArguments().valueArgument().map {
-                    AnnotationKeyValue(
-                        Key = it.simpleIdentifier().text,
-                        Value = it.expression().text,
-                    )
-                }.toTypedArray()
+    private fun buildAnnotation(it: KotlinParser.AnnotationContext): CodeAnnotation {
+        fun buildAnnotationKeyValue(argument: KotlinParser.ValueArgumentContext) =
+            AnnotationKeyValue(Key = argument.simpleIdentifier().text, Value = argument.expression().text)
+
+        return CodeAnnotation(
+            Name = it.singleAnnotation().unescapedAnnotation().constructorInvocation()
+                ?.run { userType().simpleUserType().first().simpleIdentifier().Identifier().text }
+                ?: UNKNOWN_PLACEHOLDER,
+            KeyValues = it.singleAnnotation().unescapedAnnotation().constructorInvocation()
+                ?.run { valueArguments().valueArgument().map(::buildAnnotationKeyValue) }
+                ?.toTypedArray()
+                ?: emptyArray()
         )
+    }
 
     private fun ParserRuleContext.getPosition(): CodePosition =
         CodePosition(
