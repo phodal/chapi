@@ -483,4 +483,29 @@ export function querySystemInfo() {
         assertEquals("systemInfoApi", codeFile.Fields[0].TypeKey);
         assertEquals("\"/system-info\"", codeFile.Fields[0].TypeValue);
     }
+
+    @Test
+    internal fun shouldIdentifyUmiRequest() {
+        val code = """
+import request from 'umi-request';
+
+export function demo() {
+  return request
+    .get('/api/v1/xxx?id=1')
+    .then(function(response) {
+      console.log(response);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+        val calls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+
+        println(Json.encodeToString(calls))
+        assertEquals(2, calls.size)
+//        assertEquals("request", calls[0].FunctionName);
+    }
 }
