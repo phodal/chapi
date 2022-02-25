@@ -3,10 +3,10 @@ package chapi.ast.kotlinast
 import chapi.domain.core.CodeContainer
 
 /**
- * full identifier listener, with more identifiers of the class
- * - should include all functions in @link{chapi.ast.kotlinast.BasicIdentListener}
- * - functional features?
- * - coroutine?
+ * listen to full identifier with complex type and sceneries, such as:
+ * - lambda expression
+ * - call relationship
+ * - coroutine
  */
 class KotlinFullIdentListener(fileName: String) : KotlinAstListener() {
     /** inner storage */

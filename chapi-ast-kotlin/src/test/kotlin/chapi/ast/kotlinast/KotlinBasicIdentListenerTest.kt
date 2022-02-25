@@ -76,11 +76,65 @@ class Person(val name: String) : Human {}
 
         val codeContainer = analyse(code)
         assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
-        assertEquals(codeContainer.DataStructures[0].Implements[0], "Human")
+        assertEquals(codeContainer.DataStructures[0].Implements[0], "hello.Human")
     }
 
-    // TODO identify method
-    // TODO identify method with parameter and return type
-    // TODO identify fields
-    // TODO identify imports
+    @Test
+    internal fun `should identify method`() {
+        val code = """
+package chapi.ast.kotlinast
+
+import hello.Human
+     
+class Person(val name: String) : Human {
+    fun sayHello() {
+        println("Hello")
+    }
+}
+"""
+
+        val codeContainer = analyse(code)
+        codeContainer.DataStructures[0].Functions[1].run {
+            assertEquals(IsConstructor, false)
+            assertEquals(Name, "sayHello")
+            assertEquals(ReturnType, "kotlin.Unit")
+        }
+    }
+
+    @Test
+    internal fun `should identify method with parameters and return type`() {
+        val code = """
+package chapi.ast.kotlinast
+
+import hello.Human
+import hello.things.Food
+import hello.things.Mood
+     
+class Person(val name: String) : Human {
+    fun eat(food: Food): Mood {
+        if (food == Food.Pizza) {
+            return Mood.Happy
+        }
+        return Mood.Sad
+    }
+    
+    fun play(platform: String, game: String): Boolean {
+        if (platform == "Epic" && game == "Fortnite") {
+            return true
+        }
+        return false
+    } 
+}
+"""
+
+        val codeContainer = analyse(code)
+        codeContainer.DataStructures[0].Functions[1].run {
+            assertEquals(Name, "eat")
+            assertEquals(ReturnType, "hello.things.Mood")
+        }
+        codeContainer.DataStructures[0].Functions[2].run {
+            assertEquals(Name, "play")
+            assertEquals(ReturnType, "kotlin.Boolean")
+        }
+    }
 }
