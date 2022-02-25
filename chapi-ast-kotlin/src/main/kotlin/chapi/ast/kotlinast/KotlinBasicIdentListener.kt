@@ -82,7 +82,7 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
 
     override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext) {
         currentFunction = CodeFunction(
-            Name = ctx.simpleIdentifier().Identifier().text,
+            Name = ctx.simpleIdentifier()?.Identifier()?.text ?: UNKNOWN_PLACEHOLDER,
             ReturnType = getTypeFullName(ctx.type()?.typeReference()?.text ?: UNIT_TYPE),
             Override = false,
             Position = ctx.getPosition(),
@@ -106,6 +106,7 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
         imports.firstOrNull { it.AsName == name }?.Source ?: "kotlin.$name"
 
     companion object {
+        const val UNKNOWN_PLACEHOLDER = "UNKNOWN"
         const val PRIMARY_CONSTRUCTOR_NAME = "PrimaryConstructor"
         const val UNIT_TYPE = "Unit"
     }
