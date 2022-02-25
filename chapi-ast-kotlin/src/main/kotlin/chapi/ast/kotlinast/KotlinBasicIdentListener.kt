@@ -66,6 +66,7 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
             Override = false,
             Position = ctx.getPosition(),
             IsConstructor = true,
+            Package = codeContainer.PackageName
         )
     }
 
@@ -87,6 +88,7 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
             Override = false,
             Position = ctx.getPosition(),
             IsConstructor = false,
+            Package = codeContainer.PackageName
         )
     }
 
