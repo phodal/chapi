@@ -40,11 +40,28 @@ package chapi.ast.kotlinast;
     @Test
     internal fun `should identify class`() {
         val code = """
+class Person {}
+"""
+
+        val codeContainer = analyse(code)
+        assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
+        assertEquals(codeContainer.DataStructures[0].Functions.size, 0)
+    }
+
+    @Test
+    internal fun `should identify class with constructor`() {
+        val code = """
+package chapi.ast.kotlinast
+
 class Person(val name: String) {}
 """
 
         val codeContainer = analyse(code)
         assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
+        assertEquals(codeContainer.DataStructures[0].Functions.size, 1)
+        assertEquals(codeContainer.DataStructures[0].Functions[0].Name, "PrimaryConstructor")
+        assertEquals(codeContainer.DataStructures[0].Functions[0].IsConstructor, true)
+        assertEquals(codeContainer.DataStructures[0].Functions[0].ReturnType, "chapi.ast.kotlinast.Person")
     }
 
     @Test
@@ -61,4 +78,9 @@ class Person(val name: String) : Human {}
         assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
         assertEquals(codeContainer.DataStructures[0].Implements[0], "Human")
     }
+
+    // TODO identify method
+    // TODO identify method with parameter and return type
+    // TODO identify fields
+    // TODO identify imports
 }
