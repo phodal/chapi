@@ -93,7 +93,6 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
 
     override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext) {
         val parameters = ctx.functionValueParameters().functionValueParameter()
-            .map(KotlinParser.FunctionValueParameterContext::parameter)
             .map(::buildProperty)
         val annotations = ctx.modifiers().getAnnotations()
 
@@ -109,11 +108,15 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
         )
     }
 
-    private fun buildProperty(it: KotlinParser.ClassParameterContext) =
+    private fun buildProperty(it: KotlinParser.ClassParameterContext): CodeProperty =
         CodeProperty(TypeValue = it.simpleIdentifier().text, TypeType = getTypeFullName(it.type().text))
 
-    private fun buildProperty(it: KotlinParser.ParameterContext) =
-        CodeProperty(TypeValue = it.simpleIdentifier().text, TypeType = getTypeFullName(it.type().text))
+    private fun buildProperty(it: KotlinParser.FunctionValueParameterContext): CodeProperty =
+        CodeProperty(
+            TypeValue = it.parameter().simpleIdentifier().text,
+            TypeType = getTypeFullName(it.parameter().type().text),
+            Annotations = it.modifiers().getAnnotations().toTypedArray()
+        )
 
     override fun exitFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext?) {
         currentNode.Functions += currentFunction
