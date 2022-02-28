@@ -21,10 +21,13 @@ import org.antlr.v4.runtime.ParserRuleContext
  *
  * for kotlin featured
  * - multiple classes in one file
+ * |    TODO multiple data structures but share the same package and imports
  * - companion object
+ * |    TODO inner structure
  * - individual variable/function
+ * |    TODO put individual variable/function into a class <XxxxxKt.class>
  */
-class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
+open class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
     /** inner storage */
 
     private val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -59,6 +62,7 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
             FilePath = codeContainer.FullName
             Implements = implements.toTypedArray()
             Annotations = annotations.toTypedArray()
+            Imports = imports.toTypedArray()
         }
     }
 

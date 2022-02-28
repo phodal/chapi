@@ -1,6 +1,7 @@
 package chapi.app.analyser.filter
 
 import chapi.app.analyser.config.ChapiConfig
+import chapi.app.analyser.config.Language
 
 open class FileFilter {
     companion object {
@@ -24,6 +25,9 @@ open class FileFilter {
                 }
                 "scala" -> {
                     path.endsWith(".scala")
+                }
+                Language.KOTLIN -> {
+                    path.endsWith(".kt") || path.endsWith(".kts")
                 }
                 else -> {
                     path.endsWith(".java")
