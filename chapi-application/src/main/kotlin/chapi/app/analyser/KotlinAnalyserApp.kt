@@ -6,17 +6,19 @@ import chapi.app.analyser.support.AbstractFile
 import chapi.app.analyser.support.BaseAnalyser
 import chapi.ast.kotlinast.AnalysisMode
 import chapi.ast.kotlinast.KotlinAnalyser
-import chapi.domain.core.CodeContainer
 import chapi.domain.core.CodeDataStruct
 
 class KotlinAnalyserApp(config: ChapiConfig = ChapiConfig(language = Language.KOTLIN)) : BaseAnalyser(config) {
-    override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> {
-        val analyser = KotlinAnalyser()
+    private val analyser: KotlinAnalyser by lazy { KotlinAnalyser() }
 
-        return files
-            .map { analyser.analysis(readFileAsString(it.absolutePath), it.fileName, AnalysisMode.Full) }
-            .map(CodeContainer::DataStructures)
-            .flatMap(Array<CodeDataStruct>::toList)
-            .toTypedArray()
+    override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> =
+        files.flatMap(::analysisByFile).toTypedArray()
+
+    private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
+        fun postProcess(it: CodeDataStruct): CodeDataStruct = it.apply { it.FilePath = file.absolutePath }
+
+        val codeContainer = analyser.analysis(readFileAsString(file.absolutePath), file.fileName, AnalysisMode.Full)
+
+        return codeContainer.DataStructures.map(::postProcess)
     }
 }
