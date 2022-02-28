@@ -5,6 +5,8 @@ import chapi.ast.antlr.TypeScriptParser.IdentifierExpressionContext
 import chapi.ast.antlr.TypeScriptParser.ParenthesizedExpressionContext
 import chapi.domain.core.*
 import chapi.infra.Stack
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
     private var hasAnnotation: Boolean = false;
@@ -359,10 +361,18 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
                 if (argText.startsWith("(")) {
                     // axios("/demo")
-                    currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, parseArguments(argument))
+                    val args = parseArguments(argument)
+                    currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, args)
                 } else {
-                    // axios.get() or _.orderBy()
                     currentExprIdent = argText
+
+                    // todo: add other case for call chain in arrow function
+                    if(argText.contains(").")) {
+                        val args = parseArguments(argument)
+                        println("argText with )."  + Json.encodeToString(args))
+                    }
+
+                    // axios.get() or _.orderBy()
                     currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, arrayOf())
                 }
             }
@@ -371,7 +381,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, arrayOf(parameter))
             }
             else -> {
-                println("todo: need support type: ${ctx!!::class.java.simpleName}")
+                println("todo: need support type: ${ctx::class.java.simpleName}")
             }
         }
     }
@@ -391,8 +401,18 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         "ParenthesizedExpressionContext" -> {
                             params += parseParenthesizedExpression(memberDot.singleExpression())
                         }
+                        "ArgumentsExpressionContext" -> {
+                            // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response);}).catch();
+                            val args = memberDot.singleExpression() as TypeScriptParser.ArgumentsExpressionContext
+                            val parseArguments = parseArguments(args)
+                            println(Json.encodeToString(parseArguments))
+                        }
+                        "IdentifierExpressionContext" -> {
+                            val ident = memberDot.singleExpression() as IdentifierExpressionContext
+                            currentExprIdent = ident.identifierName().text
+                        }
                         else -> {
-                            println("memberDot: -> $subName")
+                            println("MemberDotExpressionContext: -> $subName")
                         }
                     }
 
@@ -402,11 +422,19 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     val prop = parseParenthesizedExpression(it as ParenthesizedExpressionContext)
                     params += prop
                 }
+                "ArgumentsContext" -> {
+//                    val args = it as TypeScriptParser.ArgumentsContext
+//                    for (argumentContext in args.argumentList().argument()) {
+//                        //
+//                    }
+                }
                 else -> {
                     println("singleExpression -> ArgumentsExpressionContext -> $child_name")
                 }
             }
         }
+
+
         return params
     }
 

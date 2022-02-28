@@ -457,7 +457,7 @@ export function queryModule() {
         val calls = codeFile.DataStructures[0].Functions[0].FunctionCalls
 
         assertEquals(3, calls.size)
-        assertEquals("axios", calls[0].FunctionName);
+        assertEquals("axios->then", calls[0].FunctionName);
         assertEquals("axios->then", calls[1].FunctionName);
     }
 
@@ -506,6 +506,6 @@ export function demo() {
 
         println(Json.encodeToString(calls))
         assertEquals(2, calls.size)
-//        assertEquals("request", calls[0].FunctionName);
+        assertEquals("request->get->then->catch", calls[0].FunctionName);
     }
 }
