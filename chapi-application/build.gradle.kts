@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":chapi-ast-python"))
     implementation(project(":chapi-ast-scala"))
     implementation(project(":chapi-ast-c"))
+    implementation(project(":chapi-ast-kotlin"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 

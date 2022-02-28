@@ -24,7 +24,7 @@ import org.antlr.v4.runtime.ParserRuleContext
  * - companion object
  * - individual variable/function
  */
-class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
+open class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
     /** inner storage */
 
     private val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -59,6 +59,7 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
             FilePath = codeContainer.FullName
             Implements = implements.toTypedArray()
             Annotations = annotations.toTypedArray()
+            Imports = imports.toTypedArray()
         }
     }
 
