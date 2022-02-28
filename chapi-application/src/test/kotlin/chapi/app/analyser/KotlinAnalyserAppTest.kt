@@ -25,7 +25,7 @@ internal class KotlinAnalyserAppTest {
     inner class DryRun {
         private val relativePath = Paths.get("../../archguard-backend/src/main/kotlin")
 
-        @Test
+        // @Test
         fun `should parse all the files in ArchGuard`() {
             val config = ChapiConfig(language = Language.KOTLIN)
             val path = relativePath.resolve("com/thoughtworks/archguard/metrics/controller").toFile()
