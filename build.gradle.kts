@@ -10,7 +10,6 @@ plugins {
     signing
 
     java
-    jacoco
     id("jacoco-report-aggregation")
     id("com.github.kt3k.coveralls") version "2.9.0"
 }
@@ -109,8 +108,6 @@ subprojects {
         withSourcesJar()
     }
 
-
-
     tasks.test {
         finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
     }
@@ -126,4 +123,40 @@ subprojects {
             html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
         }
     }
+
+    tasks.withType<JacocoReport> {
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.map {
+                fileTree(it).apply {
+                    exclude("chapi/ast/antlr")
+                }
+            }))
+        }
+    }
+}
+
+dependencies {
+    jacocoAggregation(project(":chapi-domain"))
+    jacocoAggregation(project(":chapi-application"))
+    jacocoAggregation(project(":chapi-ast-java"))
+    jacocoAggregation(project(":chapi-ast-typescript"))
+    jacocoAggregation(project(":chapi-ast-go"))
+    jacocoAggregation(project(":chapi-ast-python"))
+    jacocoAggregation(project(":chapi-ast-c"))
+    jacocoAggregation(project(":chapi-ast-csharp"))
+    jacocoAggregation(project(":chapi-ast-kotlin"))
+    jacocoAggregation(project(":chapi-ast-scala"))
+    jacocoAggregation(project(":chapi-ast-cpp"))
+}
+
+reporting {
+    reports {
+        val jacocoRootReport by creating(JacocoCoverageReport::class) {
+            testType.set(TestSuiteType.UNIT_TEST)
+        }
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.named<JacocoReport>("jacocoRootReport"))
 }
