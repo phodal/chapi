@@ -1,5 +1,6 @@
 package chapi.ast.kotlinast
 
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -148,10 +149,9 @@ class Person(val name: String) : Human {
         }
     }
 
-    // TODO feat: support annotations on parameter
-    @Test
-    fun `should identify annotations`() {
-        val code = """
+    @Nested
+    inner class Annotations {
+        private val code = """
 package chapi.ast.kotlinast
 
 import hello.Human
@@ -180,21 +180,54 @@ class Person(val name: String) : Human {
     }
 }
 """
-        val codeContainer = analyse(code)
-        codeContainer.DataStructures[0].Annotations[0].run {
-            assertEquals(Name, "Entity")
-            assertEquals(KeyValues[0].Key, "scope")
-            assertEquals(KeyValues[0].Value, "Entity.CLASS")
+
+        @Test
+        fun `should identify annotations of class`() {
+            val codeContainer = analyse(code)
+            codeContainer.DataStructures[0].Annotations[0].run {
+                assertEquals(Name, "Entity")
+                assertEquals(KeyValues[0].Key, "scope")
+                assertEquals(KeyValues[0].Value, "Entity.CLASS")
+            }
         }
-        codeContainer.DataStructures[0].Functions[1].Annotations[0].run {
-            assertEquals(Name, "Method")
-            assertEquals(KeyValues[0].Key, "scope")
-            assertEquals(KeyValues[0].Value, "Method.FIRST")
+
+        @Test
+        fun `should identify annotations of functions`() {
+            val codeContainer = analyse(code)
+            codeContainer.DataStructures[0].Functions[1].Annotations[0].run {
+                assertEquals(Name, "Method")
+                assertEquals(KeyValues[0].Key, "scope")
+                assertEquals(KeyValues[0].Value, "Method.FIRST")
+            }
+            codeContainer.DataStructures[0].Functions[2].Annotations[0].run {
+                assertEquals(Name, "Method")
+                assertEquals(KeyValues[0].Key, "scope")
+                assertEquals(KeyValues[0].Value, "Method.SECOND")
+            }
         }
-        codeContainer.DataStructures[0].Functions[2].Annotations[0].run {
-            assertEquals(Name, "Method")
-            assertEquals(KeyValues[0].Key, "scope")
-            assertEquals(KeyValues[0].Value, "Method.SECOND")
+
+        @Test
+        fun `should identify annotations of function parameters`() {
+            val codeContainer = analyse(code)
+            codeContainer.DataStructures[0].Functions[1].run {
+                Parameters[0].Annotations[0].run {
+                    assertEquals(Name, "Parameter")
+                    assertEquals(KeyValues[0].Key, "name")
+                    assertEquals(KeyValues[0].Value, "\"food\"")
+                }
+            }
+            codeContainer.DataStructures[0].Functions[2].run {
+                Parameters[0].Annotations[0].run {
+                    assertEquals(Name, "Parameter")
+                    assertEquals(KeyValues[0].Key, "required")
+                    assertEquals(KeyValues[0].Value, "true")
+                }
+                Parameters[1].Annotations[0].run {
+                    assertEquals(Name, "Parameter")
+                    assertEquals(KeyValues[0].Key, "default")
+                    assertEquals(KeyValues[0].Value, "\"Sekiro\"")
+                }
+            }
         }
     }
 }

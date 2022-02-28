@@ -37,6 +37,7 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
 
     override fun getNodeInfo(): CodeContainer = codeContainer.apply {
         DataStructures = classes.toTypedArray()
+        Imports = imports.toTypedArray()
     }
 
     /** override hooks */
@@ -51,12 +52,14 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
         val implements = ctx.delegationSpecifiers()?.text?.let(::getTypeFullName)?.let(::listOf) ?: emptyList()
         val annotations = ctx.modifiers().getAnnotations()
 
-        currentNode = CodeDataStruct()
-        currentNode.Type = DataStructType.CLASS
-        currentNode.Package = codeContainer.PackageName
-        currentNode.NodeName = ctx.simpleIdentifier().Identifier().text
-        currentNode.Implements = implements.toTypedArray()
-        currentNode.Annotations = annotations.toTypedArray()
+        currentNode = CodeDataStruct().apply {
+            NodeName = ctx.simpleIdentifier().Identifier().text
+            Type = DataStructType.CLASS
+            Package = codeContainer.PackageName
+            FilePath = codeContainer.FullName
+            Implements = implements.toTypedArray()
+            Annotations = annotations.toTypedArray()
+        }
     }
 
     override fun exitClassDeclaration(ctx: KotlinParser.ClassDeclarationContext) {
@@ -93,7 +96,6 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
 
     override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext) {
         val parameters = ctx.functionValueParameters().functionValueParameter()
-            .map(KotlinParser.FunctionValueParameterContext::parameter)
             .map(::buildProperty)
         val annotations = ctx.modifiers().getAnnotations()
 
@@ -109,11 +111,15 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
         )
     }
 
-    private fun buildProperty(it: KotlinParser.ClassParameterContext) =
+    private fun buildProperty(it: KotlinParser.ClassParameterContext): CodeProperty =
         CodeProperty(TypeValue = it.simpleIdentifier().text, TypeType = getTypeFullName(it.type().text))
 
-    private fun buildProperty(it: KotlinParser.ParameterContext) =
-        CodeProperty(TypeValue = it.simpleIdentifier().text, TypeType = getTypeFullName(it.type().text))
+    private fun buildProperty(it: KotlinParser.FunctionValueParameterContext): CodeProperty =
+        CodeProperty(
+            TypeValue = it.parameter().simpleIdentifier().text,
+            TypeType = getTypeFullName(it.parameter().type().text),
+            Annotations = it.modifiers().getAnnotations().toTypedArray()
+        )
 
     override fun exitFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext?) {
         currentNode.Functions += currentFunction
@@ -124,13 +130,15 @@ class KotlinBasicIdentListener(fileName: String) : KotlinAstListener() {
 
     private fun buildAnnotation(it: KotlinParser.AnnotationContext): CodeAnnotation {
         fun buildAnnotationKeyValue(argument: KotlinParser.ValueArgumentContext) =
-            AnnotationKeyValue(Key = argument.simpleIdentifier().text, Value = argument.expression().text)
+            AnnotationKeyValue(Key = argument.simpleIdentifier()?.text ?: "value", Value = argument.expression().text)
 
         return CodeAnnotation(
-            Name = it.singleAnnotation().unescapedAnnotation().constructorInvocation()
-                ?.run { userType().simpleUserType().first().simpleIdentifier().Identifier().text }
+            Name = it.singleAnnotation().unescapedAnnotation()
+                .run { constructorInvocation()?.userType() ?: userType() }
+                ?.run { simpleUserType().first().simpleIdentifier().Identifier().text }
                 ?: UNKNOWN_PLACEHOLDER,
-            KeyValues = it.singleAnnotation().unescapedAnnotation().constructorInvocation()
+            KeyValues = it.singleAnnotation().unescapedAnnotation()
+                .constructorInvocation()
                 ?.run { valueArguments().valueArgument().map(::buildAnnotationKeyValue) }
                 ?.toTypedArray()
                 ?: emptyArray()
