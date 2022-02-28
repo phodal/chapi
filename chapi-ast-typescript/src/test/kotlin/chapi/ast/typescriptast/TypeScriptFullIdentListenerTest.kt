@@ -502,6 +502,8 @@ export function demo() {
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
+
+        assertEquals(1, codeFile.DataStructures[0].Functions.size)
         val calls = codeFile.DataStructures[0].Functions[0].FunctionCalls
 
         println(Json.encodeToString(calls))

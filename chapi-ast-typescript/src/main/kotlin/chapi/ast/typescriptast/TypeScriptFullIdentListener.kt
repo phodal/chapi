@@ -513,14 +513,18 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 if (ctx.typeAnnotation() != null) {
                     currentFunc.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
                 }
+
+                currentFunc.Position = this.buildPosition(ctx)
+                defaultNode.Functions += currentFunc
+            }
+            "IdentifierExpressionContext" -> {
+                currentFunc.Position = this.buildPosition(ctx)
+                defaultNode.Functions += currentFunc
             }
             else -> {
                 println("enterFunctionExpressionDeclaration -> $parentName, ${statementParent.text} ")
             }
         }
-
-        currentFunc.Position = this.buildPosition(ctx)
-        defaultNode.Functions += currentFunc
     }
 
     override fun exitFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
@@ -716,6 +720,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         for (entry in nodeMap) {
             codeContainer.DataStructures += entry.value
         }
+
         if (defaultNode.Functions.isNotEmpty()) {
             defaultNode.NodeName = "default"
             defaultNode.FilePath = codeContainer.FullName
