@@ -65,7 +65,7 @@ open class JavaFullIdentListener(
 
             innerNode = CodeDataStruct()
 
-            currentType = DataStructType.INNERSTRUCTURES
+            currentType = DataStructType.INNER_STRUCTURES
             innerNode.Type = currentType
 
             buildClassExtension(ctx, innerNode)
@@ -406,7 +406,7 @@ open class JavaFullIdentListener(
     }
 
     private fun updateCodeFunction(codeFunction: CodeFunction) {
-        if (currentType == DataStructType.CREATORCLASS) {
+        if (currentType == DataStructType.CREATOR_CLASS) {
             creatorMethodMap[getMethodMapName(codeFunction)] = codeFunction
         } else {
             currentFunction = codeFunction
@@ -579,7 +579,7 @@ open class JavaFullIdentListener(
         if (!hasEnterClass) {
             val annotation = this.buildAnnotation(ctx)
 
-            if (currentType == DataStructType.CREATORCLASS) {
+            if (currentType == DataStructType.CREATOR_CLASS) {
                 currentNode.Annotations += annotation
             } else {
                 currentNode.Annotations += annotation
@@ -665,7 +665,7 @@ open class JavaFullIdentListener(
             }
 
             val text = ctx.createdName().text
-            currentType = DataStructType.CREATORCLASS
+            currentType = DataStructType.CREATOR_CLASS
             val creatorNode = CodeDataStruct(
                 NodeName = text,
                 Type = currentType,
