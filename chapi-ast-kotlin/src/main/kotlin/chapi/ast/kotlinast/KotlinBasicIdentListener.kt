@@ -64,16 +64,29 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
 
     /** override hooks */
 
-    override fun enterTopLevelObject(ctx: KotlinParser.TopLevelObjectContext) {
-        val propertyDeclaration = ctx.declaration().propertyDeclaration()
-
-        if (propertyDeclaration != null) individualFields.add(buildField(propertyDeclaration))
-    }
-
     override fun enterPackageHeader(ctx: KotlinParser.PackageHeaderContext) {
         if (ctx.childCount == 0) return
 
         codeContainer.PackageName = ctx.identifier().text
+    }
+
+    override fun enterImportList(ctx: KotlinParser.ImportListContext) {
+        fun buildImport(header: KotlinParser.ImportHeaderContext) = header.identifier().run {
+            CodeImport(Source = text, AsName = text.substringAfterLast('.'))
+        }
+
+        ctx.importHeader().map(::buildImport).let(imports::addAll)
+    }
+
+    // TODO go with the tree to avoid duplication route
+    override fun enterTopLevelObject(ctx: KotlinParser.TopLevelObjectContext) {
+        val propertyDeclaration = ctx.declaration().propertyDeclaration()
+        val functionDeclaration = ctx.declaration().functionDeclaration()
+
+        if (propertyDeclaration != null) individualFields.add(buildField(propertyDeclaration))
+        if (functionDeclaration != null) individualFunctions.add(buildFunction(functionDeclaration))
+        // TODO replace enterClassDeclaration
+        // TODO support object declaration
     }
 
     override fun enterClassDeclaration(ctx: KotlinParser.ClassDeclarationContext) {
@@ -122,20 +135,16 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         currentNode.Functions += currentFunction
     }
 
-    override fun enterImportList(ctx: KotlinParser.ImportListContext) {
-        fun buildImport(header: KotlinParser.ImportHeaderContext) = header.identifier().run {
-            CodeImport(Source = text, AsName = text.substringAfterLast('.'))
-        }
-
-        ctx.importHeader().map(::buildImport).let(imports::addAll)
+    override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext) {
+        currentFunction = buildFunction(ctx)
     }
 
-    override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext) {
+    private fun buildFunction(ctx: KotlinParser.FunctionDeclarationContext): CodeFunction {
         val parameters = ctx.functionValueParameters().functionValueParameter()
             .map(::buildProperty)
         val annotations = ctx.modifiers().getAnnotations()
 
-        currentFunction = CodeFunction(
+        return CodeFunction(
             Name = ctx.simpleIdentifier()?.Identifier()?.text ?: UNKNOWN_PLACEHOLDER,
             ReturnType = getTypeFullName(ctx.type()?.typeReference()?.text ?: UNIT_TYPE),
             Override = false,
@@ -148,19 +157,16 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     }
 
     override fun exitFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext?) {
-        if (isEnteredClass.get() == 0) {
-            individualFunctions.add(currentFunction)
-        } else {
+        if (isEnteredClass.get() > 0) {
             currentNode.Functions += currentFunction
         }
     }
 
+    // @see line 100
     override fun enterClassMemberDeclaration(ctx: KotlinParser.ClassMemberDeclarationContext) {
-        val propertyDeclaration = ctx.declaration().propertyDeclaration()
+        val propertyDeclaration = ctx.declaration()?.propertyDeclaration()
 
-        if (propertyDeclaration != null) {
-            currentNode.Fields += propertyDeclaration.let(::buildField)
-        }
+        if (propertyDeclaration != null) currentNode.Fields += propertyDeclaration.let(::buildField)
     }
 
     /** utils */
