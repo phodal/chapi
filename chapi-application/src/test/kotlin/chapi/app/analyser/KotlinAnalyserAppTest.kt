@@ -17,7 +17,7 @@ internal class KotlinAnalyserAppTest {
 
         val nodeInfos = KotlinAnalyserApp(config).analysisNodeByPath(path.absolutePath)
 
-        Assertions.assertEquals(nodeInfos.size, 1)
+        Assertions.assertEquals(nodeInfos.size, 2)
         Assertions.assertEquals(nodeInfos[0].FilePath.endsWith("resources/test/languages/kotlin/Hello.kt"), true)
     }
 

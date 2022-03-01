@@ -1,5 +1,6 @@
 package chapi.ast.kotlinast
 
+import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -38,40 +39,42 @@ package chapi.ast.kotlinast;
         assertEquals(codeContainer.PackageName, "chapi.ast.kotlinast")
     }
 
-    @Test
-    internal fun `should identify class`() {
-        val code = """
+    @Nested
+    inner class Classes {
+        @Test
+        internal fun `should identify class`() {
+            val code = """
 class Person {}
 """
 
-        val codeContainer = analyse(code)
-        assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
-        assertEquals(codeContainer.DataStructures[0].Functions.size, 0)
-    }
+            val codeContainer = analyse(code)
+            assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
+            assertEquals(codeContainer.DataStructures[0].Functions.size, 0)
+        }
 
-    @Test
-    internal fun `should identify class with constructor`() {
-        val code = """
+        @Test
+        internal fun `should identify class with constructor`() {
+            val code = """
 package chapi.ast.kotlinast
 
 class Person(val name: String) {}
 """
 
-        val codeContainer = analyse(code)
-        assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
-        assertEquals(codeContainer.DataStructures[0].Functions.size, 1)
-        codeContainer.DataStructures[0].Functions[0].run {
-            assertEquals(Name, "PrimaryConstructor")
-            assertEquals(IsConstructor, true)
-            assertEquals(ReturnType, "chapi.ast.kotlinast.Person")
-            assertEquals(Parameters[0].TypeValue, "name")
-            assertEquals(Parameters[0].TypeType, "kotlin.String")
+            val codeContainer = analyse(code)
+            assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
+            assertEquals(codeContainer.DataStructures[0].Functions.size, 1)
+            codeContainer.DataStructures[0].Functions[0].run {
+                assertEquals(Name, "PrimaryConstructor")
+                assertEquals(IsConstructor, true)
+                assertEquals(ReturnType, "chapi.ast.kotlinast.Person")
+                assertEquals(Parameters[0].TypeValue, "name")
+                assertEquals(Parameters[0].TypeType, "kotlin.String")
+            }
         }
-    }
 
-    @Test
-    internal fun `should identify class with imported interface`() {
-        val code = """
+        @Test
+        internal fun `should identify class with imported interface`() {
+            val code = """
 package chapi.ast.kotlinast
 
 import hello.Human;
@@ -79,14 +82,80 @@ import hello.Human;
 class Person(val name: String) : Human {}
 """
 
-        val codeContainer = analyse(code)
-        assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
-        assertEquals(codeContainer.DataStructures[0].Implements[0], "hello.Human")
+            val codeContainer = analyse(code)
+            assertEquals(codeContainer.DataStructures[0].NodeName, "Person")
+            assertEquals(codeContainer.DataStructures[0].Implements[0], "hello.Human")
+        }
+
+        @Test
+        internal fun `should identify multiple classes`() {
+            val code = """
+package chapi.ast.kotlinast
+
+class Tom {}
+
+class Jerry {}
+"""
+
+            val codeContainer = analyse(code)
+            assertEquals(codeContainer.DataStructures[0].NodeName, "Tom")
+            assertEquals(codeContainer.DataStructures[0].Package, "chapi.ast.kotlinast")
+            assertEquals(codeContainer.DataStructures[1].NodeName, "Jerry")
+            assertEquals(codeContainer.DataStructures[1].Package, "chapi.ast.kotlinast")
+        }
+
+        @Test
+        internal fun `should identify class with fields`() {
+            val code = """
+package chapi.ast.kotlinast
+
+import hello.Human
+     
+class Person(val name: String, val age: Int = 0) : Human {
+    var height: Int = 0
+    private var weight: Int = 0
+    
+    fun setWeight(weight: Int) {
+        this.weight = weight
+    }
+}
+"""
+
+            val codeContainer = analyse(code)
+            assertEquals(codeContainer.DataStructures[0].Fields.size, 4)
+            codeContainer.DataStructures[0].Fields[0].run {
+                assertEquals(TypeType, "kotlin.String")
+                assertEquals(TypeValue, "")
+                assertEquals(TypeKey, "name")
+                assertEquals(Modifiers[0], "val")
+            }
+            codeContainer.DataStructures[0].Fields[1].run {
+                assertEquals(TypeType, "kotlin.Int")
+                assertEquals(TypeValue, "0")
+                assertEquals(TypeKey, "age")
+                assertEquals(Modifiers[0], "val")
+            }
+            codeContainer.DataStructures[0].Fields[2].run {
+                assertEquals(TypeType, "kotlin.Int")
+                assertEquals(TypeValue, "0")
+                assertEquals(TypeKey, "height")
+                assertEquals(Modifiers[0], "var")
+            }
+            codeContainer.DataStructures[0].Fields[3].run {
+                assertEquals(TypeType, "kotlin.Int")
+                assertEquals(TypeValue, "0")
+                assertEquals(TypeKey, "weight")
+                assertEquals(Modifiers[0], "private")
+                assertEquals(Modifiers[1], "var")
+            }
+        }
     }
 
-    @Test
-    internal fun `should identify method`() {
-        val code = """
+    @Nested
+    inner class Functions {
+        @Test
+        internal fun `should identify method`() {
+            val code = """
 package chapi.ast.kotlinast
 
 import hello.Human
@@ -98,17 +167,17 @@ class Person(val name: String) : Human {
 }
 """
 
-        val codeContainer = analyse(code)
-        codeContainer.DataStructures[0].Functions[1].run {
-            assertEquals(IsConstructor, false)
-            assertEquals(Name, "sayHello")
-            assertEquals(ReturnType, "kotlin.Unit")
+            val codeContainer = analyse(code)
+            codeContainer.DataStructures[0].Functions[1].run {
+                assertEquals(IsConstructor, false)
+                assertEquals(Name, "sayHello")
+                assertEquals(ReturnType, "kotlin.Unit")
+            }
         }
-    }
 
-    @Test
-    internal fun `should identify method with parameters and return type`() {
-        val code = """
+        @Test
+        internal fun `should identify method with parameters and return type`() {
+            val code = """
 package chapi.ast.kotlinast
 
 import hello.Human
@@ -132,20 +201,51 @@ class Person(val name: String) : Human {
 }
 """
 
-        val codeContainer = analyse(code)
-        codeContainer.DataStructures[0].Functions[1].run {
-            assertEquals(Name, "eat")
-            assertEquals(ReturnType, "hello.things.Mood")
-            assertEquals(Parameters[0].TypeValue, "food")
-            assertEquals(Parameters[0].TypeType, "hello.things.Food")
+            val codeContainer = analyse(code)
+            codeContainer.DataStructures[0].Functions[1].run {
+                assertEquals(Name, "eat")
+                assertEquals(ReturnType, "hello.things.Mood")
+                assertEquals(Parameters[0].TypeValue, "food")
+                assertEquals(Parameters[0].TypeType, "hello.things.Food")
+            }
+            codeContainer.DataStructures[0].Functions[2].run {
+                assertEquals(Name, "play")
+                assertEquals(ReturnType, "kotlin.Boolean")
+                assertEquals(Parameters[0].TypeValue, "platform")
+                assertEquals(Parameters[0].TypeType, "kotlin.String")
+                assertEquals(Parameters[1].TypeValue, "game")
+                assertEquals(Parameters[1].TypeType, "kotlin.String")
+            }
         }
-        codeContainer.DataStructures[0].Functions[2].run {
-            assertEquals(Name, "play")
-            assertEquals(ReturnType, "kotlin.Boolean")
-            assertEquals(Parameters[0].TypeValue, "platform")
-            assertEquals(Parameters[0].TypeType, "kotlin.String")
-            assertEquals(Parameters[1].TypeValue, "game")
-            assertEquals(Parameters[1].TypeType, "kotlin.String")
+    }
+
+    @Test
+    internal fun `should identify individual function and variable in the dedicated class`() {
+        val code = """
+package chapi.ast.kotlinast
+
+const val PI = 3.14
+fun calculateCircleArea(radius: Double): Double {
+    return PI * radius * radius
+} 
+"""
+
+        val codeContainer = analyse(code, "Utils.kt")
+        assertEquals(codeContainer.DataStructures[0].NodeName, "UtilsKt")
+        assertEquals(codeContainer.DataStructures[0].Type, DataStructType.OBJECT)
+
+        codeContainer.DataStructures[0].Functions[0].run {
+            assertEquals(IsConstructor, false)
+            assertEquals(Name, "calculateCircleArea")
+            assertEquals(ReturnType, "kotlin.Double")
+        }
+
+        codeContainer.DataStructures[0].Fields[0].run {
+            assertEquals(TypeType, "<UNKNOWN>")
+            assertEquals(TypeValue, "3.14")
+            assertEquals(TypeKey, "PI")
+            assertEquals(Modifiers[0], "const")
+            assertEquals(Modifiers[1], "val")
         }
     }
 
