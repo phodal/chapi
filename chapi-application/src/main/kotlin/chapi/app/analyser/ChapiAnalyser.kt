@@ -1,6 +1,7 @@
 package chapi.app.analyser
 
 import chapi.app.analyser.config.ChapiConfig
+import chapi.app.analyser.config.Language
 import chapi.app.analyser.support.IAnalyser
 import chapi.domain.core.CodeDataStruct
 
@@ -30,6 +31,9 @@ open class ChapiAnalyser(
             }
             "scala" -> {
                 langAnalyser =  ScalaAnalyserApp(config)
+            }
+            Language.KOTLIN -> {
+                langAnalyser =  KotlinAnalyserApp(config)
             }
             else -> {
                 langAnalyser =  JavaAnalyserApp(config)
