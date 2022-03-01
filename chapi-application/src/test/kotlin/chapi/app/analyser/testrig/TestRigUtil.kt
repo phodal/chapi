@@ -1,4 +1,4 @@
-package chapi.app.analyser
+package chapi.app.analyser.testrig
 
 import org.antlr.v4.gui.TestRig
 
