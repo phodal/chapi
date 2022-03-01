@@ -8,18 +8,15 @@ plugins {
     id("maven-publish")
     publishing
     signing
-//    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 
     java
-    jacoco
+    id("jacoco-report-aggregation")
     id("com.github.kt3k.coveralls") version "2.9.0"
-
-    // todo: erich domain testing & logic
-    id("nl.fabianm.kotlin.plugin.generated") version "1.5.0" // hack for jacoco generate code coverage
 }
 
+
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.7"
 }
 
 allprojects {
@@ -39,6 +36,7 @@ subprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
     apply(plugin = "publishing")
+    apply(plugin = "jacoco")
 
     publishing {
         publications {
@@ -108,82 +106,56 @@ subprojects {
         withJavadocJar()
         withSourcesJar()
     }
-}
 
-val jacocoReports by configurations.creating {
-    isCanBeResolved = true
-    isCanBeConsumed = false
-    attributes {
-        attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage::class, "jacocoReports"))
+    tasks.test {
+        finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+    }
+
+    tasks.jacocoTestReport {
+        dependsOn(tasks.test) // tests are required to run before generating the report
+    }
+
+    tasks.jacocoTestReport {
+        reports {
+            xml.required.set(false)
+            csv.required.set(false)
+            html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+        }
+    }
+
+    tasks.withType<JacocoReport> {
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.map {
+                fileTree(it).apply {
+                    exclude("chapi/ast/antlr")
+                }
+            }))
+        }
     }
 }
 
 dependencies {
-    jacocoReports(project(":chapi-domain"))
-    jacocoReports(project(":chapi-application"))
-
-    jacocoReports(project(":chapi-ast-java"))
-    jacocoReports(project(":chapi-ast-typescript"))
-    jacocoReports(project(":chapi-ast-python"))
-    jacocoReports(project(":chapi-ast-go"))
-    jacocoReports(project(":chapi-ast-kotlin"))
-    jacocoReports(project(":chapi-ast-c"))
-    jacocoReports(project(":chapi-ast-csharp"))
-    jacocoReports(project(":chapi-ast-scala"))
-    jacocoReports(project(":chapi-ast-cpp"))
-
-    subprojects.forEach {
-        archives(it)
-    }
+    jacocoAggregation(project(":chapi-domain"))
+    jacocoAggregation(project(":chapi-application"))
+    jacocoAggregation(project(":chapi-ast-java"))
+    jacocoAggregation(project(":chapi-ast-typescript"))
+    jacocoAggregation(project(":chapi-ast-go"))
+    jacocoAggregation(project(":chapi-ast-python"))
+    jacocoAggregation(project(":chapi-ast-c"))
+    jacocoAggregation(project(":chapi-ast-csharp"))
+    jacocoAggregation(project(":chapi-ast-kotlin"))
+    jacocoAggregation(project(":chapi-ast-scala"))
+    jacocoAggregation(project(":chapi-ast-cpp"))
 }
 
-// refs: https://github.com/ben-manes/caffeine/blob/v2.6.2/build.gradle#L133
-val jacocoMerge by tasks.registering(JacocoMerge::class) {
-    subprojects.forEach { subproject ->
-        executionData(subproject.tasks.withType(Test::class.java))
-    }
-    doFirst {
-        executionData = files(executionData.filter {
-            it.exists()
-        })
-    }
-}
-
-// refs: https://github.com/stankevichevg/axon-couchbase/blob/b455cbf420963656adf8f3d964c68f9811c9e8e3/build.gradle.kts
-tasks.register("jacocoRootReports", JacocoReport::class) {
-    dependsOn("test")
-    dependsOn(jacocoMerge)
-
-    executionData(files(jacocoMerge))
-    additionalClassDirs(files(subprojects.flatMap { project ->
-        listOf("kotlin")
-            .map {
-                project.buildDir.path + "/classes/$it/main"
-            }
-            .map {
-                fileTree(it).apply {
-                    exclude("chapi/ast/antlr", "chapi/domain")
-                }
-            }
-    }))
-    additionalSourceDirs(files(subprojects.flatMap { project ->
-        listOf("kotlin")
-            .map {
-                project.file("src/main/$it").absolutePath
-            }
-            .map {
-                fileTree(it).apply {
-                    exclude("chapi/ast/antlr", "chapi/domain")
-                }
-            }
-    }))
-
+reporting {
     reports {
-        xml.required.set(false)
-        csv.required.set(false)
-        html.required.set(true)
-        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+        val jacocoRootReport by creating(JacocoCoverageReport::class) {
+            testType.set(TestSuiteType.UNIT_TEST)
+        }
     }
+}
 
-    dependsOn(jacocoMerge)
+tasks.check {
+    dependsOn(tasks.named<JacocoReport>("jacocoRootReport"))
 }

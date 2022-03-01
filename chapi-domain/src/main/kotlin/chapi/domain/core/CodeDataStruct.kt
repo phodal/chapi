@@ -10,9 +10,9 @@ enum class DataStructType (val structType: String) {
     INTERFACE("Interface"),
     STRUCT("Struct"),
     OBJECT("Object"),
-    INNERSTRUCTURES("InnerStructures"),
-    CREATORCLASS("CreatorClass"),
-    ABSTRACTCLASS("AbstractClass"),
+    INNER_STRUCTURES("InnerStructures"),
+    CREATOR_CLASS("CreatorClass"),
+    ABSTRACT_CLASS("AbstractClass"),
     TRAIT("Trait") // for scala
 }
 
