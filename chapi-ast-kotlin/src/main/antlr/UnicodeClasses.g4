@@ -1,4 +1,6 @@
 /**
+ * Kotlin lexical grammar in ANTLR4 notation (Unicode classes)
+ *
  * Taken from http://www.antlr3.org/grammar/1345144569663/AntlrUnicode.txt
  */
 
@@ -916,8 +918,10 @@ UNICODE_CLASS_LO:
 	'\u3131'..'\u318E' |
 	'\u31A0'..'\u31BA' |
 	'\u31F0'..'\u31FF' |
-	'\u3400'..'\u4DB5' |
-	'\u4E00'..'\u9FCC' |
+	'\u3400' |
+	'\u4DB5' |
+	'\u4E00' |
+	'\u9FCC' |
 	'\uA000'..'\uA014' |
 	'\uA016'..'\uA48C' |
 	'\uA4D0'..'\uA4F7' |
