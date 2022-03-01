@@ -21,7 +21,6 @@ import org.antlr.v4.runtime.ParserRuleContext
  *
  * for kotlin featured
  * - multiple classes in one file
- * |    TODO multiple data structures but share the same package and imports
  * - companion object
  * |    TODO inner structure
  * - individual variable/function
