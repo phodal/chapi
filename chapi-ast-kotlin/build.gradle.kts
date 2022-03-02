@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":chapi-domain"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
@@ -47,7 +48,7 @@ sourceSets.main {
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
     arguments = arguments + listOf("-package", "chapi.ast.antlr") + listOf("-visitor", "-long-messages")
-    outputDirectory  = file("${project.buildDir}/generated-src/chapi/ast/antlr")
+    outputDirectory = file("${project.buildDir}/generated-src/chapi/ast/antlr")
 }
 
 tasks.withType<AntlrTask> {
