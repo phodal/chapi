@@ -5,6 +5,8 @@ import chapi.app.analyser.filter.FileFilter
 import chapi.domain.core.CodeDataStruct
 import java.io.BufferedReader
 import java.io.File
+import kotlin.streams.asStream
+import kotlin.streams.toList
 
 abstract class BaseAnalyser(private var config: ChapiConfig) : IAnalyser {
     override fun analysisNodeByPath(path: String): Array<CodeDataStruct> {
@@ -20,15 +22,14 @@ abstract class BaseAnalyser(private var config: ChapiConfig) : IAnalyser {
     abstract fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct>
 
     private fun getFilesByPath(path: String): Array<AbstractFile> {
-        var files: Array<AbstractFile> = arrayOf()
-        for (file in File(path).walk()) {
-            val isCorrectLanguage = FileFilter.filterByLanguage(file.absolutePath, config)
-            if (isCorrectLanguage) {
-                files += AbstractFile.toAbstractFile(file)
+        return File(path).walk().asStream().parallel()
+            .filter {
+                FileFilter.filterByLanguage(it.absolutePath, config)
             }
-        }
-
-        return files
+            .map {
+                AbstractFile.toAbstractFile(it)
+            }
+            .toArray { length -> arrayOfNulls(length) }
     }
 
 }
