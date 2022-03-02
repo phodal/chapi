@@ -28,7 +28,7 @@ configurations.create("jacocoReports") {
     attributes {
         attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage::class, "jacocoReports"))
     }
-    outgoing.artifact(jacocoTestReport.reports.xml.outputLocation) {
+    outgoing.artifact(jacocoTestReport.reports.xml.destination) {
         builtBy(jacocoTestReport)
     }
 }
