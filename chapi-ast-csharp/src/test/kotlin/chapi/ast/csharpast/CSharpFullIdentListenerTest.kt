@@ -169,4 +169,27 @@ namespace HelloWorldApp {
         assertEquals(codeDataStruct.Functions[0].Parameters[0].TypeType, "string[]")
         assertEquals(codeDataStruct.Functions[0].Parameters[0].TypeValue, "args")
     }
+
+    @Test
+    fun shouldIdentAnnotation() {
+        val code = """
+using System; 
+  
+namespace Chapi.Controller { 
+    [RoutePrefix("api")]
+    public class ChapiController {
+        public ChapiController() { }
+
+        [HttpGet]
+        [Route("book/")]
+        public Book GetBook()
+        {
+            return new Book();
+        }
+    }
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
+        assertEquals(codeContainer.Containers[0].DataStructures.size, 1)
+    }
 }
