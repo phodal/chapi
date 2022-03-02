@@ -10,13 +10,13 @@
 
 Languages Stages (Welcome to PR your usage languages)
 
-| Features/Languages  | [Java](chapi-ast-java/src/main/kotlin/chapi/ast/javaast) | [Python](chapi-ast-python/src/main/kotlin/chapi/ast/pythonast) | [Go](chapi-ast-go/src/main/kotlin/chapi/ast/goast) | [Kotlin](chapi-ast-kotlin/src/main/kotlin/chapi/ast/kotlinast) | [TypeScript](chapi-ast-typescript/src/main/kotlin/chapi/ast/typescriptast) | [C](chapi-ast-c/src/main/kotlin/chapi/ast/cast) | [C#](chapi-ast-csharp/src/main/kotlin/chapi/ast/csharpast) | [Scala](chapi-ast-scala/src/main/kotlin/chapi/ast/scalaast) | [C++](chapi-ast-cpp/src/main/kotlin/chapi/ast/cppast) |
-|---------------------|----------------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------|-------------------------------------------------|------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------|
-| syntax parse        | ✅                                                        | ✅                                                              | ✅                                                  | 🆕                                                             | ✅                                                                          | 🆕                                              | 🆕                                                         | 🆕                                                          | 🆕                                                    |
-| function call       | ✅                                                        | 🆕                                                             |                                                    |                                                                | 🆕                                                                         |                                                 |                                                            |                                                             |                                                       |
-| arch/package        | ✅                                                        |                                                                |                                                    |                                                                |                                                                            |                                                 |                                                            |                                                             |                                                       |
-| real world validate | ✅                                                        |                                                                |                                                    |                                                                |                                                                            |                                                 |                                                            |                                                             |                                                       |
-| expression  (TBD)   |                                                          |                                                                |                                                    |                                                                |                                                                            |                                                 |                                                            |                                                             |                                                       |
+| Features/Languages  | Java | Python | Go  | Kotlin | TypeScript | C   | C#  | Scala | C++ |
+|---------------------|------|--------|-----|--------|------------|-----|-----|-------|-----|
+| syntax parse        | ✅    | ✅      | ✅   | 🆕     | ✅          | 🆕  | 🆕  | 🆕    | 🆕  |
+| function call       | ✅    | 🆕     |     |        | ✅          |     |     |       |     |
+| arch/package        | ✅    |        |     |        |            |     |     |       |     |
+| real world validate | ✅    |        |     |        |            |     |     |       |     |
+| expression  (TBD)   |      |        |     |        |            |     |     |       |     |
 
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
@@ -29,10 +29,6 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript      |
 | Other      | Fortran, Swift, Matlab, ...                   | Swift?, Fortran?        |
 
-TBC:
-
- - SQL (refs: [antlr4-oracle](https://github.com/alris/antlr4-oracle) && [sqlgraph](https://github.com/dengdaiyemanren/sqlgraph))
-
 ## Chapi-base projects
 
 PS: welcome to PR to send your projects
@@ -41,39 +37,15 @@ PS: welcome to PR to send your projects
 
 ## Usage
 
-1. add to package manager ``repositories``
-
-```groovy
-allprojects {
-    repositories {
-        ...
-        jcenter()
-    }
-}
-```
-
-2. add to ``dependencies``
+1add to ``dependencies``
 
 ```
 dependencies {
-    implementation 'com.phodal.chapi:chapi-application:0.0.5'
+    implementation 'com.phodal.chapi:chapi-application:0.0.7'
 
     // or choose languages target
-    implementation 'com.phodal.chapi:chapi-ast-java:0.0.5'
-    implementation 'com.phodal.chapi:chapi-domain:0.0.5'
-}
-```
-
-3. add aliyun gradle and maven repo ``mirror`` to build file
-
-```
-allprojects {
-    ...
-    repositories {
-        maven{ setUrl("http://maven.aliyun.com/nexus/content/groups/public/") }
-        maven{ setUrl("http://maven.aliyun.com/nexus/content/repositories/jcenter")}
-        ...
-    }
+    implementation 'com.phodal.chapi:chapi-ast-java:0.0.7'
+    implementation 'com.phodal.chapi:chapi-domain:0.0.7'
 }
 ```
 
@@ -216,7 +188,7 @@ code_call
 
 ## Development（Chinese Version）
 
-环境准备：Intellij IDEA、JDK 1.8、Antlr 4.8 CLI（可选，参见[Antlr](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md))
+环境准备：Intellij IDEA、JDK 11+
 
 1. Clone 代码：``git clone https://github.com/phodal/chapi``
 
