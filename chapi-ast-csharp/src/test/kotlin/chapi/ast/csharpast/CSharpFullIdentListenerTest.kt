@@ -190,6 +190,11 @@ namespace Chapi.Controller {
 } 
 """
         val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
-        assertEquals(codeContainer.Containers[0].DataStructures.size, 1)
+        val structs = codeContainer.Containers[0].DataStructures
+        assertEquals(structs.size, 1)
+
+        val annotations = structs[0].Annotations
+        assertEquals(1, annotations.size)
+        assertEquals("RoutePrefix", annotations[0].Name)
     }
 }

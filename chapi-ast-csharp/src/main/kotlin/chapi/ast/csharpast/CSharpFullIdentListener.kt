@@ -1,6 +1,7 @@
 package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
+import chapi.ast.antlr.CSharpParser.Type_declarationContext
 import chapi.domain.core.*
 import chapi.infra.Stack
 
@@ -36,7 +37,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                 codeImport.AsName = alisCtx.identifier().text
             }
             else -> {
-                println(usingType)
+                println("handleDirective: $usingType")
             }
         }
 
@@ -92,6 +93,19 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
             }
         }
 
+        val typeDecl = ctx.parent as Type_declarationContext
+        val attributes = typeDecl.attributes()
+        attributes?.attribute_section()?.forEach { it ->
+            it.attribute_list().attribute().forEach { attr ->
+                val annotation = CodeAnnotation(Name = attr.namespace_or_type_name().text)
+                attr.attribute_argument().forEach {
+                    annotation.KeyValues += AnnotationKeyValue(Value = it.text)
+                }
+
+                codeDataStruct.Annotations += annotation
+            }
+        }
+
         currentContainer.DataStructures += codeDataStruct
     }
 
@@ -122,7 +136,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                     codeDataStruct.Functions += codeFunction
                 }
                 else -> {
-                    println(memberType)
+                    println("handleClassMember: $memberType")
                 }
             }
         }
