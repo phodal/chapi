@@ -200,8 +200,11 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         CodeProperty(
             TypeValue = it.parameter().simpleIdentifier().text,
             TypeType = getTypeFullName(it.parameter().type().text),
-            Annotations = it.modifiers().getAnnotations().toTypedArray()
+            Annotations = it.parameterModifiers().getAnnotations().toTypedArray(),
         )
+
+    private fun KotlinParser.ParameterModifiersContext?.getAnnotations(): List<CodeAnnotation> =
+        this?.annotation()?.map(::buildAnnotation) ?: emptyList()
 
     private fun KotlinParser.ModifiersContext?.getAnnotations(): List<CodeAnnotation> =
         this?.annotation()?.map(::buildAnnotation) ?: emptyList()
