@@ -35,3 +35,6 @@ chapi.json
 *.ipr
 *.iws
 output.json
+.DS_Store
+
+
