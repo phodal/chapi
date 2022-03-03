@@ -140,53 +140,70 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
 
         if (memberDeclaration.typed_member_declaration() != null) {
             val typedMember = memberDeclaration.typed_member_declaration()
-            if (typedMember.method_declaration() != null) {
+
+            val methodDeclaration = typedMember.method_declaration()
+            if (methodDeclaration != null) {
                 val typeContext = typedMember.type_()
                 if (typeContext != null) {
                     returnType = typeContext.text
                 }
 
                 codeDataStruct.Functions += createFunction(
-                    typedMember.method_declaration(),
                     returnType,
                     annotations,
                     codeDataStruct.Package,
-                    modifiers
+                    modifiers,
+                    methodDeclaration.method_member_name().text,
+                    methodDeclaration.formal_parameter_list()
                 )
             }
         }
 
-        if (memberDeclaration.method_declaration() != null) {
+        if (memberDeclaration.constructor_declaration() != null) {
+            val constructorDecl = memberDeclaration.constructor_declaration()
+
             codeDataStruct.Functions += createFunction(
-                memberDeclaration.method_declaration(),
                 returnType,
                 annotations,
                 codeDataStruct.Package,
-                modifiers
+                modifiers,
+                constructorDecl.identifier().text,
+                constructorDecl.formal_parameter_list()
+            )
+        }
+
+        val methodDecl = memberDeclaration.method_declaration()
+        if (methodDecl != null) {
+            codeDataStruct.Functions += createFunction(
+                returnType,
+                annotations,
+                codeDataStruct.Package,
+                modifiers,
+                methodDecl.method_member_name().text,
+                methodDecl.formal_parameter_list()
             )
         }
     }
 
     private fun createFunction(
-        methodDeclaration: CSharpParser.Method_declarationContext,
         returnType: String,
         annotations: Array<CodeAnnotation>,
         packageName: String,
-        modifiers: Array<String>
+        modifiers: Array<String>,
+        methodName: String,
+        formalParameterListcontext: CSharpParser.Formal_parameter_listContext?
     ): CodeFunction {
-        val methodName = methodDeclaration.method_member_name()
 
         val codeFunction = CodeFunction(
             Package = packageName,
-            Name = methodName.text,
+            Name = methodName,
             ReturnType = returnType,
             Modifiers = modifiers,
             Annotations = annotations
         )
 
-        val formalParameterList = methodDeclaration.formal_parameter_list()
-        if (formalParameterList != null) {
-            codeFunction.Parameters = this.buildFunctionParameters(formalParameterList)
+        if (formalParameterListcontext != null) {
+            codeFunction.Parameters = this.buildFunctionParameters(formalParameterListcontext)
         }
         return codeFunction
     }
