@@ -26,6 +26,9 @@ open class FileFilter {
                 "scala" -> {
                     path.endsWith(".scala")
                 }
+                Language.CSharp -> {
+                    path.endsWith(".cs")
+                }
                 Language.KOTLIN -> {
                     path.endsWith(".kt") || path.endsWith(".kts")
                 }

@@ -15,28 +15,31 @@ open class ChapiAnalyser(
     }
 
     open fun getLangAppAnalyser(): IAnalyser {
-        val langAnalyser : IAnalyser
+        val langAnalyser: IAnalyser
         when (config.language) {
-            "java" -> {
+            Language.JAVA -> {
                 langAnalyser = JavaAnalyserApp(config)
             }
             "go" -> {
-                langAnalyser =  GoAnalyserApp(config)
+                langAnalyser = GoAnalyserApp(config)
             }
             "python" -> {
-                langAnalyser =  PythonAnalyserApp(config)
+                langAnalyser = PythonAnalyserApp(config)
             }
             "typescript" -> {
-                langAnalyser =  TypeScriptAnalyserApp(config)
+                langAnalyser = TypeScriptAnalyserApp(config)
             }
             "scala" -> {
-                langAnalyser =  ScalaAnalyserApp(config)
+                langAnalyser = ScalaAnalyserApp(config)
             }
             Language.KOTLIN -> {
-                langAnalyser =  KotlinAnalyserApp(config)
+                langAnalyser = KotlinAnalyserApp(config)
+            }
+            Language.CSharp -> {
+                langAnalyser = CSharpAnalyserApp(config)
             }
             else -> {
-                langAnalyser =  JavaAnalyserApp(config)
+                langAnalyser = JavaAnalyserApp(config)
             }
         }
 

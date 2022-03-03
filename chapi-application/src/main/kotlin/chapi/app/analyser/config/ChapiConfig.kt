@@ -10,4 +10,5 @@ data class ChapiConfig(
 object Language {
     const val KOTLIN = "kotlin"
     const val JAVA = "java"
+    const val CSharp = "c#"
 }

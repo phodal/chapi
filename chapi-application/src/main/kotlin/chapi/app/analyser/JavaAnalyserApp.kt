@@ -1,12 +1,13 @@
 package chapi.app.analyser
 
 import chapi.app.analyser.config.ChapiConfig
+import chapi.app.analyser.config.Language
 import chapi.app.analyser.support.AbstractFile
 import chapi.app.analyser.support.BaseAnalyser
 import chapi.ast.javaast.JavaAnalyser
 import chapi.domain.core.CodeDataStruct
 
-open class JavaAnalyserApp(var config: ChapiConfig = ChapiConfig(language = "java")) : BaseAnalyser(config) {
+open class JavaAnalyserApp(var config: ChapiConfig = ChapiConfig(language = Language.JAVA)) : BaseAnalyser(config) {
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> {
         val basicNodes = analysisBasicInfo(files)
         return analysisFullNodes(files, basicNodes)
@@ -26,9 +27,7 @@ open class JavaAnalyserApp(var config: ChapiConfig = ChapiConfig(language = "jav
             classes += basicNode.getClassFullName()
         }
 
-        var nodeInfos: Array<CodeDataStruct> = buildNodeInfos(files, classes, basicNodes)
-
-        return nodeInfos
+        return buildNodeInfos(files, classes, basicNodes)
     }
 
     private fun buildNodeInfos(
