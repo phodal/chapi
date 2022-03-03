@@ -195,5 +195,7 @@ namespace Chapi.Controller {
         val annotations = structs[0].Annotations
         assertEquals(1, annotations.size)
         assertEquals("RoutePrefix", annotations[0].Name)
+
+        assertEquals(2, structs[0].Functions[0].Annotations.size)
     }
 }

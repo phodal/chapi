@@ -94,7 +94,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         }
 
         val parent = ctx.parent
-        when(parent.javaClass.simpleName) {
+        when (parent.javaClass.simpleName) {
             "Type_declarationContext" -> {
                 val typeDecl = parent as Type_declarationContext
                 codeDataStruct.Annotations = parseAnnotations(typeDecl.attributes())
@@ -139,6 +139,30 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
             }
         }
 
+        val annotations = parseAnnotations(memberCtx.attributes())
+
+        if (memberDeclaration.typed_member_declaration() != null) {
+            val typedMember = memberDeclaration.typed_member_declaration()
+            val methodDeclaration = typedMember.method_declaration()
+            val methodName = methodDeclaration.method_member_name()
+
+            val codeFunction = CodeFunction(
+                Package = codeDataStruct.Package,
+                Name = methodName.text,
+                ReturnType = returnType,
+                Modifiers = buildFunctionModifiers(memberCtx),
+                Annotations = annotations
+            )
+
+            val formalParameterList = methodDeclaration.formal_parameter_list()
+            if (formalParameterList != null) {
+                codeFunction.Parameters = this.buildFunctionParameters(formalParameterList)
+            }
+
+            codeDataStruct.Functions += codeFunction
+        }
+
+
         if (memberDeclaration.method_declaration() != null) {
             val methodDeclaration = memberDeclaration.method_declaration()
             val methodName = methodDeclaration.method_member_name()
@@ -147,7 +171,8 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                 Package = codeDataStruct.Package,
                 Name = methodName.text,
                 ReturnType = returnType,
-                Modifiers = buildFunctionModifiers(memberCtx)
+                Modifiers = buildFunctionModifiers(memberCtx),
+                Annotations = annotations
             )
 
             val formalParameterList = methodDeclaration.formal_parameter_list()
