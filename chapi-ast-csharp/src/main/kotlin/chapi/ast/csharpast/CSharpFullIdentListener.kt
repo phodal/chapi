@@ -125,11 +125,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         memberCtx: CSharpParser.Class_member_declarationContext?,
         codeDataStruct: CodeDataStruct
     ) {
-        val memberDeclaration = memberCtx!!.common_member_declaration()
-
-        if (memberDeclaration == null) {
-            return
-        }
+        val memberDeclaration = memberCtx!!.common_member_declaration() ?: return
 
         val firstChild = memberDeclaration.getChild(0)
         var returnType = "";
@@ -150,29 +146,24 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                     returnType = typeContext.text
                 }
 
-                val methodDeclaration = typedMember.method_declaration()
-                val codeFunction = createFunction(
-                    methodDeclaration,
+                codeDataStruct.Functions += createFunction(
+                    typedMember.method_declaration(),
                     returnType,
                     annotations,
                     codeDataStruct.Package,
                     modifiers
                 )
-
-                codeDataStruct.Functions += codeFunction
             }
         }
 
         if (memberDeclaration.method_declaration() != null) {
-            val methodDeclaration = memberDeclaration.method_declaration()
-            val codeFunction = createFunction(
-                methodDeclaration,
+            codeDataStruct.Functions += createFunction(
+                memberDeclaration.method_declaration(),
                 returnType,
                 annotations,
                 codeDataStruct.Package,
                 modifiers
             )
-            codeDataStruct.Functions += codeFunction
         }
     }
 

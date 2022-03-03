@@ -138,7 +138,7 @@ namespace HelloWorldApp {
         val codeContainer = CSharpAnalyser().analysis(code, "hello.cs")
         assertEquals(codeContainer.Containers[0].DataStructures.size, 1)
         assertEquals(codeContainer.Containers[0].DataStructures[0].NodeName, "Geeks")
-        println(codeContainer)
+
         assertEquals(codeContainer.Containers[0].Containers[0].DataStructures.size, 1)
         assertEquals(codeContainer.Containers[0].Containers[0].DataStructures[0].NodeName, "Geeks2")
     }
@@ -201,5 +201,24 @@ namespace Chapi.Controller {
         assertEquals("HttpGet", firstFunction.Annotations[0].Name)
         assertEquals("Route", firstFunction.Annotations[1].Name)
         assertEquals("Book", firstFunction.ReturnType)
+    }
+
+    @Test
+    fun shouldIdentMultipleFunctions() {
+        val code = """
+using System; 
+  
+namespace Chapi { 
+    public class Chapi {
+        public Chapi() {}
+        public Chapi(long id) {}
+    }
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+        assertEquals(structs.size, 1)
+
+        assertEquals(2, structs[0].Functions.size)
     }
 }
