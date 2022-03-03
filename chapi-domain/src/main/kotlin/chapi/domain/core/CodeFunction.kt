@@ -60,6 +60,10 @@ open class CodeFunction(
         return calls
     }
 
+    fun filterAnnotation(key: String): List<CodeAnnotation> {
+        return this.Annotations.filter { it.Name.lowercase() == key }
+    }
+
     fun isJUnitTest(): Boolean {
         var isTest = false
         for (annotation in this.Annotations) {

@@ -53,6 +53,10 @@ open class CodeDataStruct(
         this.Functions = methodsArray
     }
 
+    fun filterAnnotation(key: String): List<CodeAnnotation> {
+        return this.Annotations.filter { it.Name.lowercase() == key.lowercase() }
+    }
+
     fun getClassFullName(): String {
         return this.Package + "." + this.NodeName
     }

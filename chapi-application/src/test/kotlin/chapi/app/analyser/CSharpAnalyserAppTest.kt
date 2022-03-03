@@ -10,33 +10,34 @@ internal class CSharpAnalyserAppTest {
     @Test
     fun shouldIdentifySamePackage() {
         val resource = this.javaClass.classLoader.getResource("e2e/csharp/")
-        val path = Paths.get(resource!!.toURI()).toFile()
+        val path = Paths.get(resource!!.toURI()).toFile().absolutePath
 
-        val nodes = CSharpAnalyserApp().analysisNodeByPath(path.absolutePath)
-        println(Json.encodeToString(nodes))
-        assertEquals(5, nodes.size);
+        val nodes = CSharpAnalyserApp().analysisNodeByPath(path)
 
-//        FileWriter("output.json").use { it.write(Json.encodeToString(nodes)) }
-//        val sb = StringBuilder()
-//        nodes.forEach {
-//            it.Functions.forEach { func ->
-//                run {
-//                    func.FunctionCalls.forEach { call ->
-//                        run {
-//                            val nodeName = call.NodeName
-//                            if (!(nodeName == "axios" || nodeName.startsWith("axios."))) {
-//                                if (call.Parameters.isNotEmpty()) {
-//                                    sb.append("$nodeName -> ${call.Parameters[0].TypeValue}\n")
-//                                } else {
-//                                    sb.append("${func.Name}.$nodeName\n")
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        println(sb)
+        nodes.forEach { node ->
+            val routeAnnotation = node.filterAnnotation("RoutePrefix")
+            if (routeAnnotation.isNotEmpty()) {
+                val baseUrl = routeAnnotation[0].KeyValues[0].Value
+                node.Functions.forEach { func ->
+                    var httpMethod = "";
+                    var route = "";
+                    for (annotation in func.Annotations) {
+                        when (annotation.Name) {
+                            "HttpGet" ->    httpMethod = "Get    "
+                            "HttpPost" ->   httpMethod = "Post   "
+                            "HttpDelete" -> httpMethod = "Delete "
+                            "HttpPut" ->    httpMethod = "Put    "
+                        }
+                        if (annotation.Name == "Route") {
+                            route = annotation.KeyValues[0].Value
+                        }
+                    }
+
+                    if (route.isNotEmpty() && httpMethod.isNotEmpty()) {
+                        println("$httpMethod : /$baseUrl/$route")
+                    }
+                }
+            }
+        }
     }
 }
