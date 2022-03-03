@@ -16,7 +16,13 @@ abstract class BaseAnalyser(private var config: ChapiConfig) : IAnalyser {
 
     fun readFileAsString(filepath: String): String {
         val bufferedReader: BufferedReader = File(filepath).bufferedReader()
-        return bufferedReader.use { it.readText() }
+        var text = bufferedReader.use { it.readText() }
+
+        // fix for Window issue
+        if (text.startsWith("\uFEFF")) {
+            text = text.substring(1);
+        }
+        return text
     }
 
     abstract fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct>
