@@ -200,6 +200,7 @@ namespace Chapi.Controller {
         assertEquals(2, firstFunction.Annotations.size)
         assertEquals("HttpGet", firstFunction.Annotations[0].Name)
         assertEquals("Route", firstFunction.Annotations[1].Name)
+        assertEquals("book/", firstFunction.Annotations[1].KeyValues[0].Value)
         assertEquals("Book", firstFunction.ReturnType)
     }
 

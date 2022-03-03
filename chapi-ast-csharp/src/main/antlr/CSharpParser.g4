@@ -957,7 +957,8 @@ attribute
 	;
 
 attribute_argument
-	: (identifier ':')? expression
+	: (identifier ':')? string_literal
+	| (identifier ':')? expression
 	;
 
 //B.3 Grammar extensions for unsafe code

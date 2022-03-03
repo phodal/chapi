@@ -154,7 +154,11 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
             it.attribute_list().attribute().forEach { attr ->
                 val annotation = CodeAnnotation(Name = attr.namespace_or_type_name().text)
                 attr.attribute_argument().forEach {
-                    annotation.KeyValues += AnnotationKeyValue(Value = it.text)
+                    if (it.string_literal() != null) {
+                        annotation.KeyValues += AnnotationKeyValue(Value = parseString(it.string_literal()))
+                    } else {
+                        annotation.KeyValues += AnnotationKeyValue(Value = it.text)
+                    }
                 }
 
                 annotations += annotation
@@ -162,6 +166,16 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         }
 
         return annotations
+    }
+
+    private fun parseString(stringLiteral: CSharpParser.String_literalContext): String {
+        var str = "";
+        if (stringLiteral.REGULAR_STRING() != null) {
+            val text = stringLiteral.text
+            str = text.substring(1, text.length - 1)
+        }
+
+        return str
     }
 
     private fun handleClassMember(
@@ -274,8 +288,8 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         var modifiers: Array<String> = arrayOf()
         val allMemberModifiers = memberCtx.all_member_modifiers()
         if (allMemberModifiers != null) {
-            for (allMemberModifiercontext in allMemberModifiers.all_member_modifier()) {
-                modifiers += allMemberModifiercontext.text
+            for (memberModifier in allMemberModifiers.all_member_modifier()) {
+                modifiers += memberModifier.text
             }
         }
         return modifiers
