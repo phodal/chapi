@@ -93,8 +93,20 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
             }
         }
 
-        val typeDecl = ctx.parent as Type_declarationContext
-        val attributes = typeDecl.attributes()
+        val parent = ctx.parent
+        when(parent.javaClass.simpleName) {
+            "Type_declarationContext" -> {
+                val typeDecl = parent as Type_declarationContext
+                codeDataStruct.Annotations = parseAnnotations(typeDecl.attributes())
+            }
+        }
+
+        currentContainer.DataStructures += codeDataStruct
+    }
+
+    private fun parseAnnotations(attributes: CSharpParser.AttributesContext?): Array<CodeAnnotation> {
+        var annotations = arrayOf<CodeAnnotation>();
+
         attributes?.attribute_section()?.forEach { it ->
             it.attribute_list().attribute().forEach { attr ->
                 val annotation = CodeAnnotation(Name = attr.namespace_or_type_name().text)
@@ -102,11 +114,11 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
                     annotation.KeyValues += AnnotationKeyValue(Value = it.text)
                 }
 
-                codeDataStruct.Annotations += annotation
+                annotations += annotation
             }
         }
 
-        currentContainer.DataStructures += codeDataStruct
+        return annotations
     }
 
     private fun handleClassMember(
