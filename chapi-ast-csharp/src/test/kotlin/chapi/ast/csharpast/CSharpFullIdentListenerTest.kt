@@ -147,6 +147,7 @@ namespace HelloWorldApp {
     fun shouldIdentNameSpaceClassMethodSupport() {
         val codeContainer = CSharpAnalyser().analysis(helloworld, "hello.cs")
         val codeDataStruct = codeContainer.Containers[0].DataStructures[0]
+
         assertEquals(codeDataStruct.Functions.size, 1)
         assertEquals(codeDataStruct.Functions[0].Name, "Main")
         assertEquals(codeDataStruct.Functions[0].Modifiers.size, 1)
@@ -178,8 +179,6 @@ using System;
 namespace Chapi.Controller { 
     [RoutePrefix("api")]
     public class ChapiController {
-        public ChapiController() { }
-
         [HttpGet]
         [Route("book/")]
         public Book GetBook()

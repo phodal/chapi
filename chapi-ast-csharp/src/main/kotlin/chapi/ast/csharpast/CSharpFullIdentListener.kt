@@ -126,31 +126,36 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         codeDataStruct: CodeDataStruct
     ) {
         val memberDeclaration = memberCtx!!.common_member_declaration()
-        if (memberDeclaration != null) {
-            val memberType = memberDeclaration.getChild(0)::class.java.simpleName
-            when (memberType) {
-                "TerminalNodeImpl" -> {
-                    val methodDeclaration = memberDeclaration.method_declaration()
-                    val methodName = methodDeclaration.method_member_name()
 
-                    val codeFunction = CodeFunction(
-                        Package = codeDataStruct.Package,
-                        Name = methodName.text,
-                        ReturnType = memberDeclaration.getChild(0).text,
-                        Modifiers = buildFunctionModifiers(memberCtx)
-                    )
+        if (memberDeclaration == null) {
+            return
+        }
 
-                    val formalParameterList = methodDeclaration.formal_parameter_list()
-                    if (formalParameterList != null) {
-                        codeFunction.Parameters = this.buildFunctionParameters(formalParameterList)
-                    }
-
-                    codeDataStruct.Functions += codeFunction
-                }
-                else -> {
-                    println("handleClassMember: $memberType")
-                }
+        val firstChild = memberDeclaration.getChild(0)
+        var returnType = "";
+        when (firstChild::class.java.simpleName) {
+            "TerminalNodeImpl" -> {
+                returnType = firstChild.text
             }
+        }
+
+        if (memberDeclaration.method_declaration() != null) {
+            val methodDeclaration = memberDeclaration.method_declaration()
+            val methodName = methodDeclaration.method_member_name()
+
+            val codeFunction = CodeFunction(
+                Package = codeDataStruct.Package,
+                Name = methodName.text,
+                ReturnType = returnType,
+                Modifiers = buildFunctionModifiers(memberCtx)
+            )
+
+            val formalParameterList = methodDeclaration.formal_parameter_list()
+            if (formalParameterList != null) {
+                codeFunction.Parameters = this.buildFunctionParameters(formalParameterList)
+            }
+
+            codeDataStruct.Functions += codeFunction
         }
     }
 
