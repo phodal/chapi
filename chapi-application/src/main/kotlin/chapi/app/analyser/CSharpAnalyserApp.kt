@@ -19,8 +19,14 @@ open class CSharpAnalyserApp(var config: ChapiConfig = ChapiConfig(language = La
         val code = readFileAsString(file.absolutePath)
         val codeContainer = analyser.analysis(code, file.fileName)
 
-        println(codeContainer.FullName)
-        println(codeContainer.DataStructures.size)
-        return codeContainer.DataStructures.map(::postProcess)
+        val ds = mutableListOf<CodeDataStruct>();
+        codeContainer.Containers.flatMap { container ->
+            container.DataStructures.map {
+                it.FilePath = file.absolutePath
+                ds += it
+            }
+        }
+
+        return ds
     }
 }

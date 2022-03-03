@@ -10,7 +10,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
     private var currentStruct: CodeDataStruct = CodeDataStruct();
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     private var currentContainer: CodeContainer = codeContainer
-    private var containerStack: Stack<CodeContainer> = Stack<CodeContainer>()
+    private var containerStack: Stack<CodeContainer> = Stack()
     private var currentPackage: CodePackage = CodePackage()
 
     override fun enterCompilation_unit(ctx: CSharpParser.Compilation_unitContext?) {
