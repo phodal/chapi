@@ -221,4 +221,53 @@ namespace Chapi {
 
         assertEquals(2, structs[0].Functions.size)
     }
+
+    @Test
+    fun shouldIdentProperty() {
+        val code = """
+using System; 
+  
+namespace Chapi { 
+    public class Chapi {
+        public Chapi() {}
+        public Chapi(long id) {}
+        
+        public long ChapiId { get; set; }
+    }
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+        assertEquals(structs.size, 1)
+
+        assertEquals(2, structs[0].Functions.size)
+        assertEquals(1, structs[0].Fields.size)
+        assertEquals("long", structs[0].Fields[0].TypeType)
+        assertEquals("ChapiId", structs[0].Fields[0].TypeValue)
+    }
+
+    @Test
+    fun shouldIdentPropertyInList() {
+        val code = """
+using System; 
+  
+namespace Chapi { 
+    public class Chapi {
+        public Chapi() {}
+        public Chapi(long id) {}
+        
+        public List<DeviceParameter> Parameters { get; set; }
+    }
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+        assertEquals(structs.size, 1)
+
+        assertEquals(2, structs[0].Functions.size)
+        assertEquals(1, structs[0].Fields.size)
+        assertEquals("List", structs[0].Fields[0].Modifiers[0])
+        assertEquals("DeviceParameter", structs[0].Fields[0].TypeType)
+        assertEquals("Parameters", structs[0].Fields[0].TypeValue)
+    }
 }

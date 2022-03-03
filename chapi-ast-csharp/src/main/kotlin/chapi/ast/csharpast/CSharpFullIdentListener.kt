@@ -1,11 +1,13 @@
 package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
+import chapi.ast.antlr.CSharpParser.Class_typeContext
 import chapi.ast.antlr.CSharpParser.Type_declarationContext
 import chapi.domain.core.*
 import chapi.infra.Stack
 
 class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
+    private var currentStruct: CodeDataStruct = CodeDataStruct();
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     private var currentContainer: CodeContainer = codeContainer
     private var containerStack: Stack<CodeContainer> = Stack<CodeContainer>()
@@ -67,12 +69,10 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
             val lastContainer = containerStack.elements.last()
             lastContainer.Containers += currentContainer
             containerStack.elements[containerStack.elements.size - 1] = lastContainer
-
             containerStack.push(currentContainer)
         } else {
             codeContainer.Containers += currentContainer
             containerStack.push(currentContainer)
-            println(containerStack.elements.size)
         }
     }
 
@@ -88,8 +88,8 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
 
         val classMemberDeclarations = ctx.class_body().class_member_declarations()
         if (classMemberDeclarations != null) {
-            for (classMemberDeclarationcontext in classMemberDeclarations.class_member_declaration()) {
-                this.handleClassMember(classMemberDeclarationcontext, codeDataStruct)
+            for (classMemberDecl in classMemberDeclarations.class_member_declaration()) {
+                this.handleClassMember(classMemberDecl, codeDataStruct)
             }
         }
 
@@ -101,7 +101,50 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
             }
         }
 
-        currentContainer.DataStructures += codeDataStruct
+        currentStruct = codeDataStruct;
+    }
+
+    override fun exitClass_definition(ctx: CSharpParser.Class_definitionContext?) {
+        currentContainer.DataStructures += currentStruct
+    }
+
+    override fun enterProperty_declaration(ctx: CSharpParser.Property_declarationContext?) {
+        val memberName = ctx!!.member_name()
+        when (ctx.parent.javaClass.simpleName) {
+            "Typed_member_declarationContext" -> {
+                val typedMember = ctx.parent as CSharpParser.Typed_member_declarationContext
+                val typeValue = memberName.text
+                val typeContext = typedMember.type_()
+
+                val field = createField(typeValue, typeContext)
+
+                currentStruct.Fields += field
+            }
+        }
+    }
+
+    private fun createField(typeValue: String, typeContext: CSharpParser.Type_Context): CodeField {
+        val field = CodeField(TypeValue = typeValue)
+        field.TypeType = typeContext.text
+
+        val child = typeContext.base_type().getChild(0)
+        when (child.javaClass.simpleName) {
+            "Class_typeContext" -> {
+                val clazzType = child as Class_typeContext
+                val nsOrType = clazzType.namespace_or_type_name()
+                if (nsOrType != null) {
+                    field.Modifiers = arrayOf(nsOrType.identifier()[0].text)
+                    if (nsOrType.type_argument_list() != null) {
+                        nsOrType.type_argument_list()
+                            .asSequence()
+                            .flatMap { it.type_().asSequence() }
+                            .forEach { field.TypeType = it.text }
+                    }
+                }
+            }
+        }
+
+        return field
     }
 
     private fun parseAnnotations(attributes: CSharpParser.AttributesContext?): Array<CodeAnnotation> {

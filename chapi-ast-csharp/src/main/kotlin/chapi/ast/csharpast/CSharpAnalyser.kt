@@ -14,14 +14,12 @@ open class CSharpAnalyser {
 
         ParseTreeWalker().walk(listener, context)
 
-        val nodeInfo = listener.getNodeInfo()
-        return nodeInfo
+        return listener.getNodeInfo()
     }
 
-    open fun parse(str: String): CSharpParser {
-        val fromString = CharStreams.fromString(str)
-        val lexer = CSharpLexer (fromString)
-        val tokenStream = CommonTokenStream(lexer)
-        return CSharpParser(tokenStream)
-    }
+    private fun parse(str: String): CSharpParser =
+        CharStreams.fromString(str)
+            .let(::CSharpLexer)
+            .let(::CommonTokenStream)
+            .let(::CSharpParser)
 }
