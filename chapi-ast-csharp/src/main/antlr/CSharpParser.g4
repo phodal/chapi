@@ -555,7 +555,7 @@ resource_acquisition
 
 //B.2.6 Namespaces;
 namespace_declaration
-	: NAMESPACE qi=qualified_identifier namespace_body ';'?
+	: NAMESPACE qi=qualified_identifier namespace_body? ';'?
 	;
 
 qualified_identifier
