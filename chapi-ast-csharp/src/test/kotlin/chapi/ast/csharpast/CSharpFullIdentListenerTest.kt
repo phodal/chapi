@@ -196,6 +196,10 @@ namespace Chapi.Controller {
         assertEquals(1, annotations.size)
         assertEquals("RoutePrefix", annotations[0].Name)
 
-        assertEquals(2, structs[0].Functions[0].Annotations.size)
+        val firstFunction = structs[0].Functions[0]
+        assertEquals(2, firstFunction.Annotations.size)
+        assertEquals("HttpGet", firstFunction.Annotations[0].Name)
+        assertEquals("Route", firstFunction.Annotations[1].Name)
+        assertEquals("Book", firstFunction.ReturnType)
     }
 }

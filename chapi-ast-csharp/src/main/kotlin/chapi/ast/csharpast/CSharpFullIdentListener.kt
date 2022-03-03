@@ -140,48 +140,64 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         }
 
         val annotations = parseAnnotations(memberCtx.attributes())
+        val modifiers = buildFunctionModifiers(memberCtx)
 
         if (memberDeclaration.typed_member_declaration() != null) {
             val typedMember = memberDeclaration.typed_member_declaration()
-            val methodDeclaration = typedMember.method_declaration()
-            val methodName = methodDeclaration.method_member_name()
+            if (typedMember.method_declaration() != null) {
+                val typeContext = typedMember.type_()
+                if (typeContext != null) {
+                    returnType = typeContext.text
+                }
 
-            val codeFunction = CodeFunction(
-                Package = codeDataStruct.Package,
-                Name = methodName.text,
-                ReturnType = returnType,
-                Modifiers = buildFunctionModifiers(memberCtx),
-                Annotations = annotations
-            )
+                val methodDeclaration = typedMember.method_declaration()
+                val codeFunction = createFunction(
+                    methodDeclaration,
+                    returnType,
+                    annotations,
+                    codeDataStruct.Package,
+                    modifiers
+                )
 
-            val formalParameterList = methodDeclaration.formal_parameter_list()
-            if (formalParameterList != null) {
-                codeFunction.Parameters = this.buildFunctionParameters(formalParameterList)
+                codeDataStruct.Functions += codeFunction
             }
-
-            codeDataStruct.Functions += codeFunction
         }
-
 
         if (memberDeclaration.method_declaration() != null) {
             val methodDeclaration = memberDeclaration.method_declaration()
-            val methodName = methodDeclaration.method_member_name()
-
-            val codeFunction = CodeFunction(
-                Package = codeDataStruct.Package,
-                Name = methodName.text,
-                ReturnType = returnType,
-                Modifiers = buildFunctionModifiers(memberCtx),
-                Annotations = annotations
+            val codeFunction = createFunction(
+                methodDeclaration,
+                returnType,
+                annotations,
+                codeDataStruct.Package,
+                modifiers
             )
-
-            val formalParameterList = methodDeclaration.formal_parameter_list()
-            if (formalParameterList != null) {
-                codeFunction.Parameters = this.buildFunctionParameters(formalParameterList)
-            }
-
             codeDataStruct.Functions += codeFunction
         }
+    }
+
+    private fun createFunction(
+        methodDeclaration: CSharpParser.Method_declarationContext,
+        returnType: String,
+        annotations: Array<CodeAnnotation>,
+        packageName: String,
+        modifiers: Array<String>
+    ): CodeFunction {
+        val methodName = methodDeclaration.method_member_name()
+
+        val codeFunction = CodeFunction(
+            Package = packageName,
+            Name = methodName.text,
+            ReturnType = returnType,
+            Modifiers = modifiers,
+            Annotations = annotations
+        )
+
+        val formalParameterList = methodDeclaration.formal_parameter_list()
+        if (formalParameterList != null) {
+            codeFunction.Parameters = this.buildFunctionParameters(formalParameterList)
+        }
+        return codeFunction
     }
 
     private fun buildFunctionParameters(formalParameterList: CSharpParser.Formal_parameter_listContext?): Array<CodeProperty> {
