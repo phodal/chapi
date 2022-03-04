@@ -14,19 +14,14 @@ open class CSharpAnalyserApp(var config: ChapiConfig = ChapiConfig(language = La
         files.flatMap(::analysisByFile).toTypedArray()
 
     private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
-        fun postProcess(it: CodeDataStruct): CodeDataStruct = it.apply { it.FilePath = file.absolutePath }
-
         val code = readFileAsString(file.absolutePath)
         val codeContainer = analyser.analysis(code, file.fileName)
 
-        val ds = mutableListOf<CodeDataStruct>();
-        codeContainer.Containers.flatMap { container ->
+        return codeContainer.Containers.flatMap { container ->
             container.DataStructures.map {
                 it.FilePath = file.absolutePath
-                ds += it
+                it
             }
-        }
-
-        return ds
+        }.toList()
     }
 }

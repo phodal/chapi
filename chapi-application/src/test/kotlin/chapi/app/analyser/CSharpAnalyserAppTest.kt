@@ -19,6 +19,16 @@ data class ApiModel(
 
 internal class CSharpAnalyserAppTest {
     @Test
+    fun shouldCountModelSize() {
+        val resource = this.javaClass.classLoader.getResource("e2e/csharp/")
+        val path = Paths.get(resource!!.toURI()).toFile().absolutePath
+
+        val nodes = CSharpAnalyserApp().analysisNodeByPath(path)
+
+        assertEquals(5, nodes.size)
+    }
+
+    @Test
     fun shouldIdentifySamePackage() {
         val resource = this.javaClass.classLoader.getResource("e2e/csharp/")
         val path = Paths.get(resource!!.toURI()).toFile().absolutePath
