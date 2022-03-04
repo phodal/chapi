@@ -35,14 +35,47 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     override fun enterVariableStatement(ctx: TypeScriptParser.VariableStatementContext?) {
         if (ctx!!.variableDeclarationList() != null) {
-            ctx.variableDeclarationList().variableDeclaration().forEach {
-                if (it.Assign() != null) {
-                    val key = it.getChild(0).text
-                    val value = it.singleExpression().last().text
-                    codeContainer.Fields += CodeField(TypeKey = key, TypeValue = value)
+            codeContainer.Fields = variableToFields(ctx.variableDeclarationList())
+        }
+
+        // such as: `export const baseURL = '/api'`
+        // todo: add support for not only const?
+        if (ctx.parent.parent.getChild(0).text == "export") {
+            var modifier = "";
+            ctx.children.forEach {
+                when (it::class.java.simpleName) {
+                    "VarModifierContext" -> {
+                        modifier = it.text;
+                    }
+                    "VariableDeclarationListContext" -> {
+                        val varDeclList = it as TypeScriptParser.VariableDeclarationListContext
+                        val fields = variableToFields(varDeclList, arrayOf(modifier))
+
+                        defaultNode.Fields += fields
+                    }
+                    else -> {
+                        println(it::class.java.simpleName)
+                    }
                 }
             }
         }
+    }
+
+    private fun variableToFields(
+        varDecl: TypeScriptParser.VariableDeclarationListContext,
+        modifiers: Array<String> = arrayOf()
+    ): Array<CodeField> {
+        var fields = arrayOf<CodeField>()
+        varDecl.variableDeclaration().forEach {
+            if (it.Assign() != null) {
+                val key = it.getChild(0).text
+                val value = it.singleExpression().last().text
+
+                fields += CodeField(TypeKey = key, TypeValue = value, Modifiers = modifiers)
+            }
+        }
+
+        return fields
     }
 
     override fun enterDecoratorList(ctx: TypeScriptParser.DecoratorListContext?) {
@@ -100,9 +133,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 }
                 "PropertyDeclarationExpressionContext" -> {
                     val ctx = childCtx as TypeScriptParser.PropertyDeclarationExpressionContext
-                    val codeField = CodeField(
-                        TypeValue = ctx.propertyName().text
-                    )
+                    val codeField = CodeField(TypeValue = ctx.propertyName().text)
 
                     val modifier = ctx.propertyMemberBase().text
                     if (modifier != "") {
@@ -242,9 +273,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
     }
 
-
     override fun enterFromBlock(ctx: TypeScriptParser.FromBlockContext?) {
-        val imp = removeQuote(ctx!!.StringLiteral().text)
+        val imp = unQuote(ctx!!.StringLiteral().text)
         val codeImport = CodeImport(
             Source = imp
         )
@@ -270,10 +300,10 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         codeContainer.Imports += codeImport
     }
 
-    private fun removeQuote(text: String): String = text.replace("[\"']".toRegex(), "")
+    private fun unQuote(text: String): String = text.replace("[\"']".toRegex(), "")
 
     override fun enterImportAliasDeclaration(ctx: TypeScriptParser.ImportAliasDeclarationContext?) {
-        val imp = removeQuote(ctx!!.StringLiteral().text)
+        val imp = unQuote(ctx!!.StringLiteral().text)
         val codeImport = CodeImport(
             Source = imp
         )
@@ -286,7 +316,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     override fun enterImportAll(ctx: TypeScriptParser.ImportAllContext?) {
-        val source = removeQuote(ctx!!.StringLiteral().text)
+        val source = unQuote(ctx!!.StringLiteral().text)
         val imp = CodeImport(
             Source = source
         )
@@ -367,9 +397,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     currentExprIdent = argText
 
                     // todo: add other case for call chain in arrow function
-                    if(argText.contains(").")) {
+                    if (argText.contains(").")) {
                         val args = parseArguments(argument)
-                        println("argText with )."  + Json.encodeToString(args))
+                        println("argText with )." + Json.encodeToString(args))
                     }
 
                     // axios.get() or _.orderBy()
@@ -721,7 +751,17 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             codeContainer.DataStructures += entry.value
         }
 
-        if (defaultNode.Functions.isNotEmpty()) {
+        // for: `export const baseURL = '/api'`
+        val fieldOnly = defaultNode.Fields.isNotEmpty()
+
+        // for export default function
+        val functionOnly = defaultNode.Functions.isNotEmpty()
+
+        if (functionOnly) {
+            defaultNode.NodeName = "default"
+            defaultNode.FilePath = codeContainer.FullName
+            codeContainer.DataStructures += defaultNode
+        } else if (fieldOnly) {
             defaultNode.NodeName = "default"
             defaultNode.FilePath = codeContainer.FullName
             codeContainer.DataStructures += defaultNode

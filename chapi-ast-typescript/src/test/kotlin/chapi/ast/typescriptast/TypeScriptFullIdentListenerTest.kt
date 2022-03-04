@@ -510,4 +510,20 @@ export function demo() {
         assertEquals(2, calls.size)
         assertEquals("request->get->then->catch", calls[0].FunctionName);
     }
+
+    @Test
+    internal fun shouldSetExportConstantsToContainer() {
+        val content = """
+export const baseURL = '/api'
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "config.ts")
+        assertEquals(1, codeFile.DataStructures.size)
+        val defaultStruct = codeFile.DataStructures[0]
+
+        assertEquals("config.ts", defaultStruct.FilePath)
+        assertEquals("default", defaultStruct.NodeName)
+        assertEquals(1, defaultStruct.Fields.size)
+        assertEquals("'/api'", defaultStruct.Fields[0].TypeValue)
+    }
 }
