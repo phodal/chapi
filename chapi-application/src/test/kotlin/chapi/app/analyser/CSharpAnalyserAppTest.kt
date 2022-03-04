@@ -9,11 +9,11 @@ import kotlin.test.assertEquals
 data class ApiModel(
     // todo: add code location information
     var CodeInfo: String = "",
-    var Controller: String,
+    var SourceNode: String,
     var HttpMethod: String,
     var BaseUri: String,
     var RouteUri: String,
-    var RequestModel: String = "",
+    var Request: String = "",
     var ResponseModel: String = ""
 )
 
@@ -25,12 +25,19 @@ internal class CSharpAnalyserAppTest {
 
         val models = mutableListOf<ApiModel>()
         val nodes = CSharpAnalyserApp().analysisNodeByPath(path)
+
+        println("|  Controller   | Method     | URI          | RequestModel     | ReturnModel       |")
+        println("|---------------|------------|--------------|------------------|-------------------|")
         nodes.map { node ->
             val routeAnnotation = node.filterAnnotations("RoutePrefix", "Route")
             if (routeAnnotation.isNotEmpty()) {
                 val baseUrl = routeAnnotation[0].KeyValues[0].Value
                 node.Functions.forEach { createFunctionApi(it, baseUrl, models, node) }
             }
+        }
+
+        models.forEach {
+            println("| ${it.SourceNode} | ${it.HttpMethod} | /${it.BaseUri}/${it.RouteUri} | ${it.Request} | ${it.ResponseModel}  |")
         }
 
         assertEquals(0, models.size);
@@ -57,12 +64,16 @@ internal class CSharpAnalyserAppTest {
         }
 
         if (route.isNotEmpty() && httpMethod.isNotEmpty()) {
-            println("$httpMethod : /$baseUrl/$route")
+            val params = func.Parameters.map {
+                it.TypeType + ":" + it.TypeValue
+            }.toList().joinToString(",")
+
             models += ApiModel(
-                Controller = node.NodeName,
+                SourceNode = node.NodeName,
                 BaseUri = baseUrl,
                 HttpMethod = httpMethod,
-                RouteUri = route
+                RouteUri = route,
+                Request = params
             )
         }
     }

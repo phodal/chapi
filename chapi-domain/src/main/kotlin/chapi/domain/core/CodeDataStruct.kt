@@ -34,7 +34,7 @@ open class CodeDataStruct(
     @Deprecated(message = "looking for constructor method for SCALA")
     var Parameters: Array<CodeProperty> = arrayOf(), // for Scala
 
-    var Imports: Array<CodeImport> = arrayOf<CodeImport>(),
+    var Imports: Array<CodeImport> = arrayOf(),
 
     // todo: select node useonly imports
     var Extension: JsonElement = JsonObject(HashMap())
