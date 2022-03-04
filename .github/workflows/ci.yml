@@ -22,3 +22,6 @@ jobs:
 
     - name: Execute Gradle Coverage
       run: ./gradlew check
+
+    - name: Execute Gradle Coverage
+      run: bash <(curl -s https://codecov.io/bash)
