@@ -2,12 +2,11 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
 import chapi.ast.antlr.GoParserBaseListener
-import chapi.domain.core.CodeFunction
 import chapi.domain.core.CodeProperty
 
 open class GoAstListener : GoParserBaseListener() {
     fun buildParameters(parametersCtx: GoParser.ParametersContext?): Array<CodeProperty> {
-        var parameters : Array<CodeProperty> = arrayOf()
+        var parameters: Array<CodeProperty> = arrayOf()
         for (paramCtx in parametersCtx!!.parameterDecl()) {
             val parameter = CodeProperty(
                 TypeValue = paramCtx.identifierList().text,
@@ -32,10 +31,7 @@ open class GoAstListener : GoParserBaseListener() {
         return ""
     }
 
-    protected fun buildReturnTypeFromSignature(
-        codeFunction: CodeFunction,
-        signatureContext: GoParser.SignatureContext?
-    ): Array<CodeProperty> {
+    protected fun buildReturnTypeFromSignature(signatureContext: GoParser.SignatureContext?): Array<CodeProperty> {
         val result = signatureContext!!.result()
         var returns: Array<CodeProperty> = arrayOf()
         if (result != null) {

@@ -128,11 +128,11 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
 
     private fun buildTestContext(testContext: PythonParser.TestContext): String {
         var returnType = ""
-        val exprCtx = testContext.getChild(0).getChild(0).getChild(0)
-        val exprType = exprCtx::class.java.simpleName
+        val childCtx = testContext.getChild(0).getChild(0).getChild(0)
+        val exprType = childCtx::class.java.simpleName
         when (exprType) {
             "ExprContext" -> {
-                val exprCtx = exprCtx as PythonParser.ExprContext
+                val exprCtx = childCtx as PythonParser.ExprContext
                 val exprChild = exprCtx.getChild(0)::class.java.simpleName
                 when (exprChild) {
                     "AtomContext" -> {

@@ -48,7 +48,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         )
 
         codeFunction.Parameters = this.buildParameters(ctx.signature().parameters())
-        codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(codeFunction, ctx.signature())
+        codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(ctx.signature())
 
         currentFunction = codeFunction
     }
@@ -72,7 +72,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             Name = funcName
         )
 
-        codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(codeFunction, ctx.signature())
+        codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(ctx.signature())
         codeFunction.Parameters = this.buildParameters(ctx.signature().parameters())
 
         currentFunction = codeFunction
