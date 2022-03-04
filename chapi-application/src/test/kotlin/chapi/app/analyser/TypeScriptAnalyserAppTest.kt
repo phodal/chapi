@@ -11,7 +11,7 @@ internal class TypeScriptAnalyserAppTest {
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
-        assertEquals(2, nodes.size)
+        assertEquals(3, nodes.size)
 
         val sb = StringBuilder()
         nodes.forEach {
