@@ -54,10 +54,10 @@ open class CodeDataStruct(
     }
 
     fun filterAnnotation(key: String): List<CodeAnnotation> {
-        return this.Annotations.filter { it.Name.lowercase() == key.lowercase() }
+        return this.filterAnnotations(key)
     }
 
-    fun filterAnnotations(keys: List<String>): List<CodeAnnotation> {
+    fun filterAnnotations(vararg keys: String): List<CodeAnnotation> {
         return this.Annotations.filter { prop ->
             keys.map { it.lowercase() }.contains(prop.Name.lowercase())
         }

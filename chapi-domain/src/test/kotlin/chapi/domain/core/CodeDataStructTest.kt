@@ -37,10 +37,10 @@ internal class CodeDataStructTest {
         ds.Annotations += CodeAnnotation(Name = "Code2")
         ds.Annotations += CodeAnnotation(Name = "Code3")
 
-        val annotations = ds.filterAnnotations(listOf("Code1"))
+        val annotations = ds.filterAnnotations("Code1")
         assertEquals(1, annotations.size)
 
-        val annotations2 = ds.filterAnnotations(listOf("Code1", "Code2"))
+        val annotations2 = ds.filterAnnotations("Code1", "Code2")
         assertEquals(2, annotations2.size)
     }
 }
