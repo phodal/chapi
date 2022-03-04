@@ -57,6 +57,12 @@ open class CodeDataStruct(
         return this.Annotations.filter { it.Name.lowercase() == key.lowercase() }
     }
 
+    fun filterAnnotations(keys: List<String>): List<CodeAnnotation> {
+        return this.Annotations.filter { prop ->
+            keys.map { it.lowercase() }.contains(prop.Name.lowercase())
+        }
+    }
+
     fun getClassFullName(): String {
         return this.Package + "." + this.NodeName
     }
