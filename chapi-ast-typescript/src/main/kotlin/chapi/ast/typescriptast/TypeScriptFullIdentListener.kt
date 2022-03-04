@@ -763,20 +763,22 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             codeContainer.DataStructures += entry.value
         }
 
-        // for: `export const baseURL = '/api'`
-        val fieldOnly = defaultNode.Fields.isNotEmpty()
+        if(codeContainer.DataStructures.isEmpty()) {
+            // for: `export const baseURL = '/api'`
+            val fieldOnly = defaultNode.Fields.isNotEmpty()
 
-        // for export default function
-        val functionOnly = defaultNode.Functions.isNotEmpty()
+            // for export default function
+            val functionOnly = defaultNode.Functions.isNotEmpty()
 
-        if (functionOnly) {
-            defaultNode.NodeName = "default"
-            defaultNode.FilePath = codeContainer.FullName
-            codeContainer.DataStructures += defaultNode
-        } else if (fieldOnly) {
-            defaultNode.NodeName = "default"
-            defaultNode.FilePath = codeContainer.FullName
-            codeContainer.DataStructures += defaultNode
+            if (functionOnly) {
+                defaultNode.NodeName = "default"
+                defaultNode.FilePath = codeContainer.FullName
+                codeContainer.DataStructures += defaultNode
+            } else if (fieldOnly) {
+                defaultNode.NodeName = "default"
+                defaultNode.FilePath = codeContainer.FullName
+                codeContainer.DataStructures += defaultNode
+            }
         }
 
         return codeContainer

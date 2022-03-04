@@ -84,7 +84,6 @@ export class LedgeStorageService {
         assertEquals(annotations[0].Name, "Injectable")
     }
 
-
     @Test @Disabled
     internal fun shouldIndentTypeScriptDecoratorKeyValues() {
         val content = """
