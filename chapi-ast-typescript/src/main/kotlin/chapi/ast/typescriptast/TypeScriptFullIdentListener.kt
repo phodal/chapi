@@ -70,18 +70,20 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             if (it.Assign() != null) {
                 val key = it.getChild(0).text
                 val lastExpr = it.singleExpression().last()
-                var value = lastExpr.text
+                val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
+
                 when (lastExpr::class.simpleName) {
                     "LiteralExpressionContext" -> {
                         val literal = lastExpr as TypeScriptParser.LiteralExpressionContext
                         if (literal.literal().StringLiteral() != null) {
-                            value = unQuote(literal.text)
+                            field.TypeValue = unQuote(literal.text)
+                            field.TypeType = "String"
                         }
                     }
                 }
 
 
-                fields += CodeField(TypeKey = key, TypeValue = value, Modifiers = modifiers)
+                fields += field
             }
         }
 
