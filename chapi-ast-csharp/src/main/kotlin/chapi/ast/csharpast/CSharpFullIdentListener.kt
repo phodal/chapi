@@ -183,8 +183,8 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         codeDataStruct: CodeDataStruct
     ) {
         val memberDeclaration = memberCtx!!.common_member_declaration() ?: return
+        val firstChild = memberDeclaration.getChild(0) ?: return
 
-        val firstChild = memberDeclaration.getChild(0)
         var returnType = "";
         when (firstChild::class.java.simpleName) {
             "TerminalNodeImpl" -> {
