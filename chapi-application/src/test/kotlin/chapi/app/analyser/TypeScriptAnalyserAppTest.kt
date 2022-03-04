@@ -1,21 +1,17 @@
 package chapi.app.analyser
 
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import java.io.FileWriter
+import java.nio.file.Paths
+import kotlin.test.assertEquals
 
 internal class TypeScriptAnalyserAppTest {
     @Test
-//    @Disabled
     fun shouldIdentifySamePackage() {
-        val testPath = "/Volumes/source/archguard/archguard-frontend/archguard/src/api"
-        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(testPath)
-        println(nodes)
+        val resource = this.javaClass.classLoader.getResource("languages/ts/api")!!
+        val path = Paths.get(resource.toURI()).toFile().absolutePath
 
-        FileWriter("output.json").use { it.write(Json.encodeToString(nodes)) }
-
+        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
+        assertEquals(2, nodes.size)
 
         val sb = StringBuilder()
         nodes.forEach {
