@@ -481,7 +481,7 @@ export function querySystemInfo() {
         assertEquals(1, calls.size)
         assertEquals(1, codeFile.Fields.size);
         assertEquals("systemInfoApi", codeFile.Fields[0].TypeKey);
-        assertEquals("\"/system-info\"", codeFile.Fields[0].TypeValue);
+        assertEquals("/system-info", codeFile.Fields[0].TypeValue);
     }
 
     @Test
@@ -524,6 +524,6 @@ export const baseURL = '/api'
         assertEquals("config.ts", defaultStruct.FilePath)
         assertEquals("default", defaultStruct.NodeName)
         assertEquals(1, defaultStruct.Fields.size)
-        assertEquals("'/api'", defaultStruct.Fields[0].TypeValue)
+        assertEquals("/api", defaultStruct.Fields[0].TypeValue)
     }
 }
