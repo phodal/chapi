@@ -558,7 +558,12 @@ const BadSmellThreshold = () => {
         val defaultStruct = codeFile.DataStructures[0]
 
         assertEquals(1, defaultStruct.Functions.size)
-        assertEquals("BadSmellThreshold", defaultStruct.Functions[0].Name)
-        assertEquals("onFinish", defaultStruct.Functions[0].InnerFunctions[0].Name)
+
+        val firstFunc = defaultStruct.Functions[0]
+        assertEquals("BadSmellThreshold", firstFunc.Name)
+        val innerFunc = firstFunc.InnerFunctions[0]
+        assertEquals("onFinish", innerFunc.Name)
+
+        assertEquals("updateSystemInfo->then", firstFunc.FunctionCalls[0].FunctionName)
     }
 }

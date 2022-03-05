@@ -402,33 +402,40 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 parseExpressionSequence(context.expressionSequence())
             }
             "ArgumentsExpressionContext" -> {
-                val argument = ctx as TypeScriptParser.ArgumentsExpressionContext
-                val argText = argument.singleExpression().text
-
-                if (argText.startsWith("(")) {
-                    // axios("/demo")
-                    val args = parseArguments(argument)
-                    currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, args)
-                } else {
-                    currentExprIdent = argText
-
-                    // todo: add other case for call chain in arrow function
-                    if (argText.contains(").")) {
-                        val args = parseArguments(argument)
-                        println("argText with )." + Json.encodeToString(args))
-                    }
-
-                    // axios.get() or _.orderBy()
-                    currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, arrayOf())
-                }
+                argumentsExpressionToCall(ctx as TypeScriptParser.ArgumentsExpressionContext)
             }
             "ParenthesizedExpressionContext" -> {
                 val parameter = parseParenthesizedExpression(ctx)
                 currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, arrayOf(parameter))
             }
             else -> {
-                println("todo: need support type: ${ctx::class.java.simpleName}")
+                println("todo - need support type: ${ctx::class.java.simpleName}")
             }
+        }
+    }
+
+    private fun argumentsExpressionToCall(argument: TypeScriptParser.ArgumentsExpressionContext, varName: String = "") {
+        val argText = argument.singleExpression().text
+
+        if (varName != "") {
+            currentExprIdent = varName
+        }
+
+        if (argText.startsWith("(")) {
+            // axios("/demo")
+            val args = parseArguments(argument)
+            currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, args)
+        } else {
+            currentExprIdent = argText
+
+            // todo: add other case for call chain in arrow function
+            if (argText.contains(").")) {
+                val args = parseArguments(argument)
+                println("argText with )." + Json.encodeToString(args))
+            }
+
+            // axios.get() or _.orderBy()
+            currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, arrayOf())
         }
     }
 
@@ -760,10 +767,14 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         }
                     }
                 }
-                "enterVariableDeclaration" -> {
-                    // replace by #[enterArrowFunctionDeclaration](enterArrowFunctionDeclaration)
+                "ArrowFunctionExpressionContext" -> {
+                    // will recall by ArrowFunctionDeclaration
+                }
+                "ArgumentsExpressionContext" -> {
+                    argumentsExpressionToCall(singleExprCtx as TypeScriptParser.ArgumentsExpressionContext, varName)
                 }
                 else -> {
+                    println(ctx.text)
                     println("enterVariableDeclaration : $singleCtxType")
                 }
             }
