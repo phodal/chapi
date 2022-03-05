@@ -21,7 +21,7 @@ data class ConsumerModel(
 internal class TypeScriptAnalyserAppTest {
     @Test
     fun shouldIdentifySamePackage() {
-        val resource = this.javaClass.classLoader.getResource("languages/ts/api")!!
+        val resource = this.javaClass.classLoader.getResource("languages/ts/apicall")!!
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
