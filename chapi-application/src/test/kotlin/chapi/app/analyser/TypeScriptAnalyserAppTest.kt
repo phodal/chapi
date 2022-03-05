@@ -1,8 +1,22 @@
 package chapi.app.analyser
 
+import chapi.domain.core.CodePosition
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
 import kotlin.test.assertEquals
+
+data class ConsumerModel(
+    // like component
+    var ConsumerName: String = "",
+    // API name
+    var TargetName: String = "",
+    // consumer file path
+    var ConsumerFile: String = "",
+    // a simple log for consumer
+    var ConsumerCallLog: String = "",
+    var ConsumerPosition: CodePosition = CodePosition()
+)
+
 
 internal class TypeScriptAnalyserAppTest {
     @Test
