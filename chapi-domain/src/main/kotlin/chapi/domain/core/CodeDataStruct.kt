@@ -35,6 +35,7 @@ open class CodeDataStruct(
     var Parameters: Array<CodeProperty> = arrayOf(), // for Scala
 
     var Imports: Array<CodeImport> = arrayOf(),
+    var Exports: Array<CodeExport> = arrayOf(),
 
     // todo: select node useonly imports
     var Extension: JsonElement = JsonObject(HashMap())
