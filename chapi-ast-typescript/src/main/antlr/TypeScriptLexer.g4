@@ -202,6 +202,57 @@ BackTickInside:                 '`' {this.DecreaseTemplateDepth();} -> type(Back
 TemplateStringStartExpression:  '${' -> pushMode(DEFAULT_MODE);
 TemplateStringAtom:             ~[`];
 
+//
+// html tag declarations
+//
+mode TAG;
+
+TagOpen
+    : LessThan -> pushMode(TAG)
+    ;
+TagClose
+    : MoreThan -> popMode
+    ;
+
+TagSlashClose
+    : '/>' -> popMode
+    ;
+
+TagSlash
+    : Divide
+    ;
+
+TagName
+    : TagNameStartChar TagNameChar*
+    ;
+
+fragment
+TagNameStartChar
+    :   [:a-zA-Z]
+    |   '\u2070'..'\u218F'
+    |   '\u2C00'..'\u2FEF'
+    |   '\u3001'..'\uD7FF'
+    |   '\uF900'..'\uFDCF'
+    |   '\uFDF0'..'\uFFFD'
+    ;
+
+fragment
+TagNameChar
+    : TagNameStartChar
+    | '-'
+    | '_'
+    | '.'
+    | Digit
+    |   '\u00B7'
+    |   '\u0300'..'\u036F'
+    |   '\u203F'..'\u2040'
+    ;
+
+fragment
+Digit
+    : [0-9]
+    ;
+
 // Fragment rules
 
 fragment DoubleStringCharacter
