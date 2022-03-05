@@ -51,6 +51,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         val varDeclList = it as TypeScriptParser.VariableDeclarationListContext
                         val fields = variableToFields(varDeclList, arrayOf(modifier))
 
+                        defaultNode.Exports += CodeExport(Name = fields[0].TypeKey, Type = DataStructType.Variable, SourceFile = codeContainer.FullName)
+
                         defaultNode.Fields += fields
                     }
                     else -> {

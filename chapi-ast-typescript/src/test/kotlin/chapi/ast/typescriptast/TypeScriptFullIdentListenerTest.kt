@@ -526,4 +526,17 @@ export const baseURL = '/api'
         assertEquals(1, defaultStruct.Fields.size)
         assertEquals("/api", defaultStruct.Fields[0].TypeValue)
     }
+
+    @Test
+    internal fun shouldIdentExportFunctions() {
+        val content = """
+export const baseURL = '/api'
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "config.ts")
+        val defaultStruct = codeFile.DataStructures[0]
+
+        assertEquals(1, defaultStruct.Exports.size)
+        assertEquals("baseURL", defaultStruct.Exports[0].Name)
+    }
 }

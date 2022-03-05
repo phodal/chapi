@@ -7,6 +7,7 @@ import kotlinx.serialization.json.JsonObject
 enum class DataStructType (val structType: String) {
     EMPTY(""),
     CLASS("Class"),
+    Variable("Variable"),
     INTERFACE("Interface"),
     STRUCT("Struct"),
     OBJECT("Object"),
