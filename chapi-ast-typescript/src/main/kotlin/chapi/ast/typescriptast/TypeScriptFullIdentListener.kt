@@ -23,6 +23,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var namespaceName: String = ""
     private var currentAnnotations = arrayOf<CodeAnnotation>()
 
+    private var funcsStack = Stack<CodeFunction>()
+
     private var classNodeStack = Stack<CodeDataStruct>()
 
     override fun enterNamespaceDeclaration(ctx: TypeScriptParser.NamespaceDeclarationContext?) {
@@ -579,20 +581,32 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         val statementParent = ctx!!.parent.parent
         val parentName = statementParent::class.java.simpleName
 
+        var isInnerFunc = false;
+        if(currentFunc.Name != "") {
+            isInnerFunc = true
+        }
+        val func = CodeFunction()
+
         when (parentName) {
             // for: const blabla = () => { }
             "VariableDeclarationContext" -> {
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
-                currentFunc.Name = varDeclCtx.identifierOrKeyWord().text
+                func.Name = varDeclCtx.identifierOrKeyWord().text
                 this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
-                currentFunc.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
+                func.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
 
                 if (ctx.typeAnnotation() != null) {
-                    currentFunc.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
+                    func.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
                 }
+                func.Position = this.buildPosition(ctx)
 
-                currentFunc.Position = this.buildPosition(ctx)
-                defaultNode.Functions += currentFunc
+                if (isInnerFunc) {
+                    funcsStack.push(func)
+                    currentFunc.InnerFunctions += func
+                } else {
+                    funcsStack.push(func)
+                    currentFunc = func
+                }
             }
             "ArgumentContext" -> {
                 // todo: add arg ctx
@@ -611,6 +625,16 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         // todo: add sourceElements parse
     }
 
+    override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
+        funcsStack.pop()
+        if (funcsStack.count() == 0) {
+            if(currentFunc.Name != "") {
+                defaultNode.Functions += currentFunc
+                currentFunc = CodeFunction()
+            }
+        }
+    }
+
     private fun buildArrowFunctionParameters(arrowFuncCtx: TypeScriptParser.ArrowFunctionParametersContext?): Array<CodeProperty> {
         if (arrowFuncCtx!!.formalParameterList() != null) {
             return this.buildParameters(arrowFuncCtx.formalParameterList())
@@ -623,10 +647,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             parameters += parameter
         }
         return parameters
-    }
-
-    override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
-        currentFunc = CodeFunction()
     }
 
     private fun fillMethodFromCallSignature(
@@ -739,6 +759,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                             println("others variable decl: $identExprText")
                         }
                     }
+                }
+                "enterVariableDeclaration" -> {
+                    // replace by #[enterArrowFunctionDeclaration](enterArrowFunctionDeclaration)
                 }
                 else -> {
                     println("enterVariableDeclaration : $singleCtxType")
