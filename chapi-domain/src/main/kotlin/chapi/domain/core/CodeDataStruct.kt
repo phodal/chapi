@@ -35,6 +35,9 @@ open class CodeDataStruct(
     var Parameters: Array<CodeProperty> = arrayOf(), // for Scala
 
     var Imports: Array<CodeImport> = arrayOf(),
+
+    // in TypeScript, a files can export Function, Variable, Class, Interface
+    // `export const baseURL = '/api'`
     var Exports: Array<CodeExport> = arrayOf(),
 
     // todo: select node useonly imports
@@ -52,10 +55,6 @@ open class CodeDataStruct(
         }
 
         this.Functions = methodsArray
-    }
-
-    fun filterAnnotation(key: String): List<CodeAnnotation> {
-        return this.filterAnnotations(key)
     }
 
     fun filterAnnotations(vararg keys: String): List<CodeAnnotation> {

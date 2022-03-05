@@ -9,7 +9,7 @@ import kotlinx.serialization.json.jsonObject
 @Serializable
 open class CodeFunction(
     var Name: String = "",
-    var Package : String = "",
+    var Package: String = "",
     var ReturnType: String = "",
     var MultipleReturns: Array<CodeProperty> = arrayOf(),
     var Parameters: Array<CodeProperty> = arrayOf(),
@@ -17,11 +17,13 @@ open class CodeFunction(
     var Annotations: Array<CodeAnnotation> = arrayOf(),
     var Override: Boolean = false,
     var Modifiers: Array<String> = arrayOf(),
+    // for example, Java can have Inner Class
     var InnerStructures: Array<CodeDataStruct> = arrayOf(),
+    // for lambda or anonymous function inside function.
     var InnerFunctions: Array<CodeFunction> = arrayOf(),
     var Position: CodePosition = CodePosition(),
     var Extension: JsonElement = JsonObject(HashMap()),
-    var LocalVariables : Array<CodeProperty> = arrayOf(),
+    var LocalVariables: Array<CodeProperty> = arrayOf(),
     var IsConstructor: Boolean = false // todo: move to extension
 ) {
     private var extensionMap = HashMap<String, JsonElement>()
@@ -48,7 +50,6 @@ open class CodeFunction(
         return node.Package + "." + node.NodeName + "." + this.Name
     }
 
-
     fun getAllCallString(): Array<String> {
         var calls = arrayOf<String>()
         for (codeCall in this.FunctionCalls) {
@@ -58,10 +59,6 @@ open class CodeFunction(
         }
 
         return calls
-    }
-
-    fun filterAnnotation(key: String): List<CodeAnnotation> {
-        return this.Annotations.filter { it.Name.lowercase() == key }
     }
 
     fun isJUnitTest(): Boolean {
@@ -92,7 +89,6 @@ open class CodeFunction(
     fun isReturnNull(): Boolean {
         return this.Extension.jsonObject["IsReturnNull"] == JsonPrimitive("true")
     }
-
 
     fun addVarsFromMap(localVars: MutableMap<String, String>) {
         var vars: Array<CodeProperty> = arrayOf()
