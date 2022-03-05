@@ -539,4 +539,24 @@ export const baseURL = '/api'
         assertEquals(1, defaultStruct.Exports.size)
         assertEquals("baseURL", defaultStruct.Exports[0].Name)
     }
+
+    @Test
+    internal fun shouldIdentTsx() {
+        val content = """
+import { updateSystemInfo } from '@/api/addition/systemInfo';
+
+const BadSmellThreshold = () => {
+    const onFinish = (values: Store) => {
+        updateSystemInfo(currentSystemInfo).then(() => {});
+    }
+    
+    return ( <div />); 
+}
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "config.ts")
+        val defaultStruct = codeFile.DataStructures[0]
+
+        assertEquals(2, defaultStruct.Functions.size)
+    }
 }
