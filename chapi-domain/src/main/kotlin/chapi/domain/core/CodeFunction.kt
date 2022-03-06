@@ -9,6 +9,7 @@ import kotlinx.serialization.json.jsonObject
 @Serializable
 open class CodeFunction(
     var Name: String = "",
+    var FilePath: String = "",
     var Package: String = "",
     var ReturnType: String = "",
     var MultipleReturns: Array<CodeProperty> = arrayOf(),
@@ -98,5 +99,9 @@ open class CodeFunction(
         }
 
         this.LocalVariables = vars
+    }
+
+    fun fileExt(): String {
+        return this.FilePath.substringAfterLast('.', "")
     }
 }

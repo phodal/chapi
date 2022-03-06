@@ -47,6 +47,6 @@ internal class CodeDataStructTest {
     @Test
     internal fun shouldGetFileExt() {
         val ds = CodeDataStruct(NodeName = "FunctionMap", FilePath = "src/main.java")
-        assertEquals("java", ds.extension());
+        assertEquals("java", ds.fileExt());
     }
 }

@@ -68,7 +68,7 @@ open class CodeDataStruct(
         return this.Package + "." + this.NodeName
     }
 
-    fun extension(): String {
+    fun fileExt(): String {
         return this.FilePath.substringAfterLast('.', "")
     }
 }
