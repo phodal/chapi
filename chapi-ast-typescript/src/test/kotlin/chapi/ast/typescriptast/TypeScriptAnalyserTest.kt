@@ -50,58 +50,10 @@ internal class TypeScriptAnalyserTest {
     }
 
     @Test
-    internal fun shouldIdentTypeScriptHelloWorldFunCall() {
-        val content = """
-let greeting = function() {
-    console.log("Hello TypeScript!");
-};
-        """
+    internal fun shouldIdentReactComponents() {
+        val content = this::class.java.getResource("/realworld/BadSmellThreshold.tsx").readText()
+        val codeFile = TypeScriptAnalyser().analysis(content, "BadSmellThreshold.tsx")
 
-        val codeFile = TypeScriptAnalyser().analysis(content, "")
-
-        val firstFunc = codeFile.DataStructures[0].Functions[0]
-        assertEquals(firstFunc.FunctionCalls.size, 1)
-        assertEquals(firstFunc.FunctionCalls[0].NodeName, "console")
-        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "log")
-    }
-
-    @Test
-    internal fun shouldIndentTypeScriptDecorator() {
-        val content = """
-import { Injectable } from '@angular/core';
-
-@Injectable()
-export class LedgeStorageService {
-  get storage() {
-    return window.localStorage;
-  }
-}
-        """
-
-        val codeFile = TypeScriptAnalyser().analysis(content, "")
-        val annotations = codeFile.DataStructures[0].Annotations
-        assertEquals(annotations.size, 1)
-        assertEquals(annotations[0].Name, "Injectable")
-    }
-
-    @Test @Disabled
-    internal fun shouldIndentTypeScriptDecoratorKeyValues() {
-        val content = """
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-design',
-  templateUrl: './design.component.html',
-  styleUrls: ['./design.component.scss'],
-})
-export class DesignComponent {
-
-}
-
-        """
-
-        val codeFile = TypeScriptAnalyser().analysis(content, "")
-        val annotations = codeFile.DataStructures[0].Annotations
-        assertEquals(annotations.size, 1)
+        assertEquals(codeFile.DataStructures.size, 0)
     }
 }

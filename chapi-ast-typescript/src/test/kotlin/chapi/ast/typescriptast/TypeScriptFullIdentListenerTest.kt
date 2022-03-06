@@ -3,10 +3,69 @@ package chapi.ast.typescriptast
 import chapi.domain.core.DataStructType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class TypeScriptFullIdentListenerTest {
+
+    @Test
+    internal fun shouldIdentTypeScriptHelloWorldFunCall() {
+        val content = """
+let greeting = function() {
+    console.log("Hello TypeScript!");
+};
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
+
+        val firstFunc = codeFile.DataStructures[0].Functions[0]
+        Assertions.assertEquals(firstFunc.FunctionCalls.size, 1)
+        Assertions.assertEquals(firstFunc.FunctionCalls[0].NodeName, "console")
+        Assertions.assertEquals(firstFunc.FunctionCalls[0].FunctionName, "log")
+    }
+
+    @Test
+    internal fun shouldIndentTypeScriptDecorator() {
+        val content = """
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class LedgeStorageService {
+  get storage() {
+    return window.localStorage;
+  }
+}
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
+        val annotations = codeFile.DataStructures[0].Annotations
+        Assertions.assertEquals(annotations.size, 1)
+        Assertions.assertEquals(annotations[0].Name, "Injectable")
+    }
+
+    @Test @Disabled
+    internal fun shouldIndentTypeScriptDecoratorKeyValues() {
+        val content = """
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-design',
+  templateUrl: './design.component.html',
+  styleUrls: ['./design.component.scss'],
+})
+export class DesignComponent {
+
+}
+
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
+        val annotations = codeFile.DataStructures[0].Annotations
+        Assertions.assertEquals(annotations.size, 1)
+    }
+
     @Test
     internal fun shouldIdentifyInterfaceName() {
         var code = """

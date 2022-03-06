@@ -10,6 +10,7 @@ class TypeScriptAnalyserApp(config: ChapiConfig = ChapiConfig(language = "typesc
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> {
         var nodeInfos: Array<CodeDataStruct> = arrayOf()
         for (file in files) {
+            println(file.absolutePath)
             val fileContent = readFileAsString(file.absolutePath)
             val codeFile = TypeScriptAnalyser().analysis(fileContent, file.fileName)
             for (dataStructure in codeFile.DataStructures) {
