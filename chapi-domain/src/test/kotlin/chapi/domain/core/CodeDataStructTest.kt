@@ -43,4 +43,10 @@ internal class CodeDataStructTest {
         val annotations2 = ds.filterAnnotations("Code1", "Code2")
         assertEquals(2, annotations2.size)
     }
+
+    @Test
+    internal fun shouldGetFileExt() {
+        val ds = CodeDataStruct(NodeName = "FunctionMap", FilePath = "src/main.java")
+        assertEquals("java", ds.extension());
+    }
 }

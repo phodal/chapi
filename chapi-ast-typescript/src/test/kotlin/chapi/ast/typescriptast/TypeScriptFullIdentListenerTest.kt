@@ -552,9 +552,9 @@ const BadSmellThreshold = () => {
     
     return ( <div />); 
 }
-        """
+"""
 
-        val codeFile = TypeScriptAnalyser().analysis(content, "config.ts")
+        val codeFile = TypeScriptAnalyser().analysis(content, "index.tsx")
         val defaultStruct = codeFile.DataStructures[0]
 
         assertEquals(1, defaultStruct.Functions.size)
