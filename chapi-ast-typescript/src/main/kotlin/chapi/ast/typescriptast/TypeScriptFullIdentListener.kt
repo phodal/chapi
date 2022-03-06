@@ -9,6 +9,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
+    private lateinit var fileName: String
     private var hasAnnotation: Boolean = false;
     private var hasEnterClass = false
     private var currentExprIdent: String = ""
@@ -145,6 +146,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 "ConstructorDeclarationContext" -> {
                     val codeFunction =
                         this.buildConstructorMethod(childCtx as TypeScriptParser.ConstructorDeclarationContext)
+                    codeFunction.FilePath = fileName
                     currentNode.Functions += codeFunction
                 }
                 "PropertyDeclarationExpressionContext" -> {
@@ -172,6 +174,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
                     }
 
+                    codeFunction.FilePath = fileName
                     currentNode.Functions += codeFunction
                 }
                 else -> {
@@ -252,6 +255,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
                     fillMethodFromCallSignature(methodSignCtx.callSignature())
 
+                    currentFunc.FilePath = fileName
                     currentNode.Functions += currentFunc
                     currentFunc = CodeFunction()
                 }
@@ -282,6 +286,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             codeFunction.Parameters += param
             codeFunction.MultipleReturns += returnType
 
+            codeFunction.FilePath = fileName
             currentNode.Functions += codeFunction
         } else {
             val codeField = CodeField(TypeType = typeType, TypeValue = typeValue)
@@ -351,6 +356,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             parseStatement(context)
         }
 
+        currentFunc.FilePath = fileName
         defaultNode.Functions += currentFunc
     }
 
@@ -568,10 +574,12 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 }
 
                 currentFunc.Position = this.buildPosition(ctx)
+                currentFunc.FilePath = fileName
                 defaultNode.Functions += currentFunc
             }
             "IdentifierExpressionContext" -> {
                 currentFunc.Position = this.buildPosition(ctx)
+                currentFunc.FilePath = fileName
                 defaultNode.Functions += currentFunc
             }
             else -> {
@@ -592,7 +600,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         if(currentFunc.Name != "") {
             isInnerFunc = true
         }
-        val func = CodeFunction()
+        val func = CodeFunction(FilePath = fileName)
 
         when (parentName) {
             // for: const blabla = () => { }
@@ -682,8 +690,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     override fun enterExpressionStatement(ctx: TypeScriptParser.ExpressionStatementContext?) {
-        println("enterExpressionStatement : " + ctx!!.text)
-        if (ctx.expressionSequence() == null) {
+        if (ctx!!.expressionSequence() == null) {
             return
         }
 
@@ -818,5 +825,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
 
         return codeContainer
+    }
+
+    fun setPath(fileName: String) {
+        this.fileName = fileName
     }
 }

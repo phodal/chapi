@@ -560,6 +560,7 @@ const BadSmellThreshold = () => {
         assertEquals(1, defaultStruct.Functions.size)
 
         val firstFunc = defaultStruct.Functions[0]
+        assertEquals("index.tsx", firstFunc.FilePath)
         assertEquals("BadSmellThreshold", firstFunc.Name)
         val innerFunc = firstFunc.InnerFunctions[0]
         assertEquals("onFinish", innerFunc.Name)

@@ -12,6 +12,7 @@ open class TypeScriptAnalyser {
         val context = this.parse(str).program()
         val listener = TypeScriptFullIdentListener(TSIdentify(fileName = fileName))
 
+        listener.setPath(fileName)
         ParseTreeWalker().walk(listener, context)
 
         return listener.getNodeInfo()
