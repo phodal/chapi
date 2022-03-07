@@ -54,6 +54,6 @@ internal class TypeScriptAnalyserTest {
         val content = this::class.java.getResource("/realworld/BadSmellThreshold.tsx")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "BadSmellThreshold.tsx")
 
-        assertEquals(codeFile.DataStructures.size, 0)
+        assertEquals(codeFile.DataStructures.size, 1)
     }
 }

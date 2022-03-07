@@ -36,7 +36,7 @@ internal class TypeScriptAnalyserAppTest {
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
-        assertEquals(3, nodes.size)
+        assertEquals(4, nodes.size)
 
         var calls: List<CodeCall> = listOf()
         nodes.map { ds ->

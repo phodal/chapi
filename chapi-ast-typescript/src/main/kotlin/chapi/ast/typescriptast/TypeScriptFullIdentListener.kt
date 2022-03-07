@@ -479,7 +479,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                             // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response);}).catch();
                             val args = memberDot.singleExpression() as TypeScriptParser.ArgumentsExpressionContext
                             val parseArguments = parseArguments(args)
-                            println(Json.encodeToString(parseArguments))
                         }
                         "IdentifierExpressionContext" -> {
                             val ident = memberDot.singleExpression() as IdentifierExpressionContext
@@ -497,10 +496,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     params += prop
                 }
                 "ArgumentsContext" -> {
-//                    val args = it as TypeScriptParser.ArgumentsContext
-//                    for (argumentContext in args.argumentList().argument()) {
-//                        //
-//                    }
+
                 }
                 else -> {
                     println("singleExpression -> ArgumentsExpressionContext -> $child_name")
@@ -538,8 +534,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private fun parseObjectLiteral(objectLiteral: TypeScriptParser.ObjectLiteralContext): Array<CodeProperty> {
         var root: Array<CodeProperty> = arrayOf();
         objectLiteral.propertyAssignment().forEach { property ->
-            val propName = property::class.java.simpleName
-            when (propName) {
+            when (val propName = property::class.java.simpleName) {
                 "PropertyExpressionAssignmentContext" -> {
                     val assignCtx = property as TypeScriptParser.PropertyExpressionAssignmentContext
                     val text = singleExpToText(assignCtx.singleExpression())
@@ -734,6 +729,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
                     currentFunc.FunctionCalls += codeCall
                 }
+                "IdentifierExpressionContext" -> {
+                    println("enterExpressionStatement -> IdentifierExpressionContext: ${singleExprCtx.text}")
+                }
                 else -> {
                     println("enterExpressionStatement : $singleCtxType")
                 }
@@ -816,10 +814,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             }
         }
     }
-
-//    override fun enterEveryRule(ctx: ParserRuleContext?) {
-//        println(ctx!!.javaClass.simpleName)
-//    }
 
     private fun buildArguments(arguments: TypeScriptParser.ArgumentsContext?): Array<CodeProperty> {
         var args: Array<CodeProperty> = arrayOf()
