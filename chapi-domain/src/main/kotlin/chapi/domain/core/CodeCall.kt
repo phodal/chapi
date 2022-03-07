@@ -8,7 +8,11 @@ import kotlinx.serialization.json.JsonConfiguration
 @Serializable
 open class CodeCall(
     var Package: String = "",
+    // for Java, it can be CreatorClass, lambda
+    // for TypeScript, can be anonymous function, arrow function
     var Type: String = "",
+    // for Class/DataStruct, it's ClassName
+    // for Function, it's empty
     var NodeName: String = "",
     var FunctionName: String = "",
     var Parameters: Array<CodeProperty> = arrayOf(),

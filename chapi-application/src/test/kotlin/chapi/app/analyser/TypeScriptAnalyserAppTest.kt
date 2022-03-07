@@ -38,33 +38,33 @@ internal class TypeScriptAnalyserAppTest {
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         assertEquals(4, nodes.size)
 
+        // 1. first create Component with FunctionCall maps based on Import
         var calls: List<CodeCall> = listOf()
         nodes.map { ds ->
             ds.Functions.map {
-                val isComponent = it.fileExt() == ".tsx"
+                val isComponent = it.fileExt() == "tsx"
                 if (isComponent) {
-                    println(it.FilePath)
+                    println("component: " + it.Name)
                 }
             }
         }
 
+        // 2. build axios/umi-request to a API call method
         val sb = StringBuilder()
-        val adapters: List<ApiAdapter> = listOf();
+        val adapters: MutableList<ApiAdapter> = mutableListOf();
         nodes.forEach {
             it.Functions.forEach { func ->
                 run {
                     func.FunctionCalls.forEach { call ->
                         run {
-                            val nodeName = call.NodeName
-                            if (!(nodeName == "axios" || nodeName.startsWith("axios."))) {
+                            val callName = call.FunctionName
+                            if (callName == "axios" || callName.startsWith("axios.")) {
                                 val adapter = ApiAdapter()
                                 if (call.Parameters.isNotEmpty()) {
-                                    sb.append("$nodeName -> ${call.Parameters[0].TypeValue}\n")
-                                    adapter.SourceFunc = nodeName
+                                    sb.append("$callName -> ${call.Parameters[0].TypeValue}\n")
+                                    adapter.SourceFunc = callName
                                     adapter.TypeValue = call.Parameters[0].TypeValue
-                                } else {
-                                    adapter.SourceFunc = nodeName
-                                    sb.append("${func.Name}.$nodeName\n")
+                                    adapters += adapter
                                 }
                             }
                         }
@@ -73,7 +73,8 @@ internal class TypeScriptAnalyserAppTest {
             }
         }
 
+        // 3. mapping for results
         println(Json.encodeToString(adapters))
-        println(sb)
+        print(sb)
     }
 }
