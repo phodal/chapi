@@ -638,16 +638,18 @@ const BadSmellThreshold = () => {
         </Radio>
     ); 
     
-//    const onReset = () => {
-//        form.setFieldsValue({ badSmellThresholdSuiteId: currentSystemInfo!.badSmellThresholdSuiteId });
-//    };
+    const onChange = (e: any) => {
+        form.setFieldsValue({ badSmellThresholdSuiteId: e.target.value });
+    }
 }
 """
 
         val codeFile = TypeScriptAnalyser().analysis(content, "index.tsx")
         val defaultStruct = codeFile.DataStructures[0]
-        assertEquals(1, defaultStruct.Functions.size)
+        assertEquals(2, defaultStruct.Functions.size)
 
-//        assertEquals(1, defaultStruct.Functions[0].InnerFunctions.size)
+        assertEquals(1, defaultStruct.Functions[0].InnerFunctions.size)
+
+        println(Json.encodeToString(codeFile))
     }
 }
