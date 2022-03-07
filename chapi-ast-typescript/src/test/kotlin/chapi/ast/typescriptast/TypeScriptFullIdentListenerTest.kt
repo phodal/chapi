@@ -626,4 +626,28 @@ const BadSmellThreshold = () => {
 
         assertEquals("updateSystemInfo->then", firstFunc.FunctionCalls[0].FunctionName)
     }
+
+    @Test
+    internal fun shouldCompileNotError() {
+        val content = """
+const BadSmellThreshold = () => {
+    const renderRadio = (badSmellOption: BadSmellOption) => (
+        <Radio value={badSmellOption.id}
+            onClick={(e) => e.stopPropagation()}>
+            选择
+        </Radio>
+    ); 
+    
+//    const onReset = () => {
+//        form.setFieldsValue({ badSmellThresholdSuiteId: currentSystemInfo!.badSmellThresholdSuiteId });
+//    };
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+
+//        assertEquals(1, defaultStruct.Functions[0].InnerFunctions.size)
+    }
 }

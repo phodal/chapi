@@ -715,6 +715,13 @@ expressionSequence
 functionExpressionDeclaration
     : Function_ Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
     ;
+//
+//anoymousFunction
+//    : functionDeclaration                                                        # FunctionDecl
+//    | Async? Function_ '*'? '(' formalParameterList? ')' '{' functionBody '}'    # AnoymousFunctionDecl
+//    | Async? arrowFunctionParameters '=>' arrowFunctionBody                      # ArrowFunction
+//    ;
+
 
 singleExpression
     : functionExpressionDeclaration                                          # FunctionExpression
