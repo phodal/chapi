@@ -515,10 +515,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     private fun parseParenthesizedExpression(ctx: TypeScriptParser.SingleExpressionContext?): CodeProperty {
         var parameter = CodeProperty(TypeValue = "", TypeType = "object")
-        val context = ctx as TypeScriptParser.ParenthesizedExpressionContext
+        val context = ctx as ParenthesizedExpressionContext
         for (subSingle in context.expressionSequence().singleExpression()) {
-            val simpleName = subSingle::class.java.simpleName
-            when (simpleName) {
+            when (val simpleName = subSingle::class.java.simpleName) {
                 "ObjectLiteralExpressionContext" -> {
                     val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext;
                     val objectLiteral = parseObjectLiteral(obj.objectLiteral())
@@ -526,10 +525,10 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
                 "HtmlElementExpressionContext" -> {
-                    println("todo -> HtmlElementExpressionContext: $simpleName")
+                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
                 }
                 else -> {
-                    println("todo -> ParenthesizedExpressionContext: $simpleName")
+                    println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")
                 }
             }
         }
@@ -634,6 +633,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             "ArgumentContext" -> {
                 // todo: add arg ctx
                 val call = CodeCall(FunctionName = currentExprIdent, Type = "ArrowFunction")
+                isCallbackOrAnonymousFunction = true
                 currentFunc.FunctionCalls += call;
             }
             // such as: `(e) => e.stopPropagation()`
@@ -660,16 +660,14 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             return
         }
 
-        println("new count: ${funcsStackForCount.count()}")
+        println("exitCount: $exitArrowCount, new count: ${funcsStackForCount.count()}")
         val isInner = exitArrowCount != funcsStackForCount.count()
         if (isInner) {
             currentFunc.InnerFunctions += func
-            funcsStackForCount.push(func)
-//            currentFunc = funcsStackForCount.peek()!!
-        } else {
-            funcsStackForCount.push(func)
-            currentFunc = func
         }
+
+        funcsStackForCount.push(func)
+        currentFunc = func
     }
 
     override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
@@ -685,11 +683,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
         isCallbackOrAnonymousFunction = false
         if (funcsStackForCount.count() == 0) {
-            // more than one in functions
-            if (currentFunc.Name != "") {
-                defaultNode.Functions += currentFunc
-                currentFunc = CodeFunction()
-            }
+            defaultNode.Functions += currentFunc
+            currentFunc = CodeFunction()
         }
     }
 
