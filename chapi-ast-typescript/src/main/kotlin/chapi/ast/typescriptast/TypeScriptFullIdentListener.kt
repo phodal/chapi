@@ -367,6 +367,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         funcsStackForCount.push(currentFunc)
     }
 
+    // todo: align logic to arrow functions
     override fun exitFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
         funcsStackForCount.pop()
         if (funcsStackForCount.count() == 0) {
@@ -652,14 +653,12 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             return
         }
 
-        if (funcsStackForCount.count() == 0) {
-            currentFunc = func
-        } else {
+        if (funcsStackForCount.count() != 0) {
             currentFunc.InnerFunctions += func
         }
 
         funcsStackForCount.push(func)
-        println("newFunc: ${func.Name}, currentFunc: ${currentFunc.Name}")
+        currentFunc = func
     }
 
     override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
@@ -671,7 +670,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 }
             }
 
-            println("exit func: ${currentFunc.Name}")
             exitArrowCount = funcsStackForCount.count()
         }
 
