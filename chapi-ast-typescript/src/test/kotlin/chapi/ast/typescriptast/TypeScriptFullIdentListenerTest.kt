@@ -650,10 +650,7 @@ const BadSmellThreshold = () => {
 
         val codeFile = TypeScriptAnalyser().analysis(content, "index.tsx")
         val defaultStruct = codeFile.DataStructures[0]
-        assertEquals(3, defaultStruct.Functions.size)
-
-        assertEquals(1, defaultStruct.Functions[0].InnerFunctions.size)
-
-        println(Json.encodeToString(codeFile))
+        assertEquals(1, defaultStruct.Functions.size)
+        assertEquals(4, defaultStruct.Functions[0].InnerFunctions.size)
     }
 }

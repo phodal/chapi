@@ -9,6 +9,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
+    private var isProcessingArrowFunc: Boolean = false
+    private var isInnerFunc: Boolean = false
     private lateinit var fileName: String
     private var hasAnnotation: Boolean = false;
     private var hasEnterClass = false
@@ -54,7 +56,11 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         val varDeclList = it as TypeScriptParser.VariableDeclarationListContext
                         val fields = variableToFields(varDeclList, arrayOf(modifier))
 
-                        defaultNode.Exports += CodeExport(Name = fields[0].TypeKey, Type = DataStructType.Variable, SourceFile = codeContainer.FullName)
+                        defaultNode.Exports += CodeExport(
+                            Name = fields[0].TypeKey,
+                            Type = DataStructType.Variable,
+                            SourceFile = codeContainer.FullName
+                        )
 
                         defaultNode.Fields += fields
                     }
@@ -364,7 +370,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     override fun exitFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
         funcsStack.pop()
-        if(funcsStack.count() == 0) {
+        if (funcsStack.count() == 0) {
             currentFunc = CodeFunction()
         }
     }
@@ -518,6 +524,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     parameter =
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
+                "HtmlElementExpressionContext" -> {
+                    println("todo -> HtmlElementExpressionContext: $simpleName")
+                }
                 else -> {
                     println("todo -> ParenthesizedExpressionContext: $simpleName")
                 }
@@ -593,46 +602,39 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
     }
 
-    override fun exitFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
-//        currentFunc = CodeFunction()
-    }
-
     // see also in function declaration
     override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
         val statementParent = ctx!!.parent.parent
-        val parentName = statementParent::class.java.simpleName
-
-        var isInnerFunc = false;
-        if(currentFunc.Name != "") {
-            isInnerFunc = true
-        }
-        val func = CodeFunction(FilePath = fileName)
-
-        when (parentName) {
+        when (val parentName = statementParent::class.java.simpleName) {
             // for: const blabla = () => { }
             "VariableDeclarationContext" -> {
+                // todo: split anonymous function
+                isInnerFunc = false;
+                if (currentFunc.Name != "") {
+                    isInnerFunc = true
+                }
+                val func = CodeFunction(FilePath = fileName)
+
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
                 func.Name = varDeclCtx.identifierOrKeyWord().text
-                this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
                 func.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
+                func.Position = this.buildPosition(ctx)
 
                 if (ctx.typeAnnotation() != null) {
                     func.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
                 }
-                func.Position = this.buildPosition(ctx)
-
-                if (isInnerFunc) {
-                    funcsStack.push(func)
-                    currentFunc.InnerFunctions += func
-                } else {
-                    funcsStack.push(func)
-                    currentFunc = func
-                }
+                // todo: use stacks replace currentFunc
+                processingNewArrowFunc(func)
             }
             "ArgumentContext" -> {
                 // todo: add arg ctx
                 val call = CodeCall(FunctionName = currentExprIdent, Type = "ArrowFunction")
                 currentFunc.FunctionCalls += call;
+            }
+            "ExpressionSequenceContext" -> {
+                val func = CodeFunction(FilePath = fileName)
+                func.Name = ""
+                processingNewArrowFunc(func)
             }
             else -> {
                 val text = statementParent.text
@@ -643,13 +645,26 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         if (ctx.arrowFunctionBody().singleExpression() != null) {
             parseSingleExpression(ctx.arrowFunctionBody().singleExpression())
         }
+
+        isProcessingArrowFunc = false
         // todo: add sourceElements parse
+    }
+
+    private fun processingNewArrowFunc(func: CodeFunction) {
+        if (isInnerFunc) {
+            funcsStack.push(func)
+            currentFunc.InnerFunctions += func
+        } else {
+            funcsStack.push(func)
+            currentFunc = func
+        }
     }
 
     override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
         funcsStack.pop()
         if (funcsStack.count() == 0) {
-            if(currentFunc.Name != "") {
+            // more than one in functions
+            if (currentFunc.Name != "" && !isProcessingArrowFunc) {
                 defaultNode.Functions += currentFunc
                 currentFunc = CodeFunction()
             }
@@ -660,6 +675,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         if (arrowFuncCtx!!.formalParameterList() != null) {
             return this.buildParameters(arrowFuncCtx.formalParameterList())
         }
+
         var parameters: Array<CodeProperty> = arrayOf()
         if (arrowFuncCtx.Identifier() != null) {
             val parameter = CodeProperty(
@@ -667,12 +683,11 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             )
             parameters += parameter
         }
+
         return parameters
     }
 
-    private fun fillMethodFromCallSignature(
-        callSignCtx: TypeScriptParser.CallSignatureContext
-    ) {
+    private fun fillMethodFromCallSignature(callSignCtx: TypeScriptParser.CallSignatureContext) {
         if (callSignCtx.parameterList() != null) {
             val parameters = buildMethodParameters(callSignCtx.parameterList())
             currentFunc.Parameters = parameters
@@ -685,9 +700,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
     }
 
-    private fun buildReturnTypeByType(
-        typeAnnotationContext: TypeScriptParser.TypeAnnotationContext?
-    ): CodeProperty {
+    private fun buildReturnTypeByType(typeAnnotationContext: TypeScriptParser.TypeAnnotationContext?): CodeProperty {
         val typeAnnotation = buildTypeAnnotation(typeAnnotationContext)
 
         return CodeProperty(
@@ -812,7 +825,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             codeContainer.DataStructures += entry.value
         }
 
-        if(codeContainer.DataStructures.isEmpty()) {
+        if (codeContainer.DataStructures.isEmpty()) {
             // for: `export const baseURL = '/api'`
             val fieldOnly = defaultNode.Fields.isNotEmpty()
 
