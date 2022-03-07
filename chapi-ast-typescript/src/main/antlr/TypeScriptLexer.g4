@@ -226,6 +226,55 @@ TagName
     : TagNameStartChar TagNameChar*
     ;
 
+// an attribute value may have spaces b/t the '=' and the value
+AttributeValue
+    : [ ]* Attribute -> popMode
+    ;
+
+Attribute
+    : DoubleQuoteString
+    | SingleQuoteString
+    | AttributeChar
+    | HexChars
+    | DecChars
+    ;
+
+
+// Fragment rules
+fragment AttributeChar
+    : '-'
+    | '_'
+    | '.'
+    | '/'
+    | '+'
+    | ','
+    | '?'
+    | '='
+    | ':'
+    | ';'
+    | '#'
+    | [0-9a-zA-Z]
+    ;
+
+fragment AttributeChars
+    : AttributeChar+ ' '?
+    ;
+
+fragment HexChars
+    : '#' [0-9a-fA-F]+
+    ;
+
+fragment DecChars
+    : [0-9]+ '%'?
+    ;
+
+fragment DoubleQuoteString
+    : '"' ~[<"]* '"'
+    ;
+fragment SingleQuoteString
+    : '\'' ~[<']* '\''
+    ;
+
 fragment
 TagNameStartChar
     :   [:a-zA-Z]

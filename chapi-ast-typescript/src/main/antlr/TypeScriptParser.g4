@@ -481,6 +481,7 @@ htmlTagName
     : TagName
     | keyword
     | Identifier
+    | Identifier ('.' Identifier)*
     ;
 
 htmlAttribute
