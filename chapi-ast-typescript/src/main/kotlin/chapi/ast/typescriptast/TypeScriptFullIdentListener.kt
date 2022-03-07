@@ -9,6 +9,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
+    private var exitArrowCount: Int = 0
+    private var isCallbackOrAnonymousFunction: Boolean = false
     private var isInnerFunc: Boolean = false
     private lateinit var fileName: String
     private var hasAnnotation: Boolean = false;
@@ -429,7 +431,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, arrayOf(parameter))
             }
             else -> {
-                println("todo - need support type: ${ctx::class.java.simpleName}")
+                println("todo -> need support type: ${ctx::class.java.simpleName} ==== ${ctx.text}")
             }
         }
     }
@@ -604,11 +606,13 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     // see also in function declaration
     override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
         val statementParent = ctx!!.parent.parent
+        isCallbackOrAnonymousFunction = false
+        isInnerFunc = false;
+
         when (val parentName = statementParent::class.java.simpleName) {
             // for: const blabla = () => { }
             "VariableDeclarationContext" -> {
                 // todo: split anonymous function
-                isInnerFunc = false;
                 if (currentFunc.Name != "") {
                     isInnerFunc = true
                 }
@@ -622,8 +626,10 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 if (ctx.typeAnnotation() != null) {
                     func.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
                 }
+
+                isCallbackOrAnonymousFunction = false
                 // todo: use stacks replace currentFunc
-                processingNewArrowFunc(func)
+                processingNewArrowFunc(func, ctx.text)
             }
             "ArgumentContext" -> {
                 // todo: add arg ctx
@@ -634,7 +640,8 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
             "ExpressionSequenceContext" -> {
                 val func = CodeFunction(FilePath = fileName)
                 func.Name = ""
-                processingNewArrowFunc(func)
+                isCallbackOrAnonymousFunction = true
+                processingNewArrowFunc(func, ctx.text)
             }
             else -> {
                 val text = statementParent.text
@@ -648,10 +655,17 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         // todo: add sourceElements parse
     }
 
-    private fun processingNewArrowFunc(func: CodeFunction) {
-        if (isInnerFunc) {
-            funcsStackForCount.peek()!!.InnerFunctions += func
+    private fun processingNewArrowFunc(func: CodeFunction, text: String) {
+        if (isCallbackOrAnonymousFunction) {
+            return
+        }
+
+        println("new count: ${funcsStackForCount.count()}")
+        val isInner = exitArrowCount != funcsStackForCount.count()
+        if (isInner) {
+            currentFunc.InnerFunctions += func
             funcsStackForCount.push(func)
+//            currentFunc = funcsStackForCount.peek()!!
         } else {
             funcsStackForCount.push(func)
             currentFunc = func
@@ -659,7 +673,17 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
-        funcsStackForCount.pop()
+        if (!isCallbackOrAnonymousFunction) {
+            val pop = funcsStackForCount.pop()
+            if (pop != null) {
+                currentFunc = pop
+            }
+
+            println("exit arrow count: ${funcsStackForCount.count()}")
+            exitArrowCount = funcsStackForCount.count()
+        }
+
+        isCallbackOrAnonymousFunction = false
         if (funcsStackForCount.count() == 0) {
             // more than one in functions
             if (currentFunc.Name != "") {
@@ -725,7 +749,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     currentFunc.FunctionCalls += codeCall
                 }
                 else -> {
-                    println("enterExpressionStatement :$singleCtxType")
+                    println("enterExpressionStatement : $singleCtxType")
                 }
             }
 
@@ -759,6 +783,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         return text
     }
 
+    override fun enterReturnStatement(ctx: TypeScriptParser.ReturnStatementContext?) {
+//        println(ctx!!.text)
+    }
 
     override fun enterVariableDeclaration(ctx: TypeScriptParser.VariableDeclarationContext?) {
         val varName = ctx!!.getChild(0).text
@@ -787,7 +814,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                             parseSingleExpression(singleExpression)
                         }
                         else -> {
-                            println("others variable decl: $identExprText")
+                            println("others variable decl: $identExprText == ${singleExprCtx.text}")
                         }
                     }
                 }
@@ -798,12 +825,15 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     argumentsExpressionToCall(singleExprCtx as TypeScriptParser.ArgumentsExpressionContext, varName)
                 }
                 else -> {
-                    println(ctx.text)
-                    println("enterVariableDeclaration : $singleCtxType")
+                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
                 }
             }
         }
     }
+
+//    override fun enterEveryRule(ctx: ParserRuleContext?) {
+//        println(ctx!!.javaClass.simpleName)
+//    }
 
     private fun buildArguments(arguments: TypeScriptParser.ArgumentsContext?): Array<CodeProperty> {
         var args: Array<CodeProperty> = arrayOf()

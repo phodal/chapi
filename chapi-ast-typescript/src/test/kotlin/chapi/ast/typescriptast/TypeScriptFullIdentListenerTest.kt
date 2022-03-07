@@ -628,13 +628,13 @@ const BadSmellThreshold = () => {
     }
 
     @Test
-    internal fun shouldCompileNotError() {
+    @Disabled
+    internal fun shouldSupportNestedFunc() {
         val content = """
 const BadSmellThreshold = () => {
     const renderRadio = (badSmellOption: BadSmellOption) => (
         <Radio value={badSmellOption.id}
-            onClick={(e) => e.stopPropagation()}>
-            选择
+            onClick={(e) => e.stopPropagation()}> 选择
         </Radio>
     ); 
     
@@ -655,5 +655,52 @@ const BadSmellThreshold = () => {
         assertEquals(3, defaultStruct.Functions[0].InnerFunctions.size)
 
         assertEquals(1, defaultStruct.Functions[0].InnerFunctions[0].InnerFunctions.size)
+    }
+
+    @Test
+    internal fun shouldIdentDotTag() {
+        val code = """
+const BadSmellThreshold = () => {
+    return (
+        <Form.Item></Form.Item>
+    );
+};"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+    }
+
+    @Test
+    internal fun shouldIdentAttributeWithKeyword() {
+        val code = """
+const BadSmellThreshold = () => {
+    return (
+        <Button type="primary" htmlType="submit">
+        </Button>
+    );
+};"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+    }
+
+    @Test
+    internal fun shouldCallReturn() {
+        val code = """
+const BadSmellThreshold = () => {
+    useEffect(() => {
+        
+    });
+
+    return (
+        <div></div>
+    );
+};"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
     }
 }
