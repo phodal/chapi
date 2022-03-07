@@ -9,7 +9,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
-    private var isProcessingArrowFunc: Boolean = false
     private var isInnerFunc: Boolean = false
     private lateinit var fileName: String
     private var hasAnnotation: Boolean = false;
@@ -645,8 +644,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         if (ctx.arrowFunctionBody().singleExpression() != null) {
             parseSingleExpression(ctx.arrowFunctionBody().singleExpression())
         }
-
-        isProcessingArrowFunc = false
         // todo: add sourceElements parse
     }
 
@@ -664,7 +661,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         funcsStack.pop()
         if (funcsStack.count() == 0) {
             // more than one in functions
-            if (currentFunc.Name != "" && !isProcessingArrowFunc) {
+            if (currentFunc.Name != "") {
                 defaultNode.Functions += currentFunc
                 currentFunc = CodeFunction()
             }
