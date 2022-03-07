@@ -25,7 +25,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private var namespaceName: String = ""
     private var currentAnnotations = arrayOf<CodeAnnotation>()
 
-    private var funcsStack = Stack<CodeFunction>()
+    private var funcsStackForCount = Stack<CodeFunction>()
 
     private var classNodeStack = Stack<CodeDataStruct>()
 
@@ -364,12 +364,12 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
         currentFunc.FilePath = fileName
         defaultNode.Functions += currentFunc
-        funcsStack.push(currentFunc)
+        funcsStackForCount.push(currentFunc)
     }
 
     override fun exitFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
-        funcsStack.pop()
-        if (funcsStack.count() == 0) {
+        funcsStackForCount.pop()
+        if (funcsStackForCount.count() == 0) {
             currentFunc = CodeFunction()
         }
     }
@@ -630,6 +630,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 val call = CodeCall(FunctionName = currentExprIdent, Type = "ArrowFunction")
                 currentFunc.FunctionCalls += call;
             }
+            // such as: `(e) => e.stopPropagation()`
             "ExpressionSequenceContext" -> {
                 val func = CodeFunction(FilePath = fileName)
                 func.Name = ""
@@ -649,17 +650,17 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     private fun processingNewArrowFunc(func: CodeFunction) {
         if (isInnerFunc) {
-            funcsStack.push(func)
-            currentFunc.InnerFunctions += func
+            funcsStackForCount.peek()!!.InnerFunctions += func
+            funcsStackForCount.push(func)
         } else {
-            funcsStack.push(func)
+            funcsStackForCount.push(func)
             currentFunc = func
         }
     }
 
     override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
-        funcsStack.pop()
-        if (funcsStack.count() == 0) {
+        funcsStackForCount.pop()
+        if (funcsStackForCount.count() == 0) {
             // more than one in functions
             if (currentFunc.Name != "") {
                 defaultNode.Functions += currentFunc

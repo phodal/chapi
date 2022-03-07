@@ -45,7 +45,7 @@ export class LedgeStorageService {
         Assertions.assertEquals(annotations[0].Name, "Injectable")
     }
 
-    @Test @Disabled
+    @Test
     internal fun shouldIndentTypeScriptDecoratorKeyValues() {
         val content = """
 import { Component } from '@angular/core';
@@ -650,7 +650,10 @@ const BadSmellThreshold = () => {
 
         val codeFile = TypeScriptAnalyser().analysis(content, "index.tsx")
         val defaultStruct = codeFile.DataStructures[0]
+
         assertEquals(1, defaultStruct.Functions.size)
-        assertEquals(4, defaultStruct.Functions[0].InnerFunctions.size)
+        assertEquals(3, defaultStruct.Functions[0].InnerFunctions.size)
+
+        assertEquals(1, defaultStruct.Functions[0].InnerFunctions[0].InnerFunctions.size)
     }
 }
