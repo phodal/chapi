@@ -345,6 +345,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         codeContainer.Imports += imp
     }
 
+    // see also in arrow function declaration
     override fun enterFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
         val funcName = ctx!!.Identifier().text
         currentFunc.Name = funcName
@@ -358,6 +359,14 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
         currentFunc.FilePath = fileName
         defaultNode.Functions += currentFunc
+        funcsStack.push(currentFunc)
+    }
+
+    override fun exitFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
+        funcsStack.pop()
+        if(funcsStack.count() == 0) {
+            currentFunc = CodeFunction()
+        }
     }
 
     private fun parseStatement(context: TypeScriptParser.SourceElementContext) {
@@ -554,10 +563,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
     }
 
-    override fun exitFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
-        currentFunc = CodeFunction()
-    }
-
     override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
         val statementParent = ctx!!.parent.parent
         val parentName = statementParent::class.java.simpleName
@@ -589,9 +594,10 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     override fun exitFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
-        currentFunc = CodeFunction()
+//        currentFunc = CodeFunction()
     }
 
+    // see also in function declaration
     override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
         val statementParent = ctx!!.parent.parent
         val parentName = statementParent::class.java.simpleName

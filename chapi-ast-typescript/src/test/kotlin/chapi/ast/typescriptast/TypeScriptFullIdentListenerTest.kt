@@ -566,7 +566,7 @@ export function demo() {
         val calls = codeFile.DataStructures[0].Functions[0].FunctionCalls
 
         println(Json.encodeToString(calls))
-        assertEquals(2, calls.size)
+        assertEquals(3, calls.size)
         assertEquals("request->get->then->catch", calls[0].FunctionName);
     }
 
