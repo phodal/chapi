@@ -11,7 +11,6 @@ import kotlinx.serialization.json.Json
 class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
     private var exitArrowCount: Int = 0
     private var isCallbackOrAnonymousFunction: Boolean = false
-    private var isInnerFunc: Boolean = false
     private lateinit var fileName: String
     private var hasAnnotation: Boolean = false;
     private var hasEnterClass = false
@@ -525,7 +524,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
                 "HtmlElementExpressionContext" -> {
-                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
+//                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
                 }
                 else -> {
                     println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")
@@ -606,15 +605,10 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
         val statementParent = ctx!!.parent.parent
         isCallbackOrAnonymousFunction = false
-        isInnerFunc = false;
 
         when (val parentName = statementParent::class.java.simpleName) {
             // for: const blabla = () => { }
             "VariableDeclarationContext" -> {
-                // todo: split anonymous function
-                if (currentFunc.Name != "") {
-                    isInnerFunc = true
-                }
                 val func = CodeFunction(FilePath = fileName)
 
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
@@ -627,8 +621,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 }
 
                 isCallbackOrAnonymousFunction = false
-                // todo: use stacks replace currentFunc
-                processingNewArrowFunc(func, ctx.text)
+                processingNewArrowFunc(func)
             }
             "ArgumentContext" -> {
                 // todo: add arg ctx
@@ -641,7 +634,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 val func = CodeFunction(FilePath = fileName)
                 func.Name = ""
                 isCallbackOrAnonymousFunction = true
-                processingNewArrowFunc(func, ctx.text)
+                processingNewArrowFunc(func)
             }
             else -> {
                 val text = statementParent.text
@@ -655,29 +648,31 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         // todo: add sourceElements parse
     }
 
-    private fun processingNewArrowFunc(func: CodeFunction, text: String) {
+    private fun processingNewArrowFunc(func: CodeFunction) {
         if (isCallbackOrAnonymousFunction) {
             return
         }
 
-        println("exitCount: $exitArrowCount, new count: ${funcsStackForCount.count()}")
-        val isInner = exitArrowCount != funcsStackForCount.count()
-        if (isInner) {
+        if (funcsStackForCount.count() == 0) {
+            currentFunc = func
+        } else {
             currentFunc.InnerFunctions += func
         }
 
         funcsStackForCount.push(func)
-        currentFunc = func
+        println("newFunc: ${func.Name}, currentFunc: ${currentFunc.Name}")
     }
 
     override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
         if (!isCallbackOrAnonymousFunction) {
             val pop = funcsStackForCount.pop()
             if (pop != null) {
-                currentFunc = pop
+                if (funcsStackForCount.count() != 0) {
+                    currentFunc = funcsStackForCount.peek()!!
+                }
             }
 
-            println("exit arrow count: ${funcsStackForCount.count()}")
+            println("exit func: ${currentFunc.Name}")
             exitArrowCount = funcsStackForCount.count()
         }
 
