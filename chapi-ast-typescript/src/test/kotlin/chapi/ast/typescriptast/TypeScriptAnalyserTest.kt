@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class TypeScriptAnalyserTest {
     @Test
     internal fun shouldAnalysisTypeScriptMultipleClass() {
-        val content = this::class.java.getResource("/grammar/Class.ts").readText()
+        val content = this::class.java.getResource("/grammar/Class.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "")
 
         assertEquals(codeFile.DataStructures.size, 3)
@@ -20,7 +20,7 @@ internal class TypeScriptAnalyserTest {
 
     @Test
     internal fun shouldAnalysisTypeScriptAbstractClass() {
-        val content = this::class.java.getResource("/grammar/AbstractClass.ts").readText()
+        val content = this::class.java.getResource("/grammar/AbstractClass.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "")
 
         assertEquals(codeFile.DataStructures.size, 2)
@@ -31,7 +31,7 @@ internal class TypeScriptAnalyserTest {
 
     @Test
     internal fun shouldAnalysisTypeScriptModule() {
-        val content = this::class.java.getResource("/grammar/Module.ts").readText()
+        val content = this::class.java.getResource("/grammar/Module.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "")
 
         assertEquals(codeFile.DataStructures.size, 1)
@@ -40,7 +40,7 @@ internal class TypeScriptAnalyserTest {
 
     @Test
     internal fun shouldAnalysisTypeScriptFunctions() {
-        val content = this::class.java.getResource("/grammar/Function.ts").readText()
+        val content = this::class.java.getResource("/grammar/Function.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "")
 
         assertEquals(codeFile.DataStructures.size, 1)
@@ -51,7 +51,7 @@ internal class TypeScriptAnalyserTest {
 
     @Test
     internal fun shouldIdentReactComponents() {
-        val content = this::class.java.getResource("/realworld/BadSmellThreshold.tsx").readText()
+        val content = this::class.java.getResource("/realworld/BadSmellThreshold.tsx")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "BadSmellThreshold.tsx")
 
         assertEquals(codeFile.DataStructures.size, 0)
