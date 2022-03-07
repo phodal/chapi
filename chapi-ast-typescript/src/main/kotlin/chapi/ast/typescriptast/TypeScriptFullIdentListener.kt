@@ -255,15 +255,14 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 }
                 "MethodSignatureContext" -> {
                     val methodSignCtx = memberChild as TypeScriptParser.MethodSignatureContext
-                    currentFunc = CodeFunction(
+                    val func = CodeFunction(
                         Name = methodSignCtx.propertyName().text
                     )
 
-                    fillMethodFromCallSignature(methodSignCtx.callSignature())
+                    fillMethodFromCallSignature(methodSignCtx.callSignature(), func)
 
-                    currentFunc.FilePath = fileName
-                    currentNode.Functions += currentFunc
-                    currentFunc = CodeFunction()
+                    func.FilePath = fileName
+                    currentNode.Functions += func
                 }
                 else -> {
                     println("enterInterfaceDeclaration -> buildInterfaceBody")
@@ -356,7 +355,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         val funcName = ctx!!.Identifier().text
         currentFunc.Name = funcName
 
-        fillMethodFromCallSignature(ctx.callSignature())
+        fillMethodFromCallSignature(ctx.callSignature(), currentFunc)
         currentFunc.Position = this.buildPosition(ctx)
 
         for (context in ctx.functionBody().sourceElements().sourceElement()) {
@@ -699,7 +698,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         return parameters
     }
 
-    private fun fillMethodFromCallSignature(callSignCtx: TypeScriptParser.CallSignatureContext) {
+    private fun fillMethodFromCallSignature(callSignCtx: TypeScriptParser.CallSignatureContext, currentFunc: CodeFunction) {
         if (callSignCtx.parameterList() != null) {
             val parameters = buildMethodParameters(callSignCtx.parameterList())
             currentFunc.Parameters = parameters
@@ -707,7 +706,6 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
         if (callSignCtx.typeAnnotation() != null) {
             val returnType = buildReturnTypeByType(callSignCtx.typeAnnotation())
-
             currentFunc.MultipleReturns += returnType
         }
     }
