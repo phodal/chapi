@@ -110,6 +110,7 @@ predefinedType
     | String
     | Symbol
     | Void
+    | NullLiteral
     ;
 
 typeReference
