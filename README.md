@@ -12,6 +12,7 @@ Languages Stages (Welcome to PR your usage languages)
 
 | Features/Languages  | Java | Python | Go  | Kotlin | TypeScript | C   | C#  | Scala | C++ |
 |---------------------|------|--------|-----|--------|------------|-----|-----|-------|-----|
+| http api decl       | ✅    | ✅      | ✅   | ✅      | 🆕         | 🆕  | 🆕  | ✅     | 🆕  |
 | syntax parse        | ✅    | ✅      | ✅   | 🆕     | ✅          | 🆕  | 🆕  | 🆕    | 🆕  |
 | function call       | ✅    | 🆕     |     |        | ✅          |     |     |       |     |
 | arch/package        | ✅    |        |     |        |            |     |     |       |     |
@@ -24,7 +25,7 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 |            | Languages                                     | plan support            |
 |------------|-----------------------------------------------|-------------------------|
-| C family	  | C#, Java, Go, C, C++,  Objective-C, Rust, ... | C++, C, Java, C#, Rust? |
+| C family      | C#, Java, Go, C, C++, Objective-C, Rust, ... | C++, C, Java, C#, Rust? |
 | Functional | Scheme, Lisp, Clojure, Scala, ...             | Scala                   |
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript      |
 | Other      | Fortran, Swift, Matlab, ...                   | Swift?, Fortran?        |
@@ -133,19 +134,19 @@ examples output
 
 Syntax Parse Identify Rules:
 
- 1. package name
- 2. import name
- 3. class / data struct
+1. package name
+2. import name
+3. class / data struct
     1. struct name
     2. struct parameters
     3. function name
     4. return types
     5. function parameters
- 4. function
+4. function
     1. function name
     2. return types
     3. function parameters
- 5. method call
+5. method call
     1. new instance call
     2. parameter call
     3. field call
@@ -200,9 +201,9 @@ code_call
 
 项目主要由 domain + 各种语言的 AST + application 构建：
 
- - domain，构建统一的代码模型
- - 各语言 AST
- - application，对外暴露的简易 API
+- domain，构建统一的代码模型
+- 各语言 AST
+- application，对外暴露的简易 API
 
 每个 AST 项目的入口是 ``xxAnalyser``，返回的是一个 CodeContainer，即代码容器。在非 C# 语言里，等同于 CodeFile，即代码文件。
 
@@ -229,21 +230,22 @@ code_call        // 函数调用，如 fmt.Println
 
 1. 寻找感兴趣的语言 / 添加新的语言 AST
 
-通过 TDD 的方式一点点实现下面的功能（可以考虑按顺序），参照示例见 [JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
+通过 TDD
+的方式一点点实现下面的功能（可以考虑按顺序），参照示例见 [JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
 
- 1. package name
- 2. import name
- 3. class / data struct
+1. package name
+2. import name
+3. class / data struct
     1. struct name
     2. struct parameters
     3. function name
     4. return types
     5. function parameters
- 4. function
+4. function
     1. function name
     2. return types
     3. function parameters
- 5. method call
+5. method call
     1. new instance call
     2. parameter call
     3. field call
@@ -257,25 +259,27 @@ code_call        // 函数调用，如 fmt.Println
 
 所有的 type 见：
 
- - build: 影响构建系统或外部依赖关系的更改（示例范围：gulp，broccoli，npm）
- - ci: 更改我们的持续集成文件和脚本（示例范围：Travis，Circle，BrowserStack，SauceLabs）
- - docs: 仅文档更改
- - feat: 一个新功能
- - fix: 修复错误
- - perf: 改进性能的代码更改
- - refactor: 代码更改，既不修复错误也不添加功能
- - style: 不影响代码含义的变化（空白，格式化，缺少分号等）
- - test: 添加缺失测试或更正现有测试
+- build: 影响构建系统或外部依赖关系的更改（示例范围：gulp，broccoli，npm）
+- ci: 更改我们的持续集成文件和脚本（示例范围：Travis，Circle，BrowserStack，SauceLabs）
+- docs: 仅文档更改
+- feat: 一个新功能
+- fix: 修复错误
+- perf: 改进性能的代码更改
+- refactor: 代码更改，既不修复错误也不添加功能
+- style: 不影响代码含义的变化（空白，格式化，缺少分号等）
+- test: 添加缺失测试或更正现有测试
 
 Refs
 ---
 
-Goal: source code data model for different language & different language family from [Language support](https://en.wikipedia.org/wiki/First-class_function)
+Goal: source code data model for different language & different language family
+from [Language support](https://en.wikipedia.org/wiki/First-class_function)
 
 License
 ---
 
 [![Phodal's Idea](http://brand.phodal.com/shields/idea-small.svg)](http://ideas.phodal.com/)
 
-@ 2020 A [Phodal Huang](https://www.phodal.com)'s [Idea](http://github.com/phodal/ideas).  This code is distributed under the MPL license. See `LICENSE` in this directory.
+@ 2020 A [Phodal Huang](https://www.phodal.com)'s [Idea](http://github.com/phodal/ideas). This code is distributed under
+the MPL license. See `LICENSE` in this directory.
 
