@@ -254,7 +254,7 @@ code_call        // 函数调用，如 fmt.Println
 
 用于发布时，使用标准的 [CHANGELOG.md](CHANGELOG.md)
 
-`<type>: <message>`，示例：`feat: <grammars> init python & go grammars Phodal Huang 2020/2/2, 5:01 PM`
+`<type>[Language]: <message>`，示例：`feat(java): <grammars> init python & go grammars Phodal Huang 2020/2/2, 5:01 PM`
 
 所有的 type 见：
 
@@ -268,17 +268,11 @@ code_call        // 函数调用，如 fmt.Println
 - style: 不影响代码含义的变化（空白，格式化，缺少分号等）
 - test: 添加缺失测试或更正现有测试
 
-Refs
----
-
-Goal: source code data model for different language & different language family
-from [Language support](https://en.wikipedia.org/wiki/First-class_function)
-
 License
 ---
 
 [![Phodal's Idea](http://brand.phodal.com/shields/idea-small.svg)](http://ideas.phodal.com/)
 
-@ 2020 A [Phodal Huang](https://www.phodal.com)'s [Idea](http://github.com/phodal/ideas). This code is distributed under
+@2020 A [Phodal Huang](https://www.phodal.com)'s [Idea](http://github.com/phodal/ideas). This code is distributed under
 the MPL license. See `LICENSE` in this directory.
 
