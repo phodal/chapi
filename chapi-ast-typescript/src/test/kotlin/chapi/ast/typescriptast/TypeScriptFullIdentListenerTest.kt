@@ -724,4 +724,16 @@ const BadSmellThreshold = () => {
         val defaultStruct = codeFile.DataStructures[0]
         assertEquals(1, defaultStruct.Functions.size)
     }
+
+    @Test
+    internal fun supportOptionalCall() {
+        val code = """
+function tryApplyUpdates(onHotUpdateSuccess?: Function) {
+    onHotUpdateSuccess?.();
+}"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+    }
 }

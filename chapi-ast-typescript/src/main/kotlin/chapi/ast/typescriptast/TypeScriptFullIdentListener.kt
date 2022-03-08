@@ -377,8 +377,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         fillMethodFromCallSignature(ctx.callSignature(), currentFunc)
         currentFunc.Position = this.buildPosition(ctx)
 
-        for (context in ctx.functionBody().sourceElements().sourceElement()) {
-            parseStatement(context)
+        if (ctx.functionBody().sourceElements() != null) {
+            for (context in ctx.functionBody().sourceElements().sourceElement()) {
+                parseStatement(context)
+            }
         }
 
         currentFunc.FilePath = filePath
