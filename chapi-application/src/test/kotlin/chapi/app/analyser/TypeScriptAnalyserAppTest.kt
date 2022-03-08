@@ -39,8 +39,6 @@ internal class TypeScriptAnalyserAppTest {
         val inbounds: MutableList<String> = mutableListOf()
         val outbounds: MutableList<String> = mutableListOf()
 
-        val basepath = "apicall/"
-
         // 1. first create Component with FunctionCall maps based on Import
         // 2. build axios/umi-request to an API call method
         // 3. mapping for results

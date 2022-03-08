@@ -407,14 +407,24 @@ importNamespace
     : ('*' | identifierName) (As identifierName)?
     ;
 
-// todo: align to new grammar
-//exportStatement
-//    : Export (exportFromBlock | declaration) eos    # ExportDeclaration
-//    | Export Default singleExpression eos           # ExportDefaultDeclaration
-//    ;
-
 exportStatement
-    : Export Default? (fromBlock | statement)
+    : Export (exportFromBlock | declaration) eos    # ExportDeclaration
+    | Export Default singleExpression eos           # ExportDefaultDeclaration
+    ;
+
+importFrom
+    : From StringLiteral
+    ;
+
+exportFromBlock
+    : importNamespace importFrom eos
+    | moduleItems importFrom? eos
+    ;
+
+declaration
+    : variableStatement
+    | classDeclaration
+    | functionDeclaration
     ;
 
 variableStatement
