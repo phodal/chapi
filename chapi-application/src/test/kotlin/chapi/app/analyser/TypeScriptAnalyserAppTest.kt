@@ -19,7 +19,6 @@ data class ApiAdapter(
 )
 
 internal class TypeScriptAnalyserAppTest {
-    // String = "filename::functionName
     var callMap: HashMap<String, CodeCall> = hashMapOf()
 
     @Test

@@ -26,7 +26,7 @@ open class ChapiAnalyser(
             "python" -> {
                 langAnalyser = PythonAnalyserApp(config)
             }
-            "typescript" -> {
+            Language.TypeScript -> {
                 langAnalyser = TypeScriptAnalyserApp(config)
             }
             "scala" -> {
