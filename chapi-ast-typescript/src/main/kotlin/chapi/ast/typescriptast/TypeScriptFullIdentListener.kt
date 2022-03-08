@@ -8,11 +8,11 @@ import chapi.infra.Stack
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstListener() {
+class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private var exitArrowCount: Int = 0
     private var isCallbackOrAnonymousFunction: Boolean = false
     private lateinit var fileName: String
-    private var hasAnnotation: Boolean = false;
+    private var hasAnnotation: Boolean = false
     private var hasEnterClass = false
     private var currentExprIdent: String = ""
     private var localVars = mutableMapOf<String, String>()
@@ -46,11 +46,11 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         // such as: `export const baseURL = '/api'`
         // todo: add support for not only const?
         if (ctx.parent.parent.getChild(0).text == "export") {
-            var modifier = "";
+            var modifier = ""
             ctx.children.forEach {
                 when (it::class.java.simpleName) {
                     "VarModifierContext" -> {
-                        modifier = it.text;
+                        modifier = it.text
                     }
                     "VariableDeclarationListContext" -> {
                         val varDeclList = it as TypeScriptParser.VariableDeclarationListContext
@@ -103,7 +103,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     override fun enterDecoratorList(ctx: TypeScriptParser.DecoratorListContext?) {
         if (!hasEnterClass) {
-            hasAnnotation = true;
+            hasAnnotation = true
 
             for (decorator in ctx!!.decorator()) {
                 val annotation = buildAnnotation(decorator)
@@ -115,7 +115,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     override fun enterClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
         val nodeName = ctx!!.Identifier().text
 
-        hasEnterClass = true;
+        hasEnterClass = true
         currentNode = CodeDataStruct(
             NodeName = nodeName,
             Type = DataStructType.CLASS,
@@ -135,9 +135,9 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         }
 
         // load annotations before class
-        currentNode.Annotations = currentAnnotations;
-        currentAnnotations = arrayOf();
-        hasAnnotation = false;
+        currentNode.Annotations = currentAnnotations
+        currentAnnotations = arrayOf()
+        hasAnnotation = false
 
         this.handleClassBodyElements(ctx.classTail())
 
@@ -215,7 +215,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     override fun exitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
-        hasEnterClass = false;
+        hasEnterClass = false
         classNodeStack.pop()
     }
 
@@ -247,9 +247,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     private fun buildInterfaceBody(typeMemberList: TypeScriptParser.TypeMemberListContext?) {
         for (memberContext in typeMemberList!!.typeMember()) {
             val memberChild = memberContext.getChild(0)
-            val childType = memberChild::class.java.simpleName
-
-            when (childType) {
+            when (memberChild::class.java.simpleName) {
                 "PropertySignaturContext" -> {
                     buildInterfacePropertySignature(memberChild as TypeScriptParser.PropertySignaturContext)
                 }
@@ -377,9 +375,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     private fun parseStatement(context: TypeScriptParser.SourceElementContext) {
         val stmtChild = context.statement().getChild(0)
-        val childType = stmtChild::class.java.simpleName
-
-        when (childType) {
+        when (val childType = stmtChild::class.java.simpleName) {
             "ReturnStatementContext" -> {
                 val stmt = stmtChild as TypeScriptParser.ReturnStatementContext
                 for (singleExpressionContext in stmt.expressionSequence().singleExpression()) {
@@ -465,20 +461,18 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
         // for: `axios<Module[]>({parameter}).then`
         // create then and update parameter
-        argument.children.forEach { it ->
-            val child_name = it::class.java.simpleName
-            when (child_name) {
+        argument.children.forEach {
+            when (val childName = it::class.java.simpleName) {
                 "MemberDotExpressionContext" -> {
                     val memberDot = it as TypeScriptParser.MemberDotExpressionContext
-                    val subName = memberDot.singleExpression()::class.java.simpleName
-                    when (subName) {
+                    when (val subName = memberDot.singleExpression()::class.java.simpleName) {
                         "ParenthesizedExpressionContext" -> {
                             params += parseParenthesizedExpression(memberDot.singleExpression())
                         }
                         "ArgumentsExpressionContext" -> {
-                            // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response);}).catch();
+                            // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response)}).catch()
                             val args = memberDot.singleExpression() as TypeScriptParser.ArgumentsExpressionContext
-                            val parseArguments = parseArguments(args)
+                            parseArguments(args)
                         }
                         "IdentifierExpressionContext" -> {
                             val ident = memberDot.singleExpression() as IdentifierExpressionContext
@@ -489,7 +483,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                         }
                     }
 
-                    currentExprIdent += "->" + memberDot.identifierName().text
+                    currentExprIdent += "->${memberDot.identifierName().text}"
                 }
                 "ParenthesizedExpressionContext" -> {
                     val prop = parseParenthesizedExpression(it as ParenthesizedExpressionContext)
@@ -499,7 +493,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
                 }
                 else -> {
-                    println("singleExpression -> ArgumentsExpressionContext -> $child_name")
+                    println("singleExpression -> ArgumentsExpressionContext -> $childName")
                 }
             }
         }
@@ -514,7 +508,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         for (subSingle in context.expressionSequence().singleExpression()) {
             when (val simpleName = subSingle::class.java.simpleName) {
                 "ObjectLiteralExpressionContext" -> {
-                    val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext;
+                    val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext
                     val objectLiteral = parseObjectLiteral(obj.objectLiteral())
                     parameter =
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
@@ -532,18 +526,16 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
     }
 
     private fun parseObjectLiteral(objectLiteral: TypeScriptParser.ObjectLiteralContext): Array<CodeProperty> {
-        var root: Array<CodeProperty> = arrayOf();
+        var root: Array<CodeProperty> = arrayOf()
         objectLiteral.propertyAssignment().forEach { property ->
             when (val propName = property::class.java.simpleName) {
                 "PropertyExpressionAssignmentContext" -> {
                     val assignCtx = property as TypeScriptParser.PropertyExpressionAssignmentContext
                     val text = singleExpToText(assignCtx.singleExpression())
-
                     val value = CodeProperty(TypeType = "value", TypeValue = text)
-
                     val propText = assignCtx.propertyName().text
-                    val prop = CodeProperty(TypeType = "key", TypeValue = propText, ObjectValue = arrayOf(value))
-                    root += prop
+
+                    root += CodeProperty(TypeType = "key", TypeValue = propText, ObjectValue = arrayOf(value))
                 }
                 "PropertyShorthandContext" -> {
                     val short = (property as TypeScriptParser.PropertyShorthandContext).text
@@ -568,8 +560,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
 
     override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
         val statementParent = ctx!!.parent.parent
-        val parentName = statementParent::class.java.simpleName
-        when (parentName) {
+        when (val parentName = statementParent::class.java.simpleName) {
             "VariableDeclarationContext" -> {
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
                 currentFunc.Name = varDeclCtx.identifierOrKeyWord().text
@@ -622,7 +613,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 // todo: add arg ctx
                 val call = CodeCall(FunctionName = currentExprIdent, Type = "ArrowFunction")
                 isCallbackOrAnonymousFunction = true
-                currentFunc.FunctionCalls += call;
+                currentFunc.FunctionCalls += call
             }
             // such as: `(e) => e.stopPropagation()`
             "ExpressionSequenceContext" -> {
@@ -725,7 +716,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     codeCall.Parameters = this.buildArguments(argsCtx.arguments())
                     codeCall.FunctionName = buildFunctionName(argsCtx)
                     codeCall.NodeName = wrapTargetType(argsCtx)
-                    codeCall.Position = this.buildPosition(ctx);
+                    codeCall.Position = this.buildPosition(ctx)
 
                     currentFunc.FunctionCalls += codeCall
                 }
@@ -777,7 +768,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     val newSingleExpr = newExprCtx.singleExpression()
                     when (newSingleExpr::class.java.simpleName) {
                         "IdentifierExpressionContext" -> {
-                            val identExprCtx = newSingleExpr as TypeScriptParser.IdentifierExpressionContext
+                            val identExprCtx = newSingleExpr as IdentifierExpressionContext
                             val varType = identExprCtx.identifierName().text
 
                             localVars[varName] = varType
@@ -785,7 +776,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                     }
                 }
                 "IdentifierExpressionContext" -> {
-                    val identExpr = singleExprCtx as IdentifierExpressionContext;
+                    val identExpr = singleExprCtx as IdentifierExpressionContext
                     when (val identExprText = identExpr.identifierName().text) {
                         "await" -> {
                             val singleExpression = identExpr.singleExpression()
@@ -813,7 +804,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         var args: Array<CodeProperty> = arrayOf()
         val value = arguments!!.getChild(1).text
         if (value == ")") {
-            return args;
+            return args
         }
         val arg = CodeProperty(
             TypeValue = value, TypeType = ""
