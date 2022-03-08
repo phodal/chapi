@@ -387,12 +387,31 @@ importStatement
     ;
 
 fromBlock
-    : (Dollar | Lodash | Multiply | multipleImportStatement) (As identifierName)? From StringLiteral eos
+    : importDefault? (Dollar | Lodash | importNamespace | moduleItems) From StringLiteral  eos
+    | StringLiteral eos
     ;
 
-multipleImportStatement
-    : (identifierName ',')? '{' identifierName (',' identifierName)* '}'
+moduleItems
+    : '{' (aliasName ',')* (aliasName ','?)? '}'
     ;
+
+importDefault
+    : aliasName ','
+    ;
+
+aliasName
+    : identifierName (As identifierName)?
+    ;
+
+importNamespace
+    : ('*' | identifierName) (As identifierName)?
+    ;
+
+// todo: align to new grammar
+//exportStatement
+//    : Export (exportFromBlock | declaration) eos    # ExportDeclaration
+//    | Export Default singleExpression eos           # ExportDefaultDeclaration
+//    ;
 
 exportStatement
     : Export Default? (fromBlock | statement)

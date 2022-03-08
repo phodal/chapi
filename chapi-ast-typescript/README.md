@@ -1,11 +1,18 @@
-# API Call
+# Chapi TypeScript
+
+
+## Import
+
+`@/src/component` with default to root project
+
+## API Call
 
 support:
 
 - [ ] umi request
 - [ ] axios
 
-## Axios
+### Axios
 
 official demo: https://github.com/axios/axios
 

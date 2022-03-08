@@ -9,16 +9,17 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
+    private var filePath: String = node.filePath
+
     private var exitArrowCount: Int = 0
     private var isCallbackOrAnonymousFunction: Boolean = false
-    private lateinit var fileName: String
     private var hasAnnotation: Boolean = false
     private var hasEnterClass = false
     private var currentExprIdent: String = ""
     private var localVars = mutableMapOf<String, String>()
 
     private var nodeMap = mutableMapOf<String, CodeDataStruct>()
-    private var codeContainer: CodeContainer = CodeContainer(FullName = node.fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = node.filePath)
 
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
@@ -152,7 +153,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 "ConstructorDeclarationContext" -> {
                     val codeFunction =
                         this.buildConstructorMethod(childCtx as TypeScriptParser.ConstructorDeclarationContext)
-                    codeFunction.FilePath = fileName
+                    codeFunction.FilePath = filePath
                     currentNode.Functions += codeFunction
                 }
                 "PropertyDeclarationExpressionContext" -> {
@@ -180,7 +181,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
                     }
 
-                    codeFunction.FilePath = fileName
+                    codeFunction.FilePath = filePath
                     currentNode.Functions += codeFunction
                 }
                 else -> {
@@ -259,7 +260,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
                     fillMethodFromCallSignature(methodSignCtx.callSignature(), func)
 
-                    func.FilePath = fileName
+                    func.FilePath = filePath
                     currentNode.Functions += func
                 }
                 else -> {
@@ -289,7 +290,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             codeFunction.Parameters += param
             codeFunction.MultipleReturns += returnType
 
-            codeFunction.FilePath = fileName
+            codeFunction.FilePath = filePath
             currentNode.Functions += codeFunction
         } else {
             val codeField = CodeField(TypeType = typeType, TypeValue = typeValue)
@@ -303,9 +304,29 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             Source = imp
         )
 
-        if (ctx.multipleImportStatement() != null) {
-            for (nameContext in ctx.multipleImportStatement().identifierName()) {
-                codeImport.UsageName += nameContext.text
+        if (ctx.moduleItems() != null) {
+            for (nameContext in ctx.moduleItems().aliasName()) {
+                codeImport.UsageName += nameContext.identifierName()[0].text
+                if (nameContext.As() != null) {
+                    codeImport.AsName += nameContext.identifierName()[1].text
+                }
+            }
+        }
+
+        val importNamespace = ctx.importNamespace()
+        if (importNamespace != null) {
+            // for examples: import '*' from 'blabla';
+            val isImportAll = importNamespace.Multiply() != null
+            if (isImportAll) {
+                codeImport.UsageName += "*"
+                if (importNamespace.As() != null) {
+                    codeImport.AsName += importNamespace.identifierName()[0].text
+                }
+            } else {
+                codeImport.UsageName += importNamespace.identifierName()[0].text
+                if (importNamespace.As() != null) {
+                    codeImport.AsName += importNamespace.identifierName()[1].text
+                }
             }
         }
 
@@ -315,10 +336,6 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         if (ctx.Lodash() != null) {
             codeImport.UsageName += ctx.Lodash().text
-        }
-
-        if (ctx.As() != null) {
-            codeImport.UsageName += ctx.identifierName().text
         }
 
         codeContainer.Imports += codeImport
@@ -360,7 +377,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             parseStatement(context)
         }
 
-        currentFunc.FilePath = fileName
+        currentFunc.FilePath = filePath
         defaultNode.Functions += currentFunc
         funcsStackForCount.push(currentFunc)
     }
@@ -573,12 +590,12 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
 
                 currentFunc.Position = this.buildPosition(ctx)
-                currentFunc.FilePath = fileName
+                currentFunc.FilePath = filePath
                 defaultNode.Functions += currentFunc
             }
             "IdentifierExpressionContext" -> {
                 currentFunc.Position = this.buildPosition(ctx)
-                currentFunc.FilePath = fileName
+                currentFunc.FilePath = filePath
                 defaultNode.Functions += currentFunc
             }
             else -> {
@@ -595,7 +612,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         when (val parentName = statementParent::class.java.simpleName) {
             // for: const blabla = () => { }
             "VariableDeclarationContext" -> {
-                val func = CodeFunction(FilePath = fileName)
+                val func = CodeFunction(FilePath = filePath)
 
                 val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
                 func.Name = varDeclCtx.identifierOrKeyWord().text
@@ -617,7 +634,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             }
             // such as: `(e) => e.stopPropagation()`
             "ExpressionSequenceContext" -> {
-                val func = CodeFunction(FilePath = fileName)
+                val func = CodeFunction(FilePath = filePath)
                 func.Name = ""
                 isCallbackOrAnonymousFunction = true
                 processingNewArrowFunc(func)
@@ -837,9 +854,5 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
 
         return codeContainer
-    }
-
-    fun setPath(fileName: String) {
-        this.fileName = fileName
     }
 }

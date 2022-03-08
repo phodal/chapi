@@ -8,13 +8,10 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class TypeScriptAnalyser {
-    open fun analysis(str: String, fileName: String): CodeContainer {
+    open fun analysis(str: String, filePath: String): CodeContainer {
         val context = this.parse(str).program()
-        val listener = TypeScriptFullIdentListener(TSIdentify(fileName = fileName))
-
-        listener.setPath(fileName)
+        val listener = TypeScriptFullIdentListener(TSIdentify(filePath = filePath))
         ParseTreeWalker().walk(listener, context)
-
         return listener.getNodeInfo()
     }
 

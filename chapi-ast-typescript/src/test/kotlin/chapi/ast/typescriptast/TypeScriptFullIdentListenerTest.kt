@@ -4,7 +4,6 @@ import chapi.domain.core.DataStructType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -68,7 +67,7 @@ export class DesignComponent {
 
     @Test
     internal fun shouldIdentifyInterfaceName() {
-        var code = """
+        val code = """
 export interface IPerson {
     name: string;
     gender: string;
@@ -83,7 +82,7 @@ export interface IPerson {
 
     @Test
     internal fun shouldIdentifyInnerClass() {
-        var code = """
+        val code = """
 class Foo {
     static Bar = class {
 
@@ -98,7 +97,7 @@ class Foo {
 
     @Test
     internal fun shouldIdentifyMultipleNode() {
-        var code = """
+        val code = """
 interface IPerson {
     name: string;
 }
@@ -123,7 +122,7 @@ class Person implements IPerson {
 
     @Test
     internal fun shouldIdentifyImplements() {
-        var code = """
+        val code = """
 class Person implements IPerson {
     public publicString: string;
     private privateString: string;
@@ -143,7 +142,7 @@ class Person implements IPerson {
 
     @Test
     internal fun shouldIdentifyClassExtends() {
-        var code = """
+        val code = """
 class Employee extends Person {
 
 }"""
@@ -154,7 +153,7 @@ class Employee extends Person {
 
     @Test
     internal fun shouldIdentifyInterfaceExtends() {
-        var code = """
+        val code = """
 interface IEmployee extends IPerson {
     empCode: number;
     readonly empName: string;
@@ -170,7 +169,7 @@ interface IEmployee extends IPerson {
 
     @Test
     internal fun shouldIdentifyBlockImportsSource() {
-        var code = """
+        val code = """
 import { ZipCodeValidator } from "./ZipCodeValidator";
 
 """
@@ -183,7 +182,7 @@ import { ZipCodeValidator } from "./ZipCodeValidator";
 
     @Test
     internal fun shouldIdentifyMultipleBlockImportsSource() {
-        var code = """
+        val code = """
 import { ZipCodeValidator, ZipCodeGenerator } from "./ZipCodeValidator";
 
 """
@@ -198,7 +197,7 @@ import { ZipCodeValidator, ZipCodeGenerator } from "./ZipCodeValidator";
 
     @Test
     internal fun shouldIdentifyRequireImport() {
-        var code = """
+        val code = """
 import zip = require("./ZipCodeValidator");
 
 """
@@ -211,7 +210,7 @@ import zip = require("./ZipCodeValidator");
 
     @Test
     internal fun shouldIdentifyImportAll() {
-        var code = """
+        val code = """
 import "./module.js";
 
 """
@@ -223,7 +222,7 @@ import "./module.js";
 
     @Test
     internal fun shouldIdentifySpecificSymbol() {
-        var code = """
+        val code = """
 import $ from "jquery";
 import _ from "lodash";
 
@@ -239,7 +238,7 @@ import _ from "lodash";
 
     @Test
     internal fun shouldIdentifyImportAs() {
-        var code = """
+        val code = """
 import * as validator from "./ZipCodeValidator";
 
 """
@@ -247,7 +246,27 @@ import * as validator from "./ZipCodeValidator";
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.Imports.size, 1)
         assertEquals(codeFile.Imports[0].Source, "./ZipCodeValidator")
-        assertEquals(codeFile.Imports[0].UsageName[0], "validator")
+        assertEquals(codeFile.Imports[0].UsageName[0], "*")
+        assertEquals(codeFile.Imports[0].AsName, "validator")
+    }
+
+    @Test
+    internal fun shouldIdentStyleImports() {
+        val code = """
+import { updateSystemInfo } from '@/api/addition/systemInfo';
+import { BadSmellOption, useBadSmellOption } from "@/api/module/badSmellThresholds";
+import useSystemList from '@/store/global-cache-state/useSystemList';
+import { storage } from '@/store/storage/sessionStorage';
+import { Button, Collapse, Form, notification, Radio } from "antd";
+import { useForm } from 'antd/lib/form/Form';
+import { Store } from 'antd/lib/form/interface';
+import React, { useEffect } from "react";
+import styles from "./BadSmellThreshold.less";
+import BadSmellThresholdTable from "./components/BadSmellThresholdTable";
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        assertEquals(codeFile.Imports.size, 10)
     }
 
     private val personClassCode = """class Person implements IPerson {
