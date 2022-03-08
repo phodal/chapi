@@ -188,7 +188,7 @@ typeQuery
 
 typeQueryExpression
     : Identifier
-    | (identifierName '.')+ identifierName
+    | (identifierName '!'? '.')+ identifierName
     ;
 
 propertySignatur
@@ -760,8 +760,8 @@ singleExpression
     | arrowFunctionDeclaration                                               # ArrowFunctionExpression   // ECMAScript 6
     | Class Identifier? classTail                                            # ClassExpression
     | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
-    | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?  # MemberDotExpression
-    | singleExpression '?'? '!'? '.' '#'? '(' ')'                            # MemberDotSimpleExpression       // for: `onHotUpdateSuccess?.();`
+    | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?       # MemberDotExpression
+    | singleExpression '?'? '!'? '.' '#'? '(' ')'                                 # MemberDotExpression       // for: `onHotUpdateSuccess?.();`
     // Split to try `new Date()` first, then `new Date`.
     | New singleExpression typeArguments? arguments                          # NewExpression
     | New singleExpression typeArguments?                                    # NewExpression
@@ -849,6 +849,7 @@ literal
     | templateStringLiteral
     | RegularExpressionLiteral
     | numericLiteral
+    | Module  // only for es6 dev config
     ;
 
 templateStringLiteral

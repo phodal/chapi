@@ -30,6 +30,7 @@ internal class TypeScriptAnalyserAppTest {
         val resource = this.javaClass.classLoader.getResource("languages/ts/apicall")!!
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
+//        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src/.umi/core/devScripts.ts"
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         assertEquals(4, nodes.size)
 

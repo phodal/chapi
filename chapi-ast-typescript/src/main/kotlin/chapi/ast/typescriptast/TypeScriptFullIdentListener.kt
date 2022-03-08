@@ -7,6 +7,7 @@ import chapi.domain.core.*
 import chapi.infra.Stack
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.antlr.v4.runtime.ParserRuleContext
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private var filePath: String = node.filePath
@@ -527,8 +528,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         when (val childType = stmtChild::class.java.simpleName) {
             "ReturnStatementContext" -> {
                 val stmt = stmtChild as TypeScriptParser.ReturnStatementContext
-                for (singleExpressionContext in stmt.expressionSequence().singleExpression()) {
-                    parseSingleExpression(singleExpressionContext)
+                if (stmt.expressionSequence() != null) {
+                    for (singleExpressionContext in stmt.expressionSequence().singleExpression()) {
+                        parseSingleExpression(singleExpressionContext)
+                    }
                 }
             }
             else -> {
@@ -863,5 +866,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
 
         return codeContainer
+    }
+
+    override fun enterEveryRule(ctx: ParserRuleContext?) {
+        println(ctx!!.javaClass.simpleName)
     }
 }

@@ -742,4 +742,20 @@ function tryApplyUpdates(onHotUpdateSuccess?: Function) {
         assertEquals(1, defaultStruct.Functions[0].InnerFunctions.size)
         assertEquals("handleApplyUpdates", defaultStruct.Functions[0].InnerFunctions[0].Name)
     }
+
+    @Test
+    internal fun supportSomeIssue() {
+        val code = """
+function tryApplyUpdates(onHotUpdateSuccess: Function) {
+  if (!module.hot) {
+    window.location.reload();
+  }
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+        assertEquals("tryApplyUpdates", defaultStruct.Functions[0].Name)
+    }
 }
