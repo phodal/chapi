@@ -77,10 +77,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
     }
 
-    private fun variableToFields(
-        varDecl: TypeScriptParser.VariableDeclarationListContext,
-        modifiers: Array<String> = arrayOf()
-    ): Array<CodeField> {
+    private fun variableToFields(varDecl: TypeScriptParser.VariableDeclarationListContext, modifiers: Array<String> = arrayOf()): Array<CodeField> {
         var fields = arrayOf<CodeField>()
         varDecl.variableDeclaration().forEach {
             if (it.Assign() != null) {
@@ -372,27 +369,156 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     // see also in arrow function declaration
     override fun enterFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
         val funcName = ctx!!.Identifier().text
-        currentFunc.Name = funcName
+        val func = CodeFunction(FilePath = filePath)
+        func.Name = funcName
 
-        fillMethodFromCallSignature(ctx.callSignature(), currentFunc)
-        currentFunc.Position = this.buildPosition(ctx)
+        fillMethodFromCallSignature(ctx.callSignature(), func)
+        func.Position = this.buildPosition(ctx)
+
+        isCallbackOrAnonymousFunction = false;
+        processingNewArrowFunc(func)
 
         if (ctx.functionBody().sourceElements() != null) {
             for (context in ctx.functionBody().sourceElements().sourceElement()) {
                 parseStatement(context)
             }
         }
-
-        currentFunc.FilePath = filePath
-        defaultNode.Functions += currentFunc
-        funcsStackForCount.push(currentFunc)
     }
 
     // todo: align logic to arrow functions
     override fun exitFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
-        funcsStackForCount.pop()
+        handleFuncDeclExit()
+    }
+
+    // see also in function declaration
+    override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
+        val statementParent = ctx!!.parent.parent
+        isCallbackOrAnonymousFunction = false
+
+        when (val parentName = statementParent::class.java.simpleName) {
+            // for: const blabla = () => { }
+            "VariableDeclarationContext" -> {
+                val func = CodeFunction(FilePath = filePath)
+
+                val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
+                func.Name = varDeclCtx.identifierOrKeyWord().text
+                func.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
+                func.Position = this.buildPosition(ctx)
+
+                if (ctx.typeAnnotation() != null) {
+                    func.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
+                }
+
+                isCallbackOrAnonymousFunction = false
+                processingNewArrowFunc(func)
+            }
+            "ArgumentContext" -> {
+                // todo: add arg ctx
+                val call = CodeCall(FunctionName = currentExprIdent, Type = "ArrowFunction")
+                isCallbackOrAnonymousFunction = true
+                currentFunc.FunctionCalls += call
+            }
+            // such as: `(e) => e.stopPropagation()`
+            "ExpressionSequenceContext" -> {
+                val func = CodeFunction(FilePath = filePath)
+                func.Name = ""
+                isCallbackOrAnonymousFunction = true
+                processingNewArrowFunc(func)
+            }
+            else -> {
+                val text = statementParent.text
+                println("enterArrowFunctionDeclaration -> $parentName, $text")
+            }
+        }
+
+        if(ctx.arrowFunctionBody() == null) {
+            return
+        }
+
+        if (ctx.arrowFunctionBody().singleExpression() != null) {
+            parseSingleExpression(ctx.arrowFunctionBody().singleExpression())
+        }
+        // todo: add sourceElements parse
+    }
+
+    private fun processingNewArrowFunc(func: CodeFunction) {
+        if (isCallbackOrAnonymousFunction) {
+            return
+        }
+
+        if (funcsStackForCount.count() != 0) {
+            currentFunc.InnerFunctions += func
+        }
+
+        funcsStackForCount.push(func)
+        currentFunc = func
+    }
+
+    override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
+        handleFuncDeclExit()
+    }
+
+    private fun handleFuncDeclExit() {
+        if (!isCallbackOrAnonymousFunction) {
+            val pop = funcsStackForCount.pop()
+            if (pop != null) {
+                if (funcsStackForCount.count() != 0) {
+                    currentFunc = funcsStackForCount.peek()!!
+                }
+            }
+
+            exitArrowCount = funcsStackForCount.count()
+        }
+
+        isCallbackOrAnonymousFunction = false
         if (funcsStackForCount.count() == 0) {
+            defaultNode.Functions += currentFunc
             currentFunc = CodeFunction()
+        }
+    }
+
+    private fun buildArrowFunctionParameters(arrowFuncCtx: TypeScriptParser.ArrowFunctionParametersContext?): Array<CodeProperty> {
+        if (arrowFuncCtx!!.formalParameterList() != null) {
+            return this.buildParameters(arrowFuncCtx.formalParameterList())
+        }
+
+        var parameters: Array<CodeProperty> = arrayOf()
+        if (arrowFuncCtx.Identifier() != null) {
+            val parameter = CodeProperty(
+                TypeValue = arrowFuncCtx.Identifier().text, TypeType = "any"
+            )
+            parameters += parameter
+        }
+
+        return parameters
+    }
+
+    override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
+        val statementParent = ctx!!.parent.parent
+        when (val parentName = statementParent::class.java.simpleName) {
+            "VariableDeclarationContext" -> {
+                val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
+                currentFunc.Name = varDeclCtx.identifierOrKeyWord().text
+                if (ctx.formalParameterList() != null) {
+                    currentFunc.Parameters = this.buildParameters(ctx.formalParameterList())
+                }
+
+                if (ctx.typeAnnotation() != null) {
+                    currentFunc.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
+                }
+
+                currentFunc.Position = this.buildPosition(ctx)
+                currentFunc.FilePath = filePath
+                defaultNode.Functions += currentFunc
+            }
+            "IdentifierExpressionContext" -> {
+                currentFunc.Position = this.buildPosition(ctx)
+                currentFunc.FilePath = filePath
+                defaultNode.Functions += currentFunc
+            }
+            else -> {
+                println("enterFunctionExpressionDeclaration -> $parentName, ${statementParent.text} ")
+            }
         }
     }
 
@@ -581,133 +707,6 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
     }
 
-    override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
-        val statementParent = ctx!!.parent.parent
-        when (val parentName = statementParent::class.java.simpleName) {
-            "VariableDeclarationContext" -> {
-                val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
-                currentFunc.Name = varDeclCtx.identifierOrKeyWord().text
-                if (ctx.formalParameterList() != null) {
-                    currentFunc.Parameters = this.buildParameters(ctx.formalParameterList())
-                }
-
-                if (ctx.typeAnnotation() != null) {
-                    currentFunc.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
-                }
-
-                currentFunc.Position = this.buildPosition(ctx)
-                currentFunc.FilePath = filePath
-                defaultNode.Functions += currentFunc
-            }
-            "IdentifierExpressionContext" -> {
-                currentFunc.Position = this.buildPosition(ctx)
-                currentFunc.FilePath = filePath
-                defaultNode.Functions += currentFunc
-            }
-            else -> {
-                println("enterFunctionExpressionDeclaration -> $parentName, ${statementParent.text} ")
-            }
-        }
-    }
-
-    // see also in function declaration
-    override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
-        val statementParent = ctx!!.parent.parent
-        isCallbackOrAnonymousFunction = false
-
-        when (val parentName = statementParent::class.java.simpleName) {
-            // for: const blabla = () => { }
-            "VariableDeclarationContext" -> {
-                val func = CodeFunction(FilePath = filePath)
-
-                val varDeclCtx = statementParent as TypeScriptParser.VariableDeclarationContext
-                func.Name = varDeclCtx.identifierOrKeyWord().text
-                func.Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters())
-                func.Position = this.buildPosition(ctx)
-
-                if (ctx.typeAnnotation() != null) {
-                    func.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
-                }
-
-                isCallbackOrAnonymousFunction = false
-                processingNewArrowFunc(func)
-            }
-            "ArgumentContext" -> {
-                // todo: add arg ctx
-                val call = CodeCall(FunctionName = currentExprIdent, Type = "ArrowFunction")
-                isCallbackOrAnonymousFunction = true
-                currentFunc.FunctionCalls += call
-            }
-            // such as: `(e) => e.stopPropagation()`
-            "ExpressionSequenceContext" -> {
-                val func = CodeFunction(FilePath = filePath)
-                func.Name = ""
-                isCallbackOrAnonymousFunction = true
-                processingNewArrowFunc(func)
-            }
-            else -> {
-                val text = statementParent.text
-                println("enterArrowFunctionDeclaration -> $parentName, $text")
-            }
-        }
-
-        if(ctx.arrowFunctionBody() == null) {
-            return
-        }
-
-        if (ctx.arrowFunctionBody().singleExpression() != null) {
-            parseSingleExpression(ctx.arrowFunctionBody().singleExpression())
-        }
-        // todo: add sourceElements parse
-    }
-
-    private fun processingNewArrowFunc(func: CodeFunction) {
-        if (isCallbackOrAnonymousFunction) {
-            return
-        }
-
-        if (funcsStackForCount.count() != 0) {
-            currentFunc.InnerFunctions += func
-        }
-
-        funcsStackForCount.push(func)
-        currentFunc = func
-    }
-
-    override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
-        if (!isCallbackOrAnonymousFunction) {
-            val pop = funcsStackForCount.pop()
-            if (pop != null) {
-                if (funcsStackForCount.count() != 0) {
-                    currentFunc = funcsStackForCount.peek()!!
-                }
-            }
-
-            exitArrowCount = funcsStackForCount.count()
-        }
-
-        isCallbackOrAnonymousFunction = false
-        if (funcsStackForCount.count() == 0) {
-            defaultNode.Functions += currentFunc
-            currentFunc = CodeFunction()
-        }
-    }
-
-    private fun buildArrowFunctionParameters(arrowFuncCtx: TypeScriptParser.ArrowFunctionParametersContext?): Array<CodeProperty> {
-        if (arrowFuncCtx!!.formalParameterList() != null) {
-            return this.buildParameters(arrowFuncCtx.formalParameterList())
-        }
-
-        var parameters: Array<CodeProperty> = arrayOf()
-        if (arrowFuncCtx.Identifier() != null) {
-            val parameter = CodeProperty(
-                TypeValue = arrowFuncCtx.Identifier().text, TypeType = "any"
-            )
-            parameters += parameter
-        }
-
-        return parameters
-    }
 
     private fun fillMethodFromCallSignature(callSignCtx: TypeScriptParser.CallSignatureContext, currentFunc: CodeFunction) {
         if (callSignCtx.parameterList() != null) {

@@ -729,11 +729,17 @@ const BadSmellThreshold = () => {
     internal fun supportOptionalCall() {
         val code = """
 function tryApplyUpdates(onHotUpdateSuccess?: Function) {
-    onHotUpdateSuccess?.();
+    function handleApplyUpdates(err: Error | null, updatedModules: any) {
+        onHotUpdateSuccess?.();
+    }
 }"""
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         val defaultStruct = codeFile.DataStructures[0]
         assertEquals(1, defaultStruct.Functions.size)
+        assertEquals("tryApplyUpdates", defaultStruct.Functions[0].Name)
+
+        assertEquals(1, defaultStruct.Functions[0].InnerFunctions.size)
+        assertEquals("handleApplyUpdates", defaultStruct.Functions[0].InnerFunctions[0].Name)
     }
 }
