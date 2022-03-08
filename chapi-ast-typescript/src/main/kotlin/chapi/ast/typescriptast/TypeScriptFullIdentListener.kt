@@ -57,13 +57,17 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         val varDeclList = it as TypeScriptParser.VariableDeclarationListContext
                         val fields = variableToFields(varDeclList, arrayOf(modifier))
 
-                        defaultNode.Exports += CodeExport(
-                            Name = fields[0].TypeKey,
-                            Type = DataStructType.Variable,
-                            SourceFile = codeContainer.FullName
-                        )
+                        if (fields.isEmpty()) {
+                            println("fields size: 0, list: ${varDeclList.text}")
+                        } else {
+                            defaultNode.Exports += CodeExport(
+                                Name = fields[0].TypeKey,
+                                Type = DataStructType.Variable,
+                                SourceFile = codeContainer.FullName
+                            )
 
-                        defaultNode.Fields += fields
+                            defaultNode.Fields += fields
+                        }
                     }
                     else -> {
                         println(it::class.java.simpleName)
@@ -643,6 +647,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 val text = statementParent.text
                 println("enterArrowFunctionDeclaration -> $parentName, $text")
             }
+        }
+
+        if(ctx.arrowFunctionBody() == null) {
+            return
         }
 
         if (ctx.arrowFunctionBody().singleExpression() != null) {

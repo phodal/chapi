@@ -39,7 +39,11 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
     }
 
     fun buildTypeAnnotation(typeAnnotation: TypeScriptParser.TypeAnnotationContext?): String? {
-        val typeContext = typeAnnotation!!.type_()
+        if(typeAnnotation == null) {
+            return ""
+        }
+
+        val typeContext = typeAnnotation.type_()
 
         var type = typeContext.text
         when (typeContext.getChild(0)::class.java.simpleName) {
