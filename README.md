@@ -25,7 +25,7 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 |            | Languages                                     | plan support            |
 |------------|-----------------------------------------------|-------------------------|
-| C family      | C#, Java, Go, C, C++, Objective-C, Rust, ... | C++, C, Java, C#, Rust? |
+| C family   | C#, Java, Go, C, C++, Objective-C, Rust, ...  | C++, C, Java, C#, Rust? |
 | Functional | Scheme, Lisp, Clojure, Scala, ...             | Scala                   |
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript      |
 | Other      | Fortran, Swift, Matlab, ...                   | Swift?, Fortran?        |
@@ -189,11 +189,11 @@ code_call
 
 ## Development（Chinese Version）
 
-环境准备：Intellij IDEA、JDK 11+
+Env：Intellij IDEA、JDK 11+
 
-1. Clone 代码：``git clone https://github.com/phodal/chapi``
+1. Clone code：``git clone https://github.com/phodal/chapi``
 
-2. 执行构建：``./gradlew build``
+2. Build：``./gradlew build``
 
 ### 参与开发
 
@@ -230,8 +230,7 @@ code_call        // 函数调用，如 fmt.Println
 
 1. 寻找感兴趣的语言 / 添加新的语言 AST
 
-通过 TDD
-的方式一点点实现下面的功能（可以考虑按顺序），参照示例见 [JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
+通过 TDD 的方式一点点实现下面的功能（可以考虑按顺序），参照示例见 [JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
 
 1. package name
 2. import name
