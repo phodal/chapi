@@ -1,6 +1,7 @@
 package chapi.app.analyser
 
 import chapi.domain.core.CodeCall
+import chapi.domain.core.CodeFunction
 import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
@@ -13,7 +14,7 @@ data class ApiAdapter(
     var Import: List<String> = listOf(),
     // sourceFile::ExportFunction
     var Export: List<String> = listOf(),
-    // component name
+    // component name, only if is a component
     var ComponentName: String = "",
     var FilePath: String = ""
 )
@@ -35,7 +36,10 @@ internal class TypeScriptAnalyserAppTest {
         // fileName::componentName
         val componentList: MutableList<String> = mutableListOf()
 
-        var imports: HashMap<String, String> = hashMapOf()
+        val inbounds: MutableList<String> = mutableListOf()
+        val outbounds: MutableList<String> = mutableListOf()
+
+        val basepath = "apicall/"
 
         // 1. first create Component with FunctionCall maps based on Import
         // 2. build axios/umi-request to an API call method
@@ -46,7 +50,8 @@ internal class TypeScriptAnalyserAppTest {
 
             node.Imports.forEach { imp ->
                 imp.UsageName.forEach {
-                    imports[it] = "${imp.Source}::${it}"
+                    println(node.FilePath)
+                    inbounds += "${imp.Source}::${it}"
                 }
             }
 
@@ -57,6 +62,8 @@ internal class TypeScriptAnalyserAppTest {
             }
 
             node.Functions.forEach { func ->
+                outbounds += moduleName + "::" + func.Name
+
                 var calleeName = "$componentName::${func.Name}"
                 if (isComponent) {
                     calleeName = componentName
@@ -73,32 +80,35 @@ internal class TypeScriptAnalyserAppTest {
                             }
                         }
                     }
-                    func.InnerFunctions.forEach { inner ->
-                        run {
-                            inner.FunctionCalls.forEach { innerCall ->
-                                run {
-                                    callMap[calleeName] = innerCall
-                                    identAxios(innerCall, httpAdapterMap, calleeName)
-                                    if (isComponent) {
-                                        componentCallMap[componentName]?.plusAssign((innerCall.FunctionName))
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    recursiveCall(func, calleeName, isComponent, componentName)
                 }
             }
         }
 
-        println(imports)
-        println(callMap)
-        println(httpAdapterMap)
-        println(componentCallMap)
+        println(inbounds)
+        println(outbounds)
 
-        componentCallMap.forEach {
-            println(it.key)
-            componentCallMap[it.key]!!.forEach { value ->
-                println(value)
+        println(httpAdapterMap)
+//        println(callMap)
+//        println(componentCallMap)
+    }
+
+    private fun recursiveCall(func: CodeFunction, calleeName: String, isComponent: Boolean, componentName: String) {
+        func.InnerFunctions.forEach { inner ->
+            run {
+                inner.FunctionCalls.forEach { innerCall ->
+                    run {
+                        callMap[calleeName] = innerCall
+                        identAxios(innerCall, httpAdapterMap, calleeName)
+                        if (isComponent) {
+                            componentCallMap[componentName]?.plusAssign((innerCall.FunctionName))
+                        }
+                    }
+                }
+            }
+
+            func.InnerFunctions.forEach {
+                recursiveCall(it, calleeName, isComponent, componentName)
             }
         }
     }

@@ -234,8 +234,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             StopLinePosition = stop.charPositionInLine,
         )
 
-    private fun getTypeFullName(name: String): String =
-        imports.firstOrNull { it.AsName == name }?.Source ?: "kotlin.$name"
+    private fun getTypeFullName(name: String): String = imports.firstOrNull { it.AsName == name }?.Source ?: "kotlin.$name"
 
     companion object {
         const val UNKNOWN_PLACEHOLDER = "<UNKNOWN>"

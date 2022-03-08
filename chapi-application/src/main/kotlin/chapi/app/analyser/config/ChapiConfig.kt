@@ -5,6 +5,7 @@ data class ChapiConfig(
     var withoutTest: Boolean = false,
     // todo: use grep
     var filterRule: String = ""
+    // path resolve
 )
 
 // TODO replace string value
