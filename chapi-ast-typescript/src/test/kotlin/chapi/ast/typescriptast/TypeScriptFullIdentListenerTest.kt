@@ -4,6 +4,7 @@ import chapi.domain.core.DataStructType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -757,5 +758,35 @@ function tryApplyUpdates(onHotUpdateSuccess: Function) {
         val defaultStruct = codeFile.DataStructures[0]
         assertEquals(1, defaultStruct.Functions.size)
         assertEquals("tryApplyUpdates", defaultStruct.Functions[0].Name)
+    }
+
+    @Test
+    @Disabled
+    internal fun supportForInterfaceOptional() {
+        val code = """
+export interface IConfigFromPlugins {
+  "404"?: boolean
+  routes?: {
+  }
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+    }
+
+    @Test
+    @Disabled
+    internal fun supportForGenericMap() {
+        val code = """
+export type Model<T extends keyof typeof models> = {
+  [key in keyof typeof models]: ReturnType<typeof models[T]>;
+};
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
     }
 }
