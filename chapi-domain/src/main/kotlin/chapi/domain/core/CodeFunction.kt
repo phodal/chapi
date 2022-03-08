@@ -104,4 +104,8 @@ open class CodeFunction(
     fun fileExt(): String {
         return this.FilePath.substringAfterLast('.', "")
     }
+
+    fun fileName(): String {
+        return this.FilePath.substringBeforeLast('.', "")
+    }
 }

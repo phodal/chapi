@@ -71,4 +71,9 @@ open class CodeDataStruct(
     fun fileExt(): String {
         return this.FilePath.substringAfterLast('.', "")
     }
+
+    // src/main.ts -> src/main
+    fun fileWithoutSuffix(): String {
+        return this.FilePath.substringBeforeLast('.', "")
+    }
 }

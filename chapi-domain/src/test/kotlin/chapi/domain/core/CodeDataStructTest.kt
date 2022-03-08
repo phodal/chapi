@@ -49,4 +49,10 @@ internal class CodeDataStructTest {
         val ds = CodeDataStruct(NodeName = "FunctionMap", FilePath = "src/main.java")
         assertEquals("java", ds.fileExt());
     }
+
+    @Test
+    internal fun shouldGetFileNameWithoutFileExt() {
+        val ds = CodeDataStruct(NodeName = "FunctionMap", FilePath = "src/main.java")
+        assertEquals("src/main", ds.fileWithoutSuffix());
+    }
 }
