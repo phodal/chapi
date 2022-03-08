@@ -19,6 +19,7 @@ enum class DataStructType (val structType: String) {
 
 @Serializable
 open class CodeDataStruct(
+    // class and DataStruct Name
     var NodeName: String = "",
     var Type: DataStructType = DataStructType.EMPTY,
     var Package: String = "",

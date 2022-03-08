@@ -5,8 +5,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 open class CodeImport(
     var Source: String = "",
+    // todo: define for new usage
     var AsName: String = "",
-    var UsageName: Array<String> = arrayOf<String>(),
+    // import UsageName from 'usage'
+    // import AsSource as UsageName from 'source'
+    var UsageName: Array<String> = arrayOf(),
     var Scope: String = ""
 ) {
 
