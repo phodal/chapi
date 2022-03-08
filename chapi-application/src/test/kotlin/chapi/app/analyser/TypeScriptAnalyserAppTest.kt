@@ -1,11 +1,7 @@
 package chapi.app.analyser
 
 import chapi.domain.core.CodeCall
-import chapi.domain.core.CodeFunction
-import chapi.domain.core.CodePosition
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
 import kotlin.test.assertEquals
@@ -20,6 +16,7 @@ data class ApiAdapter(
 
 internal class TypeScriptAnalyserAppTest {
     var callMap: HashMap<String, CodeCall> = hashMapOf()
+    var httpAdapterMap: HashMap<String, CodeCall> = hashMapOf()
 
     @Test
     fun shouldIdentifySamePackage() {
@@ -35,16 +32,15 @@ internal class TypeScriptAnalyserAppTest {
         // 1. first create Component with FunctionCall maps based on Import
         // 2. build axios/umi-request to a API call method
         // 3. mapping for results
-        val sb = StringBuilder()
-        val adapters: MutableList<ApiAdapter> = mutableListOf();
         nodes.forEach {
             val isComponent = it.fileExt() == "tsx"
-            if(isComponent) {
+            if (isComponent) {
                 componentList += "${it.FilePath}::${it.NodeName}"
             }
+
             it.Functions.forEach { func ->
                 var calleeName = "${it.FilePath}::${it.NodeName}::${func.Name}"
-                if(isComponent) {
+                if (isComponent) {
                     calleeName = "${it.FilePath}::${it.NodeName}"
                 }
 
@@ -59,7 +55,7 @@ internal class TypeScriptAnalyserAppTest {
                             inner.FunctionCalls.forEach { innerCall ->
                                 run {
                                     callMap[calleeName] = innerCall
-//                                    identAxios(innerCall, sb, func, adapters)
+                                    identAxios(innerCall, httpAdapterMap, calleeName)
                                 }
                             }
                         }
@@ -68,25 +64,19 @@ internal class TypeScriptAnalyserAppTest {
             }
         }
 
-        println(Json.encodeToString(adapters))
-        print(sb)
-        print(callMap)
+        println(callMap)
+        println(httpAdapterMap)
     }
 
     private fun identAxios(
         call: CodeCall,
-        sb: StringBuilder,
-        func: CodeFunction,
-        adapters: MutableList<ApiAdapter>
+        httpAdapterMap: HashMap<String, CodeCall>,
+        calleeName: String,
     ) {
         val callName = call.FunctionName
         if (callName == "axios" || callName.startsWith("axios.")) {
             if (call.Parameters.isNotEmpty()) {
-                val adapter = ApiAdapter()
-                sb.append("${func.Name} -> $callName -> ${call.Parameters[0].TypeValue}\n")
-                adapter.SourceFunc = func.Name
-                adapter.TypeValue = call.Parameters[0].TypeValue
-                adapters += adapter
+                httpAdapterMap[calleeName] = call
             }
         }
     }

@@ -767,16 +767,11 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
         return text
     }
 
-    override fun enterReturnStatement(ctx: TypeScriptParser.ReturnStatementContext?) {
-//        println(ctx!!.text)
-    }
-
     override fun enterVariableDeclaration(ctx: TypeScriptParser.VariableDeclarationContext?) {
         val varName = ctx!!.getChild(0).text
         if (ctx.singleExpression().size == 1 && ctx.typeParameters() == null) {
             val singleExprCtx = ctx.singleExpression()[0]
-            val singleCtxType = singleExprCtx::class.java.simpleName
-            when (singleCtxType) {
+            when (val singleCtxType = singleExprCtx::class.java.simpleName) {
                 "NewExpressionContext" -> {
                     val newExprCtx = singleExprCtx as TypeScriptParser.NewExpressionContext
                     val newSingleExpr = newExprCtx.singleExpression()
@@ -791,8 +786,7 @@ class TypeScriptFullIdentListener(private var node: TSIdentify) : TypeScriptAstL
                 }
                 "IdentifierExpressionContext" -> {
                     val identExpr = singleExprCtx as IdentifierExpressionContext;
-                    val identExprText = identExpr.identifierName().text
-                    when (identExprText) {
+                    when (val identExprText = identExpr.identifierName().text) {
                         "await" -> {
                             val singleExpression = identExpr.singleExpression()
                             parseSingleExpression(singleExpression)
