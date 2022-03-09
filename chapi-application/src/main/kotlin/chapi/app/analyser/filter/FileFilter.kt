@@ -21,7 +21,15 @@ open class FileFilter {
                     path.endsWith(".py")
                 }
                 "typescript" -> {
-                    path.endsWith(".ts") || path.endsWith(".tsx")
+                    val isNormalFile = path.endsWith(".ts") || path.endsWith(".tsx")
+                        || path.endsWith(".js") || path.endsWith(".jsx")
+                    val isNotMinFile = path.endsWith(".min.js")
+
+                    if (config.ignoreMinFile) {
+                        return isNormalFile && !isNotMinFile
+                    } else {
+                        isNormalFile
+                    }
                 }
                 "scala" -> {
                     path.endsWith(".scala")

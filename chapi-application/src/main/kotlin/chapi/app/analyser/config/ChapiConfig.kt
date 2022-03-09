@@ -4,8 +4,9 @@ data class ChapiConfig(
     var language: String = "",
     var withoutTest: Boolean = false,
     // todo: use grep
-    var filterRule: String = ""
+    var filterRule: String = "",
     // path resolve
+    var ignoreMinFile: Boolean = true
 )
 
 // TODO replace string value
