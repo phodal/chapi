@@ -1,11 +1,13 @@
 package chapi.app.analyser
 
+import chapi.app.path.ecmaImportConvert
+import chapi.app.path.relativeRoot
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeFunction
 import kotlinx.serialization.Serializable
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
-import kotlin.test.assertEquals
 
 @Serializable
 data class ApiAdapter(
@@ -22,6 +24,7 @@ data class ApiAdapter(
 internal class TypeScriptAnalyserAppTest {
     // componentMapList: Import, Export
     var componentCallMap: HashMap<String, MutableList<String>> = hashMapOf()
+    var componentInbounds: HashMap<String, MutableList<String>> = hashMapOf()
     var callMap: HashMap<String, CodeCall> = hashMapOf()
     var httpAdapterMap: HashMap<String, CodeCall> = hashMapOf()
 
@@ -30,27 +33,27 @@ internal class TypeScriptAnalyserAppTest {
         val resource = this.javaClass.classLoader.getResource("languages/ts/apicall")!!
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
-//        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src"
+//        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src/api/"
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         assertEquals(4, nodes.size)
 
         // fileName::componentName
         val componentList: MutableList<String> = mutableListOf()
 
-        val inbounds: MutableList<String> = mutableListOf()
-        val outbounds: MutableList<String> = mutableListOf()
-
         // 1. first create Component with FunctionCall maps based on Import
         // 2. build axios/umi-request to an API call method
         // 3. mapping for results
         nodes.forEach { node ->
+            val inbounds: MutableList<String> = mutableListOf()
+            val outbounds: MutableList<String> = mutableListOf()
+
             val isComponent = node.fileExt() == "tsx"
-            val moduleName = node.fileWithoutSuffix()
+            val moduleName = relativeRoot(path, node.FilePath).substringBeforeLast('.', "")
 
             node.Imports.forEach { imp ->
                 imp.UsageName.forEach {
-                    println(node.FilePath)
-                    inbounds += "${imp.Source}::${it}"
+                    val source = ecmaImportConvert(path, node.FilePath, imp.Source)
+                    inbounds += "${source}::${it}"
                 }
             }
 
@@ -73,7 +76,7 @@ internal class TypeScriptAnalyserAppTest {
                     func.FunctionCalls.forEach { call ->
                         run {
                             callMap[calleeName] = call
-                            identAxios(call, httpAdapterMap, calleeName)
+                            findAxiosToHttpList(call, httpAdapterMap, calleeName)
                             if (isComponent) {
                                 componentCallMap[componentName]?.plusAssign((call.FunctionName))
                             }
@@ -82,14 +85,21 @@ internal class TypeScriptAnalyserAppTest {
                     recursiveCall(func, calleeName, isComponent, componentName)
                 }
             }
+
+            componentInbounds[componentName] = inbounds
         }
 
-        println(inbounds)
-        println(outbounds)
+        var httpCalls: Array<CodeCall> = arrayOf();
+        componentInbounds.forEach { map ->
+            map.value.forEach {
+                if (httpAdapterMap[it] != null) {
+                    httpCalls += httpAdapterMap[it]!!
+                }
+            }
+        }
 
-        println(httpAdapterMap)
-//        println(callMap)
-//        println(componentCallMap)
+        assertEquals(1, httpCalls.size)
+        assertEquals(1, httpCalls[0].Parameters.size)
     }
 
     private fun recursiveCall(func: CodeFunction, calleeName: String, isComponent: Boolean, componentName: String) {
@@ -98,7 +108,7 @@ internal class TypeScriptAnalyserAppTest {
                 inner.FunctionCalls.forEach { innerCall ->
                     run {
                         callMap[calleeName] = innerCall
-                        identAxios(innerCall, httpAdapterMap, calleeName)
+                        findAxiosToHttpList(innerCall, httpAdapterMap, calleeName)
                         if (isComponent) {
                             componentCallMap[componentName]?.plusAssign((innerCall.FunctionName))
                         }
@@ -120,7 +130,7 @@ internal class TypeScriptAnalyserAppTest {
         return "${moduleName}::${nodeName}"
     }
 
-    private fun identAxios(call: CodeCall, httpAdapterMap: HashMap<String, CodeCall>, calleeName: String) {
+    private fun findAxiosToHttpList(call: CodeCall, httpAdapterMap: HashMap<String, CodeCall>, calleeName: String) {
         val callName = call.FunctionName
         if (callName == "axios" || callName.startsWith("axios.")) {
             if (call.Parameters.isNotEmpty()) {
