@@ -23,7 +23,10 @@ fun importConvert(filepath: String, importPath: String): String {
 
         // use parent to convert
         if(file.extension.isNotEmpty()) {
-            file = file.parentFile
+            // src/main.tsx don't have parent
+            if (file.parentFile != null) {
+                file = file.parentFile
+            }
         }
 
         val resolve = file.resolve(File(importPath))

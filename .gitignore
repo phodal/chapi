@@ -36,5 +36,5 @@ chapi.json
 *.iws
 output.json
 .DS_Store
-
+api.json
 

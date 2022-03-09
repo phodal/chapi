@@ -5,24 +5,33 @@ import chapi.app.path.relativeRoot
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeFunction
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.nio.file.Paths
 
 @Serializable
-data class ApiAdapter(
-    // sourceFile::ImportItem
-    // also in mapping
-    var Import: List<String> = listOf(),
+data class ComponentRef(
+    // sourceFile::ImportItem , also in mapping
+    var Inbounds: List<String> = listOf(),
     // sourceFile::ExportFunction
-    var Export: List<String> = listOf(),
+    var Outbounds: List<String> = listOf(),
     // component name, only if is a component
-    var ComponentName: String = "",
-    var FilePath: String = ""
+    var Name: String = "",
+    var ApiRef: List<HttpApi> = listOf()
+)
+
+@Serializable
+data class HttpApi(
+    var base:   String = "",
+    var url:    String = "",
+    var method: String = "",
+    var data:   String = ""
 )
 
 internal class TypeScriptAnalyserAppTest {
-    // componentMapList: Import, Export
     var componentCallMap: HashMap<String, MutableList<String>> = hashMapOf()
     var componentInbounds: HashMap<String, MutableList<String>> = hashMapOf()
     var callMap: HashMap<String, CodeCall> = hashMapOf()
@@ -33,7 +42,7 @@ internal class TypeScriptAnalyserAppTest {
         val resource = this.javaClass.classLoader.getResource("languages/ts/apicall")!!
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
-//        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src/api/"
+//        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src"
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         assertEquals(4, nodes.size)
 
@@ -86,20 +95,48 @@ internal class TypeScriptAnalyserAppTest {
                 }
             }
 
-            componentInbounds[componentName] = inbounds
+            if (isComponent) {
+                componentInbounds[componentName] = inbounds
+            }
         }
 
-        var httpCalls: Array<CodeCall> = arrayOf();
+        var httpCalls: Array<ComponentRef> = arrayOf();
         componentInbounds.forEach { map ->
+            val componentRef = ComponentRef(Name = map.key)
             map.value.forEach {
                 if (httpAdapterMap[it] != null) {
-                    httpCalls += httpAdapterMap[it]!!
+                    val call = httpAdapterMap[it]!!
+                    val httpApi = HttpApi()
+                    call.Parameters.forEach { prop ->
+                        for (codeProperty in prop.ObjectValue) {
+                            when(codeProperty.TypeValue) {
+                                "baseURL" -> {
+                                    httpApi.base = codeProperty.ObjectValue[0].TypeValue
+                                }
+                                "url" -> {
+                                    httpApi.url = codeProperty.ObjectValue[0].TypeValue
+                                }
+                                "method" -> {
+                                    httpApi.method = codeProperty.ObjectValue[0].TypeValue
+                                }
+                                "data" -> {
+                                    httpApi.data = codeProperty.ObjectValue[0].TypeValue
+                                }
+                            }
+                        }
+                    }
+
+                    componentRef.ApiRef += httpApi
                 }
+            }
+
+            if(componentRef.ApiRef.isNotEmpty()) {
+                httpCalls += componentRef
             }
         }
 
         assertEquals(1, httpCalls.size)
-        assertEquals(1, httpCalls[0].Parameters.size)
+        File("api.json").writeText(Json.encodeToString(httpCalls))
     }
 
     private fun recursiveCall(func: CodeFunction, calleeName: String, isComponent: Boolean, componentName: String) {
