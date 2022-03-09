@@ -767,13 +767,14 @@ function tryApplyUpdates(onHotUpdateSuccess: Function) {
 export interface IConfigFromPlugins {
   "404"?: boolean
   routes?: {
+    path?: string
   }
 }
 """
 
+        // interface property lost "," as split symbol
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        val defaultStruct = codeFile.DataStructures[0]
-        assertEquals(1, defaultStruct.Functions.size)
+        assertEquals(1, codeFile.DataStructures.size)
     }
 
     @Test

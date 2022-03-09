@@ -160,6 +160,7 @@ typeMember
     | constructSignature
     | indexSignature
     | methodSignature ('=>' type_)?
+//    | objectSignature
     ;
 
 arrayType
@@ -248,6 +249,10 @@ constructSignature
 indexSignature
     : '[' Identifier ':' (Number|String) ']' typeAnnotation
     ;
+//
+//objectSignature
+//    : propertyName '?'?  ':' objectType
+//    ;
 
 methodSignature
     : propertyName '?'? callSignature

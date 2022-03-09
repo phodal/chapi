@@ -25,6 +25,7 @@ open class CodeDataStruct(
     var Type: DataStructType = DataStructType.EMPTY,
     var Package: String = "",
     var FilePath: String = "",
+    // todo: thinking in change to property
     var Fields: Array<CodeField> = arrayOf(),
     var MultipleExtend: Array<String> = arrayOf(),
     var Implements: Array<String> = arrayOf(),
