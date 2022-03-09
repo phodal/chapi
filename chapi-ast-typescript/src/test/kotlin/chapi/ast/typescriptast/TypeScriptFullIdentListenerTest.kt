@@ -790,4 +790,24 @@ export type Model<T extends keyof typeof models> = {
         val defaultStruct = codeFile.DataStructures[0]
         assertEquals(1, defaultStruct.Functions.size)
     }
+
+    @Test
+    internal fun supportInterfaceMethodGeneric() {
+        val code = """
+const createJMethodNode = (jMethod: JMethod): TreeNode<JMethod> => {
+  const { id, name, module, clazz } = jMethod;
+  return {
+    id,
+    name,
+    module,
+    parents: [],
+    children: [],
+  };
+};
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+    }
 }

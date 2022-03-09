@@ -717,6 +717,7 @@ propertyAssignment
     | generatorMethod                                         # MethodProperty
     | identifierOrKeyWord                                     # PropertyShorthand
     | restParameter                                           # RestParameterInObject
+    | Module                                                  # ModuleText   // for: const { module } = blab;
     ;
 
 getAccessor
