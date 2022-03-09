@@ -2,34 +2,43 @@ package chapi.app.path
 
 import java.io.File
 
+fun ecmaImportConvert(workspace: String, filepath: String, importPath: String): String {
+    val relativePath = relativeRoot(workspace, filepath)
+    return importConvert(relativePath, importPath)
+}
+
 // filePath: point to current file
 // sourcePath: like `../../`
 //
 // output: to normalize path
-fun ecmaPathConvert(basedPath: String, sourcePath: String): String {
+fun importConvert(filepath: String, importPath: String): String {
     // import "@/src/component/Hello.js"
-    val isResolvePath = sourcePath.startsWith("@/")
+    val isResolvePath = importPath.startsWith("@/")
     if(isResolvePath) {
-        return sourcePath.removeRange(0, 2)
+        return importPath.removeRange(0, 2)
     }
 
-    var file = File(basedPath)
+    if(importPath.startsWith("./") || importPath.startsWith("../")) {
+        var file = File(filepath)
 
-    // use parent to convert
-    if(file.isFile) {
-        file = file.parentFile
+        // use parent to convert
+        if(file.extension.isNotEmpty()) {
+            file = file.parentFile
+        }
+
+        val resolve = file.resolve(File(importPath))
+        return resolve.normalize().toString()
     }
 
-    val resolve = file.resolve(File(sourcePath))
-    return resolve.normalize().toString()
+    return importPath
 }
 
-fun relativeRoot(basedPath: String, sourcePath: String): String {
-    var pathname = sourcePath
+fun relativeRoot(filepath: String, importPath: String): String {
+    var pathname = importPath
     val isResolvePath = pathname.startsWith("@/")
     if(isResolvePath) {
         pathname = pathname.removeRange(0, 2)
     }
 
-    return File(pathname).relativeTo(File(basedPath)).toString()
+    return File(pathname).relativeTo(File(filepath)).toString()
 }
