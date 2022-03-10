@@ -15,16 +15,18 @@ import java.nio.file.Paths
 @Serializable
 data class ComponentRef(
     // sourceFile::ImportItem , also in mapping
-    var Inbounds: List<String> = listOf(),
+    var inbounds:  List<String> = listOf(),
     // sourceFile::ExportFunction
-    var Outbounds: List<String> = listOf(),
+    var outbounds: List<String> = listOf(),
     // component name, only if is a component
-    var Name: String = "",
-    var ApiRef: List<HttpApi> = listOf()
+    var name:      String = "",
+    var caller:    String = "",
+    var apiRef:    List<HttpApiCall> = listOf()
 )
 
 @Serializable
-data class HttpApi(
+data class HttpApiCall(
+    var caller: String = "",
     var base:   String = "",
     var url:    String = "",
     var method: String = "",
@@ -102,11 +104,13 @@ internal class TypeScriptAnalyserAppTest {
 
         var httpCalls: Array<ComponentRef> = arrayOf();
         componentInbounds.forEach { map ->
-            val componentRef = ComponentRef(Name = map.key)
+            val componentRef = ComponentRef(name = map.key)
             map.value.forEach {
                 if (httpAdapterMap[it] != null) {
                     val call = httpAdapterMap[it]!!
-                    val httpApi = HttpApi()
+                    val httpApi = HttpApiCall()
+
+                    httpApi.caller = it
                     call.Parameters.forEach { prop ->
                         for (codeProperty in prop.ObjectValue) {
                             when(codeProperty.TypeValue) {
@@ -126,16 +130,18 @@ internal class TypeScriptAnalyserAppTest {
                         }
                     }
 
-                    componentRef.ApiRef += httpApi
+                    componentRef.apiRef += httpApi
                 }
             }
 
-            if(componentRef.ApiRef.isNotEmpty()) {
+            if(componentRef.apiRef.isNotEmpty()) {
                 httpCalls += componentRef
             }
         }
 
         assertEquals(1, httpCalls.size)
+        assertEquals(1, httpCalls[0].apiRef)
+        assertEquals("BadSmellThreshold/BadSmellThreshold", httpCalls[0].name)
         File("api.json").writeText(Json.encodeToString(httpCalls))
     }
 
