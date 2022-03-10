@@ -1,10 +1,11 @@
 package chapi.app.analyser
 
+import chapi.app.frontend.ComponentHttpCall
+import chapi.app.frontend.FeHttpApiCall
 import chapi.app.path.ecmaImportConvert
 import chapi.app.path.relativeRoot
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeFunction
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -12,31 +13,11 @@ import org.junit.jupiter.api.Test
 import java.io.File
 import java.nio.file.Paths
 
-@Serializable
-data class ComponentHttpCall(
-    // sourceFile::ImportItem , also in mapping
-    var inbounds: List<String> = listOf(),
-    // sourceFile::ExportFunction
-    var outbounds: List<String> = listOf(),
-    // component name, only if is a component
-    var name: String = "",
-    var apiRef: List<HttpApiCall> = listOf()
-)
-
-@Serializable
-data class HttpApiCall(
-    var caller: String = "",
-    var base: String = "",
-    var url: String = "",
-    var method: String = "",
-    var data: String = ""
-)
-
 internal class TypeScriptAnalyserAppTest {
-    var componentCallMap: HashMap<String, MutableList<String>> = hashMapOf()
-    var componentInbounds: HashMap<String, MutableList<String>> = hashMapOf()
-    var callMap: HashMap<String, CodeCall> = hashMapOf()
-    var httpAdapterMap: HashMap<String, CodeCall> = hashMapOf()
+    private var componentCallMap: HashMap<String, MutableList<String>> = hashMapOf()
+    private var componentInbounds: HashMap<String, MutableList<String>> = hashMapOf()
+    private var callMap: HashMap<String, CodeCall> = hashMapOf()
+    private var httpAdapterMap: HashMap<String, CodeCall> = hashMapOf()
 
     @Test
     fun shouldIdentifySamePackage() {
@@ -107,7 +88,7 @@ internal class TypeScriptAnalyserAppTest {
             map.value.forEach {
                 if (httpAdapterMap[it] != null) {
                     val call = httpAdapterMap[it]!!
-                    val httpApi = HttpApiCall()
+                    val httpApi = FeHttpApiCall()
 
                     httpApi.caller = it
                     call.Parameters.forEach { prop ->
