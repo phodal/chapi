@@ -1,16 +1,14 @@
-package chapi.app.analyser
+package chapi.app.frontend
 
-import chapi.app.frontend.ComponentHttpCallInfo
-import chapi.app.frontend.FrontendApiAnalyser
-import chapi.app.frontend.naming
+import chapi.app.analyser.TypeScriptAnalyserApp
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.nio.file.Paths
 
-internal class TypeScriptAnalyserAppTest {
+internal class FrontendApiAnalyserTest {
     @Test
     fun shouldSupportIdentifyComponentApi() {
         val resource = this.javaClass.classLoader.getResource("languages/ts/apicall")!!
@@ -46,6 +44,18 @@ internal class TypeScriptAnalyserAppTest {
     @Test
     internal fun shouldCorrectComponentName() {
         val resource = this.javaClass.classLoader.getResource("languages/ts/interface-error")!!
+        val path = Paths.get(resource.toURI()).toFile().absolutePath
+
+        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
+        File("nodes.json").writeText(Json.encodeToString(nodes))
+
+        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
+        File("api.json").writeText(Json.encodeToString(componentCalls))
+    }
+
+    @Test
+    internal fun shouldSaveApiAdapter() {
+        val resource = this.javaClass.classLoader.getResource("languages/ts/api-adapter")!!
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
