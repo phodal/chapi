@@ -139,10 +139,16 @@ internal class TypeScriptAnalyserAppTest {
             }
         }
 
+        File("api.json").writeText(Json.encodeToString(componentCalls))
+
         assertEquals(1, componentCalls.size)
         assertEquals("BadSmellThreshold/BadSmellThreshold", componentCalls[0].name)
-        assertEquals("api/addition/systemInfo::updateSystemInfo", componentCalls[0].apiRef[0].caller)
-        File("api.json").writeText(Json.encodeToString(componentCalls))
+        val apiRef = componentCalls[0].apiRef[0]
+        assertEquals("api/addition/systemInfo::updateSystemInfo", apiRef.caller)
+        assertEquals("baseURL", apiRef.base)
+        assertEquals("systemInfoApi", apiRef.url)
+        assertEquals("PUT", apiRef.method)
+        assertEquals("parameter", apiRef.data)
     }
 
     private fun recursiveCall(func: CodeFunction, calleeName: String, isComponent: Boolean, componentName: String) {
