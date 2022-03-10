@@ -44,7 +44,7 @@ internal class TypeScriptAnalyserAppTest {
             node.Imports.forEach { imp ->
                 imp.UsageName.forEach {
                     val source = ecmaImportConvert(path, node.FilePath, imp.Source)
-                    inbounds += "${source}::${it}"
+                    inbounds += naming(source, it)
                 }
             }
 
@@ -55,9 +55,9 @@ internal class TypeScriptAnalyserAppTest {
             }
 
             node.Functions.forEach { func ->
-                outbounds += moduleName + "::" + func.Name
+                outbounds += naming(moduleName, func.Name)
 
-                var calleeName = "$componentName::${func.Name}"
+                var calleeName = naming(componentName, func.Name)
                 if (isComponent) {
                     calleeName = componentName
                 }
@@ -110,7 +110,8 @@ internal class TypeScriptAnalyserAppTest {
                         }
                     }
 
-                    httpApi.caller = "api/addition/systemInfo::updateSystemInfo"
+                    httpApi.caller = naming("api/addition/systemInfo", "updateSystemInfo")
+
                     componentRef.apiRef += httpApi
                 }
             }
@@ -125,7 +126,7 @@ internal class TypeScriptAnalyserAppTest {
         assertEquals(1, componentCalls.size)
         assertEquals("BadSmellThreshold/BadSmellThreshold", componentCalls[0].name)
         val apiRef = componentCalls[0].apiRef[0]
-        assertEquals("api/addition/systemInfo::updateSystemInfo", apiRef.caller)
+        assertEquals(naming("api/addition/systemInfo", "updateSystemInfo"), apiRef.caller)
         assertEquals("baseURL", apiRef.base)
         assertEquals("systemInfoApi", apiRef.url)
         assertEquals("PUT", apiRef.method)
