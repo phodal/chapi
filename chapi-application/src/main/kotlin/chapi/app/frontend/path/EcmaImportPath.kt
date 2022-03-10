@@ -1,4 +1,4 @@
-package chapi.app.path
+package chapi.app.frontend.path
 
 import java.io.File
 

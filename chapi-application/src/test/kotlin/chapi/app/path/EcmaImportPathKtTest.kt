@@ -1,5 +1,8 @@
 package chapi.app.path
 
+import chapi.app.frontend.path.ecmaImportConvert
+import chapi.app.frontend.path.importConvert
+import chapi.app.frontend.path.relativeRoot
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
