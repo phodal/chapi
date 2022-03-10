@@ -13,24 +13,23 @@ import java.io.File
 import java.nio.file.Paths
 
 @Serializable
-data class ComponentRef(
+data class ComponentHttpCall(
     // sourceFile::ImportItem , also in mapping
-    var inbounds:  List<String> = listOf(),
+    var inbounds: List<String> = listOf(),
     // sourceFile::ExportFunction
     var outbounds: List<String> = listOf(),
     // component name, only if is a component
-    var name:      String = "",
-    var caller:    String = "",
-    var apiRef:    List<HttpApiCall> = listOf()
+    var name: String = "",
+    var apiRef: List<HttpApiCall> = listOf()
 )
 
 @Serializable
 data class HttpApiCall(
     var caller: String = "",
-    var base:   String = "",
-    var url:    String = "",
+    var base: String = "",
+    var url: String = "",
     var method: String = "",
-    var data:   String = ""
+    var data: String = ""
 )
 
 internal class TypeScriptAnalyserAppTest {
@@ -102,9 +101,9 @@ internal class TypeScriptAnalyserAppTest {
             }
         }
 
-        var httpCalls: Array<ComponentRef> = arrayOf();
+        var componentCalls: Array<ComponentHttpCall> = arrayOf();
         componentInbounds.forEach { map ->
-            val componentRef = ComponentRef(name = map.key)
+            val componentRef = ComponentHttpCall(name = map.key)
             map.value.forEach {
                 if (httpAdapterMap[it] != null) {
                     val call = httpAdapterMap[it]!!
@@ -113,7 +112,7 @@ internal class TypeScriptAnalyserAppTest {
                     httpApi.caller = it
                     call.Parameters.forEach { prop ->
                         for (codeProperty in prop.ObjectValue) {
-                            when(codeProperty.TypeValue) {
+                            when (codeProperty.TypeValue) {
                                 "baseURL" -> {
                                     httpApi.base = codeProperty.ObjectValue[0].TypeValue
                                 }
@@ -130,19 +129,20 @@ internal class TypeScriptAnalyserAppTest {
                         }
                     }
 
+                    httpApi.caller = "api/addition/systemInfo::updateSystemInfo"
                     componentRef.apiRef += httpApi
                 }
             }
 
-            if(componentRef.apiRef.isNotEmpty()) {
-                httpCalls += componentRef
+            if (componentRef.apiRef.isNotEmpty()) {
+                componentCalls += componentRef
             }
         }
 
-        assertEquals(1, httpCalls.size)
-        assertEquals(1, httpCalls[0].apiRef)
-        assertEquals("BadSmellThreshold/BadSmellThreshold", httpCalls[0].name)
-        File("api.json").writeText(Json.encodeToString(httpCalls))
+        assertEquals(1, componentCalls.size)
+        assertEquals("BadSmellThreshold/BadSmellThreshold", componentCalls[0].name)
+        assertEquals("api/addition/systemInfo::updateSystemInfo", componentCalls[0].apiRef[0].caller)
+        File("api.json").writeText(Json.encodeToString(componentCalls))
     }
 
     private fun recursiveCall(func: CodeFunction, calleeName: String, isComponent: Boolean, componentName: String) {
