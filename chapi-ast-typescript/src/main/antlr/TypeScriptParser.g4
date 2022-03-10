@@ -915,7 +915,7 @@ keyword
     | Function_
     | This
     | With
-    | Default
+//    | Default
     | If
     | Throw
     | Delete
