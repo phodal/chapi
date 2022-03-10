@@ -1,10 +1,9 @@
 package chapi.app.frontend
 
+import chapi.app.frontend.identify.AxiosHttpIdentify
 import chapi.app.frontend.path.ecmaImportConvert
 import chapi.app.frontend.path.relativeRoot
-import chapi.domain.core.CodeCall
-import chapi.domain.core.CodeDataStruct
-import chapi.domain.core.CodeFunction
+import chapi.domain.core.*
 
 class FrontendApiAnalyser {
     private var componentCallMap: HashMap<String, MutableList<String>> = hashMapOf()
@@ -12,30 +11,31 @@ class FrontendApiAnalyser {
     private var callMap: HashMap<String, CodeCall> = hashMapOf()
     private var httpAdapterMap: HashMap<String, CodeCall> = hashMapOf()
 
+    // for Axios Http Call
+    private val axiosIdent = AxiosHttpIdentify()
+
     // 1. first create Component with FunctionCall maps based on Import
     // 2. build axios/umi-request to an API call method
     // 3. mapping for results
     fun analysis(nodes: Array<CodeDataStruct>, path: String): Array<ComponentHttpCallInfo> {
         nodes.forEach { node ->
-            val inbounds: MutableList<String> = mutableListOf()
+            var isComponent = false;
             val outbounds: MutableList<String> = mutableListOf()
+            // update
+            // tsx || jsx file
+            val isComponentExt = node.fileExt() == "tsx" || node.fileExt() == "jsx"
+            val isNotInterface = node.Type != DataStructType.INTERFACE
+            val inbounds = createInbounds(path, node.Imports, node.FilePath)
 
-            val isComponent = node.fileExt() == "tsx"
             val moduleName = relativeRoot(path, node.FilePath).substringBeforeLast('.', "")
-
-            node.Imports.forEach { imp ->
-                imp.UsageName.forEach {
-                    val source = ecmaImportConvert(path, node.FilePath, imp.Source)
-                    inbounds += naming(source, it)
-                }
-            }
-
             val componentName = naming(moduleName, node.NodeName)
-            if (isComponent) {
-                componentCallMap[componentName] = mutableListOf()
-            }
 
             node.Functions.forEach { func ->
+                isComponent = isNotInterface && isComponentExt && func.IsReturnHtml
+                if (isComponent) {
+                    componentCallMap[componentName] = mutableListOf()
+                }
+
                 outbounds += naming(moduleName, func.Name)
 
                 var calleeName = naming(componentName, func.Name)
@@ -43,12 +43,13 @@ class FrontendApiAnalyser {
                     calleeName = componentName
                 }
 
-                // todo: recursion to collection all calls
                 run {
                     func.FunctionCalls.forEach { call ->
                         run {
                             callMap[calleeName] = call
-                            findAxiosToHttpList(call, httpAdapterMap, calleeName)
+                            if (axiosIdent.isMatch(call)) {
+                                httpAdapterMap[calleeName] = call
+                            }
                             if (isComponent) {
                                 componentCallMap[componentName]?.plusAssign((call.FunctionName))
                             }
@@ -56,43 +57,21 @@ class FrontendApiAnalyser {
                     }
                     recursiveCall(func, calleeName, isComponent, componentName)
                 }
-            }
 
-            if (isComponent) {
-                componentInbounds[componentName] = inbounds
+                if (isComponent) {
+                    componentInbounds[componentName] = inbounds
+                }
             }
         }
 
-        var componentCalls: Array<ComponentHttpCallInfo> = arrayOf();
+        var componentCalls: Array<ComponentHttpCallInfo> = arrayOf()
         componentInbounds.forEach { map ->
             val componentRef = ComponentHttpCallInfo(name = map.key)
             map.value.forEach {
                 if (httpAdapterMap[it] != null) {
                     val call = httpAdapterMap[it]!!
-                    val httpApi = HttpApiCallInfo()
-
+                    val httpApi = axiosIdent.convert(call)
                     httpApi.caller = it
-                    call.Parameters.forEach { prop ->
-                        for (codeProperty in prop.ObjectValue) {
-                            when (codeProperty.TypeValue) {
-                                "baseURL" -> {
-                                    httpApi.base = codeProperty.ObjectValue[0].TypeValue
-                                }
-                                "url" -> {
-                                    httpApi.url = codeProperty.ObjectValue[0].TypeValue
-                                }
-                                "method" -> {
-                                    httpApi.method = codeProperty.ObjectValue[0].TypeValue
-                                }
-                                "data" -> {
-                                    httpApi.data = codeProperty.ObjectValue[0].TypeValue
-                                }
-                            }
-                        }
-                    }
-
-                    httpApi.caller = naming("api/addition/systemInfo", "updateSystemInfo")
-
                     componentRef.apiRef += httpApi
                 }
             }
@@ -101,7 +80,21 @@ class FrontendApiAnalyser {
                 componentCalls += componentRef
             }
         }
+
         return componentCalls
+    }
+
+    private fun createInbounds(path: String, imports: Array<CodeImport>, filePath: String): MutableList<String> {
+        val inbounds: MutableList<String> = mutableListOf()
+
+        imports.forEach { imp ->
+            imp.UsageName.forEach {
+                val source = ecmaImportConvert(path, filePath, imp.Source)
+                inbounds += naming(source, it)
+            }
+        }
+
+        return inbounds
     }
 
     private fun recursiveCall(func: CodeFunction, calleeName: String, isComponent: Boolean, componentName: String) {
@@ -110,7 +103,11 @@ class FrontendApiAnalyser {
                 inner.FunctionCalls.forEach { innerCall ->
                     run {
                         callMap[calleeName] = innerCall
-                        findAxiosToHttpList(innerCall, httpAdapterMap, calleeName)
+
+                        if (axiosIdent.isMatch(innerCall)) {
+                            httpAdapterMap[calleeName] = innerCall
+                        }
+
                         if (isComponent) {
                             componentCallMap[componentName]?.plusAssign((innerCall.FunctionName))
                         }
@@ -123,14 +120,4 @@ class FrontendApiAnalyser {
             }
         }
     }
-
-    private fun findAxiosToHttpList(call: CodeCall, httpAdapterMap: HashMap<String, CodeCall>, calleeName: String) {
-        val callName = call.FunctionName
-        if (callName == "axios" || callName.startsWith("axios.")) {
-            if (call.Parameters.isNotEmpty()) {
-                httpAdapterMap[calleeName] = call
-            }
-        }
-    }
-
 }

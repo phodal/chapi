@@ -12,7 +12,7 @@ import java.nio.file.Paths
 
 internal class TypeScriptAnalyserAppTest {
     @Test
-    fun shouldIdentifySamePackage() {
+    fun shouldSupportIdentifyComponentApi() {
         val resource = this.javaClass.classLoader.getResource("languages/ts/apicall")!!
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
@@ -31,5 +31,27 @@ internal class TypeScriptAnalyserAppTest {
         assertEquals("systemInfoApi", apiRef.url)
         assertEquals("PUT", apiRef.method)
         assertEquals("parameter", apiRef.data)
+    }
+
+//    @Test
+//    fun supportArchGuard() {
+//        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src"
+//        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
+//        File("nodes.json").writeText(Json.encodeToString(nodes))
+//
+//        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
+//        File("api.json").writeText(Json.encodeToString(componentCalls))
+//    }
+
+    @Test
+    internal fun shouldCorrectComponentName() {
+        val resource = this.javaClass.classLoader.getResource("languages/ts/interface-error")!!
+        val path = Paths.get(resource.toURI()).toFile().absolutePath
+
+        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
+        File("nodes.json").writeText(Json.encodeToString(nodes))
+
+        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
+        File("api.json").writeText(Json.encodeToString(componentCalls))
     }
 }
