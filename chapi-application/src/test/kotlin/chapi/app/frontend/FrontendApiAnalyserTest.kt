@@ -16,7 +16,7 @@ internal class FrontendApiAnalyserTest {
 
 //        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src"
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
-        assertEquals(4, nodes.size)
+        assertEquals(5, nodes.size)
 
         val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
         File("api.json").writeText(Json.encodeToString(componentCalls))
