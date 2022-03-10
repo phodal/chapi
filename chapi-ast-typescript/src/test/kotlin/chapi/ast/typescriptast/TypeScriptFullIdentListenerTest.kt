@@ -909,4 +909,19 @@ function hello2() {
         assertEquals(1, defaultStruct.Functions[0].FunctionCalls.size)
         assertEquals("template-string", defaultStruct.Functions[0].FunctionCalls[0].Parameters[0].TypeValue)
     }
+    @Test
+    internal fun fixSomeIssue() {
+        val code = """
+const QualityGateProfile = () => {
+  updateQualityGateProfile(profile.id!, profile).then(() => {
+    notification.success({
+      message: "更新成功！",
+    });
+  });
+};
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
 }

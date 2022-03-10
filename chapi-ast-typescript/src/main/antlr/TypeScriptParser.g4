@@ -767,8 +767,10 @@ singleExpression
     | arrowFunctionDeclaration                                               # ArrowFunctionExpression   // ECMAScript 6
     | Class Identifier? classTail                                            # ClassExpression
     | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
-    | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?       # MemberDotExpression
-    | singleExpression '?'? '!'? '.' '#'? '(' ')'                                 # MemberDotExpression       // for: `onHotUpdateSuccess?.();`
+    | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?  # MemberDotExpression
+    // for: `onHotUpdateSuccess?.();`
+    | singleExpression '?'? '!'? '.' '#'? '(' ')'                            # MemberDotExpression
+    | singleExpression '!'                                                   # PropCheckExpression
     // Split to try `new Date()` first, then `new Date`.
     | New singleExpression typeArguments? arguments                          # NewExpression
     | New singleExpression typeArguments?                                    # NewExpression
