@@ -82,6 +82,34 @@ export interface IPerson {
     }
 
     @Test
+    internal fun shouldIdentifyInterfacesWithMethod() {
+        val code = """
+export interface ProfileConfig {
+  layer: LayerKeys;
+  quota: string;
+  operator: "BIGGER" | "LESS" | "EQUAL";
+  value: number;
+}
+
+export interface Profile {
+  id?: number;
+  name: string;
+  config: ProfileConfig[];
+}
+
+const QualityGateProfile = () => {
+
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "iperson.ts")
+        val structs = codeFile.DataStructures
+        assertEquals(structs.size, 3)
+        assertEquals("ProfileConfig", structs[0].NodeName)
+        assertEquals("Profile", structs[1].NodeName)
+        assertEquals("default", structs[2].NodeName)
+    }
+
+    @Test
     internal fun shouldIdentifyInnerClass() {
         val code = """
 class Foo {

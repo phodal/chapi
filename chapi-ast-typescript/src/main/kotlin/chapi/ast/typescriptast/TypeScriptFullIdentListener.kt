@@ -7,6 +7,7 @@ import chapi.domain.core.*
 import chapi.infra.Stack
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.antlr.v4.runtime.ParserRuleContext
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private var hasHtmlElement: Boolean = false
@@ -256,8 +257,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         for (memberContext in typeMemberList!!.typeMember()) {
             val memberChild = memberContext.getChild(0)
             when (memberChild::class.java.simpleName) {
-                "PropertySignaturContext" -> {
-                    buildInterfacePropertySignature(memberChild as TypeScriptParser.PropertySignaturContext)
+                "PropertySignatureContext" -> {
+                    buildInterfacePropertySignature(memberChild as TypeScriptParser.PropertySignatureContext)
                 }
                 "MethodSignatureContext" -> {
                     val methodSignCtx = memberChild as TypeScriptParser.MethodSignatureContext
@@ -277,7 +278,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
     }
 
-    private fun buildInterfacePropertySignature(signCtx: TypeScriptParser.PropertySignaturContext) {
+    private fun buildInterfacePropertySignature(signCtx: TypeScriptParser.PropertySignatureContext) {
         val typeType = buildTypeAnnotation(signCtx.typeAnnotation())!!
         val typeValue = signCtx.propertyName().text
 

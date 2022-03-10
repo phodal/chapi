@@ -155,11 +155,12 @@ typeMemberList
     ;
 
 typeMember
-    : propertySignatur
+    : propertySignature
     | callSignature
     | constructSignature
     | indexSignature
     | methodSignature ('=>' type_)?
+    | enumSignature
 //    | objectSignature
     ;
 
@@ -192,7 +193,7 @@ typeQueryExpression
     | (identifierName '!'? '.')+ identifierName
     ;
 
-propertySignatur
+propertySignature
     : ReadOnly? propertyName '?'? typeAnnotation? ('=>' type_)?
     ;
 
@@ -249,10 +250,10 @@ constructSignature
 indexSignature
     : '[' Identifier ':' (Number|String) ']' typeAnnotation
     ;
-//
-//objectSignature
-//    : propertyName '?'?  ':' objectType
-//    ;
+
+enumSignature
+    : Identifier ':' StringLiteral ('|' StringLiteral)*  # StringEnum
+    ;
 
 methodSignature
     : propertyName '?'? callSignature
