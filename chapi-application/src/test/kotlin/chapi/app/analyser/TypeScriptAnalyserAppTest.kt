@@ -1,7 +1,7 @@
 package chapi.app.analyser
 
-import chapi.app.frontend.ComponentHttpCall
-import chapi.app.frontend.FeHttpApiCall
+import chapi.app.frontend.ComponentHttpCallInfo
+import chapi.app.frontend.HttpApiCallInfo
 import chapi.app.path.ecmaImportConvert
 import chapi.app.path.relativeRoot
 import chapi.domain.core.CodeCall
@@ -82,13 +82,13 @@ internal class TypeScriptAnalyserAppTest {
             }
         }
 
-        var componentCalls: Array<ComponentHttpCall> = arrayOf();
+        var componentCalls: Array<ComponentHttpCallInfo> = arrayOf();
         componentInbounds.forEach { map ->
-            val componentRef = ComponentHttpCall(name = map.key)
+            val componentRef = ComponentHttpCallInfo(name = map.key)
             map.value.forEach {
                 if (httpAdapterMap[it] != null) {
                     val call = httpAdapterMap[it]!!
-                    val httpApi = FeHttpApiCall()
+                    val httpApi = HttpApiCallInfo()
 
                     httpApi.caller = it
                     call.Parameters.forEach { prop ->
