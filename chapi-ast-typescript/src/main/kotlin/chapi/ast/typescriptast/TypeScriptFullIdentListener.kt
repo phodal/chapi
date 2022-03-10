@@ -9,6 +9,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
+    private var hasHtmlElement: Boolean = false
     private var filePath: String = node.filePath
 
     private var exitArrowCount: Int = 0
@@ -40,13 +41,15 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     override fun enterVariableStatement(ctx: TypeScriptParser.VariableStatementContext?) {
-        if (ctx!!.variableDeclarationList() != null) {
-            codeContainer.Fields = variableToFields(ctx.variableDeclarationList())
+        val isExport = ctx!!.parent.parent.getChild(0).text == "export"
+
+        if (!isExport && ctx.variableDeclarationList() != null) {
+            defaultNode.Fields = variableToFields(ctx.variableDeclarationList())
         }
 
         // such as: `export const baseURL = '/api'`
         // todo: add support for not only const?
-        if (ctx.parent.parent.getChild(0).text == "export") {
+        if (isExport) {
             var modifier = ""
             ctx.children.forEach {
                 when (it::class.java.simpleName) {
@@ -77,7 +80,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
     }
 
-    private fun variableToFields(varDecl: TypeScriptParser.VariableDeclarationListContext, modifiers: Array<String> = arrayOf()): Array<CodeField> {
+    private fun variableToFields(
+        varDecl: TypeScriptParser.VariableDeclarationListContext,
+        modifiers: Array<String> = arrayOf()
+    ): Array<CodeField> {
         var fields = arrayOf<CodeField>()
         varDecl.variableDeclaration().forEach {
             if (it.Assign() != null) {
@@ -375,7 +381,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         fillMethodFromCallSignature(ctx.callSignature(), func)
         func.Position = this.buildPosition(ctx)
 
-        isCallbackOrAnonymousFunction = false;
+        isCallbackOrAnonymousFunction = false
         processingNewArrowFunc(func)
 
         if (ctx.functionBody().sourceElements() != null) {
@@ -431,14 +437,19 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             }
         }
 
-        if(ctx.arrowFunctionBody() == null) {
+        if (ctx.arrowFunctionBody() == null) {
             return
+        }
+
+        if (ctx.arrowFunctionBody() != null) {
+            ctx.arrowFunctionBody()?.functionBody()?.sourceElements()?.sourceElement()?.forEach {
+                parseStatement(it)
+            }
         }
 
         if (ctx.arrowFunctionBody().singleExpression() != null) {
             parseSingleExpression(ctx.arrowFunctionBody().singleExpression())
         }
-        // todo: add sourceElements parse
     }
 
     private fun processingNewArrowFunc(func: CodeFunction) {
@@ -526,15 +537,20 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         val stmtChild = context.statement().getChild(0)
         when (val childType = stmtChild::class.java.simpleName) {
             "ReturnStatementContext" -> {
-                val stmt = stmtChild as TypeScriptParser.ReturnStatementContext
-                if (stmt.expressionSequence() != null) {
-                    for (singleExpressionContext in stmt.expressionSequence().singleExpression()) {
+                val returnStmt = stmtChild as TypeScriptParser.ReturnStatementContext
+                hasHtmlElement = false;
+                if (returnStmt.expressionSequence() != null) {
+                    for (singleExpressionContext in returnStmt.expressionSequence().singleExpression()) {
                         parseSingleExpression(singleExpressionContext)
                     }
                 }
+
+                if (hasHtmlElement) {
+                    currentFunc.IsReturnHtml = true
+                }
             }
             else -> {
-                println("childType -> :$childType")
+                println("parseStmt childType -> :$childType")
             }
         }
     }
@@ -665,7 +681,11 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
                 "HtmlElementExpressionContext" -> {
+                    hasHtmlElement = true
 //                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
+                }
+                "ArgumentsExpressionContext" -> {
+                    parseArguments(subSingle as TypeScriptParser.ArgumentsExpressionContext)
                 }
                 else -> {
                     println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")
@@ -710,7 +730,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
 
-    private fun fillMethodFromCallSignature(callSignCtx: TypeScriptParser.CallSignatureContext, currentFunc: CodeFunction) {
+    private fun fillMethodFromCallSignature(
+        callSignCtx: TypeScriptParser.CallSignatureContext,
+        currentFunc: CodeFunction
+    ) {
         if (callSignCtx.parameterList() != null) {
             val parameters = buildMethodParameters(callSignCtx.parameterList())
             currentFunc.Parameters = parameters
@@ -807,11 +830,13 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     val identExpr = singleExprCtx as IdentifierExpressionContext
                     when (val identExprText = identExpr.identifierName().text) {
                         "await" -> {
-                            val singleExpression = identExpr.singleExpression()
-                            parseSingleExpression(singleExpression)
+                            parseSingleExpression(identExpr.singleExpression())
+                        }
+                        "Number" -> {
+                            parseSingleExpression(identExpr.singleExpression())
                         }
                         else -> {
-                            println("others variable decl: $identExprText == ${singleExprCtx.text}")
+                            println("others variable decl: $identExprText ==== ${singleExprCtx.text}")
                         }
                     }
                 }
@@ -820,6 +845,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
                 "ArgumentsExpressionContext" -> {
                     argumentsExpressionToCall(singleExprCtx as TypeScriptParser.ArgumentsExpressionContext, varName)
+                }
+                "ParenthesizedExpressionContext" -> {
+                    parseParenthesizedExpression(singleExprCtx as ParenthesizedExpressionContext)
                 }
                 else -> {
                     println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
@@ -834,10 +862,27 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         if (value == ")") {
             return args
         }
-        val arg = CodeProperty(
-            TypeValue = value, TypeType = ""
-        )
-        args += arg
+
+        arguments.argumentList().argument().forEach {
+            parseSingleExpression(it.singleExpression())
+            val value: String = when (it.singleExpression().javaClass.simpleName) {
+                "LiteralExpressionContext" -> {
+                    val literalExpr = (it.singleExpression() as TypeScriptParser.LiteralExpressionContext).literal()
+                    if (literalExpr.templateStringLiteral() != null) {
+                        literalExpr.templateStringLiteral().text.drop(1).dropLast(1)
+                    } else {
+                        it.text
+                    }
+                }
+                else -> {
+                    it.text;
+                }
+            }
+
+            val arg = CodeProperty(TypeValue = value, TypeType = "")
+            args += arg
+        }
+
         return args
     }
 
@@ -846,22 +891,19 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             codeContainer.DataStructures += entry.value
         }
 
-        if (codeContainer.DataStructures.isEmpty()) {
-            // for: `export const baseURL = '/api'`
-            val fieldOnly = defaultNode.Fields.isNotEmpty()
+        // for: `export const baseURL = '/api'`
+        val fieldOnly = defaultNode.Fields.isNotEmpty()
+        // for export default function
+        val functionOnly = defaultNode.Functions.isNotEmpty()
 
-            // for export default function
-            val functionOnly = defaultNode.Functions.isNotEmpty()
-
-            if (functionOnly) {
-                defaultNode.NodeName = "default"
-                defaultNode.FilePath = codeContainer.FullName
-                codeContainer.DataStructures += defaultNode
-            } else if (fieldOnly) {
-                defaultNode.NodeName = "default"
-                defaultNode.FilePath = codeContainer.FullName
-                codeContainer.DataStructures += defaultNode
-            }
+        if (functionOnly) {
+            defaultNode.NodeName = "default"
+            defaultNode.FilePath = codeContainer.FullName
+            codeContainer.DataStructures += defaultNode
+        } else if (fieldOnly) {
+            defaultNode.NodeName = "default"
+            defaultNode.FilePath = codeContainer.FullName
+            codeContainer.DataStructures += defaultNode
         }
 
         return codeContainer

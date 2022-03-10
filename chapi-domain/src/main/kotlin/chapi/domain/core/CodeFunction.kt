@@ -25,7 +25,8 @@ open class CodeFunction(
     var Position: CodePosition = CodePosition(),
     var Extension: JsonElement = JsonObject(HashMap()),
     var LocalVariables: Array<CodeProperty> = arrayOf(),
-    var IsConstructor: Boolean = false // todo: move to extension
+    var IsConstructor: Boolean = false, // todo: move to extension
+    var IsReturnHtml: Boolean = false
 ) {
     private var extensionMap = HashMap<String, JsonElement>()
 

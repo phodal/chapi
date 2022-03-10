@@ -555,12 +555,13 @@ export function querySystemInfo() {
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
-        val calls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        val dataStruct = codeFile.DataStructures[0]
+        val calls = dataStruct.Functions[0].FunctionCalls
 
         assertEquals(1, calls.size)
-        assertEquals(1, codeFile.Fields.size);
-        assertEquals("systemInfoApi", codeFile.Fields[0].TypeKey);
-        assertEquals("/system-info", codeFile.Fields[0].TypeValue);
+        assertEquals(1, dataStruct.Fields.size);
+        assertEquals("systemInfoApi", dataStruct.Fields[0].TypeKey);
+        assertEquals("/system-info", dataStruct.Fields[0].TypeValue);
     }
 
     @Test
@@ -603,7 +604,27 @@ export const baseURL = '/api'
         assertEquals("config.ts", defaultStruct.FilePath)
         assertEquals("default", defaultStruct.NodeName)
         assertEquals(1, defaultStruct.Fields.size)
+        assertEquals(1, defaultStruct.Exports.size)
         assertEquals("/api", defaultStruct.Fields[0].TypeValue)
+    }
+
+    @Test
+    internal fun shouldExportFieldForAlias() {
+        val content = """
+
+import createCacheState from "@/utils/utils";
+import { queryAllQualityGateProfile } from "@/api/module/profile";
+
+const useQualityGate = createCacheState(queryAllQualityGateProfile, []);
+export default useQualityGate;
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "config.ts")
+        val defaultStruct = codeFile.DataStructures[0]
+
+        assertEquals("default", defaultStruct.NodeName)
+        assertEquals(1, defaultStruct.Fields.size)
     }
 
     @Test
@@ -792,6 +813,41 @@ export type Model<T extends keyof typeof models> = {
     }
 
     @Test
+    internal fun variableCallInNumber() {
+        val code = """
+function reload() {
+  const currentSystemId = Number(storage.getSystemId());
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+        assertEquals(1, defaultStruct.Functions[0].FunctionCalls.size)
+        assertEquals("storage->getSystemId", defaultStruct.Functions[0].FunctionCalls[0].FunctionName)
+    }
+
+    @Test
+    internal fun correctFunctionCallName() {
+        val code = """
+interface DependenceConfigProps {
+  visible: boolean;
+  hide: Function;
+}
+
+const DependenceConfig = (props: DependenceConfigProps) => {
+    return (<div></div>)
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(2, codeFile.DataStructures.size)
+
+        val defaultStruct = codeFile.DataStructures[1]
+        val functions = defaultStruct.Functions
+        assertEquals(true, functions[0].IsReturnHtml)
+    }
+
+    @Test
     internal fun supportInterfaceMethodGeneric() {
         val code = """
 const createJMethodNode = (jMethod: JMethod): TreeNode<JMethod> => {
@@ -809,5 +865,20 @@ const createJMethodNode = (jMethod: JMethod): TreeNode<JMethod> => {
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         val defaultStruct = codeFile.DataStructures[0]
         assertEquals(1, defaultStruct.Functions.size)
+    }
+
+    @Test
+    internal fun cleanTemplateString() {
+        val code = """
+function hello2() {
+  console.log(`template-string`)
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+        assertEquals(1, defaultStruct.Functions[0].FunctionCalls.size)
+        assertEquals("template-string", defaultStruct.Functions[0].FunctionCalls[0].Parameters[0].TypeValue)
     }
 }
