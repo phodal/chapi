@@ -894,7 +894,6 @@ identifierName
     | reservedWord
     | Lodash Lodash*
     | Dollar Dollar*
-    | Module
     ;
 
 identifierOrKeyWord
@@ -963,6 +962,7 @@ keyword
     | Require
     | TypeAlias
     | String
+    | Undefined
     ;
 
 getter

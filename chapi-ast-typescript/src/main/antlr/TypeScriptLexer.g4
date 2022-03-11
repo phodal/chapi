@@ -171,6 +171,7 @@ Require: 'require';
 Module: 'module';
 Declare: 'declare';
 Unknown: 'unknown';
+Undefined: 'undefined';
 
 Abstract: 'abstract';
 

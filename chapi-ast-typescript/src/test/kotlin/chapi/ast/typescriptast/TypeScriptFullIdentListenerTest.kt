@@ -990,6 +990,23 @@ export const getLayout = (options: LayoutOptions) => {
     }
 
     @Test
+    internal fun enumInUndefined() {
+        val code = """
+interface CollapsibleCardProps {
+  collapsed?: boolean;
+  title?: string | ReactNode;
+  size?: "default" | "small" | undefined;
+  extra?: ReactNode;
+  children?: any;
+  className?: string;
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
     internal fun handleNullCoalesce() {
         val code = """
 const handleError = (error: any) => {

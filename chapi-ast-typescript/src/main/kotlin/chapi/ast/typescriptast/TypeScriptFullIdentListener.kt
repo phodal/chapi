@@ -61,9 +61,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         val varDeclList = it as TypeScriptParser.VariableDeclarationListContext
                         val fields = variableToFields(varDeclList, arrayOf(modifier))
 
-                        if (fields.isEmpty()) {
-                            println("fields size: 0, list: ${varDeclList.text}")
-                        } else {
+                        if (fields.isNotEmpty()) {
                             defaultNode.Exports += CodeExport(
                                 Name = fields[0].TypeKey,
                                 Type = DataStructType.Variable,
@@ -74,7 +72,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         }
                     }
                     else -> {
-                        println(it::class.java.simpleName)
+                        println("enterVariableStatement: " + it::class.java.simpleName)
                     }
                 }
             }
@@ -949,8 +947,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         return codeContainer
     }
-
-    override fun enterEveryRule(ctx: ParserRuleContext?) {
-        println(ctx!!.javaClass.simpleName)
-    }
+//
+//    override fun enterEveryRule(ctx: ParserRuleContext?) {
+//        println(ctx!!.javaClass.simpleName)
+//    }
 }
