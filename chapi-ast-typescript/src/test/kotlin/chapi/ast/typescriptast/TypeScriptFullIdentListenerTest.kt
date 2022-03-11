@@ -1119,11 +1119,29 @@ export function BuGrade(props: BuGradeProps) {
     }
 
     @Test
-    internal fun maybeCallback() {
+    internal fun optionalParameterBeforeRequiredParamter() {
         val code = """
 export function initCytoscape(id = "cy", onEvent: { cxttap: () => MessageType }) {
 
 }
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    @Disabled
+    internal fun someIssue() {
+        val code = """
+const renderDataClassFields = (record: DataClass) => {
+  return (
+    <div key={field.name}>
+      <span>字段</span>： 
+      <span>{field.name}</span>
+    </div>
+  );
+};
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
