@@ -1117,4 +1117,16 @@ export function BuGrade(props: BuGradeProps) {
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
     }
+
+    @Test
+    internal fun maybeCallback() {
+        val code = """
+export function initCytoscape(id = "cy", onEvent: { cxttap: () => MessageType }) {
+
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
 }

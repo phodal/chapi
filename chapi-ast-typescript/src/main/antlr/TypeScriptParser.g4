@@ -208,22 +208,17 @@ callSignature
     ;
 
 parameterList
-    : restParameter
-    | predefinedType (',' predefinedType)*
-    | optionalParameterList (',' restParameter)?
-    | requiredParameterList (',' (optionalParameterList (',' restParameter)? | restParameter))?
+    : restParameter                                     #OnlyRestParameter
+    | parameter (',' parameter)* (',' restParameter)?   #NormalParameter
     ;
 
-requiredParameterList
-    : requiredParameter (',' requiredParameter)*
+parameter
+    : requiredParameter
+    | optionalParameter
     ;
 
 requiredParameter
     : decoratorList? accessibilityModifier? identifierOrPattern typeAnnotation?
-    ;
-
-optionalParameterList
-    : optionalParameter (',' optionalParameter)*
     ;
 
 optionalParameter

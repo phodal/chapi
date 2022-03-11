@@ -69,65 +69,71 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
     }
 
     fun buildMethodParameters(paramListCtx: TypeScriptParser.ParameterListContext?): Array<CodeProperty> {
-        val childNode = paramListCtx!!.getChild(0)
         var parameters: Array<CodeProperty> = arrayOf()
 
-        val childType = childNode::class.java.simpleName
-        when (childType) {
-            "RequiredParameterListContext" -> {
-                val listCtx = childNode as TypeScriptParser.RequiredParameterListContext
-                val requireParams = this.buildRequireParameterList(listCtx)
-                parameters += requireParams
+        val type = paramListCtx!!.getChild(0)
+        when(type.parent::class.simpleName) {
+            "OnlyRestParameterContext" -> {
+                val restCtx = paramListCtx as TypeScriptParser.OnlyRestParameterContext
+                val restParameters = this.buildRestParameter(restCtx.restParameter())
+                parameters += restParameters
+            }
+            "NormalParameterContext" -> {
+                val normalParam = paramListCtx as TypeScriptParser.NormalParameterContext
 
-                if (paramListCtx.restParameter() != null) {
-                    val restParameters = this.buildRestParameters(paramListCtx.restParameter())
-                    parameters += restParameters
+                normalParam.parameter().forEach {
+                    if (it.requiredParameter() != null) {
+                        parameters += this.buildRequireParameter(it.requiredParameter())
+                    }
+                    if (it.optionalParameter() != null) {
+                        parameters += this.buildOptionalParameter(it.optionalParameter())
+                    }
                 }
 
-            }
-            "PredefinedTypeContext" -> {
-                val predefinedTypeContext = childNode as TypeScriptParser.PredefinedTypeContext
-                val predefinedType = CodeProperty(
-                    TypeValue = "any",
-                    TypeType = predefinedTypeContext.text
-                )
-                parameters += predefinedType
-            }
-            else -> {
-                println("enterFunctionDeclaration -> TypeScriptAstListener::buildMethodParameters")
+                if (normalParam.restParameter() != null) {
+                    val restParameters = this.buildRestParameter(paramListCtx.restParameter())
+                    parameters += restParameters
+                }
             }
         }
 
         return parameters
     }
 
-    private fun buildRestParameters(restCtx: TypeScriptParser.RestParameterContext?): CodeProperty {
-        val parameterContext = restCtx!!.getChild(0) as TypeScriptParser.RequiredParameterContext
-        return this.buildRequireParameter(parameterContext)
-    }
-
-    private fun buildRequireParameterList(listCtx: TypeScriptParser.RequiredParameterListContext): Array<CodeProperty> {
-        var requiredCodeParameters: Array<CodeProperty> = arrayOf()
-        for (requiredParam in listCtx.requiredParameter()) {
-            val param = this.buildRequireParameter(requiredParam)
-            requiredCodeParameters += param
+    private fun buildRestParameter(restCtx: TypeScriptParser.RestParameterContext?): CodeProperty {
+        var paramType = ""
+        if (restCtx!!.typeAnnotation() != null) {
+            paramType = buildTypeAnnotation(restCtx.typeAnnotation())!!
         }
 
-        return requiredCodeParameters
+        return CodeProperty(
+            TypeValue = restCtx.text,
+            TypeType = paramType
+        )
     }
 
-    private fun buildRequireParameter(paramCtx: TypeScriptParser.RequiredParameterContext?): CodeProperty {
+    private fun buildOptionalParameter(paramCtx: TypeScriptParser.OptionalParameterContext): CodeProperty {
         var paramType = ""
-        if (paramCtx!!.typeAnnotation() != null) {
+        if (paramCtx.typeAnnotation() != null) {
             paramType = buildTypeAnnotation(paramCtx.typeAnnotation())!!
         }
 
-        val parameter = CodeProperty(
+        return CodeProperty(
             TypeValue = paramCtx.identifierOrPattern().text,
             TypeType = paramType
         )
+    }
 
-        return parameter
+    private fun buildRequireParameter(paramCtx: TypeScriptParser.RequiredParameterContext): CodeProperty {
+        var paramType = ""
+        if (paramCtx.typeAnnotation() != null) {
+            paramType = buildTypeAnnotation(paramCtx.typeAnnotation())!!
+        }
+
+        return CodeProperty(
+            TypeValue = paramCtx.identifierOrPattern().text,
+            TypeType = paramType
+        )
     }
 
     fun buildAnnotation(decorator: TypeScriptParser.DecoratorContext): CodeAnnotation {
