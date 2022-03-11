@@ -1004,6 +1004,7 @@ interface CollapsibleCardProps {
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
+        assertEquals(6, codeFile.DataStructures[0].Fields.size)
     }
 
     @Test
@@ -1078,6 +1079,20 @@ function dfs() {
     }
   }
 }
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun defaultInObjectLiteral() {
+        val code = """
+const options: Partial<GraphOptions> = {
+  modes: {
+    default: ["drag-canvas", "drag-node", "zoom-canvas"],
+  }
+};
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")

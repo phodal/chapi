@@ -83,7 +83,7 @@ type_
     | constructorType
     | typeGeneric
     | StringLiteral
-    | StringLiteral ('|' StringLiteral)*
+    | StringLiteral ('|' (StringLiteral | Undefined))*
     ;
 
 unionOrIntersectionOrPrimaryType
@@ -742,6 +742,7 @@ propertyName
     | StringLiteral
     | numericLiteral
     | Module
+    | Default
     ;
 
 arguments
