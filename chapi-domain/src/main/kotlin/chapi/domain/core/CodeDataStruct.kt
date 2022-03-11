@@ -6,6 +6,7 @@ import kotlinx.serialization.json.JsonObject
 
 enum class DataStructType (val structType: String) {
     EMPTY(""),
+    DEFAULT("default"),
     CLASS("Class"),
     Variable("Variable"),
     INTERFACE("Interface"),
@@ -21,6 +22,7 @@ enum class DataStructType (val structType: String) {
 @Serializable
 open class CodeDataStruct(
     // class and DataStruct Name
+    // for TypeScript/JavaScript, if is a variable, function, it will be naming to `default`
     var NodeName: String = "",
     var Type: DataStructType = DataStructType.EMPTY,
     var Package: String = "",
