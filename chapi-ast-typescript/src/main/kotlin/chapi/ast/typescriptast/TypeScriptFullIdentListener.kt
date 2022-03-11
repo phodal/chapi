@@ -89,7 +89,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         varDecl.variableDeclaration().forEach {
             if (it.Assign() != null) {
                 val key = it.getChild(0).text
-                val lastExpr = it.singleExpression().last()
+                val singleExpression = it.singleExpression()
+
+                val lastExpr = singleExpression.last()
                 val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
 
                 when (lastExpr::class.simpleName) {
@@ -102,19 +104,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     }
                     "IdentifierExpressionContext" -> {
                         val identExpr = lastExpr as IdentifierExpressionContext
-                        val singleExpr = identExpr.singleExpression()
-                        if (singleExpr != null) {
-                            when(val name = singleExpr::class.simpleName) {
-                                "ParenthesizedExpressionContext" -> {
-                                    val parameters = parseParenthesizedExpression(singleExpr)
-                                    val funcName = identExpr.identifierName().text
-                                    field.Calls += CodeCall("", CallType.FIELD, "", funcName, parameters)
-                                }
-                                else ->{
-                                    println("todo -> var -> decl call: $name")
-                                }
-                            }
-                        }
+                        singleExprToFieldCall(field, identExpr.singleExpression(), identExpr.identifierName().text)
                     }
                     else -> {
                         println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
@@ -127,6 +117,24 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
 
         return fields
+    }
+
+    private fun singleExprToFieldCall(
+        field: CodeField,
+        singleExpr: TypeScriptParser.SingleExpressionContext?,
+        funcName: String
+    ) {
+        if (singleExpr != null) {
+            when (val name = singleExpr::class.simpleName) {
+                "ParenthesizedExpressionContext" -> {
+                    val parameters = parseParenthesizedExpression(singleExpr)
+                    field.Calls += CodeCall("", CallType.FIELD, "", funcName, parameters)
+                }
+                else -> {
+                    println("todo -> var -> decl call: $name")
+                }
+            }
+        }
     }
 
     override fun enterDecoratorList(ctx: TypeScriptParser.DecoratorListContext?) {
@@ -514,9 +522,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
 
         var parameters: Array<CodeProperty> = arrayOf()
-        if (arrowFuncCtx.Identifier() != null) {
+        if (arrowFuncCtx.identifierOrKeyWord() != null) {
             val parameter = CodeProperty(
-                TypeValue = arrowFuncCtx.Identifier().text, TypeType = "any"
+                TypeValue = arrowFuncCtx.identifierOrKeyWord().text, TypeType = "any"
             )
             parameters += parameter
         }
@@ -869,6 +877,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         }
                     }
                 }
+                "AwaitExpressionContext" -> {
+                    val identExpr = singleExprCtx as TypeScriptParser.AwaitExpressionContext
+                    parseSingleExpression(identExpr.singleExpression())
+                }
                 "ArrowFunctionExpressionContext" -> {
                     // will recall by ArrowFunctionDeclaration
                 }
@@ -938,7 +950,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return codeContainer
     }
 
-//    override fun enterEveryRule(ctx: ParserRuleContext?) {
-//        println(ctx!!.javaClass.simpleName)
-//    }
+    override fun enterEveryRule(ctx: ParserRuleContext?) {
+        println(ctx!!.javaClass.simpleName)
+    }
 }

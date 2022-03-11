@@ -979,10 +979,87 @@ export const getLayout = (options: LayoutOptions) => {
   const getSize = (
     size: number | number[] | undefined,
     index: number,
-    defaultVaue = 16
+    defaultVaue = 16,
   ): number =>  { }
 };
 
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun handleNullCoalesce() {
+        val code = """
+const handleError = (error: any) => {
+  const message = error?.response?.data?.message ?? error.message;
+};
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun handleFunctionDeclEndWithCommon() {
+        val code = """
+export function queryDFMSMetricBy(by: "module" | "package" | "class", params: MetricParams, ) {
+
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun moduleKeyword() {
+        val code = """
+const getModulesOption = (modules?: Module[]): FormItemOption[] => {
+  return modules.map(module => {
+    return { label: module.name, value: module.name }
+  })
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun AsunknownIssue() {
+        val code = """
+export default function axiosAgent<T>(config: AxiosRequestConfig) {
+  return (axiosInstance(config) as unknown) as Promise<T>;
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun classPropCheckIssue() {
+        val code = """
+export class ELKLayout {
+  elk!: ELK;
+  options!: LayoutOptions;
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun forOfStatement() {
+        val code = """
+function dfs() {
+  if (node in graph) {
+    
+  }
+}
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
