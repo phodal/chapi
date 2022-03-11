@@ -102,6 +102,7 @@ primaryType
     | typeQuery                                     #QueryPrimType
     | This                                          #ThisPrimType
     | typeReference Is primaryType                  #RedefinitionOfType
+    | Undefined                                     #UndefinedType
     ;
 
 predefinedType
