@@ -125,6 +125,9 @@ From:                           'from';
 ReadOnly:                       'readonly';
 Async:                          'async';
 
+Of:                             'of';
+Await:                          'await';
+
 /// Future Reserved Words
 
 Class:                          'class';
@@ -167,6 +170,7 @@ Namespace: 'namespace';
 Require: 'require';
 Module: 'module';
 Declare: 'declare';
+Unknown: 'unknown';
 
 Abstract: 'abstract';
 

@@ -83,6 +83,7 @@ type_
     | constructorType
     | typeGeneric
     | StringLiteral
+    | StringLiteral ('|' StringLiteral)*
     ;
 
 unionOrIntersectionOrPrimaryType
@@ -202,7 +203,7 @@ typeAnnotation
     ;
 
 callSignature
-    : typeParameters? '(' parameterList? ')' typeAnnotation?
+    : typeParameters? '(' parameterList? ','? ')' typeAnnotation?
     ;
 
 parameterList
@@ -252,7 +253,12 @@ indexSignature
     ;
 
 enumSignature
-    : Identifier ':' StringLiteral ('|' StringLiteral)*  # StringEnum
+    : Identifier ':' enumOr ('|' enumOr)*
+    ;
+
+enumOr
+    : identifierName
+    | StringLiteral
     ;
 
 methodSignature
@@ -469,6 +475,7 @@ iterationStatement
           statement                                                                                             # ForVarStatement
     | For '(' singleExpression (In | Identifier{this.p("of")}?) expressionSequence ')' statement                # ForInStatement
     | For '(' varModifier variableDeclaration (In | Identifier{this.p("of")}?) expressionSequence ')' statement # ForVarInStatement
+    | For Await? '(' (singleExpression | variableDeclarationList) 'of' expressionSequence ')' statement         # ForOfStatement
     ;
 
 varModifier
@@ -600,7 +607,7 @@ debuggerStatement
     ;
 
 functionDeclaration
-    : Function_ Identifier callSignature ( ('{' functionBody '}') | SemiColon)
+    : Async? Function_ Identifier callSignature ( ('{' functionBody '}') | SemiColon)
     ;
 
 //Ovveride ECMA
@@ -633,7 +640,7 @@ classElement
     ;
 
 propertyMemberDeclaration
-    : propertyMemberBase propertyName '?'? typeAnnotation? initializer? SemiColon                   # PropertyDeclarationExpression
+    : propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer? SemiColon             # PropertyDeclarationExpression
     | propertyMemberBase propertyName callSignature ( ('{' functionBody '}') | SemiColon)           # MethodDeclarationExpression
     | propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
     | abstractDeclaration                                                                           # AbstractMemberDeclaration
@@ -719,7 +726,6 @@ propertyAssignment
     | generatorMethod                                         # MethodProperty
     | identifierOrKeyWord                                     # PropertyShorthand
     | restParameter                                           # RestParameterInObject
-    | Module                                                  # ModuleText   // for: const { module } = blab;
     ;
 
 getAccessor
@@ -734,6 +740,7 @@ propertyName
     : identifierName
     | StringLiteral
     | numericLiteral
+    | Module
     ;
 
 arguments
@@ -745,7 +752,7 @@ argumentList
     ;
 
 argument                      // ECMAScript 6: Spread Operator
-    : Ellipsis? (singleExpression | Identifier)
+    : Ellipsis? (singleExpression | identifierOrKeyWord)
     ;
 
 expressionSequence
@@ -769,6 +776,8 @@ singleExpression
     | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?  # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
     | singleExpression '?'? '!'? '.' '#'? '(' ')'                            # MemberDotExpression
+    // samples: `error?.response?.data?.message ?? error.message;`
+    | singleExpression '??' singleExpression                                 # NullCoalesceExpression
     | singleExpression '!'                                                   # PropCheckExpression
     // Split to try `new Date()` first, then `new Date`.
     | New singleExpression typeArguments? arguments                          # NewExpression
@@ -785,6 +794,8 @@ singleExpression
     | '-' singleExpression                                                   # UnaryMinusExpression
     | '~' singleExpression                                                   # BitNotExpression
     | '!' singleExpression                                                   # NotExpression
+    | Await singleExpression                                                 # AwaitExpression
+    | <assoc=right> singleExpression '**' singleExpression                  # PowerExpression
     | singleExpression ('*' | '/' | '%') singleExpression                    # MultiplicativeExpression
     | singleExpression ('+' | '-') singleExpression                          # AdditiveExpression
     | singleExpression ('<<' | '>>' | '>>>') singleExpression                # BitShiftExpression
@@ -820,6 +831,7 @@ singleExpression
 asExpression
     : predefinedType ('[' ']')?
     | singleExpression
+    | Unknown
     ;
 
 arrowFunctionDeclaration
@@ -827,8 +839,8 @@ arrowFunctionDeclaration
     ;
 
 arrowFunctionParameters
-    : Identifier
-    | '(' formalParameterList? ')'
+    : identifierOrKeyWord
+    | '(' formalParameterList? ','? ')'
     ;
 
 arrowFunctionBody
@@ -882,18 +894,22 @@ identifierName
     | reservedWord
     | Lodash Lodash*
     | Dollar Dollar*
+    | Module
     ;
 
 identifierOrKeyWord
     : Identifier
     | TypeAlias
     | Require
+    | Module
+    | Default
     ;
 
 reservedWord
     : keyword
     | NullLiteral
     | BooleanLiteral
+    | Module
     ;
 
 keyword
