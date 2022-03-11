@@ -19,7 +19,7 @@ class FrontendApiAnalyser {
     // 3. mapping for results
     fun analysis(nodes: Array<CodeDataStruct>, path: String): Array<ComponentHttpCallInfo> {
         nodes.forEach { node ->
-            var isComponent = false;
+            var isComponent: Boolean
             val outbounds: MutableList<String> = mutableListOf()
             // update
             // tsx || jsx file
