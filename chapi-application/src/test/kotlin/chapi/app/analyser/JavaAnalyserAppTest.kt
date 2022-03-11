@@ -1,27 +1,14 @@
 package chapi.app.analyser
 
 import chapi.app.analyser.support.AbstractFile
+import chapi.domain.core.CallType
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeDataStruct
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.nio.file.Paths
 
 internal class JavaAnalyserAppTest {
-    @Throws(IOException::class)
-    fun getResourceFiles(path: String): List<String> = getResourceAsStream(path).use {
-        return if (it == null) emptyList() else BufferedReader(InputStreamReader(it)).readLines()
-    }
-
-    private fun getResourceAsStream(resource: String): InputStream? =
-        Thread.currentThread().contextClassLoader.getResourceAsStream(resource)
-            ?: resource::class.java.getResourceAsStream(resource)
-
     @Test
     fun analysisByFile() {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/Main.java")
@@ -50,7 +37,7 @@ internal class JavaAnalyserAppTest {
         val path = Paths.get(resource!!.toURI()).toFile()
 
         val nodes = JavaAnalyserApp().analysisNodeByPath(path.absolutePath)
-        var nodeMap: HashMap<String, CodeDataStruct> = HashMap()
+        val nodeMap: HashMap<String, CodeDataStruct> = HashMap()
         for (node in nodes) {
             nodeMap[node.getClassFullName()] = node
         }
@@ -77,7 +64,7 @@ internal class JavaAnalyserAppTest {
             mainFunCallMap[function.NodeName] = function
         }
 
-        assertEquals(mainFunCallMap["AggregateRootARepo"]!!.Type, "same package")
+        assertEquals(mainFunCallMap["AggregateRootARepo"]!!.Type, CallType.SAME_PACKAGE)
         assertEquals(mainFunCallMap["AggregateRootARepo"]!!.Package, "repositories")
     }
 }

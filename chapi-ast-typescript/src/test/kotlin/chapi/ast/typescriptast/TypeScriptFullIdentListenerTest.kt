@@ -911,7 +911,7 @@ function hello2() {
     }
 
     @Test
-    internal fun fixSomeIssue() {
+    internal fun optionCheckAfterData() {
         val code = """
 const QualityGateProfile = () => {
   updateQualityGateProfile(profile.id!, profile).then(() => {
@@ -927,6 +927,38 @@ const QualityGateProfile = () => {
     }
 
     @Test
+    internal fun supportForRestParameterInHtml() {
+        val code = """
+function PluginConfig(props: { data: ConfigData; updateData: Function }) {
+    return (<Form.Item {...field}></Form.Item>);
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun supportForExprInFunction() {
+        val code = """
+function PluginConfig(props: { data: ConfigData; updateData: Function }) {
+    return (
+      <Form form={form} onFinish={onFinish}>
+        <Form.List name={type}>
+          {(fields, { add, remove }) => {
+            
+          }}
+        </Form.List>
+      </Form>
+);
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
     internal fun supportForLogCodeCallToField() {
         val code = """
 const useQualityGate = createCacheState(queryAllQualityGateProfile, []);
@@ -935,6 +967,25 @@ export default useQualityGate;
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
-        assertEquals("", codeFile.DataStructures[0].Fields[0].Call[0].FunctionName)
+        assertEquals("createCacheState", codeFile.DataStructures[0].Fields[0].Calls[0].FunctionName)
+        assertEquals(2, codeFile.DataStructures[0].Fields[0].Calls[0].Parameters.size)
+        assertEquals("queryAllQualityGateProfile", codeFile.DataStructures[0].Fields[0].Calls[0].Parameters[0].TypeValue)
+    }
+
+    @Test
+    internal fun undefinedAndUnusedComma() {
+        val code = """
+export const getLayout = (options: LayoutOptions) => {
+  const getSize = (
+    size: number | number[] | undefined,
+    index: number,
+    defaultVaue = 16
+  ): number =>  { }
+};
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
     }
 }

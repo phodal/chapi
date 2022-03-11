@@ -20,43 +20,41 @@ class FrontendApiAnalyser {
     fun analysis(nodes: Array<CodeDataStruct>, path: String): Array<ComponentHttpCallInfo> {
         nodes.forEach { node ->
             var isComponent: Boolean
-            val outbounds: MutableList<String> = mutableListOf()
-            // update
-            // tsx || jsx file
             val isComponentExt = node.fileExt() == "tsx" || node.fileExt() == "jsx"
             val isNotInterface = node.Type != DataStructType.INTERFACE
+
             val inbounds = createInbounds(path, node.Imports, node.FilePath)
 
             val moduleName = relativeRoot(path, node.FilePath).substringBeforeLast('.', "")
             val componentName = naming(moduleName, node.NodeName)
 
+            node.Fields.forEach { field ->
+                fieldToCallMap(field, componentName, inbounds)
+            }
+
+            // lookup CodeCall from Functions
             node.Functions.forEach { func ->
                 isComponent = isNotInterface && isComponentExt && func.IsReturnHtml
                 if (isComponent) {
                     componentCallMap[componentName] = mutableListOf()
                 }
 
-                outbounds += naming(moduleName, func.Name)
-
                 var calleeName = naming(componentName, func.Name)
                 if (isComponent) {
                     calleeName = componentName
                 }
 
-                run {
-                    func.FunctionCalls.forEach { call ->
-                        run {
-                            callMap[calleeName] = call
-                            if (axiosIdent.isMatch(call)) {
-                                httpAdapterMap[calleeName] = call
-                            }
-                            if (isComponent) {
-                                componentCallMap[componentName]?.plusAssign((call.FunctionName))
-                            }
-                        }
+                func.FunctionCalls.forEach { call ->
+                    callMap[calleeName] = call
+                    if (axiosIdent.isMatch(call)) {
+                        httpAdapterMap[calleeName] = call
                     }
-                    recursiveCall(func, calleeName, isComponent, componentName)
+                    if (isComponent) {
+                        componentCallMap[componentName]?.plusAssign((call.FunctionName))
+                    }
                 }
+
+                recursiveCall(func, calleeName, isComponent, componentName)
 
                 if (isComponent) {
                     componentInbounds[componentName] = inbounds
@@ -73,6 +71,19 @@ class FrontendApiAnalyser {
                     val httpApi = axiosIdent.convert(call)
                     httpApi.caller = it
                     componentRef.apiRef += httpApi
+                } else {
+                    if(callMap[it] != null) {
+                        val codeCall = callMap[it]!!
+                        val name = naming(codeCall.NodeName, codeCall.FunctionName)
+
+                        if (httpAdapterMap[name] != null) {
+                            val call = httpAdapterMap[name]!!
+                            val httpApi = axiosIdent.convert(call)
+                            httpApi.caller = name
+                            httpApi.routes = listOf(it, name)
+                            componentRef.apiRef += httpApi
+                        }
+                    }
                 }
             }
 
@@ -81,7 +92,29 @@ class FrontendApiAnalyser {
             }
         }
 
+        println(callMap)
+
         return componentCalls
+    }
+
+    private fun fieldToCallMap(
+        field: CodeField,
+        componentName: String,
+        inbounds: MutableList<String>
+    ) {
+        field.Calls.forEach {
+            val calleeName = naming(componentName, field.TypeKey)
+            callMap[calleeName] = it
+
+            it.Parameters.forEach {
+                inbounds.forEach { inbound ->
+                    if (inbound.endsWith("::${it.TypeValue}")) {
+                        val split = inbound.split("::")
+                        callMap[calleeName] = CodeCall(FunctionName = split[1], NodeName = split[0])
+                    }
+                }
+            }
+        }
     }
 
     private fun createInbounds(path: String, imports: Array<CodeImport>, filePath: String): MutableList<String> {

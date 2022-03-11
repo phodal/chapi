@@ -16,6 +16,7 @@ data class ComponentHttpCallInfo(
 @Serializable
 data class HttpApiCallInfo(
     var caller: String = "",
+    var routes: List<String> = listOf(),
     var base: String = "",
     var url: String = "",
     var method: String = "",

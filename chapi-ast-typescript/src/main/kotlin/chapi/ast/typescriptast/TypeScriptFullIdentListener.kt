@@ -106,8 +106,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         if (singleExpr != null) {
                             when(val name = singleExpr::class.simpleName) {
                                 "ParenthesizedExpressionContext" -> {
-                                    val parameter = parseParenthesizedExpression(singleExpr)
-                                    field.Call += CodeCall("", "", "", currentExprIdent, arrayOf(parameter))
+                                    val parameters = parseParenthesizedExpression(singleExpr)
+                                    val funcName = identExpr.identifierName().text
+                                    field.Calls += CodeCall("", CallType.FIELD, "", funcName, parameters)
                                 }
                                 else ->{
                                     println("todo -> var -> decl call: $name")
@@ -439,7 +440,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             }
             "ArgumentContext" -> {
                 // todo: add arg ctx
-                val call = CodeCall(FunctionName = currentExprIdent, Type = "ArrowFunction")
+                val call = CodeCall(FunctionName = currentExprIdent, Type = CallType.ARROW)
                 isCallbackOrAnonymousFunction = true
                 currentFunc.FunctionCalls += call
             }
@@ -608,8 +609,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 argumentsExpressionToCall(ctx as TypeScriptParser.ArgumentsExpressionContext)
             }
             "ParenthesizedExpressionContext" -> {
-                val parameter = parseParenthesizedExpression(ctx)
-                currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, arrayOf(parameter))
+                val parameters = parseParenthesizedExpression(ctx)
+                currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, parameters)
             }
             else -> {
                 println("todo -> need support type: ${ctx::class.java.simpleName} ==== ${ctx.text}")
@@ -627,7 +628,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         if (argText.startsWith("(")) {
             // axios("/demo")
             val args = parseArguments(argument)
-            currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, args)
+            currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, args)
         } else {
             currentExprIdent = argText
 
@@ -638,7 +639,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             }
 
             // axios.get() or _.orderBy()
-            currentFunc.FunctionCalls += CodeCall("", "", "", currentExprIdent, arrayOf())
+            currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, arrayOf())
         }
     }
 
@@ -688,16 +689,17 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return params
     }
 
-    private fun parseParenthesizedExpression(ctx: TypeScriptParser.SingleExpressionContext?): CodeProperty {
-        var parameter = CodeProperty(TypeValue = "", TypeType = "object")
+    private fun parseParenthesizedExpression(ctx: TypeScriptParser.SingleExpressionContext?): Array<CodeProperty> {
+        var parameters: Array<CodeProperty> = arrayOf()
         val context = ctx as ParenthesizedExpressionContext
         for (subSingle in context.expressionSequence().singleExpression()) {
+            var parameter = CodeProperty(TypeValue = "", TypeType = "object")
+
             when (val simpleName = subSingle::class.java.simpleName) {
                 "ObjectLiteralExpressionContext" -> {
                     val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext
                     val objectLiteral = parseObjectLiteral(obj.objectLiteral())
-                    parameter =
-                        CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
+                    parameter = CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
                 "HtmlElementExpressionContext" -> {
                     hasHtmlElement = true
@@ -706,13 +708,22 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 "ArgumentsExpressionContext" -> {
                     parseArguments(subSingle as TypeScriptParser.ArgumentsExpressionContext)
                 }
+                "IdentifierExpressionContext" -> {
+                    val identExpr = subSingle as IdentifierExpressionContext
+                    parameter = CodeProperty(TypeValue = identExpr.text, TypeType = "parameter")
+                }
+                "ArrayLiteralExpressionContext" -> {
+                    parameter = CodeProperty(TypeValue = "[]", TypeType = "parameter")
+                }
                 else -> {
                     println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")
                 }
             }
+
+            parameters += parameter
         }
 
-        return parameter
+        return parameters
     }
 
     private fun parseObjectLiteral(objectLiteral: TypeScriptParser.ObjectLiteralContext): Array<CodeProperty> {
@@ -747,7 +758,6 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             parseSingleExpression(singleExpressionContext)
         }
     }
-
 
     private fun fillMethodFromCallSignature(
         callSignCtx: TypeScriptParser.CallSignatureContext,
@@ -928,7 +938,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return codeContainer
     }
 
-    override fun enterEveryRule(ctx: ParserRuleContext?) {
-        println(ctx!!.javaClass.simpleName)
-    }
+//    override fun enterEveryRule(ctx: ParserRuleContext?) {
+//        println(ctx!!.javaClass.simpleName)
+//    }
 }
