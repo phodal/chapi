@@ -909,6 +909,7 @@ function hello2() {
         assertEquals(1, defaultStruct.Functions[0].FunctionCalls.size)
         assertEquals("template-string", defaultStruct.Functions[0].FunctionCalls[0].Parameters[0].TypeValue)
     }
+
     @Test
     internal fun fixSomeIssue() {
         val code = """
@@ -923,5 +924,17 @@ const QualityGateProfile = () => {
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun supportForLogCodeCallToField() {
+        val code = """
+const useQualityGate = createCacheState(queryAllQualityGateProfile, []);
+export default useQualityGate;
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+        assertEquals("", codeFile.DataStructures[0].Fields[0].Call[0].FunctionName)
     }
 }

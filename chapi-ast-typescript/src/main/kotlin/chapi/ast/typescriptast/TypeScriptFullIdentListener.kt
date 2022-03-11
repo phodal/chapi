@@ -100,6 +100,24 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                             field.TypeType = "String"
                         }
                     }
+                    "IdentifierExpressionContext" -> {
+                        val identExpr = lastExpr as IdentifierExpressionContext
+                        val singleExpr = identExpr.singleExpression()
+                        if (singleExpr != null) {
+                            when(val name = singleExpr::class.simpleName) {
+                                "ParenthesizedExpressionContext" -> {
+                                    val parameter = parseParenthesizedExpression(singleExpr)
+                                    field.Call += CodeCall("", "", "", currentExprIdent, arrayOf(parameter))
+                                }
+                                else ->{
+                                    println("todo -> var -> decl call: $name")
+                                }
+                            }
+                        }
+                    }
+                    else -> {
+                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
+                    }
                 }
 
 
@@ -837,7 +855,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                             parseSingleExpression(identExpr.singleExpression())
                         }
                         else -> {
-                            println("others variable decl: $identExprText ==== ${singleExprCtx.text}")
+                            println("IdentifierExpressionContext -> others variable decl: $identExprText ==== ${singleExprCtx.text}")
                         }
                     }
                 }
@@ -910,7 +928,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return codeContainer
     }
 
-//    override fun enterEveryRule(ctx: ParserRuleContext?) {
-//        println(ctx!!.javaClass.simpleName)
-//    }
+    override fun enterEveryRule(ctx: ParserRuleContext?) {
+        println(ctx!!.javaClass.simpleName)
+    }
 }
