@@ -1098,4 +1098,23 @@ const options: Partial<GraphOptions> = {
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
     }
+
+    @Test
+    internal fun commentInTsx() {
+        val code = """
+export function BuGrade(props: BuGradeProps) {
+  return (
+    <div className="BuGrade">
+      <BaLabel text={props.text}>
+        <div className="BuGrade-grade-icon">NA</div>
+        {/* <div className="BuGrade-grade-icon">{props.grade.toUpperCase()}</div> */}
+      </BaLabel>
+    </div>
+  );
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
 }
