@@ -92,8 +92,7 @@ class FrontendApiAnalyser {
             }
         }
 
-        println(callMap)
-
+//        println(callMap)
         return componentCalls
     }
 
