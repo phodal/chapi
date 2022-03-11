@@ -30,16 +30,16 @@ internal class FrontendApiAnalyserTest {
         assertEquals("PUT", apiRef.method)
         assertEquals("parameter", apiRef.data)
     }
-
-    @Test
-    fun supportArchGuard() {
-        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src"
-        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
-        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
-
-        File("nodes.json").writeText(Json.encodeToString(nodes))
-        File("api.json").writeText(Json.encodeToString(componentCalls))
-    }
+//
+//    @Test
+//    fun supportArchGuard() {
+//        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src"
+//        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
+//        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
+//
+//        File("nodes.json").writeText(Json.encodeToString(nodes))
+//        File("api.json").writeText(Json.encodeToString(componentCalls))
+//    }
 
     @Test
     internal fun shouldCorrectComponentName() {

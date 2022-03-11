@@ -1074,7 +1074,8 @@ export class ELKLayout {
         val code = """
 function dfs() {
   if (node in graph) {
-    
+    for (const n of graph[node]) {
+    }
   }
 }
 """
