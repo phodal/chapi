@@ -6,8 +6,8 @@ import chapi.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 
-data class TargetTypePackage(val targetType: String, val packageName: String) {}
-data class JavaTargetType(var targetType: String = "", var callType: String = "") {}
+data class TargetTypePackage(val targetType: String, val packageName: String)
+data class JavaTargetType(var targetType: String = "", var callType: CallType = CallType.FUNCTION)
 
 open class JavaFullIdentListener(
     fileName: String,
@@ -145,9 +145,9 @@ open class JavaFullIdentListener(
         currentClzExtend = ""
         currentFunction = CodeFunction(IsConstructor = false)
 
-        methodMap = mutableMapOf<String, CodeFunction>()
-        methodCalls = arrayOf<CodeCall>()
-        fields = arrayOf<CodeField>()
+        methodMap = mutableMapOf()
+        methodCalls = arrayOf()
+        fields = arrayOf()
         isOverrideMethod = false
     }
 
@@ -182,7 +182,7 @@ open class JavaFullIdentListener(
         val name = ctx!!.IDENTIFIER().text
         val typeType = ctx.typeTypeOrVoid().text
 
-        var codeFunction = CodeFunction(
+        val codeFunction = CodeFunction(
             Name = name,
             ReturnType = typeType,
             Position = buildPosition(ctx),
@@ -304,12 +304,12 @@ open class JavaFullIdentListener(
         var methodName = callee
 
         var targetTypeStr = _targetType
-        var targetType = this.warpTargetFullType(targetTypeStr)
+        val targetType = this.warpTargetFullType(targetTypeStr)
         var callType = targetType.callType
-        var fullType = targetType.targetType
+        val fullType = targetType.targetType
 
         if (targetTypeStr == "super" || callee == "super") {
-            callType = "super"
+            callType = CallType.SUPER
             targetTypeStr = currentClzExtend
         }
         codeCall.Type = callType
@@ -434,12 +434,11 @@ open class JavaFullIdentListener(
     }
 
     private fun warpTargetFullType(targetType: String?): JavaTargetType {
-        var callType = ""
+        val callType: CallType = CallType.FUNCTION
         if (currentClz == targetType) {
-            callType = "self"
             return JavaTargetType(
                 targetType = codeContainer.PackageName + "." + targetType,
-                callType = callType
+                callType = CallType.SELF
             )
         }
 
@@ -447,10 +446,9 @@ open class JavaFullIdentListener(
         if (pureTargetType != "") {
             for (imp in imports) {
                 if (imp.Source.endsWith(pureTargetType)) {
-                    callType = "chain"
                     return JavaTargetType(
                         targetType = imp.Source,
-                        callType = callType
+                        callType = CallType.CHAIN
                     )
                 }
             }
@@ -458,10 +456,9 @@ open class JavaFullIdentListener(
 
         for (clz in classes) {
             if (clz.endsWith(".$pureTargetType")) {
-                callType = "same package"
                 return JavaTargetType(
                     targetType = clz,
-                    callType = callType
+                    callType = CallType.SAME_PACKAGE
                 )
             }
         }
@@ -469,10 +466,9 @@ open class JavaFullIdentListener(
         if (pureTargetType == "super" || pureTargetType == "this") {
             for (imp in imports) {
                 if (imp.Source.endsWith(currentClzExtend)) {
-                    callType = "super"
                     return JavaTargetType(
                         targetType = imp.Source,
-                        callType = callType
+                        callType = CallType.SUPER
                     )
                 }
             }
@@ -526,7 +522,7 @@ open class JavaFullIdentListener(
             val position = buildPosition(ctx as ParserRuleContext)
             val methodCall = CodeCall(
                 Package = removeTarget(target),
-                Type = "field",
+                Type = CallType.FIELD,
                 NodeName = typeType,
                 Position = position
             )
@@ -611,7 +607,7 @@ open class JavaFullIdentListener(
             val position = buildPosition(ctx)
             val codeCall = CodeCall(
                 Package = removeTarget(fullType),
-                Type = "lambda",
+                Type = CallType.LAMBDA,
                 NodeName = targetType!!,
                 FunctionName = methodName,
                 Position = position
@@ -710,17 +706,14 @@ open class JavaFullIdentListener(
     }
 
     private fun buildCreatedCall(createdName: String?, ctx: JavaParser.CreatorContext) {
-        var codeFunction = methodMap[getMethodMapName(currentFunction)]
-        if (codeFunction == null) {
-            return
-        }
+        val codeFunction = methodMap[getMethodMapName(currentFunction)] ?: return
 
         val fullType = warpTargetFullType(createdName)
         val codePosition = buildPosition(ctx)
 
         val codeCall = CodeCall(
             Package = removeTarget(fullType = fullType.targetType),
-            Type = "CreatorClass",
+            Type = CallType.CREATOR,
             NodeName = createdName!!,
             Position = codePosition
         )

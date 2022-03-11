@@ -9,5 +9,5 @@ open class CodeField(
     var TypeKey: String = "",
     var Modifiers: Array<String> = arrayOf(),
     // for TypeScript and JavaScript only, examples: `export default sample = createHello() `
-    var Call: Array<CodeCall> = arrayOf()
+    var Calls: Array<CodeCall> = arrayOf()
 )

@@ -5,12 +5,25 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 
+enum class CallType (val calltype: String) {
+    FIELD("field"),
+    LAMBDA("lambda"),
+    ARROW("arrow"),
+    CREATOR("creator"),
+    FUNCTION("function"),
+    // method come from parent
+    SUPER("super"),
+    SAME_PACKAGE("same package"),
+    SELF("self"),
+    CHAIN("chain")
+}
+
 @Serializable
 open class CodeCall(
     var Package: String = "",
     // for Java, it can be CreatorClass, lambda
     // for TypeScript, can be anonymous function, arrow function
-    var Type: String = "",
+    var Type: CallType = CallType.FUNCTION,
     // for Class/DataStruct, it's ClassName
     // for Function, it's empty
     var NodeName: String = "",
