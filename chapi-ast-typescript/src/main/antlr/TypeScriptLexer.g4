@@ -168,6 +168,8 @@ Require: 'require';
 Module: 'module';
 Declare: 'declare';
 
+Undefined: 'undefined';
+
 Abstract: 'abstract';
 
 Is: 'is';

@@ -101,6 +101,7 @@ primaryType
     | typeQuery                                     #QueryPrimType
     | This                                          #ThisPrimType
     | typeReference Is primaryType                  #RedefinitionOfType
+    | 'undefined'                                   #UndefinedType
     ;
 
 predefinedType
@@ -523,6 +524,7 @@ htmlTagName
 htmlAttribute
     : htmlAttributeName '=' htmlAttributeValue
     | htmlAttributeName
+    | objectLiteral
     ;
 
 htmlAttributeName
@@ -754,17 +756,15 @@ expressionSequence
 functionExpressionDeclaration
     : Function_ Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
     ;
-//
-//anoymousFunction
-//    : functionDeclaration                                                        # FunctionDecl
-//    | Async? Function_ '*'? '(' formalParameterList? ')' '{' functionBody '}'    # AnoymousFunctionDecl
-//    | Async? arrowFunctionParameters '=>' arrowFunctionBody                      # ArrowFunction
-//    ;
 
+jsxArrowFunction
+    : '(' formalParameterList (',' formalParameterList)* ')' '=>' arrowFunctionBody      # JsxArrowFunctionDecl
+    ;
 
 singleExpression
     : functionExpressionDeclaration                                          # FunctionExpression
     | arrowFunctionDeclaration                                               # ArrowFunctionExpression   // ECMAScript 6
+    | jsxArrowFunction                                                       # JsxArrowFunctionExpression
     | Class Identifier? classTail                                            # ClassExpression
     | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
     | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?  # MemberDotExpression
