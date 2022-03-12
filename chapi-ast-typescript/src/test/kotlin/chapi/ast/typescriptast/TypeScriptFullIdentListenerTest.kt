@@ -1163,6 +1163,18 @@ function useUrlQuery<T = { [key: string]: string }>() {
     }
 
     @Test
+    internal fun someIssue() {
+        val code = """
+function ModuleDependenceGraph() {
+  const [graphData, setGraphData] = useState<GraphData<JavaItem>>();
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
     @Disabled
     internal fun htmlElementIssue() {
         val code = """

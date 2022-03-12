@@ -947,8 +947,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         return codeContainer
     }
-//
-//    override fun enterEveryRule(ctx: ParserRuleContext?) {
-//        println(ctx!!.javaClass.simpleName)
-//    }
+
+    override fun enterEveryRule(ctx: ParserRuleContext?) {
+        println(ctx!!.javaClass.simpleName)
+    }
 }

@@ -815,7 +815,7 @@ singleExpression
     | generatorFunctionDeclaration                                           # GeneratorsFunctionExpression // ECMAScript 6
     | yieldStatement                                                         # YieldExpression // ECMAScript 6
     | This                                                                   # ThisExpression
-    | identifierName singleExpression?                                       # IdentifierExpression
+    | identifierName nestedTypeGeneric? singleExpression?                    # IdentifierExpression
     | Super                                                                  # SuperExpression
     | literal                                                                # LiteralExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
@@ -823,7 +823,7 @@ singleExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
     | typeArguments expressionSequence?                                      # GenericTypes
     | singleExpression As asExpression                                       # CastAsExpression
-    | htmlElements                                                           # htmlElementExpression
+    | htmlElements                                                           # HtmlElementExpression
     ;
 
 asExpression
