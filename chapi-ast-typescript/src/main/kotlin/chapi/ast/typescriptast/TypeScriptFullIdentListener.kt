@@ -7,7 +7,6 @@ import chapi.domain.core.*
 import chapi.infra.Stack
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.antlr.v4.runtime.ParserRuleContext
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private var hasHtmlElement: Boolean = false
@@ -904,7 +903,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         arguments.argumentList().argument().forEach {
             parseSingleExpression(it.singleExpression())
-            val value: String = when (it.singleExpression().javaClass.simpleName) {
+            val typeValue: String = when (it.singleExpression().javaClass.simpleName) {
                 "LiteralExpressionContext" -> {
                     val literalExpr = (it.singleExpression() as TypeScriptParser.LiteralExpressionContext).literal()
                     if (literalExpr.templateStringLiteral() != null) {
@@ -918,7 +917,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
             }
 
-            val arg = CodeProperty(TypeValue = value, TypeType = "")
+            val arg = CodeProperty(TypeValue = typeValue, TypeType = "")
             args += arg
         }
 
@@ -948,7 +947,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return codeContainer
     }
 
-    override fun enterEveryRule(ctx: ParserRuleContext?) {
-        println(ctx!!.javaClass.simpleName)
-    }
+//    override fun enterEveryRule(ctx: ParserRuleContext?) {
+//        println(ctx!!.javaClass.simpleName)
+//    }
 }

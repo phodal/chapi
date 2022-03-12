@@ -59,7 +59,7 @@ typeParameterList
 typeParameter
     : Identifier constraint?
     | Identifier '=' objectType
-    | Identifier '=' identifierOrKeyWord nestedTypeGeneric?
+    | Identifier '=' primaryType nestedTypeGeneric?
     | typeParameters
     ;
 
@@ -165,6 +165,7 @@ typeMember
     | indexSignature
     | methodSignature ('=>' type_)?
     | enumSignature
+    | '[' typeReference In typeReference ']' typeAnnotation
 //    | objectSignature
     ;
 

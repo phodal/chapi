@@ -1175,16 +1175,30 @@ function ModuleDependenceGraph() {
     }
 
     @Test
-//    @Disabled
     internal fun multipleGeneric() {
         val code = """
-const createTreeNode = <U = TreeNode, T extends JavaItem>(): U => {
-
-};
+const createTreeNode = <U = TreeNode, T extends JavaItem>(): U => {};
 """
-
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun anyKeywordInType() {
+        val code = """
+export default function createCacheState<T = any>(): () => [CacheState<T> | undefined, () => void] {
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun typeAlias() {
+        val code = """
+type State = { [key in ThresholdKey]: any };
+"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
     }
 
     @Test
