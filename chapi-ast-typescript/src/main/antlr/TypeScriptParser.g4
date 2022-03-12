@@ -59,6 +59,7 @@ typeParameterList
 typeParameter
     : Identifier constraint?
     | Identifier '=' objectType
+//    | Identifier '=' identifierOrKeyWord nestedTypeGeneric?
     | Identifier '=' primaryType nestedTypeGeneric?
     | typeParameters
     ;
@@ -611,7 +612,7 @@ functionDeclaration
 
 //Ovveride ECMA
 classDeclaration
-    : Abstract? Class Identifier typeParameters? classHeritage classTail
+    : Declare? Abstract? Class Identifier typeParameters? classHeritage classTail
     ;
 
 classHeritage
