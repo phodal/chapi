@@ -1150,6 +1150,19 @@ export const switchFunc = (pagination, filters, sorter, {action}) => {
     }
 
     @Test
+    internal fun typeDefineIssue() {
+        val code = """
+function useUrlQuery<T = { [key: string]: string }>() {
+//  const location = (useLocation() as unknown) as { query: T; };
+//  return location.query ?? ({} as T);
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
     @Disabled
     internal fun htmlElementIssue() {
         val code = """

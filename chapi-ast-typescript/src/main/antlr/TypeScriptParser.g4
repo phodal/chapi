@@ -58,6 +58,7 @@ typeParameterList
 
 typeParameter
     : Identifier constraint?
+    | Identifier '=' objectType
     | typeParameters
     ;
 
@@ -603,7 +604,7 @@ debuggerStatement
     ;
 
 functionDeclaration
-    : Async? Function_ Identifier callSignature ( ('{' functionBody '}') | SemiColon)
+    : Default? Async? Function_ Identifier callSignature ( ('{' functionBody '}') | SemiColon)
     ;
 
 //Ovveride ECMA
