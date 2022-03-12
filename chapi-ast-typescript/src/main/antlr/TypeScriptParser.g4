@@ -505,6 +505,8 @@ htmlElements
 
 htmlElement
     : '<' htmlTagStartName htmlAttribute* '>' htmlContent '<''/' htmlTagClosingName '>'
+    // for React
+    | '<' '>' htmlContent '<''/' '>'
     | '<' htmlTagName htmlAttribute* htmlContent '/''>'
     | '<' htmlTagName htmlAttribute* '/''>'
     | '<' htmlTagName htmlAttribute* '>'

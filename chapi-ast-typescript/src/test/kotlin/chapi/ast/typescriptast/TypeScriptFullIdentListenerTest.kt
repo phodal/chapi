@@ -1272,7 +1272,7 @@ const getClazzColumnsBy = (type: keyof typeof columnCount) => {}
     }
 
     @Test
-    internal fun someIssue() {
+    internal fun anyInObjecLiteralType() {
         val code = """
 export function getChartsOption(data?: number[]): EChartOption {
   return {
@@ -1286,6 +1286,20 @@ export function getChartsOption(data?: number[]): EChartOption {
     ]
   }
 }
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun reactDefaultNode() {
+        val code = """
+const SystemInfoForm = (props: SystemInfoFormProps, ref: any) => {
+  return (
+    <>
+    </>
+  );
+};
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
