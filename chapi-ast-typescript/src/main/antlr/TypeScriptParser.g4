@@ -104,6 +104,7 @@ primaryType
     | '[' tupleElementTypes ']'                     #TuplePrimType
     | typeQuery                                     #QueryPrimType
     | This                                          #ThisPrimType
+    | This Is primaryType                           #RedefinitionOfThisType
     | typeReference Is primaryType                  #RedefinitionOfType
     | primaryType {notLineTerminator()}? '[' singleExpression ']'    #SingleExprPrimType
     ;
@@ -937,6 +938,7 @@ keyword
     | Debugger
     | Function_
     | This
+    | Is
     | With
     | Default
     | If

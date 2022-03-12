@@ -1283,6 +1283,26 @@ type ThresholdKey = | "oversizedMethodByLine" | "oversizedMethodByCount"
     }
 
     @Test
+    internal fun thisIsInObjectType() {
+        val code = """
+interface SingularData {
+  isNode(): this is NodeSingular;
+}
+"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
+    internal fun isAsFunctionName() {
+        val code = """
+interface SingularData {
+   is(selector: Selector): boolean;
+}
+"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
     internal fun typeAnnotationForObjectLiteralGenerateMethod() {
         val code = """
 const store: IOptions<State, string, string, string> = {
