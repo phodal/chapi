@@ -59,6 +59,7 @@ typeParameterList
 typeParameter
     : Identifier constraint?
     | Identifier '=' objectType
+    | Identifier '=' identifierOrKeyWord nestedTypeGeneric?
     | typeParameters
     ;
 
@@ -102,7 +103,6 @@ primaryType
     | typeQuery                                     #QueryPrimType
     | This                                          #ThisPrimType
     | typeReference Is primaryType                  #RedefinitionOfType
-    | Identifier '=' Identifier nestedTypeGeneric?  #EqualPrimType
     ;
 
 predefinedType

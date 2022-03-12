@@ -1175,9 +1175,10 @@ function ModuleDependenceGraph() {
     }
 
     @Test
-    internal fun someIssue() {
+//    @Disabled
+    internal fun multipleGeneric() {
         val code = """
-const createTreeNode = <U = TreeNode<T>>(): U => {
+const createTreeNode = <U = TreeNode, T extends JavaItem>(): U => {
 
 };
 """
