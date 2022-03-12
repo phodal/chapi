@@ -71,8 +71,11 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                             defaultNode.Fields += fields
                         }
                     }
+                    "TerminalNodeImpl" -> {
+
+                    }
                     else -> {
-                        println("enterVariableStatement: " + it::class.java.simpleName)
+                        println("enterVariableStatement: ${it::class.java.simpleName} === ${it.text}")
                     }
                 }
             }
@@ -594,7 +597,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             "LiteralExpressionContext" -> {
                 val singleStr = text.startsWith("'") && text.endsWith("'")
                 val doubleStr = text.startsWith("\"") && text.endsWith("\"")
-                if (singleStr || doubleStr) {
+                val templateStr = text.startsWith("`") && text.endsWith("`")
+                if (singleStr || doubleStr || templateStr) {
                     text = text.drop(1).dropLast(1)
                 }
             }
@@ -726,6 +730,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
                 "ArrayLiteralExpressionContext" -> {
                     parameter = CodeProperty(TypeValue = "[]", TypeType = "parameter")
+                }
+                "LiteralExpressionContext" -> {
+                    parameter = CodeProperty(TypeValue = singleExpToText(subSingle), TypeType = "string")
                 }
                 else -> {
                     println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")

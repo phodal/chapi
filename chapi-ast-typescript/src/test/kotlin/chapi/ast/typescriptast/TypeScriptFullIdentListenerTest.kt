@@ -1369,6 +1369,23 @@ export type Model<T extends keyof typeof models> = {
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
 
+    @Test
+    internal fun parametersForString() {
+        val code = """
+export const querySystemInfo = (data) => {
+    return request(`/api/system-info`, {
+        method: 'GET',
+    });
+};
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val parameters = codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters
+        assertEquals(parameters.size, 2)
+        assertEquals(parameters[0].TypeValue, "/api/system-info")
+    }
+
     // TODO: fix nestedIssued
     @Test
     @Disabled
