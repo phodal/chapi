@@ -169,7 +169,7 @@ typeMember
     | indexSignature
     | methodSignature ('=>' type_)?
     | enumSignature
-    | '[' typeReference In typeReference ']' typeAnnotation
+    | '[' typeReference In (Keyof | Typeof)* typeReference ']' typeAnnotation
     ;
 
 arrayType
@@ -193,7 +193,7 @@ constructorType
     ;
 
 typeQuery
-    : 'typeof' typeQueryExpression
+    : Typeof* typeQueryExpression
     ;
 
 typeQueryExpression

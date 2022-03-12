@@ -1359,7 +1359,6 @@ type SearchVisitFunction = (
     }
 
     @Test
-    @Disabled
     internal fun supportForGenericMap() {
         val code = """
 export type Model<T extends keyof typeof models> = {
@@ -1367,9 +1366,7 @@ export type Model<T extends keyof typeof models> = {
 };
 """
 
-        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        val defaultStruct = codeFile.DataStructures[0]
-        assertEquals(1, defaultStruct.Functions.size)
+        TypeScriptAnalyser().analysis(code, "index.tsx")
     }
 
     // TODO: fix nestedIssued
