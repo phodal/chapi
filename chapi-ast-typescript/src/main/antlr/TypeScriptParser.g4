@@ -829,6 +829,7 @@ singleExpression
 asExpression
     : predefinedType ('[' ']')?
     | singleExpression
+    | objectType
     | Unknown
     ;
 

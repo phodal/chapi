@@ -1153,8 +1153,8 @@ export const switchFunc = (pagination, filters, sorter, {action}) => {
     internal fun typeDefineIssue() {
         val code = """
 function useUrlQuery<T = { [key: string]: string }>() {
-//  const location = (useLocation() as unknown) as { query: T; };
-//  return location.query ?? ({} as T);
+  const location = useLocation() as { query: T; };
+  return location.query ?? ({} as T);
 }
 """
 
