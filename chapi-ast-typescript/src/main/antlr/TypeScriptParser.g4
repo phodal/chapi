@@ -86,7 +86,7 @@ type_
     | functionType
     | constructorType
     | typeGeneric
-    | StringLiteral ('|' (StringLiteral | Undefined))*
+    | '|'? StringLiteral ('|' (StringLiteral | Undefined))*
     ;
 
 unionOrIntersectionOrPrimaryType

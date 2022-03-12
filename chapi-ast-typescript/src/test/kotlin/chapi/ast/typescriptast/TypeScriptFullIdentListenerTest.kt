@@ -1305,6 +1305,14 @@ const SystemInfoForm = (props: SystemInfoFormProps, ref: any) => {
         assertEquals(1, codeFile.DataStructures.size)
     }
 
+    @Test
+    internal fun typeInStrings() {
+        val code = """
+type ThresholdKey = | "oversizedMethodByLine" | "oversizedMethodByCount"
+"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
     // TODO: fix nestedIssued
     @Test
     @Disabled
