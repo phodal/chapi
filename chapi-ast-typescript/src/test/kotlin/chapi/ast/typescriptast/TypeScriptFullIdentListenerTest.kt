@@ -1131,14 +1131,32 @@ export function initCytoscape(id = "cy", onEvent: { cxttap: () => MessageType })
     }
 
     @Test
+    internal fun queryBeforeIdentify() {
+        val code = """
+export const switchFunc = (pagination, filters, sorter, {action}) => {
+  switch (action) {
+    case "paginate":
+      return onPaginationChange?.(pagination);
+    case "filter":
+      return onFilterChange?.(filters);
+    case "sort":
+      return onSortChange?.(sorter);
+  }
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
     @Disabled
-    internal fun someIssue() {
+    internal fun htmlElementIssue() {
         val code = """
 const renderDataClassFields = (record: DataClass) => {
   return (
     <div key={field.name}>
-      <span>字段</span>： 
-      <span>{field.name}</span>
+      <span>字段</span>：<span>{field.name}</span>
     </div>
   );
 };

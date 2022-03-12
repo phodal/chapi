@@ -772,7 +772,7 @@ singleExpression
     | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
     | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?  # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression '?'? '!'? '.' '#'? '(' ')'                            # MemberDotExpression
+    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'          # MemberDotExpression
     // samples: `error?.response?.data?.message ?? error.message;`
     | singleExpression '??' singleExpression                                 # NullCoalesceExpression
     | singleExpression '!'                                                   # PropCheckExpression
