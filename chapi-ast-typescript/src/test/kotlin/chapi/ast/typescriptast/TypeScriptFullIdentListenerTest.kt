@@ -1215,24 +1215,16 @@ const createTreeNode = <U = TreeNode, T extends JavaItem<T>>(): U => {};
 
 
     @Test
-    internal fun typeIssue() {
+    internal fun lodashIssueInObjectMethod() {
         val code = """
-export interface CouplingRecord {
-  key: string;
-  label: string;
-  fullName: string;
-  name: string;
-  moduleId: string;
-  shortName: string;
-  props: {
-    desc: string;
-    name: string;
-    value: any;
-    key: string;
-    qualified: boolean;
-  }[];
-  packages?: CouplingRecord[];
-  classess?: CouplingRecord[];
+export default function CouplingList(props: CouplingListProps) {
+  const props = firstItem.props.map((prop, index) => {
+    return {
+      render(_: any, item: CouplingRecord) {
+        return <Text type={qualified ? undefined : "danger"}>{value}</Text>;
+      },
+    };
+  })
 }
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")

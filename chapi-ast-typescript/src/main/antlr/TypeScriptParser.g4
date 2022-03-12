@@ -495,6 +495,7 @@ breakStatement
 returnStatement
     : Return ({this.notLineTerminator()}? expressionSequence)? eos
     | Return '(' htmlElements ')' eos
+//    | Return '{' statement '}' eos
     ;
 
 htmlElements
@@ -776,7 +777,7 @@ singleExpression
     | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
     | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?  # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'          # MemberDotExpression
+    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
     // samples: `error?.response?.data?.message ?? error.message;`
     | singleExpression '??' singleExpression                                 # NullCoalesceExpression
     | singleExpression '!'                                                   # PropCheckExpression
@@ -796,7 +797,7 @@ singleExpression
     | '~' singleExpression                                                   # BitNotExpression
     | '!' singleExpression                                                   # NotExpression
     | Await singleExpression                                                 # AwaitExpression
-    | <assoc=right> singleExpression '**' singleExpression                  # PowerExpression
+    | <assoc=right> singleExpression '**' singleExpression                   # PowerExpression
     | singleExpression ('*' | '/' | '%') singleExpression                    # MultiplicativeExpression
     | singleExpression ('+' | '-') singleExpression                          # AdditiveExpression
     | singleExpression ('<<' | '>>' | '>>>') singleExpression                # BitShiftExpression
@@ -894,8 +895,8 @@ numericLiteral
 identifierName
     : Identifier
     | reservedWord
-    | Lodash Lodash*
-    | Dollar Dollar*
+    | Lodash Lodash?
+    | Dollar Dollar?
     ;
 
 identifierOrKeyWord
@@ -904,6 +905,8 @@ identifierOrKeyWord
     | Require
     | Module
     | Default
+    | Lodash Lodash?
+    | Dollar Dollar?
     ;
 
 reservedWord
