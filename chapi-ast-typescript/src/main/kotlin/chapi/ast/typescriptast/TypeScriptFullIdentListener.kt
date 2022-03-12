@@ -173,15 +173,17 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         currentAnnotations = arrayOf()
         hasAnnotation = false
 
-        this.handleClassBodyElements(ctx.classTail())
+        if (ctx.classTail() != null) {
+            this.handleClassBodyElements(ctx.classTail())
+        }
 
         classNodeStack.push(currentNode)
         nodeMap[nodeName] = currentNode
     }
 
-    private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassTailContext?) {
-        for (clzElementCtx in classTailCtx!!.classElement()) {
-            val childCtx = clzElementCtx.getChild(0)
+    private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassTailContext) {
+        for (clzElementCtx in classTailCtx.classElement()) {
+            val childCtx = clzElementCtx.getChild(0) ?: continue
             when (val childElementType = childCtx::class.java.simpleName) {
                 "ConstructorDeclarationContext" -> {
                     val codeFunction =
