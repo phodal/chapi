@@ -83,14 +83,13 @@ type_
     | functionType
     | constructorType
     | typeGeneric
-    | StringLiteral
     | StringLiteral ('|' (StringLiteral | Undefined))*
     ;
 
 unionOrIntersectionOrPrimaryType
     : unionOrIntersectionOrPrimaryType '|' unionOrIntersectionOrPrimaryType #Union
     | unionOrIntersectionOrPrimaryType '&' unionOrIntersectionOrPrimaryType #Intersection
-    | primaryType #Primary
+    | primaryType                                                           #Primary
     ;
 
 primaryType
@@ -103,7 +102,7 @@ primaryType
     | typeQuery                                     #QueryPrimType
     | This                                          #ThisPrimType
     | typeReference Is primaryType                  #RedefinitionOfType
-    | Undefined                                     #UndefinedType
+    | Identifier '=' Identifier nestedTypeGeneric?  #EqualPrimType
     ;
 
 predefinedType
@@ -114,6 +113,8 @@ predefinedType
     | Symbol
     | Void
     | NullLiteral
+    | StringLiteral
+    | Undefined
     ;
 
 typeReference
@@ -839,7 +840,7 @@ arrowFunctionDeclaration
 
 arrowFunctionParameters
     : identifierOrKeyWord
-    | '(' formalParameterList? ','? ')'
+    | nestedTypeGeneric? '(' formalParameterList? ','? ')'
     ;
 
 arrowFunctionBody

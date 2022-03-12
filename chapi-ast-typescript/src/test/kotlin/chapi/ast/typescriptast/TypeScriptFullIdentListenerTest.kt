@@ -1163,11 +1163,23 @@ function useUrlQuery<T = { [key: string]: string }>() {
     }
 
     @Test
-    internal fun someIssue() {
+    internal fun nestedGeneric() {
         val code = """
 function ModuleDependenceGraph() {
   const [graphData, setGraphData] = useState<GraphData<JavaItem>>();
 }
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun someIssue() {
+        val code = """
+const createTreeNode = <U = TreeNode<T>>(): U => {
+
+};
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
