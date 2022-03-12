@@ -43,5 +43,10 @@ fun relativeRoot(filepath: String, importPath: String): String {
         pathname = pathname.removeRange(0, 2)
     }
 
-    return File(pathname).relativeTo(File(filepath)).toString()
+    var relativePath = File(pathname).relativeTo(File(filepath)).toString()
+    if (!relativePath.startsWith("./") || !relativePath.startsWith("../")) {
+        relativePath = "./$relativePath"
+    }
+
+    return relativePath
 }
