@@ -42,11 +42,11 @@ PS: welcome to PR to send your projects
 
 ```
 dependencies {
-    implementation 'com.phodal.chapi:chapi-application:0.0.7'
+    implementation 'com.phodal.chapi:chapi-application:0.0.8'
 
     // or choose languages target
-    implementation 'com.phodal.chapi:chapi-ast-java:0.0.7'
-    implementation 'com.phodal.chapi:chapi-domain:0.0.7'
+    implementation 'com.phodal.chapi:chapi-ast-java:0.0.8'
+    implementation 'com.phodal.chapi:chapi-domain:0.0.8'
 }
 ```
 
