@@ -715,7 +715,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 "ObjectLiteralExpressionContext" -> {
                     val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext
                     val objectLiteral = parseObjectLiteral(obj.objectLiteral())
-                    parameter = CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
+                    parameter =
+                        CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
                 "HtmlElementExpressionContext" -> {
                     hasHtmlElement = true
@@ -858,7 +859,14 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     override fun enterVariableDeclaration(ctx: TypeScriptParser.VariableDeclarationContext?) {
-        val varName = ctx!!.getChild(0).text
+        if (ctx == null) {
+            return
+        }
+        if (ctx.children == null) {
+            return
+        }
+
+        val varName = ctx.getChild(0).text
         if (ctx.singleExpression().size == 1 && ctx.typeParameters() == null) {
             val singleExprCtx = ctx.singleExpression()[0]
             when (val singleCtxType = singleExprCtx::class.java.simpleName) {
