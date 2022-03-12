@@ -6,25 +6,14 @@ plugins {
     kotlin("plugin.serialization") version "1.6.10"
 
     `jacoco-conventions`
+
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
-    jcenter()
 }
-
-application {
-    mainClassName = "chapi.app.cli.Main"
-}
-
-//tasks.withType<Jar> {
-//    manifest {
-//        attributes["Main-Class"] = application.mainClassName
-//    }
-//
-//    from(configurations.runtimeClasspath.get().map({ if (it.isDirectory) it else zipTree(it) }))
-//}
 
 dependencies {
     // project deps
@@ -39,6 +28,8 @@ dependencies {
     implementation(project(":chapi-ast-c"))
     implementation(project(":chapi-ast-csharp"))
     implementation(project(":chapi-ast-kotlin"))
+
+    implementation("com.github.ajalt.clikt:clikt:3.4.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
@@ -57,8 +48,17 @@ dependencies {
     implementation("org.antlr:antlr4-runtime:4.8-1")
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+
+application {
+    mainClass.set("chapi.app.cli.ChapiKt")
+}
+
+tasks{
+    shadowJar {
+        manifest {
+            attributes(Pair("Main-Class", "chapi.app.cli.ChapiKt"))
+        }
+    }
 }
 
 tasks.withType<Test> {
