@@ -102,6 +102,7 @@ class FrontendApiAnalyser {
                             httpApi = umiIdent.convert(call)
                         }
                     }
+
                     httpApi.caller = it
                     componentRef.apiRef += httpApi
                 } else {
@@ -135,7 +136,6 @@ class FrontendApiAnalyser {
             }
         }
 
-//        println(callMap)
         return componentCalls
     }
 

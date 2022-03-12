@@ -20,6 +20,19 @@ class UmiHttpIdentify : HttpIdentify {
 
     override fun convert(call: CodeCall): HttpApiCallInfo {
         val url = call.Parameters[0].TypeValue
-        return HttpApiCallInfo(url)
+        val httpApi = HttpApiCallInfo(url = url)
+
+        for (codeProperty in call.Parameters[1].ObjectValue) {
+            when (codeProperty.TypeValue) {
+                "method" -> {
+                    httpApi.method = codeProperty.ObjectValue[0].TypeValue
+                }
+                "data" -> {
+                    httpApi.data = codeProperty.ObjectValue[0].TypeValue
+                }
+            }
+        }
+
+        return httpApi
     }
 }
