@@ -63,7 +63,10 @@ internal class FrontendApiAnalyserTest {
         File("nodes.json").writeText(Json.encodeToString(nodes))
 
         val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
-        assertEquals(1, componentCalls[0].apiRef.size)
+        val apiRef = componentCalls[0].apiRef
+
+        assertEquals(1, apiRef.size)
+        assertEquals(naming("system-info", "querySystemInfo"), apiRef[0].caller)
         File("api.json").writeText(Json.encodeToString(componentCalls))
     }
 }
