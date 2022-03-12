@@ -1265,8 +1265,26 @@ const docs = {
     @Test
     internal fun keyofTypeOf() {
         val code = """
-const getClazzColumnsBy = (type: keyof typeof columnCount) => {
+const getClazzColumnsBy = (type: keyof typeof columnCount) => {}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
 
+    @Test
+    internal fun someIssue() {
+        val code = """
+export function getChartsOption(data?: number[]): EChartOption {
+  return {
+      series: !data ? defaultSeriesMarkLineOpt :
+      [...defaultSeriesMarkLineOpt, {
+        data: [data],
+        tooltip: {
+          formatter: ({ value }: any) => {}
+        }
+      },
+    ]
+  }
 }
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")

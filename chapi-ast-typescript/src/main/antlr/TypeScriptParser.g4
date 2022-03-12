@@ -82,6 +82,7 @@ typeArgument
 
 type_
     : (Keyof | Typeof)* unionOrIntersectionOrPrimaryType
+    | unionOrIntersectionOrPrimaryType
     | functionType
     | constructorType
     | typeGeneric
@@ -168,7 +169,6 @@ typeMember
     | methodSignature ('=>' type_)?
     | enumSignature
     | '[' typeReference In typeReference ']' typeAnnotation
-//    | objectSignature
     ;
 
 arrayType
@@ -909,7 +909,7 @@ identifierOrKeyWord
     | Module
     | Default
     | Lodash Lodash?
-    | Dollar Dollar?
+    | Any
     ;
 
 reservedWord
@@ -972,6 +972,7 @@ keyword
     | TypeAlias
     | String
     | Undefined
+    | Any
     ;
 
 getter
