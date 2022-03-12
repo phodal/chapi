@@ -1,18 +1,39 @@
 package chapi.app.frontend
 
 import chapi.app.frontend.identify.AxiosHttpIdentify
+import chapi.app.frontend.identify.UmiHttpIdentify
 import chapi.app.frontend.path.ecmaImportConvert
 import chapi.app.frontend.path.relativeRoot
 import chapi.domain.core.*
+import kotlinx.serialization.Serializable
+
+
+@Serializable
+data class ApiCodeCall(val ApiType: String = "") : CodeCall() {
+    companion object {
+        fun from(call: CodeCall, apiType: String): ApiCodeCall {
+            val apiCodeCall = ApiCodeCall(ApiType = apiType)
+            apiCodeCall.NodeName = call.NodeName
+            apiCodeCall.FunctionName = call.FunctionName
+            apiCodeCall.Parameters = call.Parameters
+            apiCodeCall.Position = call.Position
+            apiCodeCall.Type = call.Type
+            apiCodeCall.Package = call.Package
+
+            return apiCodeCall
+        }
+    }
+}
 
 class FrontendApiAnalyser {
     private var componentCallMap: HashMap<String, MutableList<String>> = hashMapOf()
     private var componentInbounds: HashMap<String, MutableList<String>> = hashMapOf()
     private var callMap: HashMap<String, CodeCall> = hashMapOf()
-    private var httpAdapterMap: HashMap<String, CodeCall> = hashMapOf()
+    private var httpAdapterMap: HashMap<String, ApiCodeCall> = hashMapOf()
 
     // for Axios Http Call
     private val axiosIdent = AxiosHttpIdentify()
+    private val umiIdent = UmiHttpIdentify()
 
     // 1. first create Component with FunctionCall maps based on Import
     // 2. build axios/umi-request to an API call method
@@ -46,15 +67,18 @@ class FrontendApiAnalyser {
 
                 func.FunctionCalls.forEach { call ->
                     callMap[calleeName] = call
-                    if (axiosIdent.isMatch(call)) {
-                        httpAdapterMap[calleeName] = call
+                    if (axiosIdent.isMatch(call, node.Imports)) {
+                        httpAdapterMap[calleeName] = ApiCodeCall.from(call, "axios")
+                    }
+                    if (umiIdent.isMatch(call, node.Imports)) {
+                        httpAdapterMap[calleeName] = ApiCodeCall.from(call, "umi")
                     }
                     if (isComponent) {
                         componentCallMap[componentName]?.plusAssign((call.FunctionName))
                     }
                 }
 
-                recursiveCall(func, calleeName, isComponent, componentName)
+                recursiveCall(func, calleeName, isComponent, componentName, node.Imports)
 
                 if (isComponent) {
                     componentInbounds[componentName] = inbounds
@@ -68,17 +92,36 @@ class FrontendApiAnalyser {
             map.value.forEach {
                 if (httpAdapterMap[it] != null) {
                     val call = httpAdapterMap[it]!!
-                    val httpApi = axiosIdent.convert(call)
+
+                    var httpApi = HttpApiCallInfo()
+                    when(call.ApiType) {
+                        "axios" -> {
+                            httpApi = axiosIdent.convert(call)
+                        }
+                        "umi" -> {
+                            httpApi = umiIdent.convert(call)
+                        }
+                    }
                     httpApi.caller = it
                     componentRef.apiRef += httpApi
                 } else {
-                    if(callMap[it] != null) {
+                    if (callMap[it] != null) {
                         val codeCall = callMap[it]!!
                         val name = naming(codeCall.NodeName, codeCall.FunctionName)
 
                         if (httpAdapterMap[name] != null) {
                             val call = httpAdapterMap[name]!!
-                            val httpApi = axiosIdent.convert(call)
+
+                            var httpApi = HttpApiCallInfo()
+                            when(call.ApiType) {
+                                "axios" -> {
+                                    httpApi = axiosIdent.convert(call)
+                                }
+                                "umi" -> {
+                                    httpApi = umiIdent.convert(call)
+                                }
+                            }
+
                             httpApi.caller = name
                             httpApi.routes = listOf(it, name)
                             componentRef.apiRef += httpApi
@@ -129,15 +172,25 @@ class FrontendApiAnalyser {
         return inbounds
     }
 
-    private fun recursiveCall(func: CodeFunction, calleeName: String, isComponent: Boolean, componentName: String) {
+    private fun recursiveCall(
+        func: CodeFunction,
+        calleeName: String,
+        isComponent: Boolean,
+        componentName: String,
+        imports: Array<CodeImport>
+    ) {
         func.InnerFunctions.forEach { inner ->
             run {
                 inner.FunctionCalls.forEach { innerCall ->
                     run {
                         callMap[calleeName] = innerCall
 
-                        if (axiosIdent.isMatch(innerCall)) {
-                            httpAdapterMap[calleeName] = innerCall
+                        if (umiIdent.isMatch(innerCall, imports)) {
+                            httpAdapterMap[calleeName] = ApiCodeCall.from(innerCall, "umi")
+                        }
+
+                        if (axiosIdent.isMatch(innerCall, imports)) {
+                            httpAdapterMap[calleeName] = ApiCodeCall.from(innerCall, "axios")
                         }
 
                         if (isComponent) {
@@ -148,7 +201,7 @@ class FrontendApiAnalyser {
             }
 
             func.InnerFunctions.forEach {
-                recursiveCall(it, calleeName, isComponent, componentName)
+                recursiveCall(it, calleeName, isComponent, componentName, imports)
             }
         }
     }

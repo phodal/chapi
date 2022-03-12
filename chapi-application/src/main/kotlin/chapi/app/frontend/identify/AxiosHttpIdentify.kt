@@ -2,9 +2,10 @@ package chapi.app.frontend.identify
 
 import chapi.app.frontend.HttpApiCallInfo
 import chapi.domain.core.CodeCall
+import chapi.domain.core.CodeImport
 
 open class AxiosHttpIdentify : HttpIdentify {
-    override fun isMatch(call: CodeCall): Boolean {
+    override fun isMatch(call: CodeCall, imports: Array<CodeImport>): Boolean {
         if (call.FunctionName == "axios" || call.FunctionName.startsWith("axios.")) {
             if (call.Parameters.isNotEmpty()) {
                 return true
