@@ -59,8 +59,8 @@ typeParameterList
 typeParameter
     : Identifier constraint?
     | Identifier '=' objectType
-//    | Identifier '=' identifierOrKeyWord nestedTypeGeneric?
-    | Identifier '=' primaryType nestedTypeGeneric?
+    | Identifier '=' identifierOrKeyWord typeIncludeGeneric?
+    | Identifier '=' primaryType typeIncludeGeneric?
     | typeParameters
     ;
 

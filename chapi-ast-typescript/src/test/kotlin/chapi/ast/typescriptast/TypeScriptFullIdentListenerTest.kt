@@ -1175,15 +1175,6 @@ function ModuleDependenceGraph() {
     }
 
     @Test
-    internal fun multipleGeneric() {
-        val code = """
-const createTreeNode = <U = TreeNode, T extends JavaItem>(): U => {};
-"""
-        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        assertEquals(1, codeFile.DataStructures.size)
-    }
-
-    @Test
     internal fun anyKeywordInType() {
         val code = """
 export default function createCacheState<T = any>(): () => [CacheState<T> | undefined, () => void] {
@@ -1199,6 +1190,53 @@ export default function createCacheState<T = any>(): () => [CacheState<T> | unde
 type State = { [key in ThresholdKey]: any };
 """
         TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
+    internal fun declareClass() {
+        val code = """
+declare class ELK {
+  constructor(options: any) {}
+  layout(data: any): Promise<any>;
+}
+"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
+    @Disabled
+    internal fun multipleGeneric() {
+        val code = """
+const createTreeNode = <U = TreeNode, T extends JavaItem<T>>(): U => {};
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+
+    @Test
+    internal fun typeIssue() {
+        val code = """
+export interface CouplingRecord {
+  key: string;
+  label: string;
+  fullName: string;
+  name: string;
+  moduleId: string;
+  shortName: string;
+  props: {
+    desc: string;
+    name: string;
+    value: any;
+    key: string;
+    qualified: boolean;
+  }[];
+  packages?: CouplingRecord[];
+  classess?: CouplingRecord[];
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
     }
 
     @Test
