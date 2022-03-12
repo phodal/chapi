@@ -180,6 +180,7 @@ class Employee extends Person {
         assertEquals(codeFile.DataStructures[0].Extend, "Person")
     }
 
+    // Todo:
     @Test
     internal fun shouldIdentifyInterfaceExtends() {
         val code = """
@@ -410,7 +411,6 @@ interface IEmployee extends IPerson {
         val secondFunc = codeFile.DataStructures[0].Functions[1]
         assertEquals(secondFunc.Name, "getManagerName")
         assertEquals(secondFunc.MultipleReturns[0].TypeType, "string")
-//        assertEquals(secondFunc.Parameters[0].TypeType, "number")
     }
 
     @Test
@@ -807,37 +807,6 @@ function tryApplyUpdates(onHotUpdateSuccess: Function) {
         val defaultStruct = codeFile.DataStructures[0]
         assertEquals(1, defaultStruct.Functions.size)
         assertEquals("tryApplyUpdates", defaultStruct.Functions[0].Name)
-    }
-
-    @Test
-    @Disabled
-    internal fun supportForInterfaceOptional() {
-        val code = """
-export interface IConfigFromPlugins {
-  "404"?: boolean
-  routes?: {
-    path?: string
-  }
-}
-"""
-
-        // interface property lost "," as split symbol
-        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        assertEquals(1, codeFile.DataStructures.size)
-    }
-
-    @Test
-    @Disabled
-    internal fun supportForGenericMap() {
-        val code = """
-export type Model<T extends keyof typeof models> = {
-  [key in keyof typeof models]: ReturnType<typeof models[T]>;
-};
-"""
-
-        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        val defaultStruct = codeFile.DataStructures[0]
-        assertEquals(1, defaultStruct.Functions.size)
     }
 
     @Test
@@ -1326,6 +1295,47 @@ const store: IOptions<State, string, string, string> = {
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun namespaceAsParameter() {
+        val code = """
+interface CoreGraphManipulationExt {
+    scratch(namespace?: string): Scratchpad;
+    scratch(namespace: string, value: any): this;
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun someIssue() {
+        val code = """
+interface CytoscapeOptions {
+  elements?:
+    | ElementsDefinition
+    | ElementDefinition[]
+    | Promise<ElementsDefinition>
+    | Promise<ElementDefinition[]>
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    @Disabled
+    internal fun supportForGenericMap() {
+        val code = """
+export type Model<T extends keyof typeof models> = {
+  [key in keyof typeof models]: ReturnType<typeof models[T]>;
+};
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
     }
 
     // TODO: fix nestedIssued

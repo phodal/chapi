@@ -254,12 +254,7 @@ indexSignature
     ;
 
 enumSignature
-    : Identifier ':' enumOr ('|' enumOr)*
-    ;
-
-enumOr
-    : identifierName
-    | StringLiteral
+    : identifierOrKeyWord '?'? ':' '|'? type_ ('|' type_)*
     ;
 
 methodSignature
@@ -267,7 +262,7 @@ methodSignature
     ;
 
 typeAliasDeclaration
-    : 'type' Identifier typeParameters? '=' type_ SemiColon
+    : 'type' Identifier typeParameters? '=' type_ SemiColon?
     ;
 
 constructorDeclaration
@@ -975,6 +970,8 @@ keyword
     | String
     | Undefined
     | Any
+    | Namespace
+    | Number
     ;
 
 getter
