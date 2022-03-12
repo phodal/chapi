@@ -86,7 +86,7 @@ type_
     | functionType
     | constructorType
     | typeGeneric
-    | '|'? StringLiteral ('|' (StringLiteral | Undefined))*
+    | '|'? propertyName ('|' (propertyName))*
     ;
 
 unionOrIntersectionOrPrimaryType
@@ -974,6 +974,7 @@ keyword
     | Any
     | Namespace
     | Number
+    | Boolean
     ;
 
 getter

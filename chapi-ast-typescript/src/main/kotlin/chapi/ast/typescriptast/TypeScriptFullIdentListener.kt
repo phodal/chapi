@@ -410,6 +410,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         isCallbackOrAnonymousFunction = false
         processingNewArrowFunc(func)
 
+        if (ctx.functionBody() == null) {
+            return
+        }
+
         if (ctx.functionBody().sourceElements() != null) {
             for (context in ctx.functionBody().sourceElements().sourceElement()) {
                 parseStatement(context)

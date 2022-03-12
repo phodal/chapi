@@ -1330,18 +1330,32 @@ interface CoreGraphManipulationExt {
     }
 
     @Test
-    internal fun someIssue() {
+    internal fun typeEnumList() {
         val code = """
 interface CytoscapeOptions {
   elements?:
     | ElementsDefinition
     | ElementDefinition[]
     | Promise<ElementsDefinition>
-    | Promise<ElementDefinition[]>
+    | Promise<ElementDefinition[]>;
 }
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun multipleReturnTypeWithBoolean() {
+        val code = """
+type SearchVisitFunction = (
+ v: NodeSingular,
+ e: EdgeSingular,
+ u: NodeSingular,
+ i: number,
+ depth: number,
+) => boolean | void;
+"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
     }
 
     @Test
