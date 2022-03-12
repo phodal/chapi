@@ -1221,7 +1221,7 @@ export default function CouplingList(props: CouplingListProps) {
     }
 
     @Test
-    internal fun normalIssue() {
+    internal fun symbolKeywordInObjectLiteral() {
         val code = """
 const getMarkLineOpt = (coordX: number, coordY: number) => {
   return {
@@ -1235,6 +1235,39 @@ const getMarkLineOpt = (coordX: number, coordY: number) => {
         assertEquals(1, codeFile.DataStructures.size)
     }
 
+    @Test
+    internal fun typeByObject() {
+        val code = """
+const onStabilityChange = (value: DFMS["stability"]) => {
+
+};
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun lazyRequiredInObject() {
+        val code = """
+const docs = {
+  index: require("./docs/index.md").default,
+  "module-coupling": require("./docs/module-coupling.md").default,
+};
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    @Test
+    internal fun keyofTypeOf() {
+        val code = """
+const getClazzColumnsBy = (type: keyof typeof columnCount) => {
+
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
 
     // TODO: fix nestedIssued
     @Test

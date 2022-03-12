@@ -81,7 +81,7 @@ typeArgument
     ;
 
 type_
-    : unionOrIntersectionOrPrimaryType
+    : (Keyof | Typeof)* unionOrIntersectionOrPrimaryType
     | functionType
     | constructorType
     | typeGeneric
@@ -104,6 +104,7 @@ primaryType
     | typeQuery                                     #QueryPrimType
     | This                                          #ThisPrimType
     | typeReference Is primaryType                  #RedefinitionOfType
+    | primaryType {notLineTerminator()}? '[' singleExpression ']'    #SingleExprPrimType
     ;
 
 predefinedType
@@ -790,6 +791,7 @@ singleExpression
     | Delete singleExpression                                                # DeleteExpression
     | Void singleExpression                                                  # VoidExpression
     | Typeof singleExpression                                                # TypeofExpression
+    | Keyof singleExpression                                                 # KeyofExpression
     | '++' singleExpression                                                  # PreIncrementExpression
     | '--' singleExpression                                                  # PreDecreaseExpression
     | '+' singleExpression                                                   # UnaryPlusExpression
@@ -828,6 +830,7 @@ singleExpression
     | typeArguments expressionSequence?                                      # GenericTypes
     | singleExpression As asExpression                                       # CastAsExpression
     | htmlElements                                                           # HtmlElementExpression
+    | Require '(' literal ')' '.'? Default?                                  # LazyRequiredExpression
     ;
 
 asExpression
@@ -921,6 +924,7 @@ keyword
     | Do
     | Instanceof
     | Typeof
+    | Keyof
     | Case
     | Else
     | New

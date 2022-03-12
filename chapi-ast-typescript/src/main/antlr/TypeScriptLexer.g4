@@ -99,6 +99,7 @@ Break:                          'break';
 Do:                             'do';
 Instanceof:                     'instanceof';
 Typeof:                         'typeof';
+Keyof:                          'keyof';
 Case:                           'case';
 Else:                           'else';
 New:                            'new';
