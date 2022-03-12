@@ -659,7 +659,7 @@ indexMemberDeclaration
     ;
 
 generatorMethod
-    : '*'?  Identifier '(' formalParameterList? ')' '{' functionBody '}'
+    : '*'?  Identifier '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
     ;
 
 generatorFunctionDeclaration

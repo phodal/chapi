@@ -1313,6 +1313,21 @@ type ThresholdKey = | "oversizedMethodByLine" | "oversizedMethodByCount"
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
 
+    @Test
+    internal fun typeAnnotationForObjectLiteralGenerateMethod() {
+        val code = """
+const store: IOptions<State, string, string, string> = {
+  mutations: {
+    updateThresholdState(state: State, payload): State {
+      return Object.assign({}, state, { ...payload });
+    }
+  }
+};
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
     // TODO: fix nestedIssued
     @Test
     @Disabled
