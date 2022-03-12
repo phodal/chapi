@@ -1204,17 +1204,6 @@ declare class ELK {
     }
 
     @Test
-    @Disabled
-    internal fun multipleGeneric() {
-        val code = """
-const createTreeNode = <U = TreeNode, T extends JavaItem<T>>(): U => {};
-"""
-        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        assertEquals(1, codeFile.DataStructures.size)
-    }
-
-
-    @Test
     internal fun lodashIssueInObjectMethod() {
         val code = """
 export default function CouplingList(props: CouplingListProps) {
@@ -1231,6 +1220,34 @@ export default function CouplingList(props: CouplingListProps) {
         assertEquals(1, codeFile.DataStructures.size)
     }
 
+    @Test
+    internal fun normalIssue() {
+        val code = """
+const getMarkLineOpt = (coordX: number, coordY: number) => {
+  return {
+    data: [[
+      { coord: [coordY, coordX], symbol: 'none' }
+    ]]
+  }
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+
+    // TODO: fix nestedIssued
+    @Test
+    @Disabled
+    internal fun multipleGeneric() {
+        val code = """
+const createTreeNode = <U = TreeNode, T extends JavaItem<T>>(): U => {};
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
+    // TODO: fix nestedIssued
     @Test
     @Disabled
     internal fun htmlElementIssue() {

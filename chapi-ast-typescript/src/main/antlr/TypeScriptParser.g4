@@ -741,8 +741,8 @@ propertyName
     : identifierName
     | StringLiteral
     | numericLiteral
-    | Module
-    | Default
+    | keyword
+    | predefinedType
     ;
 
 arguments
