@@ -1091,8 +1091,12 @@ function dfs() {
 const options: Partial<GraphOptions> = {
   modes: {
     default: ["drag-canvas", "drag-node", "zoom-canvas"],
+  },
+  defaultNode: {
+    type: "deps-node",
   }
 };
+
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
