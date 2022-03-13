@@ -30,9 +30,9 @@ import java.util.concurrent.atomic.AtomicInteger
 open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstListener() {
     /** inner storage */
 
-    protected val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
-    private val classes: MutableList<CodeDataStruct> = mutableListOf()
-    private val imports: MutableList<CodeImport> = mutableListOf()
+    private val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    protected val classes: MutableList<CodeDataStruct> = mutableListOf()
+    protected val imports: MutableList<CodeImport> = mutableListOf()
     protected lateinit var currentNode: CodeDataStruct
     protected lateinit var currentFunction: CodeFunction
     protected val isEnteredClass = AtomicInteger(0)
@@ -91,11 +91,13 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
 
     override fun enterClassDeclaration(ctx: KotlinParser.ClassDeclarationContext) {
         isEnteredClass.incrementAndGet()
+        currentNode = buildClass(ctx)
+    }
 
+    open fun buildClass(ctx: KotlinParser.ClassDeclarationContext): CodeDataStruct {
         val implements = ctx.delegationSpecifiers()?.text?.let(::getTypeFullName)?.let(::listOf) ?: emptyList()
         val annotations = ctx.modifiers().getAnnotations()
-
-        currentNode = CodeDataStruct().apply {
+        return CodeDataStruct().apply {
             NodeName = ctx.simpleIdentifier().Identifier().text
             Type = DataStructType.CLASS
             Package = codeContainer.PackageName
