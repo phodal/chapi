@@ -34,15 +34,20 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
     private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
 
     private fun KotlinParser.StatementContext.parseFunctionCall(): CodeCall? {
-        val result = Regex("(\\w+)\\((.*)\\)").find(text) ?: return null
+        val result = Regex("(\\w+\\.?)+\\((.*)\\)").find(text) ?: return null
+        val matchedExpression = result.value
+
         val functionName = result.groupValues[1]
         val parameters = arrayOf(
             parseParameter(result.groupValues[2])
         )
+        val matchedStart = result.groups[0]!!.range.first
+        val functionStart = result.groups[1]!!.range.first
+        val nodeName = matchedExpression.substring(0, maxOf(functionStart - matchedStart - 1, 0))
 
         return CodeCall(
             Type = CallType.FUNCTION,
-            NodeName = "",
+            NodeName = nodeName,
             FunctionName = functionName,
             Parameters = parameters,
             Position = getPosition(),
@@ -67,9 +72,27 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
             }
         }
 
+        currentNode.Fields.find { it.TypeKey == NodeName }?.let {
+            val fullNodeName = it.TypeType
+            Package = fullNodeName.substringBeforeLast('.')
+            NodeName = fullNodeName.substringAfterLast('.')
+            Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
+        }
+
+        // import node
+        imports.find { it.AsName == NodeName }?.let {
+            return apply {
+                Package = it.Source.substringBeforeLast('.')
+                Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
+            }
+        }
+
+        // import function
         imports.find { it.AsName == FunctionName }?.let {
             return apply {
-                Package = it.Source
+                val fullNodeName = it.Source.substringBeforeLast('.')
+                Package = fullNodeName.substringBeforeLast('.')
+                NodeName = fullNodeName.substringAfterLast('.')
                 Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
             }
         }
@@ -80,6 +103,13 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
                 Package = it.Package
                 Type = CallType.CREATOR
                 // TODO match/copy the parameter type (property)
+            }
+
+            it.Fields.find { it.TypeValue == NodeName }?.let {
+                val fullNodeName = it.TypeType
+                Package = fullNodeName.substringBeforeLast('.')
+                NodeName = fullNodeName.substringAfterLast('.')
+                Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
             }
         }
         return this

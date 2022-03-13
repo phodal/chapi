@@ -74,12 +74,13 @@ class Person(private val mouth: Mouth) {
 """
 
             val container = analyse(code)
-            val calls = container.DataStructures[0].Functions[0].FunctionCalls
+            // function 0 is constructor
+            val calls = container.DataStructures[0].Functions[1].FunctionCalls
 
             assertEquals(calls[0].Package, "hello")
             assertEquals(calls[0].FunctionName, "say")
             assertEquals(calls[0].Type, CallType.FUNCTION)
-            assertEquals(calls[0].NodeName, "mouth")
+            assertEquals(calls[0].NodeName, "Mouth")
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
             assertEquals(calls[0].Parameters[0].TypeValue, "\"Hello world!\"")
         }
@@ -99,7 +100,7 @@ class Person(private val mouth: Mouth) {
 """
 
             val container = analyse(code)
-            val calls = container.DataStructures[0].Functions[0].FunctionCalls
+            val calls = container.DataStructures[0].Functions[1].FunctionCalls
 
             assertEquals(calls[0].Package, "hello")
             assertEquals(calls[0].FunctionName, "say")
@@ -124,7 +125,7 @@ class Person(private val mouth: Mouth) {
 """
 
             val container = analyse(code)
-            val calls = container.DataStructures[0].Functions[0].FunctionCalls
+            val calls = container.DataStructures[0].Functions[1].FunctionCalls
 
             assertEquals(calls[0].Package, "hello")
             assertEquals(calls[0].FunctionName, "say")
