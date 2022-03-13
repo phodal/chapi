@@ -56,4 +56,10 @@ internal class EcmaImportPathKtTest {
         val path = ecmaImportConvert("modernizing/chapi/chapi-application", "modernizing/chapi/chapi-application/src/components/hello.js", "./config.js")
         assertEquals(path, "src/components/config.js")
     }
+
+    @Test
+    internal fun inSamePath() {
+        val path = ecmaImportConvert("modernizing/chapi/chapi-application/src/components", "modernizing/chapi/chapi-application/src/components/hello.js", "./config.js")
+        assertEquals(path, "config.js")
+    }
 }

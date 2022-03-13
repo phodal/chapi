@@ -43,14 +43,19 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
             return ""
         }
 
-        val typeContext = typeAnnotation.type_()
-
+        val typeContext = typeAnnotation.type_() ?: return ""
         var type = typeContext.text
+
+        if(typeContext.children == null) {
+            return type
+        }
+
         when (typeContext.getChild(0)::class.java.simpleName) {
             "PrimaryContext" -> {
                 type = handleTypeAnnotationPrimary(typeContext, type)
             }
         }
+
         return type
     }
 

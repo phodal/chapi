@@ -71,8 +71,11 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                             defaultNode.Fields += fields
                         }
                     }
+                    "TerminalNodeImpl" -> {
+
+                    }
                     else -> {
-                        println("enterVariableStatement: " + it::class.java.simpleName)
+                        println("enterVariableStatement: ${it::class.java.simpleName} === ${it.text}")
                     }
                 }
             }
@@ -594,7 +597,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             "LiteralExpressionContext" -> {
                 val singleStr = text.startsWith("'") && text.endsWith("'")
                 val doubleStr = text.startsWith("\"") && text.endsWith("\"")
-                if (singleStr || doubleStr) {
+                val templateStr = text.startsWith("`") && text.endsWith("`")
+                if (singleStr || doubleStr || templateStr) {
                     text = text.drop(1).dropLast(1)
                 }
             }
@@ -711,7 +715,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 "ObjectLiteralExpressionContext" -> {
                     val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext
                     val objectLiteral = parseObjectLiteral(obj.objectLiteral())
-                    parameter = CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
+                    parameter =
+                        CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
                 "HtmlElementExpressionContext" -> {
                     hasHtmlElement = true
@@ -726,6 +731,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
                 "ArrayLiteralExpressionContext" -> {
                     parameter = CodeProperty(TypeValue = "[]", TypeType = "parameter")
+                }
+                "LiteralExpressionContext" -> {
+                    parameter = CodeProperty(TypeValue = singleExpToText(subSingle), TypeType = "string")
                 }
                 else -> {
                     println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")
@@ -851,7 +859,14 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     override fun enterVariableDeclaration(ctx: TypeScriptParser.VariableDeclarationContext?) {
-        val varName = ctx!!.getChild(0).text
+        if (ctx == null) {
+            return
+        }
+        if (ctx.children == null) {
+            return
+        }
+
+        val varName = ctx.getChild(0).text
         if (ctx.singleExpression().size == 1 && ctx.typeParameters() == null) {
             val singleExprCtx = ctx.singleExpression()[0]
             when (val singleCtxType = singleExprCtx::class.java.simpleName) {

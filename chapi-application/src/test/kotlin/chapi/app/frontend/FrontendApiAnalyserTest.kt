@@ -48,10 +48,26 @@ internal class FrontendApiAnalyserTest {
         val path = Paths.get(resource.toURI()).toFile().absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
-        File("nodes.json").writeText(Json.encodeToString(nodes))
 
         val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
         assertEquals(4, componentCalls[0].apiRef.size)
+    }
+
+    @Test
+    internal fun testForUmi() {
+        val resource = this.javaClass.classLoader.getResource("languages/ts/js-umi-request")!!
+        val path = Paths.get(resource.toURI()).toFile().absolutePath
+
+        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
+        assertEquals(2, nodes.size)
+        File("nodes.json").writeText(Json.encodeToString(nodes))
+
+        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
+        val apiRef = componentCalls[0].apiRef
+
+        assertEquals(1, apiRef.size)
+        assertEquals(naming("system-info", "querySystemInfo"), apiRef[0].caller)
+        assertEquals("GET", apiRef[0].method)
         File("api.json").writeText(Json.encodeToString(componentCalls))
     }
 }

@@ -3,7 +3,17 @@ package chapi.app.frontend.path
 import java.io.File
 
 fun ecmaImportConvert(workspace: String, filepath: String, importPath: String): String {
-    val relativePath = relativeRoot(workspace, filepath)
+    var pathname = filepath
+    val isResolvePath = pathname.startsWith("@/")
+    if(isResolvePath) {
+        pathname = pathname.removeRange(0, 2)
+    }
+
+    var relativePath = File(pathname).relativeTo(File(workspace)).toString()
+    if (!relativePath.startsWith("./") || !relativePath.startsWith("../")) {
+        relativePath = "./$relativePath"
+    }
+
     return importConvert(relativePath, importPath)
 }
 
