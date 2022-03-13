@@ -23,19 +23,19 @@ import java.util.concurrent.atomic.AtomicInteger
  *
  * for kotlin featured
  * - multiple classes in one file
- * - companion object
+ * - companion object, inner class
  * |    TODO inner structure
  * - individual variable/function
  */
 open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstListener() {
     /** inner storage */
 
-    private val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    protected val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     private val classes: MutableList<CodeDataStruct> = mutableListOf()
     private val imports: MutableList<CodeImport> = mutableListOf()
-    private lateinit var currentNode: CodeDataStruct
-    private lateinit var currentFunction: CodeFunction
-    private val isEnteredClass = AtomicInteger(0)
+    protected lateinit var currentNode: CodeDataStruct
+    protected lateinit var currentFunction: CodeFunction
+    protected val isEnteredClass = AtomicInteger(0)
     private val individualFunctions = mutableListOf<CodeFunction>()
     private val individualFields = mutableListOf<CodeField>()
 
@@ -136,10 +136,13 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     }
 
     override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext) {
-        currentFunction = buildFunction(ctx)
+        // TODO scan function declaration under class declaration, skip individual function temporarily
+        if (isEnteredClass.get() > 0) {
+            currentFunction = buildFunction(ctx)
+        }
     }
 
-    private fun buildFunction(ctx: KotlinParser.FunctionDeclarationContext): CodeFunction {
+    open fun buildFunction(ctx: KotlinParser.FunctionDeclarationContext): CodeFunction {
         val parameters = ctx.functionValueParameters().functionValueParameter()
             .map(::buildProperty)
         val annotations = ctx.modifiers().getAnnotations()
@@ -196,7 +199,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     private fun buildProperty(it: KotlinParser.ClassParameterContext): CodeProperty =
         CodeProperty(TypeValue = it.simpleIdentifier().text, TypeType = getTypeFullName(it.type().text))
 
-    private fun buildProperty(it: KotlinParser.FunctionValueParameterContext): CodeProperty =
+    protected fun buildProperty(it: KotlinParser.FunctionValueParameterContext): CodeProperty =
         CodeProperty(
             TypeValue = it.parameter().simpleIdentifier().text,
             TypeType = getTypeFullName(it.parameter().type().text),
@@ -206,7 +209,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     private fun KotlinParser.ParameterModifiersContext?.getAnnotations(): List<CodeAnnotation> =
         this?.annotation()?.map(::buildAnnotation) ?: emptyList()
 
-    private fun KotlinParser.ModifiersContext?.getAnnotations(): List<CodeAnnotation> =
+    protected fun KotlinParser.ModifiersContext?.getAnnotations(): List<CodeAnnotation> =
         this?.annotation()?.map(::buildAnnotation) ?: emptyList()
 
     private fun buildAnnotation(it: KotlinParser.AnnotationContext): CodeAnnotation {
@@ -226,7 +229,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         )
     }
 
-    private fun ParserRuleContext.getPosition(): CodePosition =
+    protected fun ParserRuleContext.getPosition(): CodePosition =
         CodePosition(
             StartLine = start.line,
             StartLinePosition = start.charPositionInLine,
@@ -234,7 +237,8 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             StopLinePosition = stop.charPositionInLine,
         )
 
-    private fun getTypeFullName(name: String): String = imports.firstOrNull { it.AsName == name }?.Source ?: "kotlin.$name"
+    protected fun getTypeFullName(name: String): String =
+        imports.firstOrNull { it.AsName == name }?.Source ?: "kotlin.$name"
 
     companion object {
         const val UNKNOWN_PLACEHOLDER = "<UNKNOWN>"
