@@ -683,6 +683,8 @@ formalParameterList
     | lastFormalParameterArg
     | arrayLiteral                              // ECMAScript 6: Parameter Context Matching
     | objectLiteral (':' formalParameterList)?  // ECMAScript 6: Parameter Context Matching
+    // `addThing({ payload }, { call }){}`
+    | objectLiteral (',' objectLiteral)*        // ECMAScript 6: Parameter Context Matching
     ;
 
 formalParameterArg

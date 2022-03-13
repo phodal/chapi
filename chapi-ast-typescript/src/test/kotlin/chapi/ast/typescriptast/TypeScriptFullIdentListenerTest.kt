@@ -1390,8 +1390,7 @@ export const querySystemInfo = (data) => {
     }
 
     @Test
-    @Disabled
-    internal fun compileSuccess() {
+    internal fun objectLiteralListInParameterList() {
         val code = """
 const service = {
   effects: {
