@@ -938,7 +938,10 @@ export default useQualityGate;
         assertEquals(1, codeFile.DataStructures.size)
         assertEquals("createCacheState", codeFile.DataStructures[0].Fields[0].Calls[0].FunctionName)
         assertEquals(2, codeFile.DataStructures[0].Fields[0].Calls[0].Parameters.size)
-        assertEquals("queryAllQualityGateProfile", codeFile.DataStructures[0].Fields[0].Calls[0].Parameters[0].TypeValue)
+        assertEquals(
+            "queryAllQualityGateProfile",
+            codeFile.DataStructures[0].Fields[0].Calls[0].Parameters[0].TypeValue
+        )
     }
 
     @Test
@@ -1384,6 +1387,25 @@ export const querySystemInfo = (data) => {
         val parameters = codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters
         assertEquals(parameters.size, 2)
         assertEquals(parameters[0].TypeValue, "/api/system-info")
+    }
+
+    @Test
+    @Disabled
+    internal fun compileSuccess() {
+        val code = """
+const service = {
+  effects: {
+    *addThing({ payload }, { call }){
+      const response = yield call(createThingRequest, payload)
+      return response
+    }
+  }  
+};
+
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
     }
 
     // TODO: fix nestedIssued
