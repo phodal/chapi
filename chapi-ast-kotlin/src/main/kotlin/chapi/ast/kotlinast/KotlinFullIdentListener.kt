@@ -10,47 +10,39 @@ import chapi.domain.core.CodeProperty
 /**
  * listen to full identifier with complex type and sceneries, such as:
  * - call relationship
- * |    TODO call chain
  * - lambda expression
  * - coroutine
  */
 class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileName) {
 
+    private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
     override fun buildFunction(ctx: KotlinParser.FunctionDeclarationContext): CodeFunction =
         super.buildFunction(ctx).apply {
-            FunctionCalls = buildCalls(ctx).toTypedArray()
+            FunctionCalls = buildFunctionCalls(ctx).toTypedArray()
         }
 
-    private fun buildCalls(ctx: KotlinParser.FunctionDeclarationContext): MutableList<CodeCall> {
-        val calls = mutableListOf<CodeCall>()
-        ctx.functionBody().block().statements().statement().forEach {
-            it.parseFunctionCall()?.let { call ->
-                calls.add(call)
-            }
-        }
-        return calls
-    }
+    private fun buildFunctionCalls(ctx: KotlinParser.FunctionDeclarationContext): List<CodeCall> =
+        ctx.functionBody().block().statements().statement().mapNotNull(::buildFunctionCall)
 
-    private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
+    private fun buildFunctionCall(it: KotlinParser.StatementContext): CodeCall? {
+        val result = Regex("(\\w+\\.?)+\\((.*)\\)").find(it.text) ?: return null
 
-    private fun KotlinParser.StatementContext.parseFunctionCall(): CodeCall? {
-        val result = Regex("(\\w+\\.?)+\\((.*)\\)").find(text) ?: return null
         val matchedExpression = result.value
-
         val functionName = result.groupValues[1]
         val parameters = arrayOf(
             parseParameter(result.groupValues[2])
         )
+
         val matchedStart = result.groups[0]!!.range.first
         val functionStart = result.groups[1]!!.range.first
         val nodeName = matchedExpression.substring(0, maxOf(functionStart - matchedStart - 1, 0))
 
         return CodeCall(
-            Type = CallType.FUNCTION,
+            Type = if (functionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION,
             NodeName = nodeName,
             FunctionName = functionName,
             Parameters = parameters,
-            Position = getPosition(),
+            Position = it.getPosition(),
         ).refineIfExistsCreator()
     }
 
@@ -63,31 +55,22 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
         TypeValue = text
     )
 
+    // correct the function info
     private fun CodeCall.refineIfExistsCreator(): CodeCall {
+        // search the node in declared classes (for individual function)
         classes.find { it.NodeName == FunctionName }?.let {
             return apply {
-                Package = it.Package
                 Type = CallType.CREATOR
-                // TODO match/copy the parameter type (property)
+                Package = it.Package
             }
         }
-
-        currentNode.Fields.find { it.TypeKey == NodeName }?.let {
-            val fullNodeName = it.TypeType
-            Package = fullNodeName.substringBeforeLast('.')
-            NodeName = fullNodeName.substringAfterLast('.')
-            Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
-        }
-
-        // import node
+        // search the node in imported classes
         imports.find { it.AsName == NodeName }?.let {
             return apply {
                 Package = it.Source.substringBeforeLast('.')
-                Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
             }
         }
-
-        // import function
+        // search the node in imported functions
         imports.find { it.AsName == FunctionName }?.let {
             return apply {
                 val fullNodeName = it.Source.substringBeforeLast('.')
@@ -96,20 +79,20 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
                 Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
             }
         }
-
-        // simple function or not scanned yet, register a post handler to find the creator of the class
-        postClassHandler.add {
-            if (it.NodeName == FunctionName) {
-                Package = it.Package
-                Type = CallType.CREATOR
-                // TODO match/copy the parameter type (property)
-            }
-
-            it.Fields.find { it.TypeValue == NodeName }?.let {
+        // search the node in current class
+        currentNode.Fields.find { it.TypeKey == NodeName }?.let {
+            return apply {
                 val fullNodeName = it.TypeType
                 Package = fullNodeName.substringBeforeLast('.')
                 NodeName = fullNodeName.substringAfterLast('.')
-                Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
+            }
+        }
+
+        // not found yet, register a post handler to check the node in the next class
+        postClassHandler.add {
+            if (it.NodeName == FunctionName) {
+                Type = CallType.CREATOR
+                Package = it.Package
             }
         }
         return this

@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger
 open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstListener() {
     /** inner storage */
 
-    private val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    protected val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     protected val classes: MutableList<CodeDataStruct> = mutableListOf()
     protected val imports: MutableList<CodeImport> = mutableListOf()
     protected var currentNode: CodeDataStruct = CodeDataStruct()

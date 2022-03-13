@@ -60,6 +60,35 @@ fun main() {
         }
 
         @Test
+        internal fun `should identify function call of creator after main`() {
+            val code = """
+package chapi.ast.kotlinast
+    
+fun main() {
+    val person = Person("John")
+    println(person.name)
+}
+
+class Person(val name: String)
+"""
+
+            val container = analyse(code)
+            val calls = container.DataStructures[0].Functions[0].FunctionCalls
+
+            assertEquals(calls[0].Package, "chapi.ast.kotlinast")
+            assertEquals(calls[0].FunctionName, "Person")
+            assertEquals(calls[0].Type, CallType.CREATOR)
+            assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
+            assertEquals(calls[0].Parameters[0].TypeValue, "\"John\"")
+
+            assertEquals(calls[1].Package, "")
+            assertEquals(calls[1].FunctionName, "println")
+            assertEquals(calls[1].Type, CallType.FUNCTION)
+            assertEquals(calls[1].Parameters[0].TypeType, "")
+            assertEquals(calls[1].Parameters[0].TypeValue, "person.name")
+        }
+
+        @Test
         internal fun `should identify function call of depended class`() {
             val code = """
 package chapi.ast.kotlinast
