@@ -1407,6 +1407,24 @@ const service = {
         assertEquals(1, codeFile.DataStructures.size)
     }
 
+
+    @Test
+    internal fun someIssue() {
+        val code = """
+const setting = {
+  reducers: {
+    changeSetting(_, { payload }) {
+      return { ...defaultSettings, ...payload };
+    },
+  },
+};
+export default setting;
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+    }
+
     // TODO: fix nestedIssued
     @Test
     @Disabled

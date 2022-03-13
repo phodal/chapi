@@ -14,10 +14,12 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         var parameters: Array<CodeProperty> = arrayOf()
         for (argCtx in formalParameterListContext!!.formalParameterArg()) {
             val typeType = this.buildTypeAnnotation(argCtx.typeAnnotation())
-            val parameter = CodeProperty(
-                TypeValue = argCtx.identifierOrKeyWord().text,
-                TypeType = typeType!!
-            )
+            var typeValue = argCtx.text
+            if (argCtx.identifierOrKeyWord() != null) {
+                typeValue = argCtx.identifierOrKeyWord().text
+            }
+
+            val parameter = CodeProperty(TypeValue = typeValue, TypeType = typeType!!)
 
             if (argCtx.accessibilityModifier() != null) {
                 parameter.Modifiers += argCtx.accessibilityModifier().text
@@ -39,14 +41,14 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
     }
 
     fun buildTypeAnnotation(typeAnnotation: TypeScriptParser.TypeAnnotationContext?): String? {
-        if(typeAnnotation == null) {
+        if (typeAnnotation == null) {
             return ""
         }
 
         val typeContext = typeAnnotation.type_() ?: return ""
         var type = typeContext.text
 
-        if(typeContext.children == null) {
+        if (typeContext.children == null) {
             return type
         }
 
@@ -77,7 +79,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         var parameters: Array<CodeProperty> = arrayOf()
 
         val type = paramListCtx!!.getChild(0)
-        when(type.parent::class.simpleName) {
+        when (type.parent::class.simpleName) {
             "OnlyRestParameterContext" -> {
                 val restCtx = paramListCtx as TypeScriptParser.OnlyRestParameterContext
                 val restParameters = this.buildRestParameter(restCtx.restParameter())

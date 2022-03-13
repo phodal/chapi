@@ -680,15 +680,15 @@ iteratorDefinition
 
 formalParameterList
     : formalParameterArg (',' formalParameterArg)* (',' lastFormalParameterArg)?
-    | lastFormalParameterArg
-    | arrayLiteral                              // ECMAScript 6: Parameter Context Matching
-    | objectLiteral (':' formalParameterList)?  // ECMAScript 6: Parameter Context Matching
-    // `addThing({ payload }, { call }){}`
-    | objectLiteral (',' objectLiteral)*        // ECMAScript 6: Parameter Context Matching
     ;
 
 formalParameterArg
     : decorator? accessibilityModifier? identifierOrKeyWord '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
+    | lastFormalParameterArg
+    | arrayLiteral                                                                                           // ECMAScript 6: Parameter Context Matching
+    | objectLiteral (':' formalParameterList)?                                                               // ECMAScript 6: Parameter Context Matching
+    // `addThing({ payload }, { call }){}`
+    | objectLiteral (',' objectLiteral)*                                                                     // ECMAScript 6: Parameter Context Matching
     ;
 
 lastFormalParameterArg                        // ECMAScript 6: Rest Parameter
