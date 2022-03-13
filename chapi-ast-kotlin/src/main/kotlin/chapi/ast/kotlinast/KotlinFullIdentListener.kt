@@ -4,7 +4,9 @@ import chapi.ast.antlr.KotlinParser
 import chapi.domain.core.CallType
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeDataStruct
+import chapi.domain.core.CodeField
 import chapi.domain.core.CodeFunction
+import chapi.domain.core.CodeImport
 import chapi.domain.core.CodeProperty
 
 /**
@@ -58,42 +60,55 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
     // correct the function info
     private fun CodeCall.refineIfExistsCreator(): CodeCall {
         // search the node in declared classes (for individual function)
-        classes.find { it.NodeName == FunctionName }?.let {
-            return apply {
-                Type = CallType.CREATOR
-                Package = it.Package
-            }
+        for (clazz in classes) {
+            this.refineWithClass(clazz) ?: return this
         }
-        // search the node in imported classes
-        imports.find { it.AsName == NodeName }?.let {
-            return apply {
-                Package = it.Source.substringBeforeLast('.')
-            }
+
+        // search the node in imported classes/functions
+        for (import in imports) {
+            this.refineWithImport(import) ?: return this
         }
-        // search the node in imported functions
-        imports.find { it.AsName == FunctionName }?.let {
-            return apply {
-                val fullNodeName = it.Source.substringBeforeLast('.')
-                Package = fullNodeName.substringBeforeLast('.')
-                NodeName = fullNodeName.substringAfterLast('.')
-                Type = if (FunctionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
-            }
-        }
+
         // search the node in current class
-        currentNode.Fields.find { it.TypeKey == NodeName }?.let {
-            return apply {
-                val fullNodeName = it.TypeType
-                Package = fullNodeName.substringBeforeLast('.')
-                NodeName = fullNodeName.substringAfterLast('.')
-            }
+        for (field in currentNode.Fields) {
+            this.refineWithField(field) ?: return this
         }
 
         // not found yet, register a post handler to check the node in the next class
-        postClassHandler.add {
-            if (it.NodeName == FunctionName) {
-                Type = CallType.CREATOR
-                Package = it.Package
-            }
+        postClassHandler.add { this.refineWithClass(it) }
+        return this
+    }
+
+    // return null to quick exit
+    private fun CodeCall.refineWithClass(it: CodeDataStruct): CodeCall? {
+        if (it.NodeName == FunctionName) {
+            Type = CallType.CREATOR
+            Package = it.Package
+            return null
+        }
+        return this
+    }
+
+    private fun CodeCall.refineWithImport(it: CodeImport): CodeCall? {
+        if (it.AsName == NodeName) {
+            Package = it.Source.substringBeforeLast('.')
+            return null
+        }
+        if (it.AsName == FunctionName) {
+            val fullNodeName = it.Source.substringBeforeLast('.')
+            Package = fullNodeName.substringBeforeLast('.')
+            NodeName = fullNodeName.substringAfterLast('.')
+            return null
+        }
+        return this
+    }
+
+    private fun CodeCall.refineWithField(it: CodeField): CodeCall? {
+        if (it.TypeKey == NodeName) {
+            val fullNodeName = it.TypeType
+            Package = fullNodeName.substringBeforeLast('.')
+            NodeName = fullNodeName.substringAfterLast('.')
+            return null
         }
         return this
     }
