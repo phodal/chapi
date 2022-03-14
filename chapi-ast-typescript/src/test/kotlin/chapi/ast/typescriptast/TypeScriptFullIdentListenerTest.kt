@@ -1409,9 +1409,23 @@ const service = {
         assertEquals(1, ds[0].Fields[0].Calls.size)
     }
 
+    @Test
+    @Disabled
+    internal fun conflictWithGenericType() {
+        val code = """
+export default function({a, b, c}) {
+    return (c ? <DirectoryTree></DirectoryTree> : <Nodata/>)
+}
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        val ds = codeFile.DataStructures
+        assertEquals(1, ds.size)
+    }
+
 
     @Test
-    internal fun someIssue() {
+    internal fun parameterObjectLiteral() {
         val code = """
 const setting = {
   reducers: {
@@ -1440,7 +1454,7 @@ const createTreeNode = <U = TreeNode, T extends JavaItem<T>>(): U => {};
 
     // TODO: fix nestedIssued
     @Test
-    @Disabled
+//    @Disabled
     internal fun htmlElementIssue() {
         val code = """
 const renderDataClassFields = (record: DataClass) => {

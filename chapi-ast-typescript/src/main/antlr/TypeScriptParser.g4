@@ -509,7 +509,8 @@ htmlElement
     ;
 
 htmlContent
-    : htmlChardata? ((htmlElement | objectExpressionSequence) htmlChardata?)*
+    : htmlChardata? ((htmlElement) htmlChardata?)*
+    | htmlChardata? ((htmlElement | objectExpressionSequence) htmlChardata?)*
     ;
 
 htmlTagStartName
