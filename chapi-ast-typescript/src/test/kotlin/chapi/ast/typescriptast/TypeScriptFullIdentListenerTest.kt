@@ -1454,7 +1454,7 @@ const createTreeNode = <U = TreeNode, T extends JavaItem<T>>(): U => {};
 
     // TODO: fix nestedIssued
     @Test
-//    @Disabled
+    @Disabled
     internal fun htmlElementIssue() {
         val code = """
 const renderDataClassFields = (record: DataClass) => {
