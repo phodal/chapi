@@ -1404,7 +1404,9 @@ const service = {
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        assertEquals(1, codeFile.DataStructures.size)
+        val ds = codeFile.DataStructures
+        assertEquals(1, ds.size)
+        assertEquals(1, ds[0].Fields[0].Calls.size)
     }
 
 

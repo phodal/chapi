@@ -87,7 +87,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         modifiers: Array<String> = arrayOf()
     ): Array<CodeField> {
         var fields = arrayOf<CodeField>()
-        varDecl.variableDeclaration().forEach {
+        varDecl.variableDeclaration().forEach { it ->
             if (it.Assign() != null) {
                 val key = it.getChild(0).text
                 val singleExpression = it.singleExpression()
@@ -106,6 +106,15 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     "IdentifierExpressionContext" -> {
                         val identExpr = lastExpr as IdentifierExpressionContext
                         singleExprToFieldCall(field, identExpr.singleExpression(), identExpr.identifierName().text)
+                    }
+                    "YieldExpressionContext" -> {
+                        val yieldExpr = lastExpr as TypeScriptParser.YieldExpressionContext
+                        if (yieldExpr.yieldStatement().expressionSequence() != null) {
+                            val singeExprs = yieldExpr.yieldStatement().expressionSequence().singleExpression()
+                            singeExprs.forEach { expr ->
+                                singleExprToFieldCall(field, expr, expr.text)
+                            }
+                        }
                     }
                     else -> {
                         println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
@@ -130,6 +139,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 "ParenthesizedExpressionContext" -> {
                     val parameters = parseParenthesizedExpression(singleExpr)
                     field.Calls += CodeCall("", CallType.FIELD, "", funcName, parameters)
+                }
+                "IdentifierExpressionContext" -> {
+                    val identExpr = singleExpr as IdentifierExpressionContext
+                    field.Calls += CodeCall("", CallType.FIELD, "", identExpr.identifierName().text)
                 }
                 else -> {
                     println("todo -> var -> decl call: $name")
