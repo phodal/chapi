@@ -1,6 +1,5 @@
 plugins {
-    application
-
+//    application
     java
     kotlin("jvm")
     kotlin("plugin.serialization") version "1.6.10"
@@ -47,10 +46,13 @@ dependencies {
     implementation("org.antlr:antlr4-runtime:4.8-1")
 }
 
-
-application {
-    mainClass.set("chapi.app.cli.ChapiKt")
+configure<JavaPluginConvention> {
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }
+
+//application {
+//    mainClass.set("chapi.app.cli.ChapiKt")
+//}
 //
 //tasks{
 //    shadowJar {
