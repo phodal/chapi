@@ -106,6 +106,7 @@ class FrontendApiAnalyser {
                     }
 
                     httpApi.caller = it
+                    httpApi.routes = listOf(it)
                     componentRef.apiRef += httpApi
                 } else {
                     if (callMap[it] != null) {
