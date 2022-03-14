@@ -67,6 +67,7 @@ class FrontendApiAnalyser {
 
                 func.FunctionCalls.forEach { call ->
                     callMap[calleeName] = call
+                    // TODO: refactor by DI
                     if (axiosIdent.isMatch(call, node.Imports)) {
                         httpAdapterMap[calleeName] = ApiCodeCall.from(call, "axios")
                     }
@@ -90,6 +91,7 @@ class FrontendApiAnalyser {
         componentInbounds.forEach { map ->
             val componentRef = ComponentHttpCallInfo(name = map.key)
             map.value.forEach {
+                // TODO: add support for multiple level call routes
                 if (httpAdapterMap[it] != null) {
                     val call = httpAdapterMap[it]!!
 
