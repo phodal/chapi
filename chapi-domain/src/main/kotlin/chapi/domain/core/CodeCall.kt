@@ -2,8 +2,6 @@ package chapi.domain.core
 
 import chapi.domain.DomainConstants
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 
 enum class CallType (val calltype: String) {
     FIELD("field"),
