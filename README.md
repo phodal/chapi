@@ -38,15 +38,15 @@ PS: welcome to PR to send your projects
 
 ## Usage
 
-1add to ``dependencies``
+1. add to ``dependencies``
 
 ```
 dependencies {
-    implementation 'com.phodal.chapi:chapi-application:0.0.8'
+    implementation 'com.phodal.chapi:chapi-application:0.2.0'
 
     // or choose languages target
-    implementation 'com.phodal.chapi:chapi-ast-java:0.0.8'
-    implementation 'com.phodal.chapi:chapi-domain:0.0.8'
+    implementation 'com.phodal.chapi:chapi-ast-java:0.2.0'
+    implementation 'com.phodal.chapi:chapi-domain:0.2.0'
 }
 ```
 
