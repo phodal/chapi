@@ -20,11 +20,14 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
     private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
     override fun buildFunction(ctx: KotlinParser.FunctionDeclarationContext): CodeFunction =
         super.buildFunction(ctx).apply {
-            FunctionCalls = buildFunctionCalls(ctx).toTypedArray()
+            val functionCalls = buildFunctionCalls(ctx)
+            if (functionCalls != null) {
+                FunctionCalls = functionCalls.toTypedArray()
+            }
         }
 
-    private fun buildFunctionCalls(ctx: KotlinParser.FunctionDeclarationContext): List<CodeCall> =
-        ctx.functionBody().block().statements().statement().mapNotNull(::buildFunctionCall)
+    private fun buildFunctionCalls(ctx: KotlinParser.FunctionDeclarationContext): List<CodeCall>? =
+        ctx.functionBody()?.block()?.statements()?.statement()?.mapNotNull(::buildFunctionCall)
 
     private fun buildFunctionCall(it: KotlinParser.StatementContext): CodeCall? {
         val result = Regex("(\\w+\\.?)+\\((.*)\\)").find(it.text) ?: return null

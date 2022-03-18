@@ -3,9 +3,12 @@ package chapi.app.analyser
 import chapi.app.analyser.config.ChapiConfig
 import chapi.app.analyser.config.Language
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
 import kotlin.test.assertEquals
 
 internal class KotlinAnalyserAppTest {
@@ -19,6 +22,16 @@ internal class KotlinAnalyserAppTest {
 
         Assertions.assertEquals(nodeInfos.size, 2)
         Assertions.assertEquals(nodeInfos[0].FilePath.endsWith("resources/test/languages/kotlin/Hello.kt"), true)
+    }
+
+    @Test
+    @Disabled
+    fun `boostrap for not crash`() {
+        val config = ChapiConfig(language = Language.KOTLIN)
+        // todo: can change to `../`
+        val path = Path("../")
+
+        KotlinAnalyserApp(config).analysisNodeByPath(path.absolutePathString())
     }
 
     @Nested
