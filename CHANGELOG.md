@@ -1,13 +1,23 @@
-# [](https://github.com/modernizing/chapi/compare/v0.1.9...v) (2022-03-14)
+# [](https://github.com/modernizing/chapi/compare/v1.2.1...v) (2022-03-18)
 
 
 
-## [0.1.9](https://github.com/modernizing/chapi/compare/v0.0.9...v0.1.9) (2022-03-14)
+## [1.2.1](https://github.com/modernizing/chapi/compare/1.2.1...v1.2.1) (2022-03-18)
+
+
+### Bug Fixes
+
+* fix kotlin crash issue ([6b141d5](https://github.com/modernizing/chapi/commit/6b141d5ea741f772ab6b4b9a9b558df4a7092e0d))
+
+
+
+## [1.1.4](https://github.com/modernizing/chapi/compare/v0.0.9...v1.1.4) (2022-03-16)
 
 
 ### Bug Fixes
 
 * revert tests ([2d67f2c](https://github.com/modernizing/chapi/commit/2d67f2c7bf54a1eaf3a59093c57ef92b575b1405))
+* **tbs:** fix tbs runner issue ([8dad1fc](https://github.com/modernizing/chapi/commit/8dad1fcd0c5c859ced440e679ac177d19d3254b4))
 
 
 ### Features
