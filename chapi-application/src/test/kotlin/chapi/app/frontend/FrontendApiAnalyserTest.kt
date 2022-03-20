@@ -17,17 +17,17 @@ internal class FrontendApiAnalyserTest {
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         assertEquals(5, nodes.size)
 
-        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
+        val componentCalls: Array<ContainerService> = FrontendApiAnalyser().analysis(nodes, path)
         File("api.json").writeText(Json.encodeToString(componentCalls))
 
         assertEquals(1, componentCalls.size)
         assertEquals("BadSmellThreshold/BadSmellThreshold", componentCalls[0].name)
-        val apiRef = componentCalls[0].apiRef[0]
-        assertEquals(naming("api/addition/systemInfo", "updateSystemInfo"), apiRef.caller)
+        val apiRef = componentCalls[0].demands[0]
+        assertEquals(naming("api/addition/systemInfo", "updateSystemInfo"), apiRef.source_caller)
         assertEquals("baseURL", apiRef.base)
-        assertEquals("systemInfoApi", apiRef.url)
-        assertEquals("PUT", apiRef.method)
-        assertEquals("parameter", apiRef.data)
+        assertEquals("systemInfoApi", apiRef.target_url)
+        assertEquals("PUT", apiRef.target_http_method)
+        assertEquals("parameter", apiRef.call_data)
     }
 
     @Test
@@ -38,7 +38,7 @@ internal class FrontendApiAnalyserTest {
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         File("nodes.json").writeText(Json.encodeToString(nodes))
 
-        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
+        val componentCalls: Array<ContainerService> = FrontendApiAnalyser().analysis(nodes, path)
         File("api.json").writeText(Json.encodeToString(componentCalls))
     }
 
@@ -49,8 +49,8 @@ internal class FrontendApiAnalyserTest {
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
 
-        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
-        assertEquals(4, componentCalls[0].apiRef.size)
+        val componentCalls: Array<ContainerService> = FrontendApiAnalyser().analysis(nodes, path)
+        assertEquals(4, componentCalls[0].demands.size)
     }
 
     @Test
@@ -62,12 +62,12 @@ internal class FrontendApiAnalyserTest {
         assertEquals(2, nodes.size)
         File("nodes.json").writeText(Json.encodeToString(nodes))
 
-        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
-        val apiRef = componentCalls[0].apiRef
+        val componentCalls: Array<ContainerService> = FrontendApiAnalyser().analysis(nodes, path)
+        val apiRef = componentCalls[0].demands
 
         assertEquals(1, apiRef.size)
-        assertEquals(naming("system-info", "querySystemInfo"), apiRef[0].caller)
-        assertEquals("GET", apiRef[0].method)
+        assertEquals(naming("system-info", "querySystemInfo"), apiRef[0].source_caller)
+        assertEquals("GET", apiRef[0].target_http_method)
         File("api.json").writeText(Json.encodeToString(componentCalls))
     }
 }

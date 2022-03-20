@@ -2,7 +2,7 @@ package chapi.app.cli
 
 import chapi.app.analyser.ChapiAnalyser
 import chapi.app.analyser.TypeScriptAnalyserApp
-import chapi.app.frontend.ComponentHttpCallInfo
+import chapi.app.frontend.ContainerService
 import chapi.app.frontend.FrontendApiAnalyser
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
@@ -31,7 +31,7 @@ class Api : CliktCommand() {
 
     override fun run() {
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
-        val componentCalls: Array<ComponentHttpCallInfo> = FrontendApiAnalyser().analysis(nodes, path)
+        val componentCalls: Array<ContainerService> = FrontendApiAnalyser().analysis(nodes, path)
 
         File("nodes.json").writeText(Json.encodeToString(nodes))
         File("api.json").writeText(Json.encodeToString(componentCalls))

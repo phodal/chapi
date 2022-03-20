@@ -13,7 +13,7 @@ Languages Stages (Welcome to PR your usage languages)
 |---------------------|------|--------|-----|--------|------------|-----|-----|-------|-----|
 | http api decl       | ✅    | ✅      | ✅   | ✅      | 🆕         | 🆕  | 🆕  | ✅     | 🆕  |
 | syntax parse        | ✅    | ✅      | ✅   | 🆕     | ✅          | 🆕  | 🆕  | 🆕    | 🆕  |
-| function call       | ✅    | 🆕     |     | 🆕      | ✅          |     |     |       |     |
+| function call       | ✅    | 🆕     |     | 🆕     | ✅          |     |     |       |     |
 | arch/package        | ✅    |        |     |        |            |     |     |       |     |
 | real world validate | ✅    |        |     |        | ✅          |     |     |       |     |
 | expression  (TBD)   |      |        |     |        |            |     |     |       |     |

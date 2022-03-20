@@ -1,6 +1,6 @@
 package chapi.app.frontend.identify
 
-import chapi.app.frontend.HttpApiCallInfo
+import chapi.app.frontend.ContainerDemand
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeImport
 
@@ -18,17 +18,17 @@ class UmiHttpIdentify : HttpIdentify {
         return false
     }
 
-    override fun convert(call: CodeCall): HttpApiCallInfo {
+    override fun convert(call: CodeCall): ContainerDemand {
         val url = call.Parameters[0].TypeValue
-        val httpApi = HttpApiCallInfo(url = url)
+        val httpApi = ContainerDemand(target_url = url)
 
         for (codeProperty in call.Parameters[1].ObjectValue) {
             when (codeProperty.TypeValue) {
                 "method" -> {
-                    httpApi.method = codeProperty.ObjectValue[0].TypeValue
+                    httpApi.target_http_method = codeProperty.ObjectValue[0].TypeValue
                 }
                 "data" -> {
-                    httpApi.data = codeProperty.ObjectValue[0].TypeValue
+                    httpApi.call_data = codeProperty.ObjectValue[0].TypeValue
                 }
             }
         }

@@ -1,6 +1,6 @@
 package chapi.app.frontend.identify
 
-import chapi.app.frontend.HttpApiCallInfo
+import chapi.app.frontend.ContainerDemand
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeImport
 
@@ -15,8 +15,8 @@ open class AxiosHttpIdentify : HttpIdentify {
         return false
     }
 
-    override fun convert(call: CodeCall): HttpApiCallInfo {
-        val httpApi = HttpApiCallInfo()
+    override fun convert(call: CodeCall): ContainerDemand {
+        val httpApi = ContainerDemand()
         call.Parameters.forEach { prop ->
             for (codeProperty in prop.ObjectValue) {
                 when (codeProperty.TypeValue) {
@@ -24,13 +24,13 @@ open class AxiosHttpIdentify : HttpIdentify {
                         httpApi.base = codeProperty.ObjectValue[0].TypeValue
                     }
                     "url" -> {
-                        httpApi.url = codeProperty.ObjectValue[0].TypeValue
+                        httpApi.target_url = codeProperty.ObjectValue[0].TypeValue
                     }
                     "method" -> {
-                        httpApi.method = codeProperty.ObjectValue[0].TypeValue
+                        httpApi.target_http_method = codeProperty.ObjectValue[0].TypeValue
                     }
                     "data" -> {
-                        httpApi.data = codeProperty.ObjectValue[0].TypeValue
+                        httpApi.call_data = codeProperty.ObjectValue[0].TypeValue
                     }
                 }
             }
