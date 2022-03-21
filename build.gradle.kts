@@ -21,7 +21,7 @@ jacoco {
 
 allprojects {
     group = "com.phodal.chapi"
-    version = "1.2.2-SNAPSHOT"
+    version = "1.2.2"
     description =
         "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
 

@@ -1,4 +1,11 @@
-# [](https://github.com/modernizing/chapi/compare/v1.2.1...v) (2022-03-18)
+# [](https://github.com/modernizing/chapi/compare/v1.2.1...v) (2022-03-21)
+
+
+### Features
+
+* add isFile api for ts ([f4bedfc](https://github.com/modernizing/chapi/commit/f4bedfc99d701b214c9445b1561ee60a215ec745))
+* **ts:** add basic parser for resolve path ([13f3b0c](https://github.com/modernizing/chapi/commit/13f3b0c03fd788b8c71f6da7908765161c8dcf8b))
+* **ts:** add package name support ([d948b9c](https://github.com/modernizing/chapi/commit/d948b9c87c37ef67bbb69cee8e146cfc88de4df1))
 
 
 
