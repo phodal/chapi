@@ -11,7 +11,7 @@ import chapi.domain.core.DataStructType
 class TypeScriptAnalyserApp(config: ChapiConfig = ChapiConfig(language = Language.TypeScript)) : BaseAnalyser(config) {
     private val analyser: TypeScriptAnalyser by lazy { TypeScriptAnalyser() }
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> =
-        files.flatMap(::analysisByFile).toTypedArray()
+        files.filter { it.isFile }.flatMap(::analysisByFile).toTypedArray()
 
     private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         println("processing file: ${file.absolutePath}")
