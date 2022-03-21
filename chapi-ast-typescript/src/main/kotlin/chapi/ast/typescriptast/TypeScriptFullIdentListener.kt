@@ -20,7 +20,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private var localVars = mutableMapOf<String, String>()
 
     private var nodeMap = mutableMapOf<String, CodeDataStruct>()
-    private var codeContainer: CodeContainer = CodeContainer(FullName = node.filePath)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = node.filePath, PackageName = node.resolvePackage())
 
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
@@ -168,7 +168,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         currentNode = CodeDataStruct(
             NodeName = nodeName,
             Type = DataStructType.CLASS,
-            Package = this.namespaceName,
+            Package = codeContainer.PackageName,
             FilePath = codeContainer.FullName
         )
 
@@ -275,7 +275,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         val currentType = DataStructType.INTERFACE
 
         currentNode = CodeDataStruct(
-            NodeName = nodeName, Type = currentType, Package = this.namespaceName, FilePath = codeContainer.FullName
+            NodeName = nodeName, Type = currentType, Package = codeContainer.PackageName, FilePath = codeContainer.FullName
         )
 
         if (ctx.interfaceExtendsClause() != null) {
@@ -292,7 +292,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     override fun exitInterfaceDeclaration(ctx: TypeScriptParser.InterfaceDeclarationContext?) {
-        currentNode = CodeDataStruct()
+        currentNode = CodeDataStruct(Package = codeContainer.PackageName, FilePath = codeContainer.FullName)
     }
 
     private fun buildInterfaceBody(typeMemberList: TypeScriptParser.TypeMemberListContext?) {
@@ -971,10 +971,12 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         if (functionOnly) {
             defaultNode.NodeName = "default"
             defaultNode.FilePath = codeContainer.FullName
+            defaultNode.Package = codeContainer.PackageName
             codeContainer.DataStructures += defaultNode
         } else if (fieldOnly) {
             defaultNode.NodeName = "default"
             defaultNode.FilePath = codeContainer.FullName
+            defaultNode.Package = codeContainer.PackageName
             codeContainer.DataStructures += defaultNode
         }
 

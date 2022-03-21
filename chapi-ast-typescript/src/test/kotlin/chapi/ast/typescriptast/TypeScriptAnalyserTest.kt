@@ -27,6 +27,7 @@ internal class TypeScriptAnalyserTest {
         assertEquals(codeFile.DataStructures.size, 3)
         assertEquals(codeFile.DataStructures[0].Type, DataStructType.CLASS)
         assertEquals(codeFile.DataStructures[1].NodeName, "Employee")
+
         assertEquals(codeFile.DataStructures[1].Extend, "Person")
     }
 
@@ -56,5 +57,14 @@ internal class TypeScriptAnalyserTest {
         val codeFile = TypeScriptAnalyser().analysis(content, "BadSmellThreshold.tsx")
 
         assertEquals(codeFile.DataStructures.size, 1)
+    }
+
+    @Test
+    internal fun shouldIdentifyPackage() {
+        val content = this::class.java.getResource("/grammar/AbstractClass.ts")!!.readText()
+        val codeFile = TypeScriptAnalyser().analysis(content, "/grammar/AbstractClass.ts")
+
+        assertEquals(codeFile.PackageName, "@.grammar")
+        assertEquals(codeFile.DataStructures[0].Package, "@.grammar")
     }
 }
