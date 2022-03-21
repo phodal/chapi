@@ -482,8 +482,8 @@ export namespace Polygons {
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "src/Polygons/Polygons.ts")
         assertEquals(codeFile.DataStructures.size, 2)
-        assertEquals(codeFile.DataStructures[0].Package, "@.Polygons")
-        assertEquals(codeFile.DataStructures[1].Package, "@.Polygons")
+        assertEquals(codeFile.DataStructures[0].Package, "@.Polygons.Polygons")
+        assertEquals(codeFile.DataStructures[1].Package, "@.Polygons.Polygons")
     }
 
     @Test

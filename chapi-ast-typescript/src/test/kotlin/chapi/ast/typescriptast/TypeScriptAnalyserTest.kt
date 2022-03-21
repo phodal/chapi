@@ -64,7 +64,7 @@ internal class TypeScriptAnalyserTest {
         val content = this::class.java.getResource("/grammar/AbstractClass.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "/grammar/AbstractClass.ts")
 
-        assertEquals(codeFile.PackageName, "@.grammar")
-        assertEquals(codeFile.DataStructures[0].Package, "@.grammar")
+        assertEquals(codeFile.PackageName, "@.grammar.AbstractClass")
+        assertEquals(codeFile.DataStructures[0].Package, "@.grammar.AbstractClass")
     }
 }
