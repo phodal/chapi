@@ -10,7 +10,7 @@ internal class TSIdentifyTest {
         val tsIdentify = TSIdentify("AbstractClass.ts",)
         val pkgName = tsIdentify.resolvePackage()
 
-        assertEquals("AbstractClass.ts", pkgName)
+        assertEquals("AbstractClass", pkgName)
     }
 
     @Test
@@ -18,7 +18,7 @@ internal class TSIdentifyTest {
         val tsIdentify = TSIdentify("/AbstractClass.ts",)
         val pkgName = tsIdentify.resolvePackage()
 
-        assertEquals("@", pkgName)
+        assertEquals("@.AbstractClass", pkgName)
     }
 
     @Test
@@ -26,7 +26,7 @@ internal class TSIdentifyTest {
         val tsIdentify = TSIdentify("src/AbstractClass.ts",)
         val pkgName = tsIdentify.resolvePackage()
 
-        assertEquals("@", pkgName)
+        assertEquals("@.AbstractClass", pkgName)
     }
 
     @Test
@@ -34,7 +34,7 @@ internal class TSIdentifyTest {
         val tsIdentify = TSIdentify("src/grammar/AbstractClass.ts",)
         val pkgName = tsIdentify.resolvePackage()
 
-        assertEquals("@.grammar", pkgName)
+        assertEquals("@.grammar.AbstractClass", pkgName)
     }
 
     @Test
@@ -42,6 +42,6 @@ internal class TSIdentifyTest {
         val tsIdentify = TSIdentify("/grammar/AbstractClass.ts",)
         val pkgName = tsIdentify.resolvePackage()
 
-        assertEquals("@.grammar", pkgName)
+        assertEquals("@.grammar.AbstractClass", pkgName)
     }
 }

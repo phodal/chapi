@@ -1,10 +1,12 @@
 package chapi.ast.typescriptast
 
+import java.io.File
+
 open class TSIdentify(var filePath: String = "") {
     fun resolvePackage(): String {
         val split = filePath.split("/").toMutableList()
         if(split.size == 1) {
-            return split[0]
+            return File(split[0]).nameWithoutExtension
         }
 
         if(split[0] == "src" || split[0] == "") {
@@ -13,7 +15,7 @@ open class TSIdentify(var filePath: String = "") {
             split.add(0, "@")
         }
 
-        val names = split.dropLast(1)
-        return names.joinToString(".")
+        split[split.size - 1] = File(split.last()).nameWithoutExtension
+        return split.joinToString(".")
     }
 }
