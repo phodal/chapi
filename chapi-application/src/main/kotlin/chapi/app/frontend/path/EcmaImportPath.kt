@@ -9,7 +9,13 @@ fun ecmaImportConvert(workspace: String, filepath: String, importPath: String): 
         pathname = pathname.removeRange(0, 2)
     }
 
-    var relativePath = File(pathname).relativeTo(File(workspace)).toString()
+    var relativePath = pathname
+    try {
+        relativePath = File(pathname).relativeTo(File(workspace)).toString()
+    } catch (e: IllegalArgumentException) {
+        println(e)
+    }
+
     if (!relativePath.startsWith("./") || !relativePath.startsWith("../")) {
         relativePath = "./$relativePath"
     }
@@ -53,5 +59,12 @@ fun relativeRoot(filepath: String, importPath: String): String {
         pathname = pathname.removeRange(0, 2)
     }
 
-    return File(pathname).relativeTo(File(filepath)).toString()
+    var relativePath = pathname
+    try {
+        relativePath = File(pathname).relativeTo(File(filepath)).toString()
+    } catch (e: IllegalArgumentException) {
+        println(e)
+    }
+
+    return relativePath
 }

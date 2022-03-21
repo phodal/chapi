@@ -15,7 +15,7 @@ internal class JavaAnalyserAppTest {
         val file = Paths.get(resource!!.toURI()).toFile()
 
         var files = arrayOf<AbstractFile>()
-        val toAbstractFile = AbstractFile.toAbstractFile(file)
+        val toAbstractFile = AbstractFile.toAbstractFile(file, file)
         files += toAbstractFile
 
         val nodes = JavaAnalyserApp().analysisByFiles(files)

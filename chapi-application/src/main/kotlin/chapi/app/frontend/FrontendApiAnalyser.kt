@@ -38,15 +38,15 @@ class FrontendApiAnalyser {
     // 1. first create Component with FunctionCall maps based on Import
     // 2. build axios/umi-request to an API call method
     // 3. mapping for results
-    fun analysis(nodes: Array<CodeDataStruct>, path: String): Array<ContainerService> {
+    fun analysis(nodes: Array<CodeDataStruct>, workspace: String): Array<ContainerService> {
         nodes.forEach { node ->
             var isComponent: Boolean
             val isComponentExt = node.fileExt() == "tsx" || node.fileExt() == "jsx"
             val isNotInterface = node.Type != DataStructType.INTERFACE
 
-            val inbounds = createInbounds(path, node.Imports, node.FilePath)
+            val inbounds = createInbounds(workspace, node.Imports, node.FilePath)
 
-            val moduleName = relativeRoot(path, node.FilePath).substringBeforeLast('.', "")
+            val moduleName = relativeRoot(workspace, node.FilePath).substringBeforeLast('.', "")
             val componentName = naming(moduleName, node.NodeName)
 
             node.Fields.forEach { field ->
@@ -162,12 +162,12 @@ class FrontendApiAnalyser {
         }
     }
 
-    private fun createInbounds(path: String, imports: Array<CodeImport>, filePath: String): MutableList<String> {
+    private fun createInbounds(workspace: String, imports: Array<CodeImport>, filePath: String): MutableList<String> {
         val inbounds: MutableList<String> = mutableListOf()
 
         imports.forEach { imp ->
             imp.UsageName.forEach {
-                val source = ecmaImportConvert(path, filePath, imp.Source)
+                val source = ecmaImportConvert(workspace, filePath, imp.Source)
                 inbounds += naming(source, it)
             }
         }

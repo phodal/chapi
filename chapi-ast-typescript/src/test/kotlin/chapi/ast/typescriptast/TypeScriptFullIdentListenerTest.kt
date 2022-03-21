@@ -480,10 +480,10 @@ export namespace Polygons {
     export class Square { }
 }
 """
-        val codeFile = TypeScriptAnalyser().analysis(code, "")
+        val codeFile = TypeScriptAnalyser().analysis(code, "src/Polygons/Polygons.ts")
         assertEquals(codeFile.DataStructures.size, 2)
-        assertEquals(codeFile.DataStructures[0].Package, "Polygons")
-        assertEquals(codeFile.DataStructures[1].Package, "Polygons")
+        assertEquals(codeFile.DataStructures[0].Package, "@.Polygons")
+        assertEquals(codeFile.DataStructures[1].Package, "@.Polygons")
     }
 
     @Test

@@ -1,8 +1,6 @@
 package chapi.ast.typescriptast
 
-open class TSIdentify(
-    var filePath: String = ""
-) {
+open class TSIdentify(var filePath: String = "") {
     fun resolvePackage(): String {
         val split = filePath.split("/").toMutableList()
         if(split.size == 1) {

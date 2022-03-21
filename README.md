@@ -29,6 +29,14 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript      |
 | Other      | Fortran, Swift, Matlab, ...                   | Swift?, Fortran?        |
 
+## Specify Rule
+
+### TypeScript
+
+1. PackageName will use resolvePath, package of `src/grammar/blbla.ts` is `@.grammar`
+2. Function in file will use `default` as DataStructure.Name
+3. export default `Object` in file will use `default` as FunctionName, and will belong to `default` DataStructure
+
 ## Chapi-base projects
 
 PS: welcome to PR to send your projects

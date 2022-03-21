@@ -15,7 +15,7 @@ class TypeScriptAnalyserApp(config: ChapiConfig = ChapiConfig(language = Languag
 
     private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         println("processing file: ${file.absolutePath}")
-        val codeContainer = analyser.analysis(readFileAsString(file.absolutePath), file.absolutePath)
+        val codeContainer = analyser.analysis(readFileAsString(file.absolutePath), file.relativePath)
         return codeContainer.DataStructures.map {
             it.apply {
                 if (it.Type != DataStructType.INTERFACE) {

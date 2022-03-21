@@ -27,12 +27,13 @@ abstract class BaseAnalyser(private var config: ChapiConfig) : IAnalyser {
     abstract fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct>
 
     private fun getFilesByPath(path: String): Array<AbstractFile> {
-        return File(path).walk().asStream().parallel()
+        val workspace = File(path)
+        return workspace.walk().asStream().parallel()
             .filter {
                 FileFilter.filterByLanguage(it.absolutePath, config)
             }
             .map {
-                AbstractFile.toAbstractFile(it)
+                AbstractFile.toAbstractFile(it, workspace)
             }
             .toArray { length -> arrayOfNulls(length) }
     }
