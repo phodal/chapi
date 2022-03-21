@@ -4,6 +4,7 @@ import chapi.app.analyser.TypeScriptAnalyserApp
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.nio.file.Paths
@@ -51,6 +52,17 @@ internal class FrontendApiAnalyserTest {
 
         val componentCalls: Array<ContainerService> = FrontendApiAnalyser().analysis(nodes, path)
         assertEquals(4, componentCalls[0].demands.size)
+    }
+
+    @Test
+    @Disabled
+    internal fun archguardAnalysis() {
+        val path = "/Volumes/source/archguard/archguard-frontend/archguard/src"
+        val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
+
+        val componentCalls: Array<ContainerService> = FrontendApiAnalyser().analysis(nodes, path)
+        File("nodes.json").writeText(Json.encodeToString(nodes))
+        File("api.json").writeText(Json.encodeToString(componentCalls))
     }
 
     @Test
