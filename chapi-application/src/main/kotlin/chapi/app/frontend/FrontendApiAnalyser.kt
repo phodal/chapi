@@ -40,53 +40,13 @@ class FrontendApiAnalyser {
     // 3. mapping for results
     fun analysis(nodes: Array<CodeDataStruct>, workspace: String): Array<ContainerService> {
         nodes.forEach { node ->
-            var isComponent: Boolean
-            val isComponentExt = node.fileExt() == "tsx" || node.fileExt() == "jsx"
-            val isNotInterface = node.Type != DataStructType.INTERFACE
-
-            val inbounds = createInbounds(workspace, node.Imports, node.FilePath)
-
-            val moduleName = relativeRoot(workspace, node.FilePath).substringBeforeLast('.', "")
-            val componentName = naming(moduleName, node.NodeName)
-
-            node.Fields.forEach { field ->
-                fieldToCallMap(field, componentName, inbounds)
-            }
-
-            // lookup CodeCall from Functions
-            node.Functions.forEach { func ->
-                isComponent = isNotInterface && isComponentExt && func.IsReturnHtml
-                if (isComponent) {
-                    componentCallMap[componentName] = mutableListOf()
-                }
-
-                var calleeName = naming(componentName, func.Name)
-                if (isComponent) {
-                    calleeName = componentName
-                }
-
-                func.FunctionCalls.forEach { call ->
-                    callMap[calleeName] = call
-                    // TODO: refactor by DI
-                    if (axiosIdent.isMatch(call, node.Imports)) {
-                        httpAdapterMap[calleeName] = ApiCodeCall.from(call, "axios")
-                    }
-                    if (umiIdent.isMatch(call, node.Imports)) {
-                        httpAdapterMap[calleeName] = ApiCodeCall.from(call, "umi")
-                    }
-                    if (isComponent) {
-                        componentCallMap[componentName]?.plusAssign((call.FunctionName))
-                    }
-                }
-
-                recursiveCall(func, calleeName, isComponent, componentName, node.Imports)
-
-                if (isComponent) {
-                    componentInbounds[componentName] = inbounds
-                }
-            }
+            analysisByPath(node, workspace)
         }
 
+        return toContainerServices()
+    }
+
+    private fun toContainerServices(): Array<ContainerService> {
         var componentCalls: Array<ContainerService> = arrayOf()
         componentInbounds.forEach { map ->
             val componentRef = ContainerService(name = map.key)
@@ -96,7 +56,7 @@ class FrontendApiAnalyser {
                     val call = httpAdapterMap[it]!!
 
                     var httpApi = ContainerDemand()
-                    when(call.ApiType) {
+                    when (call.ApiType) {
                         "axios" -> {
                             httpApi = axiosIdent.convert(call)
                         }
@@ -117,7 +77,7 @@ class FrontendApiAnalyser {
                             val call = httpAdapterMap[name]!!
 
                             var httpApi = ContainerDemand()
-                            when(call.ApiType) {
+                            when (call.ApiType) {
                                 "axios" -> {
                                     httpApi = axiosIdent.convert(call)
                                 }
@@ -140,6 +100,54 @@ class FrontendApiAnalyser {
         }
 
         return componentCalls
+    }
+
+    private fun analysisByPath(node: CodeDataStruct, workspace: String) {
+        var isComponent: Boolean
+        val isComponentExt = node.fileExt() == "tsx" || node.fileExt() == "jsx"
+        val isNotInterface = node.Type != DataStructType.INTERFACE
+
+        val inbounds = createInbounds(workspace, node.Imports, node.FilePath)
+
+        val moduleName = relativeRoot(workspace, node.FilePath).substringBeforeLast('.', "")
+        val componentName = naming(moduleName, node.NodeName)
+
+        node.Fields.forEach { field ->
+            fieldToCallMap(field, componentName, inbounds)
+        }
+
+        // lookup CodeCall from Functions
+        node.Functions.forEach { func ->
+            isComponent = isNotInterface && isComponentExt && func.IsReturnHtml
+            if (isComponent) {
+                componentCallMap[componentName] = mutableListOf()
+            }
+
+            var calleeName = naming(componentName, func.Name)
+            if (isComponent) {
+                calleeName = componentName
+            }
+
+            func.FunctionCalls.forEach { call ->
+                callMap[calleeName] = call
+                // TODO: refactor by DI
+                if (axiosIdent.isMatch(call, node.Imports)) {
+                    httpAdapterMap[calleeName] = ApiCodeCall.from(call, "axios")
+                }
+                if (umiIdent.isMatch(call, node.Imports)) {
+                    httpAdapterMap[calleeName] = ApiCodeCall.from(call, "umi")
+                }
+                if (isComponent) {
+                    componentCallMap[componentName]?.plusAssign((call.FunctionName))
+                }
+            }
+
+            recursiveCall(func, calleeName, isComponent, componentName, node.Imports)
+
+            if (isComponent) {
+                componentInbounds[componentName] = inbounds
+            }
+        }
     }
 
     private fun fieldToCallMap(
