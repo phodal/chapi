@@ -1,4 +1,21 @@
-# [](https://github.com/modernizing/chapi/compare/v1.2.1...v) (2022-03-21)
+# [](https://github.com/modernizing/chapi/compare/v1.2.4...v) (2022-03-24)
+
+
+
+## [1.2.4](https://github.com/modernizing/chapi/compare/v1.2.2...v1.2.4) (2022-03-24)
+
+
+### Bug Fixes
+
+* add lost language config for cli app ([990c7e7](https://github.com/modernizing/chapi/commit/990c7e79b9799634a33e03c4ca2e92ac8cc674d5))
+* change output to json ([fc362bc](https://github.com/modernizing/chapi/commit/fc362bcf7787fb2fb95539857e5a4a7ba5763ebd))
+* fix c# var crash issue ([2d5a0e4](https://github.com/modernizing/chapi/commit/2d5a0e483bae8cab9575564618af4bd44419f64b))
+* fix new package name issue ([cbe5542](https://github.com/modernizing/chapi/commit/cbe55425914ec206cd8ad49b56dff401b7f2e058))
+* fix typescript filename not as package name issue ([1910a7a](https://github.com/modernizing/chapi/commit/1910a7a0f7f13ce46dd8fc556d3f6cc8e1fa1555))
+
+
+
+## [1.2.2](https://github.com/modernizing/chapi/compare/v1.2.1...v1.2.2) (2022-03-21)
 
 
 ### Features
