@@ -273,7 +273,7 @@ namespace Chapi {
     }
 
     @Test
-    fun unknown_crash() {
+    fun variable_crash() {
         val code = """
 using System; 
   
@@ -289,6 +289,24 @@ namespace Chapi {
                 },
                 param = new List<String>()
             };
+       }
+    }
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+        assertEquals(structs.size, 1)
+    }
+
+    @Test
+    fun template_string() {
+        val code = """
+using System; 
+  
+namespace Chapi { 
+    public class Chapi {
+       public getInput() {
+          string s = $"get by date {DateTime.Now:yyyy-MM-dd HH:mm:ss,fff}";
        }
     }
 } 
