@@ -271,4 +271,30 @@ namespace Chapi {
         assertEquals("DeviceParameter", structs[0].Fields[0].TypeType)
         assertEquals("Parameters", structs[0].Fields[0].TypeValue)
     }
+
+    @Test
+    fun unknown_crash() {
+        val code = """
+using System; 
+  
+namespace Chapi { 
+    public class Chapi {
+       public getInput() {
+            var input = new Input()
+            {
+                item = new Item()
+                {
+                    name = "Smple",
+                    createdTime = $"{DateTime.Now:yyyy-MM-ddTHH:mm:ss}.08Z}",
+                },
+                param = new List<String>()
+            };
+       }
+    }
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+        assertEquals(structs.size, 1)
+    }
 }
