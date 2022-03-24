@@ -47,6 +47,22 @@ public class HelloWorld {
     }
 
     @Test
+    fun shouldIdentifyDataStructurePosition() {
+        val code = """
+public class HelloWorld {
+    public static void main(String []args) {
+       System.out.println("Hello World");
+    }
+}
+"""
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        val ds = codeFile.DataStructures[0]
+        assertEquals(ds.NodeName, "HelloWorld")
+        assertEquals(ds.Position.StartLine, 2)
+        assertEquals(ds.Position.StopLine, 6)
+    }
+
+    @Test
     fun shouldIdentifyFunctionParameters() {
         val code = """
 public class HelloWorld {

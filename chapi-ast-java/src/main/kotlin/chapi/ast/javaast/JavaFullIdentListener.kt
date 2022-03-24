@@ -13,8 +13,7 @@ open class JavaFullIdentListener(
     fileName: String,
     val classes: Array<String>
 ) : JavaAstListener() {
-    private var currentCreatorNode: CodeDataStruct =
-        CodeDataStruct()
+    private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
     private var isOverrideMethod: Boolean = false
     private var fields = arrayOf<CodeField>()
     private var methodCalls = arrayOf<CodeCall>()
@@ -30,10 +29,8 @@ open class JavaFullIdentListener(
     private var hasEnterClass: Boolean = false
     private var classNodes: Array<CodeDataStruct> = arrayOf()
 
-    private var innerNode: CodeDataStruct =
-        CodeDataStruct()
-    private var classNodeStack =
-        Stack<CodeDataStruct>()
+    private var innerNode: CodeDataStruct = CodeDataStruct()
+    private var classNodeStack = Stack<CodeDataStruct>()
 
     private var methodQueue: Array<CodeFunction> = arrayOf()
 
@@ -63,7 +60,7 @@ open class JavaFullIdentListener(
         if (isInnerNode) {
             updateStructMethods()
 
-            innerNode = CodeDataStruct()
+            innerNode = CodeDataStruct(Position = buildPosition(ctx!!))
 
             currentType = DataStructType.INNER_STRUCTURES
             innerNode.Type = currentType
@@ -77,6 +74,7 @@ open class JavaFullIdentListener(
         } else {
             currentType = DataStructType.CLASS
             currentNode.Type = currentType
+            currentNode.Position = buildPosition(ctx!!)
 
             hasEnterClass = true
             buildClassExtension(ctx, currentNode)
@@ -665,7 +663,8 @@ open class JavaFullIdentListener(
             val creatorNode = CodeDataStruct(
                 NodeName = text,
                 Type = currentType,
-                Package = codeContainer.PackageName
+                Package = codeContainer.PackageName,
+                Position = buildPosition(ctx)
             )
 
             currentCreatorNode = creatorNode
