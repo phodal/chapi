@@ -37,6 +37,10 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 2. Function in file will use `default` as DataStructure.Name
 3. export default `Object` in file will use `default` as FunctionName, and will belong to `default` DataStructure
 
+## Todo
+
+- [ ] split Chapi CLI application``
+
 ## Chapi-base projects
 
 PS: welcome to PR to send your projects
