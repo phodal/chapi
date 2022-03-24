@@ -37,6 +37,12 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 2. Function in file will use `default` as DataStructure.Name
 3. export default `Object` in file will use `default` as FunctionName, and will belong to `default` DataStructure
 
+### C# issues
+
+- [official grammar](https://github.com/dotnet/roslyn/blob/main/src/Compilers/CSharp/Portable/Generated/CSharp.Generated.g4)
+
+Antlr issues: [https://github.com/antlr/grammars-v4/issues/1146](https://github.com/antlr/grammars-v4/issues/1146)
+
 ## Todo
 
 - [ ] split Chapi CLI application
