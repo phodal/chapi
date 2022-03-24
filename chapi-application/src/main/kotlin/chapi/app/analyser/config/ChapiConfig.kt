@@ -3,7 +3,7 @@ package chapi.app.analyser.config
 data class ChapiConfig(
     var language: String = "",
     var withoutTest: Boolean = false,
-    // todo: use grep
+    // todo: change to grep
     var filterRule: String = "",
     // path resolve
     var ignoreMinFile: Boolean = true

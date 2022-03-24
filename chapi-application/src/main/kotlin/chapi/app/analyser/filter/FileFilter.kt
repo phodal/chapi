@@ -7,6 +7,7 @@ import java.io.File
 open class FileFilter {
     companion object {
         fun filterByLanguage(path: String, config: ChapiConfig): Boolean {
+            // todo: change to grep
             if (config.filterRule.isNotEmpty()) {
                 return config.filterRule.toRegex().matches(path)
             }
