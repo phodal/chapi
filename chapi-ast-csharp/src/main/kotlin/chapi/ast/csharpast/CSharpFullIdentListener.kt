@@ -5,6 +5,7 @@ import chapi.ast.antlr.CSharpParser.Class_typeContext
 import chapi.ast.antlr.CSharpParser.Type_declarationContext
 import chapi.domain.core.*
 import chapi.infra.Stack
+import org.antlr.v4.runtime.ParserRuleContext
 
 class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
     private var currentStruct: CodeDataStruct = CodeDataStruct();
@@ -83,7 +84,8 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
     override fun enterClass_definition(ctx: CSharpParser.Class_definitionContext?) {
         val className = ctx!!.identifier().text
         val codeDataStruct = CodeDataStruct(
-            NodeName = className
+            NodeName = className,
+            Position = buildPosition(ctx)
         )
 
         val classMemberDeclarations = ctx.class_body().class_member_declarations()
@@ -293,6 +295,16 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
             }
         }
         return modifiers
+    }
+
+
+    fun buildPosition(ctx: ParserRuleContext): CodePosition {
+        val position = CodePosition()
+        position.StartLine = ctx.start.line
+        position.StartLinePosition = ctx.start.charPositionInLine
+        position.StopLine = ctx.stop.line
+        position.StopLinePosition = ctx.stop.charPositionInLine
+        return position
     }
 
     fun getNodeInfo(): CodeContainer {

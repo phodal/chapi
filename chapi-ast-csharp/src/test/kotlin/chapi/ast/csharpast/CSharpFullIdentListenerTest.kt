@@ -223,6 +223,27 @@ namespace Chapi {
         assertEquals(2, structs[0].Functions.size)
     }
 
+
+    @Test
+    fun shouldIdentClassPosition() {
+        val code = """
+using System; 
+  
+namespace Chapi { 
+    public class Chapi {
+        public Chapi() {}
+        public Chapi(long id) {}
+    }
+} 
+"""
+        val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+        assertEquals(structs.size, 1)
+
+        assertEquals(structs[0].Position.StartLine, 5)
+        assertEquals(structs[0].Position.StopLine, 8)
+    }
+
     @Test
     fun shouldIdentProperty() {
         val code = """
