@@ -47,7 +47,9 @@ open class CodeDataStruct(
     var Exports: Array<CodeExport> = arrayOf(),
 
     // todo: select node useonly imports
-    var Extension: JsonElement = JsonObject(HashMap())
+    var Extension: JsonElement = JsonObject(HashMap()),
+
+    var Position: CodePosition = CodePosition()
 ) {
     open fun isUtilClass(): Boolean {
         return this.NodeName.lowercase().contains("util") ||
