@@ -39,7 +39,7 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 ## Todo
 
-- [ ] split Chapi CLI application``
+- [ ] split Chapi CLI application
 
 ## Chapi-base projects
 
