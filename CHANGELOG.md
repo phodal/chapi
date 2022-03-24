@@ -1,4 +1,13 @@
-# [](https://github.com/modernizing/chapi/compare/v1.2.4...v) (2022-03-24)
+# [](https://github.com/modernizing/chapi/compare/v1.2.5...v) (2022-03-24)
+
+
+
+## [1.2.5](https://github.com/modernizing/chapi/compare/v1.2.4...v1.2.5) (2022-03-24)
+
+
+### Bug Fixes
+
+* fix suffix is a path issue ([84d8f1f](https://github.com/modernizing/chapi/commit/84d8f1fb74a457b90d50d0fab8059f9dfc60683e))
 
 
 
