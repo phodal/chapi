@@ -105,7 +105,17 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             Implements = implements.toTypedArray()
             Annotations = annotations.toTypedArray()
             Imports = imports.toTypedArray()
+            Position = buildPosition(ctx)
         }
+    }
+
+    fun buildPosition(ctx: ParserRuleContext): CodePosition {
+        val position = CodePosition()
+        position.StartLine = ctx.start.line
+        position.StartLinePosition = ctx.start.charPositionInLine
+        position.StopLine = ctx.stop.line
+        position.StopLinePosition = ctx.stop.charPositionInLine
+        return position
     }
 
     override fun exitClassDeclaration(ctx: KotlinParser.ClassDeclarationContext) {

@@ -88,6 +88,22 @@ class Person(val name: String) : Human {}
         }
 
         @Test
+        internal fun `should identify class with position`() {
+            val code = """
+package chapi.ast.kotlinast
+
+import hello.Human;
+     
+class Person(val name: String) : Human {}
+"""
+
+            val codeContainer = analyse(code)
+            val ds = codeContainer.DataStructures[0]
+            assertEquals(ds.Position.StartLine, 6)
+            assertEquals(ds.Position.StopLine, 6)
+        }
+
+        @Test
         internal fun `should identify multiple classes`() {
             val code = """
 package chapi.ast.kotlinast
