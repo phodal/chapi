@@ -311,6 +311,7 @@ namespace Chapi {
     }
 } 
 """
+        // expression will split by `:`, cause issues the
         val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
         val structs = codeContainer.Containers[0].DataStructures
         assertEquals(structs.size, 1)
