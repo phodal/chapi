@@ -19,7 +19,7 @@ class Ast : CliktCommand() {
 
     override fun run() {
         val results = ChapiAnalyser(ChapiConfig(language)).analysis(path)
-        File("chapi.json").writeText(results.toString())
+        File("chapi.json").writeText(Json.encodeToString(results))
     }
 }
 
