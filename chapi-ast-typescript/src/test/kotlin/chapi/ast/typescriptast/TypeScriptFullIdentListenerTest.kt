@@ -45,6 +45,28 @@ export class LedgeStorageService {
         Assertions.assertEquals(annotations[0].Name, "Injectable")
     }
 
+
+    @Test
+    internal fun shouldIdentClassPosition() {
+        val content = """
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class LedgeStorageService {
+  get storage() {
+    return window.localStorage;
+  }
+}
+        """
+
+        val codeFile = TypeScriptAnalyser().analysis(content, "")
+        val ds = codeFile.DataStructures[0]
+        val annotations = ds.Annotations
+        Assertions.assertEquals(annotations.size, 1)
+        Assertions.assertEquals(ds.Position.StartLine, 5)
+        Assertions.assertEquals(ds.Position.StopLine, 9)
+    }
+
     @Test
     internal fun shouldIndentTypeScriptDecoratorKeyValues() {
         val content = """

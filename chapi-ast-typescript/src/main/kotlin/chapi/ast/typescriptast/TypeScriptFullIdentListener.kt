@@ -169,7 +169,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             NodeName = nodeName,
             Type = DataStructType.CLASS,
             Package = codeContainer.PackageName,
-            FilePath = codeContainer.FullName
+            FilePath = codeContainer.FullName,
+            Position = buildPosition(ctx)
         )
 
         val heritageCtx = ctx.classHeritage()
@@ -275,7 +276,11 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         val currentType = DataStructType.INTERFACE
 
         currentNode = CodeDataStruct(
-            NodeName = nodeName, Type = currentType, Package = codeContainer.PackageName, FilePath = codeContainer.FullName
+            NodeName = nodeName,
+            Type = currentType,
+            Package = codeContainer.PackageName,
+            FilePath = codeContainer.FullName,
+            Position = buildPosition(ctx)
         )
 
         if (ctx.interfaceExtendsClause() != null) {
