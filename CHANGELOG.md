@@ -1,4 +1,8 @@
-# [](https://github.com/modernizing/chapi/compare/v1.2.5...v) (2022-03-25)
+# [](https://github.com/modernizing/chapi/compare/v1.3.0...v) (2022-03-25)
+
+
+
+# [1.3.0](https://github.com/modernizing/chapi/compare/v1.2.5...v1.3.0) (2022-03-25)
 
 
 ### Bug Fixes
@@ -9,6 +13,8 @@
 
 ### Features
 
+* **c#:** config for namespace ([01ac839](https://github.com/modernizing/chapi/commit/01ac8399292eeae7e5d1bd2c1009492d9df5d6d8))
+* **c#:** make container to use sample imports to ds ([0171c89](https://github.com/modernizing/chapi/commit/0171c893b884708b33cc9a828b829408f2aa8da6))
 * **loc:** add position for c# ([591de72](https://github.com/modernizing/chapi/commit/591de721b59ed6ee4089e984ef696238f12b76c2))
 * **loc:** add position for java ([fac9446](https://github.com/modernizing/chapi/commit/fac944617b16b640fc862cf331fd61f41512b8e7))
 * **loc:** add position for kotlin ([a47b668](https://github.com/modernizing/chapi/commit/a47b6685ff741a71161059c53c125688d0793e4d))
