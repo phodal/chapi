@@ -1,16 +1,11 @@
 plugins {
-//    application
+    application
     java
     kotlin("jvm")
     kotlin("plugin.serialization") version "1.6.10"
 
     `jacoco-conventions`
-//    id("com.github.johnrengelman.shadow") version "7.0.0"
-}
-
-repositories {
-    mavenCentral()
-    mavenLocal()
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 dependencies {
@@ -47,17 +42,17 @@ dependencies {
     implementation("org.antlr:antlr4-runtime:4.9.3")
 }
 
-//application {
-//    mainClass.set("chapi.app.cli.ChapiKt")
-//}
-//
-//tasks{
-//    shadowJar {
-//        manifest {
-//            attributes(Pair("Main-Class", "chapi.app.cli.ChapiKt"))
-//        }
-//    }
-//}
+application {
+    mainClass.set("chapi.app.cli.ChapiKt")
+}
+
+tasks{
+    shadowJar {
+        manifest {
+            attributes(Pair("Main-Class", "chapi.app.cli.ChapiKt"))
+        }
+    }
+}
 
 tasks.withType<Test> {
     useJUnitPlatform()
