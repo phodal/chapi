@@ -20,8 +20,10 @@ open class CSharpAnalyserApp(var config: ChapiConfig = ChapiConfig(language = La
 
         return codeContainer.Containers.flatMap { container ->
             container.DataStructures.map {
-                it.FilePath = file.absolutePath
-                it
+                it.apply {
+                    it.Imports = codeContainer.Imports
+                    it.FilePath = file.absolutePath
+                }
             }
         }.toList()
     }
