@@ -1,9 +1,11 @@
 plugins {
+//    application
     java
     kotlin("jvm")
     kotlin("plugin.serialization") version "1.6.10"
 
     `jacoco-conventions`
+//    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
@@ -12,7 +14,9 @@ repositories {
 }
 
 dependencies {
+    // project deps
     implementation(project(":chapi-domain"))
+    implementation(project(":chapi-application"))
 
     // languages
     implementation(project(":chapi-ast-java"))
@@ -42,6 +46,18 @@ dependencies {
     implementation("org.antlr:antlr4:4.8-1")
     implementation("org.antlr:antlr4-runtime:4.8-1")
 }
+
+//application {
+//    mainClass.set("chapi.app.cli.ChapiKt")
+//}
+//
+//tasks{
+//    shadowJar {
+//        manifest {
+//            attributes(Pair("Main-Class", "chapi.app.cli.ChapiKt"))
+//        }
+//    }
+//}
 
 tasks.withType<Test> {
     useJUnitPlatform()
