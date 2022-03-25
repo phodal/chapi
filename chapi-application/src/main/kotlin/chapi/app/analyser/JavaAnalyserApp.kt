@@ -34,6 +34,7 @@ open class JavaAnalyserApp(var config: ChapiConfig = ChapiConfig(language = Lang
         basicNodes: Array<CodeDataStruct>
     ): Array<CodeDataStruct> {
         return files.flatMap {
+            println("processing file: ${it.absolutePath}")
             val codeContainer = JavaAnalyser().identFullInfo(readFileAsString(it.absolutePath), it.fileName, classes, basicNodes)
             codeContainer.DataStructures.map { ds -> ds.apply { ds.Imports = codeContainer.Imports } }
         }.toTypedArray()
