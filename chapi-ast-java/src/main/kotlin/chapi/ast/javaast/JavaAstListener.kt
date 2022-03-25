@@ -9,13 +9,13 @@ import org.antlr.v4.runtime.ParserRuleContext
 
 open class JavaAstListener : JavaParserBaseListener() {
     fun buildAnnotation(ctx: JavaParser.AnnotationContext): CodeAnnotation {
-        var annotationName = ctx.qualifiedName().text
+        val annotationName = ctx.qualifiedName().text
         val codeAnnotation = CodeAnnotation(
             Name = annotationName
         )
         if (ctx.elementValuePairs() != null) {
             for (pairContext in ctx.elementValuePairs().elementValuePair()) {
-                val key = pairContext.IDENTIFIER().text
+                val key = pairContext.identifier().text
                 val value = pairContext.elementValue().text
 
                 codeAnnotation.KeyValues += AnnotationKeyValue(key, value)

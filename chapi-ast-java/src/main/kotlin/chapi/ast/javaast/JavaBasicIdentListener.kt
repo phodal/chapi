@@ -30,8 +30,8 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         currentNode.Type = DataStructType.CLASS
         currentNode.Package = codeContainer.PackageName
 
-        if (ctx!!.IDENTIFIER() != null) {
-            currentNode.NodeName = ctx.IDENTIFIER().text
+        if (ctx!!.identifier() != null) {
+            currentNode.NodeName = ctx.identifier().text
         }
 
         if (ctx.EXTENDS() != null) {
@@ -55,7 +55,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
 
     open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
         var implements = arrayOf<String>()
-        for (_type in ctx.typeList().typeType()) {
+        for (_type in ctx.typeList()) {
             val typeText = _type.text
             for (imp in imports) {
                 if (imp.Source.endsWith(".$typeText")) {
@@ -70,7 +70,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     override fun enterInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
         hasEnterClass = true
         currentNode = CodeDataStruct(
-            NodeName = ctx!!.IDENTIFIER().text,
+            NodeName = ctx!!.identifier().text,
             Type = DataStructType.INTERFACE,
             Package = codeContainer.PackageName
         )
@@ -84,7 +84,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     }
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-        val name = ctx!!.IDENTIFIER().text
+        val name = ctx!!.identifier().text
         val typeType = ctx.typeTypeOrVoid().text
 
         var codeFunction = CodeFunction(
@@ -119,8 +119,8 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     }
 
     override fun enterInterfaceMethodDeclaration(ctx: JavaParser.InterfaceMethodDeclarationContext?) {
-        val name = ctx!!.IDENTIFIER().text
-        val typeType = ctx.typeTypeOrVoid().text
+        val name = ctx!!.interfaceCommonBodyDeclaration().identifier().text
+        val typeType = ctx.interfaceCommonBodyDeclaration().typeTypeOrVoid().text
 
         val position = buildPosition(ctx)
         var codeFunction = CodeFunction(
@@ -146,7 +146,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     override fun enterConstructorDeclaration(ctx: JavaParser.ConstructorDeclarationContext?) {
         val codePosition = buildPosition(ctx!!)
         val codeFunction = CodeFunction(
-            Name = ctx.IDENTIFIER().text,
+            Name = ctx.identifier().text,
             ReturnType = "",
             Override = isOverrideMethod,
             Position = codePosition,

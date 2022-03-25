@@ -93,8 +93,8 @@ open class JavaFullIdentListener(
         classNode.Package = codeContainer.PackageName
         classNode.FilePath = codeContainer.FullName
 
-        if (ctx!!.IDENTIFIER() != null) {
-            currentClz = ctx.IDENTIFIER().text
+        if (ctx!!.identifier() != null) {
+            currentClz = ctx.identifier().text
             classNode.NodeName = currentClz
         }
 
@@ -111,7 +111,7 @@ open class JavaFullIdentListener(
 
     open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
         var implements = arrayOf<String>()
-        for (_type in ctx.typeList().typeType()) {
+        for (_type in ctx.typeList()) {
             var target = this.warpTargetFullType(_type.text).targetType
             if (target == "") {
                 target = _type.text
@@ -151,14 +151,14 @@ open class JavaFullIdentListener(
 
 
     override fun enterInterfaceMethodDeclaration(ctx: JavaParser.InterfaceMethodDeclarationContext?) {
-        val name = ctx!!.IDENTIFIER().text
-        val typeType = ctx.typeTypeOrVoid().text
+        val name = ctx!!.interfaceCommonBodyDeclaration().identifier().text
+        val typeType = ctx.interfaceCommonBodyDeclaration().typeTypeOrVoid().text
 
         val codePosition = CodePosition(
             StartLine = ctx.start.line,
-            StartLinePosition = ctx.IDENTIFIER().symbol.startIndex,
+            StartLinePosition = ctx.start.charPositionInLine,
             StopLine = ctx.stop.line,
-            StopLinePosition = ctx.IDENTIFIER().symbol.stopIndex
+            StopLinePosition = ctx.stop.charPositionInLine
         )
 
         val codeFunction = CodeFunction(
@@ -177,7 +177,7 @@ open class JavaFullIdentListener(
     }
 
     override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
-        val name = ctx!!.IDENTIFIER().text
+        val name = ctx!!.identifier().text
         val typeType = ctx.typeTypeOrVoid().text
 
         val codeFunction = CodeFunction(
@@ -215,7 +215,7 @@ open class JavaFullIdentListener(
         for (param in parameterList.formalParameter()) {
             val paramCtx = param as JavaParser.FormalParameterContext
             val paramType = paramCtx.typeType().text
-            val paramValue = paramCtx.variableDeclaratorId().IDENTIFIER().text
+            val paramValue = paramCtx.variableDeclaratorId().identifier().text
             localVars[paramValue] = paramType
 
             val parameter =
@@ -252,7 +252,7 @@ open class JavaFullIdentListener(
             val currentCtx = targetCtx.getChild(0)
             when (currentCtx::class.simpleName) {
                 "MethodCallContext" -> {
-                    targetType = (currentCtx as JavaParser.MethodCallContext).IDENTIFIER().text
+                    targetType = (currentCtx as JavaParser.MethodCallContext).identifier().text
                 }
             }
         }
@@ -483,7 +483,7 @@ open class JavaFullIdentListener(
     }
 
     override fun exitFormalParameter(ctx: JavaParser.FormalParameterContext?) {
-        val paramKey = ctx!!.variableDeclaratorId().IDENTIFIER().text
+        val paramKey = ctx!!.variableDeclaratorId().identifier().text
         formalParameters[paramKey] = ctx.typeType().text
     }
 
@@ -503,8 +503,8 @@ open class JavaFullIdentListener(
                 continue
             }
 
-            val typeTypeText = typeCtx.IDENTIFIER(0).text
-            val typeValue = declCtx.variableDeclaratorId().IDENTIFIER().text
+            val typeTypeText = typeCtx.identifier(0).text
+            val typeValue = declCtx.variableDeclaratorId().identifier().text
             fieldsMap[typeValue] = typeTypeText
 
             val field = CodeField(typeTypeText, typeValue, Modifiers = arrayOf())
@@ -548,13 +548,13 @@ open class JavaFullIdentListener(
     override fun enterInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
         hasEnterClass = true
         currentType = DataStructType.INTERFACE
-        currentNode.NodeName = ctx!!.IDENTIFIER().text
+        currentNode.NodeName = ctx!!.identifier().text
         currentNode.Type = DataStructType.INTERFACE
         currentNode.Package = codeContainer.PackageName
 
         if (ctx.EXTENDS() != null) {
             var extend = ""
-            for (typeContext in ctx.typeList().typeType()) {
+            for (typeContext in ctx.typeList()) {
                 extend = buildExtend(typeContext.text)
             }
 
@@ -598,7 +598,7 @@ open class JavaFullIdentListener(
             }
 
             val text = ctx.expression(0).text
-            val methodName = ctx.IDENTIFIER().text
+            val methodName = ctx.identifier().text
             val targetType = parseTargetType(text)
 
             val fullType = warpTargetFullType(targetType).targetType
@@ -616,7 +616,7 @@ open class JavaFullIdentListener(
     }
 
     override fun enterConstructorDeclaration(ctx: JavaParser.ConstructorDeclarationContext?) {
-        val name = ctx!!.IDENTIFIER().text
+        val name = ctx!!.identifier().text
         val position = buildPosition(ctx)
 
         val codeFunction = CodeFunction(
@@ -637,7 +637,7 @@ open class JavaFullIdentListener(
 
     override fun enterCreator(ctx: JavaParser.CreatorContext?) {
         val variableName = ctx!!.getParent().getParent().getChild(0).text
-        val allIdentifier = ctx.createdName().IDENTIFIER()
+        val allIdentifier = ctx.createdName().identifier()
         for (identifier in allIdentifier!!) {
             val createdName = identifier.text
             localVars[variableName] = createdName
