@@ -1,4 +1,19 @@
-# [](https://github.com/modernizing/chapi/compare/v1.2.5...v) (2022-03-24)
+# [](https://github.com/modernizing/chapi/compare/v1.2.5...v) (2022-03-25)
+
+
+### Bug Fixes
+
+* fix path issues ([af79760](https://github.com/modernizing/chapi/commit/af797609a83cf42aa45c78cfd46daa07ae2aa688))
+* fix tests ([4a08b03](https://github.com/modernizing/chapi/commit/4a08b039df36f507ace3fb521ab212bfbb7fd9e9))
+
+
+### Features
+
+* **loc:** add position for c# ([591de72](https://github.com/modernizing/chapi/commit/591de721b59ed6ee4089e984ef696238f12b76c2))
+* **loc:** add position for java ([fac9446](https://github.com/modernizing/chapi/commit/fac944617b16b640fc862cf331fd61f41512b8e7))
+* **loc:** add position for kotlin ([a47b668](https://github.com/modernizing/chapi/commit/a47b6685ff741a71161059c53c125688d0793e4d))
+* **loc:** add position for typescript ([50284c9](https://github.com/modernizing/chapi/commit/50284c9ae9437c3ee70eec492adf606bb94bb9fa))
+* **loc:** add position to code data struct ([aebffba](https://github.com/modernizing/chapi/commit/aebffba60a55ed84beed014b80cfd051c7ace0ab))
 
 
 
