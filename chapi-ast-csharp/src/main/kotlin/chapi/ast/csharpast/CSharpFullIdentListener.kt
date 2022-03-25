@@ -8,6 +8,7 @@ import chapi.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 
 class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
+    private var currentNamspace: String = ""
     private var currentStruct: CodeDataStruct = CodeDataStruct();
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     private var currentContainer: CodeContainer = codeContainer
@@ -52,6 +53,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         if (namespaceDeclaration != null) {
             if (namespaceDeclaration.qualified_identifier() != null) {
                 val nsName = ctx.namespace_declaration().qualified_identifier().text
+                currentNamspace = nsName
                 val container = CodeContainer(
                     FullName = fileName,
                     PackageName = nsName
@@ -85,6 +87,7 @@ class CSharpFullIdentListener(val fileName: String) : CSharpAstListener() {
         val className = ctx!!.identifier().text
         val codeDataStruct = CodeDataStruct(
             NodeName = className,
+            Package = currentNamspace,
             Position = buildPosition(ctx)
         )
 
