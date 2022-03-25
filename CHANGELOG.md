@@ -1,4 +1,19 @@
-# [](https://github.com/modernizing/chapi/compare/v1.3.0...v) (2022-03-25)
+# [](https://github.com/modernizing/chapi/compare/v1.3.1...v) (2022-03-25)
+
+
+
+## [1.3.1](https://github.com/modernizing/chapi/compare/v1.3.0...v1.3.1) (2022-03-25)
+
+
+### Bug Fixes
+
+* fix typos ([085281c](https://github.com/modernizing/chapi/commit/085281c5c7cb660e06c1497e29997da6348d9c38))
+
+
+### Features
+
+* add debug for local info ([34744ea](https://github.com/modernizing/chapi/commit/34744ea56562aa7087bbead80626ba712858d6e3))
+* **java:** merge java 17 grammar ([aa4541b](https://github.com/modernizing/chapi/commit/aa4541bb575dd4890c5525c1afc08462afd8b865))
 
 
 
