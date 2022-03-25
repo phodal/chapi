@@ -43,8 +43,8 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
     testRuntimeOnly("org.junit.platform:junit-platform-console:1.6.0")
 
-    implementation("org.antlr:antlr4:4.8-1")
-    implementation("org.antlr:antlr4-runtime:4.8-1")
+    implementation("org.antlr:antlr4:4.9.3")
+    implementation("org.antlr:antlr4-runtime:4.9.3")
 }
 
 //application {
