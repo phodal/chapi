@@ -41,6 +41,7 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 - interpolated_string parse issue：[official grammar](https://github.com/dotnet/roslyn/blob/main/src/Compilers/CSharp/Portable/Generated/CSharp.Generated.g4)，Antlr issues: [https://github.com/antlr/grammars-v4/issues/1146](https://github.com/antlr/grammars-v4/issues/1146)
 - import analysis support
+  - in C#, import `namespace` can use call in namespace
 
 ## Todo
 
