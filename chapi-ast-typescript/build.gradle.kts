@@ -33,10 +33,6 @@ dependencies {
     implementation("org.antlr:antlr4-runtime:4.9.3")
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
 sourceSets.main {
     java.srcDirs("${project.buildDir}/generated-src")
 }

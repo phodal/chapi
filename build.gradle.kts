@@ -20,6 +20,8 @@ jacoco {
 }
 
 allprojects {
+    apply(plugin = "java")
+
     group = "com.phodal.chapi"
     version = "1.3.0-SNAPSHOT"
     description =
@@ -29,6 +31,8 @@ allprojects {
         mavenCentral()
         mavenLocal()
     }
+
+    java.sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
 subprojects {

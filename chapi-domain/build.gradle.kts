@@ -20,10 +20,6 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-console:1.6.0")
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
 tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
