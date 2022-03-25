@@ -18,6 +18,12 @@ Languages Stages (Welcome to PR your usage languages)
 | real world validate | ✅    |        |     |        | ✅          |     |     |       |     |
 | expression  (TBD)   |      |        |     |        |            |     |     |       |     |
 
+language versions（tested）: 
+
+- Java: 8, 11, 17
+- C#: .NET 6.0
+- Python: 2, 3
+
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
 Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily)

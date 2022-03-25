@@ -5,8 +5,20 @@ import kotlin.test.assertEquals
 
 internal class JavaIdentCallAppTest {
     @Test
-    fun shouldNotCrashForGrammarFile() {
+    fun shouldNotCrashForJava8() {
         val code = this::class.java.getResource("/grammar/AllInOne8.java").readText()
+        JavaAnalyser().identFullInfo(code, "AllInOne8.java")
+    }
+
+    @Test
+    fun shouldNotCrashForJava11() {
+        val code = this::class.java.getResource("/grammar/AllInOne11.java").readText()
+        JavaAnalyser().identFullInfo(code, "AllInOne8.java")
+    }
+
+    @Test
+    fun shouldNotCrashForJava17() {
+        val code = this::class.java.getResource("/grammar/AllInOne17.java").readText()
         JavaAnalyser().identFullInfo(code, "AllInOne8.java")
     }
 
