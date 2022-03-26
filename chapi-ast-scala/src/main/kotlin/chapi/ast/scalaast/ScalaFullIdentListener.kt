@@ -49,7 +49,7 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
 
         if (ctx.classTemplateOpt() != null) {
             if (ctx.classTemplateOpt().classTemplate() != null) {
-                val extend = ctx.classTemplateOpt().classTemplate().text
+                val extend = ctx.classTemplateOpt().classTemplate().classParents().constr().annotType().text
                 codeDataStruct.Extend = extend
             }
         }
