@@ -1,6 +1,7 @@
 package chapi.ast.kotlinast
 
 import chapi.domain.core.CallType
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -162,6 +163,31 @@ class Person(private val mouth: Mouth) {
             assertEquals(calls[0].NodeName, "Mouth")
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
             assertEquals(calls[0].Parameters[0].TypeValue, "\"Hello world!\"")
+        }
+
+        @Test
+        @Disabled
+        internal fun `should identify function call for RestTemplate`() {
+            val code = """
+package chapi.ast.kotlinast
+     
+import org.springframework.web.client.RestTemplate
+
+
+@Component
+class QualityGateClientImpl(@Value val baseUrl: String) : QualityGateClient {
+    override fun getQualityGate(qualityGateName: String): CouplingQualityGate {
+        RestTemplate().getForObject("/api/quality-gate-profile/mcc", CouplingQualityGate::class.java)
+    }
+}
+"""
+
+            val container = analyse(code)
+            val calls = container.DataStructures[0].Functions[1].FunctionCalls
+
+            assertEquals(calls[0].Package, "org.springframework.web")
+            assertEquals(calls[0].NodeName, "RestTemplate")
+//            assertEquals(calls[0].FunctionName, "RestTemplate")
         }
     }
 }
