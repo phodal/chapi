@@ -128,9 +128,9 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
     override fun enterPostfixUnaryExpression(ctx: KotlinParser.PostfixUnaryExpressionContext?) {
         // one or more call, maybe call map
         var calls: Array<CodeCall> = arrayOf()
-        var params: Array<String> = arrayOf()
         var lastIdentifier = ""
         var lastPackage = ""
+
         ctx!!.children.forEach { child ->
             println("Child: ${child.javaClass.simpleName} -> Text: ${child.text}")
             when (child) {
@@ -138,12 +138,11 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                     if (child.simpleIdentifier() != null) {
                         lastIdentifier = child.simpleIdentifier().text
                     } else if (child.stringLiteral() != null) {
-                        params += child.stringLiteral().text
+                        lastIdentifier = child.stringLiteral().text
                     } else {
+                        lastIdentifier = child.text
                         println("PrimaryExpressionContext: ${child.javaClass.simpleName}")
                     }
-
-                    // todo: parse from parameters
                 }
 
                 is KotlinParser.PostfixUnarySuffixContext -> {
@@ -155,6 +154,9 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                             var parameters: Array<CodeProperty> = arrayOf()
                             if (postfix.valueArguments() != null) {
                                 parameters = postfix.valueArguments().valueArgument().map {
+                                    if (it.expression() != null) {
+                                        // todo: handle for has sub expression
+                                    }
                                     parseParameter(it.text)
                                 }.toTypedArray()
                             }
@@ -198,8 +200,8 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         }
 
         if (calls.isNotEmpty()) {
-//            currentFunction.FunctionCalls = calls
-//            println(Json.encodeToString(currentFunction.FunctionCalls))
+//            currentFunction.FunctionCalls += calls
+            println(Json.encodeToString(calls))
         }
     }
 

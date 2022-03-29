@@ -1,6 +1,7 @@
 package chapi.ast.kotlinast
 
 import chapi.domain.core.CallType
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -185,7 +186,29 @@ class QualityGateClientImpl(@Value val baseUrl: String) : QualityGateClient {
 
             assertEquals(calls[0].Package, "org.springframework.web.client.RestTemplate")
             assertEquals(calls[0].NodeName, "RestTemplate")
-//            assertEquals(calls[0].FunctionName, "RestTemplate")
+        }
+
+        @Test
+        @Disabled
+        internal fun `multiple call for testing`() {
+            val code = """
+package com.thoughtworks.archguard.packages.domain
+     
+import org.springframework.web.client.RestTemplate
+
+class PackageStore {
+    fun addEdge(a: String, b: String, num: Int) {
+        val aId = getNodeId(a)
+        val bId = getNodeId(b)
+        packageEdges.add(PackageEdge(aId, bId, num))
+    }
+}
+"""
+
+            val container = analyse(code)
+            val calls = container.DataStructures[0].Functions[0].FunctionCalls
+
+            assertEquals(4, calls.size)
         }
     }
 }
