@@ -123,6 +123,74 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
         return this
     }
 
+    override fun enterPostfixUnaryExpression(ctx: KotlinParser.PostfixUnaryExpressionContext?) {
+        // one or more call, maybe call map
+        var calls: Array<CodeCall> = arrayOf()
+        var params: Array<String> = arrayOf()
+        var lastIdentifier = ""
+        ctx!!.children.forEach { child ->
+            println("Child: ${child.javaClass.simpleName} -> Text: ${child.text}")
+            when (child) {
+                is KotlinParser.PrimaryExpressionContext -> {
+                    if (child.simpleIdentifier() != null) {
+                        lastIdentifier = child.simpleIdentifier().text
+                    } else if (child.stringLiteral() != null) {
+                        params += child.stringLiteral().text
+                    } else {
+                        println("PrimaryExpressionContext: ${child.javaClass.simpleName}")
+                    }
+
+                    // todo: parse from parameters
+                }
+
+                is KotlinParser.PostfixUnarySuffixContext -> {
+                    println("PostfixUnaryType: ${child.children[0].javaClass.simpleName}")
+
+                    when (val postfix = child.children[0]) {
+                        is KotlinParser.CallSuffixContext -> {
+                            var parameters: Array<CodeProperty> = arrayOf()
+                            if (postfix.typeArguments() != null) {
+                                parameters = postfix.typeArguments().typeProjection().map {
+                                    CodeProperty(TypeValue = it.text, TypeType = "")
+                                }.toTypedArray()
+                            }
+
+                            calls += CodeCall(
+                                FunctionName = lastIdentifier,
+                                Parameters = parameters
+                            ).refineIfExistsCreator()
+                        }
+                        is KotlinParser.NavigationSuffixContext -> {
+                            // parameters ?
+                            if (postfix.parenthesizedExpression() != null) {
+                                println("todo: parse parameters")
+                            }
+                            if (postfix.simpleIdentifier() != null) {
+                                val navigationName = postfix.simpleIdentifier().text
+                                var parameters: Array<CodeProperty> = arrayOf()
+                                if (postfix.parenthesizedExpression() != null) {
+                                    val param = postfix.parenthesizedExpression().expression().text
+                                    parameters += CodeProperty(TypeValue = param, TypeType = "")
+                                }
+
+                                calls += CodeCall(
+                                    NodeName = lastIdentifier,
+                                    FunctionName = navigationName,
+                                    Parameters = parameters
+                                ).refineIfExistsCreator()
+                            }
+                        } else -> {
+                            println("todo: PostfixUnaryType: ${child.children[0].javaClass.simpleName}")
+                        }
+                    }
+                }
+            }
+        }
+
+//        println("..........................")
+//        currentFunction.FunctionCalls += calls
+    }
+
     override fun buildClass(ctx: KotlinParser.ClassDeclarationContext): CodeDataStruct {
         return super.buildClass(ctx).also {
             postClassHandler.forEach { callback -> callback(it) }
