@@ -8,6 +8,8 @@ import chapi.domain.core.CodeField
 import chapi.domain.core.CodeFunction
 import chapi.domain.core.CodeImport
 import chapi.domain.core.CodeProperty
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * listen to full identifier with complex type and sceneries, such as:
@@ -15,7 +17,7 @@ import chapi.domain.core.CodeProperty
  * - lambda expression
  * - coroutine
  */
-class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileName) {
+open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileName) {
 
     private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
     override fun buildFunction(ctx: KotlinParser.FunctionDeclarationContext): CodeFunction =
@@ -128,6 +130,7 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
         var calls: Array<CodeCall> = arrayOf()
         var params: Array<String> = arrayOf()
         var lastIdentifier = ""
+        var lastPackage = ""
         ctx!!.children.forEach { child ->
             println("Child: ${child.javaClass.simpleName} -> Text: ${child.text}")
             when (child) {
@@ -145,20 +148,23 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
 
                 is KotlinParser.PostfixUnarySuffixContext -> {
                     println("PostfixUnaryType: ${child.children[0].javaClass.simpleName}")
+                    println("PostfixUnaryType: ${child.children[0].text}")
 
                     when (val postfix = child.children[0]) {
                         is KotlinParser.CallSuffixContext -> {
                             var parameters: Array<CodeProperty> = arrayOf()
-                            if (postfix.typeArguments() != null) {
-                                parameters = postfix.typeArguments().typeProjection().map {
-                                    CodeProperty(TypeValue = it.text, TypeType = "")
+                            if (postfix.valueArguments() != null) {
+                                parameters = postfix.valueArguments().valueArgument().map {
+                                    parseParameter(it.text)
                                 }.toTypedArray()
                             }
 
-                            calls += CodeCall(
+                            val call = CodeCall(
+                                NodeName = lastPackage,
                                 FunctionName = lastIdentifier,
                                 Parameters = parameters
                             ).refineIfExistsCreator()
+                            calls += call
                         }
                         is KotlinParser.NavigationSuffixContext -> {
                             // parameters ?
@@ -170,16 +176,20 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
                                 var parameters: Array<CodeProperty> = arrayOf()
                                 if (postfix.parenthesizedExpression() != null) {
                                     val param = postfix.parenthesizedExpression().expression().text
-                                    parameters += CodeProperty(TypeValue = param, TypeType = "")
+                                    parameters += parseParameter(param)
                                 }
 
-                                calls += CodeCall(
+                                val call = CodeCall(
                                     NodeName = lastIdentifier,
                                     FunctionName = navigationName,
-                                    Parameters = parameters
+                                    Parameters = parameters,
+                                    Package = lastPackage
                                 ).refineIfExistsCreator()
+                                lastPackage = call.Package
+                                calls += call
                             }
-                        } else -> {
+                        }
+                        else -> {
                             println("todo: PostfixUnaryType: ${child.children[0].javaClass.simpleName}")
                         }
                     }
@@ -187,8 +197,10 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
             }
         }
 
-//        println("..........................")
-//        currentFunction.FunctionCalls += calls
+        if (calls.isNotEmpty()) {
+//            currentFunction.FunctionCalls = calls
+//            println(Json.encodeToString(currentFunction.FunctionCalls))
+        }
     }
 
     override fun buildClass(ctx: KotlinParser.ClassDeclarationContext): CodeDataStruct {
