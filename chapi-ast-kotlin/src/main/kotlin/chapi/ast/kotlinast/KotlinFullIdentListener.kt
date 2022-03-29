@@ -97,6 +97,13 @@ class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileN
             Package = it.Source.substringBeforeLast('.')
             return null
         }
+
+        if (it.AsName == FunctionName && FunctionName[0].isUpperCase()) {
+            Package = it.Source
+            NodeName = FunctionName
+            return null;
+        }
+
         if (it.AsName == FunctionName) {
             val fullNodeName = it.Source.substringBeforeLast('.')
             Package = fullNodeName.substringBeforeLast('.')

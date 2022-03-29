@@ -34,7 +34,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     protected val classes: MutableList<CodeDataStruct> = mutableListOf()
     protected val imports: MutableList<CodeImport> = mutableListOf()
     protected var currentNode: CodeDataStruct = CodeDataStruct()
-    protected lateinit var currentFunction: CodeFunction
+    protected var currentFunction: CodeFunction = CodeFunction()
     protected val isEnteredClass = AtomicInteger(0)
     private val individualFunctions = mutableListOf<CodeFunction>()
     private val individualFields = mutableListOf<CodeField>()
