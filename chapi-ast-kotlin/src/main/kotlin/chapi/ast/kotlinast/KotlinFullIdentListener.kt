@@ -125,12 +125,17 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         return this
     }
 
+    private var nestedPostfixMap: MutableMap<String, CodeCall> = mutableMapOf()
+
     override fun enterPostfixUnaryExpression(ctx: KotlinParser.PostfixUnaryExpressionContext?) {
         // one or more call, maybe call map
         var calls: Array<CodeCall> = arrayOf()
         var lastIdentifier = ""
         var lastPackage = ""
+        var lastFunctionName = ""
+        var lastNodeName = ""
 
+        var lastPostfixChildType = ""
         ctx!!.children.forEach { child ->
             println("Child: ${child.javaClass.simpleName} -> Text: ${child.text}")
             when (child) {
@@ -161,12 +166,19 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                                 }.toTypedArray()
                             }
 
+                            if (lastPostfixChildType == "NavigationSuffixContext") {
+                                calls = calls.dropLast(1).toTypedArray()
+                                lastIdentifier = "$lastIdentifier.$lastFunctionName"
+                            }
+
                             val call = CodeCall(
-                                NodeName = lastPackage,
+                                NodeName = lastNodeName,
                                 FunctionName = lastIdentifier,
                                 Parameters = parameters
                             ).refineIfExistsCreator()
                             calls += call
+
+                            lastPostfixChildType = "CallSuffixContext"
                         }
                         is KotlinParser.NavigationSuffixContext -> {
                             // parameters ?
@@ -181,6 +193,8 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                                     parameters += parseParameter(param)
                                 }
 
+                                lastFunctionName = navigationName
+
                                 val call = CodeCall(
                                     NodeName = lastIdentifier,
                                     FunctionName = navigationName,
@@ -188,11 +202,15 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                                     Package = lastPackage
                                 ).refineIfExistsCreator()
                                 lastPackage = call.Package
+                                lastNodeName = call.NodeName
                                 calls += call
                             }
+
+                            lastPostfixChildType = "NavigationSuffixContext"
                         }
                         else -> {
-                            println("todo: PostfixUnaryType: ${child.children[0].javaClass.simpleName}")
+                            lastPostfixChildType = child.children[0].javaClass.simpleName
+                            println("todo: PostfixUnaryType: $lastPostfixChildType")
                         }
                     }
                 }
