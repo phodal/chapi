@@ -158,9 +158,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                             }
 
                             if (lastPostfixChildType == "NavigationSuffixContext") {
-                                println(calls.size)
                                 calls = calls.dropLast(1).toTypedArray()
-                                println(calls.size)
                                 lastIdentifier = "$lastIdentifier.$lastFunctionName"
                             }
 
@@ -213,8 +211,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         }
 
         if (calls.isNotEmpty()) {
-//            currentFunction.FunctionCalls += calls
-            println(Json.encodeToString(calls))
+            currentFunction.FunctionCalls += calls
         }
     }
 
