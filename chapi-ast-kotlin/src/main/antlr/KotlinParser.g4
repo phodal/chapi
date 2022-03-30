@@ -368,18 +368,22 @@ expression
     : disjunction
     ;
 
+// ||
 disjunction
     : conjunction (NL* DISJ NL* conjunction)*
     ;
 
+// &&
 conjunction
     : equality (NL* CONJ NL* equality)*
     ;
 
+// ==
 equality
     : comparison (equalityOperator NL* comparison)*
     ;
 
+// >= compare
 comparison
     : genericCallLikeComparison (comparisonOperator NL* genericCallLikeComparison)*
     ;
@@ -388,10 +392,12 @@ genericCallLikeComparison
     : infixOperation callSuffix*
     ;
 
+// in ..
 infixOperation
     : elvisExpression (inOperator NL* elvisExpression | isOperator NL* type)*
     ;
 
+// ?: , x ?: y // yields `x` if `x` is not null, `y` otherwise.
 elvisExpression
     : infixFunctionCall (NL* elvis NL* infixFunctionCall)*
     ;
@@ -404,18 +410,22 @@ infixFunctionCall
     : rangeExpression (simpleIdentifier NL* rangeExpression)*
     ;
 
+// range
 rangeExpression
     : additiveExpression (RANGE NL* additiveExpression)*
     ;
 
+// +
 additiveExpression
     : multiplicativeExpression (additiveOperator NL* multiplicativeExpression)*
     ;
 
+// -
 multiplicativeExpression
     : asExpression (multiplicativeOperator NL* asExpression)*
     ;
 
+// as
 asExpression
     : prefixUnaryExpression (NL* asOperator NL* type)*
     ;
