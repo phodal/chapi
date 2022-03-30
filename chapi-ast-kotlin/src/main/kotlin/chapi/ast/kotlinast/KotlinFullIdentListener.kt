@@ -140,7 +140,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
             when (child) {
                 // sometimes, it just a tests.
                 is KotlinParser.PrimaryExpressionContext -> {
-                    textFromPrimaryExpr(child, lastIdentifier)
+                    lastIdentifier = textFromPrimaryExpr(child)
                 }
                 is KotlinParser.PostfixUnarySuffixContext -> {
                     println("PostfixUnaryType: ${child.children[0].javaClass.simpleName}, Text: ${child.children[0].text}")
@@ -220,18 +220,16 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
 
     private fun textFromPrimaryExpr(
         child: KotlinParser.PrimaryExpressionContext,
-        lastIdentifier: String
-    ) {
-        var lastIdentifier1 = lastIdentifier
-        when {
+    ): String {
+        return when {
             child.simpleIdentifier() != null -> {
-                lastIdentifier1 = child.simpleIdentifier().text
+                child.simpleIdentifier().text
             }
             child.stringLiteral() != null -> {
-                lastIdentifier1 = child.stringLiteral().text
+                child.stringLiteral().text
             }
             else -> {
-                lastIdentifier1 = child.text
+                child.text
             }
         }
     }
