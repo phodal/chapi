@@ -28,7 +28,7 @@ fun main() {
             assertEquals(calls[0].FunctionName, "println")
             assertEquals(calls[0].Parameters.size, 1)
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
-            assertEquals(calls[0].Parameters[0].TypeValue, "\"Hello world!\"")
+            assertEquals(calls[0].Parameters[0].TypeValue, "Hello world!")
         }
 
         @Test
@@ -51,7 +51,7 @@ fun main() {
             assertEquals(calls[0].FunctionName, "Person")
             assertEquals(calls[0].Type, CallType.CREATOR)
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
-            assertEquals(calls[0].Parameters[0].TypeValue, "\"John\"")
+            assertEquals(calls[0].Parameters[0].TypeValue, "John")
 
             assertEquals(calls[1].Package, "")
             assertEquals(calls[1].FunctionName, "println")
@@ -80,7 +80,7 @@ class Person(val name: String)
             assertEquals(calls[0].FunctionName, "Person")
             assertEquals(calls[0].Type, CallType.CREATOR)
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
-            assertEquals(calls[0].Parameters[0].TypeValue, "\"John\"")
+            assertEquals(calls[0].Parameters[0].TypeValue, "John")
 
             assertEquals(calls[1].Package, "")
             assertEquals(calls[1].FunctionName, "println")
@@ -112,7 +112,7 @@ class Person(private val mouth: Mouth) {
             assertEquals(calls[0].Type, CallType.FUNCTION)
             assertEquals(calls[0].NodeName, "Mouth")
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
-            assertEquals(calls[0].Parameters[0].TypeValue, "\"Hello world!\"")
+            assertEquals(calls[0].Parameters[0].TypeValue, "Hello world!")
         }
 
         @Test
@@ -137,7 +137,7 @@ class Person(private val mouth: Mouth) {
             assertEquals(calls[0].Type, CallType.FUNCTION)
             assertEquals(calls[0].NodeName, "Mouth")
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
-            assertEquals(calls[0].Parameters[0].TypeValue, "\"Hello world!\"")
+            assertEquals(calls[0].Parameters[0].TypeValue, "Hello world!")
         }
 
         @Test
@@ -162,7 +162,7 @@ class Person(private val mouth: Mouth) {
             assertEquals(calls[0].Type, CallType.FUNCTION)
             assertEquals(calls[0].NodeName, "Mouth")
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
-            assertEquals(calls[0].Parameters[0].TypeValue, "\"Hello world!\"")
+            assertEquals(calls[0].Parameters[0].TypeValue, "Hello world!")
         }
 
         @Test
@@ -177,6 +177,29 @@ import org.springframework.web.client.RestTemplate
 class QualityGateClientImpl(@Value val baseUrl: String) : QualityGateClient {
     override fun getQualityGate(qualityGateName: String): CouplingQualityGate {
         RestTemplate().getForObject("/api/quality-gate-profile/mcc", CouplingQualityGate::class.java)
+    }
+}
+"""
+
+            val container = analyse(code)
+            val calls = container.DataStructures[0].Functions[1].FunctionCalls
+
+            assertEquals(calls[0].Package, "org.springframework.web.client.RestTemplate")
+            assertEquals(calls[0].NodeName, "RestTemplate")
+        }
+
+        @Test
+        internal fun `should identify function call with parameters for RestTemplate`() {
+            val code = """
+package chapi.ast.kotlinast
+     
+import org.springframework.web.client.RestTemplate
+
+@Component
+class QualityGateClientImpl(@Value("\${'$'}{client.host}") val baseUrl: String) : QualityGateClient {
+    override fun getQualityGate(qualityGateName: String): CouplingQualityGate {
+        val couplingQualityGate = RestTemplate().getForObject(baseUrl + "/api/quality-gate-profile/${'$'}qualityGateName", CouplingQualityGate::class.java)
+        return couplingQualityGate ?: CouplingQualityGate(null, qualityGateName, emptyList(), null, null)
     }
 }
 """

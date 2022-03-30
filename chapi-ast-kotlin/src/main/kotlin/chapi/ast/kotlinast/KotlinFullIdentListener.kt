@@ -59,7 +59,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
             text.matches(Regex("\\d+")) -> getTypeFullName("Number")
             else -> ""
         },
-        TypeValue = text
+        TypeValue = text.removePrefix("\"").removeSuffix("\"")
     )
 
     // correct the function info
@@ -125,7 +125,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         return this
     }
 
-    private var nestedPostfixMap: MutableMap<String, CodeCall> = mutableMapOf()
+    private var nestedCallMap: MutableMap<String, CodeCall> = mutableMapOf()
 
     override fun enterPostfixUnaryExpression(ctx: KotlinParser.PostfixUnaryExpressionContext?) {
         // one or more call, maybe call map
@@ -137,44 +137,38 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
 
         var lastPostfixChildType = ""
         ctx!!.children.forEach { child ->
-            println("Child: ${child.javaClass.simpleName} -> Text: ${child.text}")
             when (child) {
+                // sometimes, it just a tests.
                 is KotlinParser.PrimaryExpressionContext -> {
-                    if (child.simpleIdentifier() != null) {
-                        lastIdentifier = child.simpleIdentifier().text
-                    } else if (child.stringLiteral() != null) {
-                        lastIdentifier = child.stringLiteral().text
-                    } else {
-                        lastIdentifier = child.text
-                        println("PrimaryExpressionContext: ${child.javaClass.simpleName}")
-                    }
+                    textFromPrimaryExpr(child, lastIdentifier)
                 }
-
                 is KotlinParser.PostfixUnarySuffixContext -> {
-                    println("PostfixUnaryType: ${child.children[0].javaClass.simpleName}")
-                    println("PostfixUnaryType: ${child.children[0].text}")
-
+                    println("PostfixUnaryType: ${child.children[0].javaClass.simpleName}, Text: ${child.children[0].text}")
                     when (val postfix = child.children[0]) {
                         is KotlinParser.CallSuffixContext -> {
+                            val valueArguments = postfix.valueArguments()
+
                             var parameters: Array<CodeProperty> = arrayOf()
-                            if (postfix.valueArguments() != null) {
-                                parameters = postfix.valueArguments().valueArgument().map {
-                                    if (it.expression() != null) {
-                                        // todo: handle for has sub expression
-                                    }
+                            if (valueArguments != null) {
+                                parameters = valueArguments.valueArgument().map {
+                                    // todo: handle for has sub expression
+//                                  if (it.expression() != null) {}
                                     parseParameter(it.text)
                                 }.toTypedArray()
                             }
 
                             if (lastPostfixChildType == "NavigationSuffixContext") {
+                                println(calls.size)
                                 calls = calls.dropLast(1).toTypedArray()
+                                println(calls.size)
                                 lastIdentifier = "$lastIdentifier.$lastFunctionName"
                             }
 
                             val call = CodeCall(
                                 NodeName = lastNodeName,
                                 FunctionName = lastIdentifier,
-                                Parameters = parameters
+                                Parameters = parameters,
+                                Position = ctx.getPosition()
                             ).refineIfExistsCreator()
                             calls += call
 
@@ -199,7 +193,8 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                                     NodeName = lastIdentifier,
                                     FunctionName = navigationName,
                                     Parameters = parameters,
-                                    Package = lastPackage
+                                    Package = lastPackage,
+                                    Position = ctx.getPosition()
                                 ).refineIfExistsCreator()
                                 lastPackage = call.Package
                                 lastNodeName = call.NodeName
@@ -220,6 +215,24 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         if (calls.isNotEmpty()) {
 //            currentFunction.FunctionCalls += calls
             println(Json.encodeToString(calls))
+        }
+    }
+
+    private fun textFromPrimaryExpr(
+        child: KotlinParser.PrimaryExpressionContext,
+        lastIdentifier: String
+    ) {
+        var lastIdentifier1 = lastIdentifier
+        when {
+            child.simpleIdentifier() != null -> {
+                lastIdentifier1 = child.simpleIdentifier().text
+            }
+            child.stringLiteral() != null -> {
+                lastIdentifier1 = child.stringLiteral().text
+            }
+            else -> {
+                lastIdentifier1 = child.text
+            }
         }
     }
 
