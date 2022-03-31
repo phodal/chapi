@@ -28,6 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * - individual variable/function
  */
 open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstListener() {
+    private var isEnteredClassFunciton: Boolean = false
+
     /** inner storage */
 
     protected val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -150,6 +152,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext) {
         // TODO scan function declaration under class declaration, skip individual function temporarily
         if (isEnteredClass.get() > 0) {
+            isEnteredClassFunciton = true
             currentFunction = buildFunction(ctx)
         }
     }
@@ -173,6 +176,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
 
     override fun exitFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext?) {
         if (isEnteredClass.get() > 0) {
+            isEnteredClassFunciton = false
             currentNode.Functions += currentFunction
         }
     }

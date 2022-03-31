@@ -233,5 +233,44 @@ class PackageStore {
 
             assertEquals(4, calls.size)
         }
+
+        @Test
+        internal fun `should inline variable to parameter`() {
+            val code = """
+package com.thoughtworks.archguard.packages.domain
+     
+import org.springframework.web.client.RestTemplate
+
+@Repository
+class SystemOverviewRepositoryImpl(val jdbi: Jdbi) : SystemOverviewRepository {
+    fun getSystemInfoRepoBySystemId(systemId: Long): String {
+        return jdbi.withHandle<String, Exception> {
+            val sql = ""${'"'}
+                select repo from system_info where id = :id
+            ""${'"'}.trimIndent()
+            it.createQuery(sql)
+                    .bind("id", systemId)
+                    .mapTo(String::class.java)
+                    .one()
+        }
+    }
+}
+"""
+
+            val container = analyse(code)
+            val calls = container.DataStructures[0].Functions[1].FunctionCalls
+
+            var hasCatchVariable = false;
+            calls.forEach {
+                if (it.FunctionName == "it.createQuery") {
+                    if (it.Parameters[0].TypeValue.contains("select repo from system_info where id = :id")) {
+                        hasCatchVariable = true
+                    }
+                }
+            }
+
+            assert(hasCatchVariable)
+            assertEquals(10, calls.size)
+        }
     }
 }

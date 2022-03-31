@@ -53,14 +53,45 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         ).refineIfExistsCreator()
     }
 
-    private fun parseParameter(text: String) = CodeProperty(
-        TypeType = when {
+    private var VARIABLE_POOL: MutableMap<String, String> = mutableMapOf()
+    override fun enterPropertyDeclaration(ctx: KotlinParser.PropertyDeclarationContext?) {
+        if (ctx!!.variableDeclaration() != null) {
+            val key = ctx.variableDeclaration().simpleIdentifier().text
+            if (ctx.ASSIGNMENT() != null) {
+                if (ctx.propertyDelegate() != null) {
+                    VARIABLE_POOL[key] = ctx.propertyDelegate().text
+                }
+                if (ctx.expression() != null) {
+                    VARIABLE_POOL[key] = ctx.expression().text
+                }
+            }
+        }
+    }
+
+    private fun typeFromText(text: String): String {
+        val typeType = when {
             text.matches(Regex("\".*\"")) -> getTypeFullName("String")
             text.matches(Regex("\\d+")) -> getTypeFullName("Number")
             else -> ""
-        },
-        TypeValue = text.removePrefix("\"").removeSuffix("\"")
-    )
+        }
+        return typeType
+    }
+
+    private fun parseParameter(text: String): CodeProperty {
+        var typeType = typeFromText(text)
+
+        var value = text.removePrefix("\"").removeSuffix("\"")
+        // if a argument/parameter type is not a string and not a number, it could be a variable
+        // so, try to load value from VARIABLE_POOL
+        if (typeType == "") {
+            if (VARIABLE_POOL[value] != null) {
+                value = VARIABLE_POOL[value].toString()
+                typeType = typeFromText(value)
+            }
+        }
+
+        return CodeProperty(TypeType = typeType, TypeValue = value)
+    }
 
     // correct the function info
     private fun CodeCall.refineIfExistsCreator(): CodeCall {
@@ -112,6 +143,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
             NodeName = fullNodeName.substringAfterLast('.')
             return null
         }
+
         return this
     }
 
@@ -124,8 +156,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         }
         return this
     }
-
-    private var nestedCallMap: MutableMap<String, CodeCall> = mutableMapOf()
 
     override fun enterPostfixUnaryExpression(ctx: KotlinParser.PostfixUnaryExpressionContext?) {
         // one or more call, maybe call map
