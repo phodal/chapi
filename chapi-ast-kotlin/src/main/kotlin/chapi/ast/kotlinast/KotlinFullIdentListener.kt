@@ -8,8 +8,6 @@ import chapi.domain.core.CodeField
 import chapi.domain.core.CodeFunction
 import chapi.domain.core.CodeImport
 import chapi.domain.core.CodeProperty
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 /**
  * listen to full identifier with complex type and sceneries, such as:
@@ -73,6 +71,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         return typeType
     }
 
+    private val VAR_IN_STRING = "(\\$[a-zA-Z_]+)".toRegex()
     private fun parseParameter(text: String): CodeProperty {
         var typeType = typeFromText(text)
 
@@ -82,6 +81,24 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         if (typeType == "") {
             if (VARIABLE_POOL[value] != null) {
                 value = VARIABLE_POOL[value].toString()
+
+                // value contains with String
+                val matches = VAR_IN_STRING.find(value)
+                matches?.groups?.forEach {
+                    if (it?.value != null) {
+                        val variable = it.value
+                        val withoutVariable = variable.removePrefix("$")
+                        val pool = VARIABLE_POOL[withoutVariable]
+                        if (pool != null) {
+                            var text = pool
+                            if(text.startsWith("\"") && text.endsWith("\"")) {
+                                text = text.removePrefix("\"").removeSuffix("\"")
+                            }
+                            value = value.replace(variable, text)
+                        }
+                    }
+                }
+
                 typeType = typeFromText(value)
             }
         }

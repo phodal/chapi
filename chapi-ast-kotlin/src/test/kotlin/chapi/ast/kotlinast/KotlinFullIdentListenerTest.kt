@@ -1,7 +1,6 @@
 package chapi.ast.kotlinast
 
 import chapi.domain.core.CallType
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -231,6 +230,39 @@ class PackageStore {
             val calls = container.DataStructures[0].Functions[0].FunctionCalls
 
             assertEquals(4, calls.size)
+        }
+
+        @Test
+        internal fun should_inline_variable() {
+            val code = """
+package com.thoughtworks.archguard.packages.domain
+     
+import org.springframework.web.client.RestTemplate
+
+class SizingRepositoryImpl(val jdbi: Jdbi) : SizingRepository {
+    override fun getClassSizingListAboveMethodCountThresholdCount(systemId: Long, threshold: Int): Long {
+        return jdbi.withHandle<Long, Exception> {
+            val table = "select count(name) as count from code_class where system_id = :systemId and is_test=false and loc is not NULL " +
+                    "group by class_name " +
+                    "having count>:threshold "
+            val sql = "select count(1) from (${'$'}table) as c"
+            it.createQuery(sql)
+                    .bind("systemId", systemId)
+                    .bind("threshold", threshold)
+                    .mapTo(Long::class.java)
+                    .findOne()
+                    .orElse(0)
+        }
+    }
+}
+"""
+
+            val container = analyse(code)
+            val calls = container.DataStructures[0].Functions[1].FunctionCalls
+
+
+            assertEquals(10, calls.size)
+            assertEquals(true, calls[2].Parameters[0].TypeValue.contains("select count(1)") && calls[2].Parameters[0].TypeValue.contains("select count(name)"))
         }
 
         @Test
