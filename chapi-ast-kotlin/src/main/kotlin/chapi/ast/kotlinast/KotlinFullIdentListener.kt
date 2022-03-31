@@ -143,7 +143,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                     lastIdentifier = textFromPrimaryExpr(child)
                 }
                 is KotlinParser.PostfixUnarySuffixContext -> {
-                    println("PostfixUnaryType: ${child.children[0].javaClass.simpleName}, Text: ${child.children[0].text}")
                     when (val postfix = child.children[0]) {
                         is KotlinParser.CallSuffixContext -> {
                             val valueArguments = postfix.valueArguments()
@@ -152,7 +151,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                             if (valueArguments != null) {
                                 parameters = valueArguments.valueArgument().map {
                                     // todo: handle for has sub expression
-//                                  if (it.expression() != null) {}
                                     parseParameter(it.text)
                                 }.toTypedArray()
                             }
@@ -173,10 +171,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                             lastPostfixChildType = "CallSuffixContext"
                         }
                         is KotlinParser.NavigationSuffixContext -> {
-                            // parameters ?
-                            if (postfix.parenthesizedExpression() != null) {
-                                println("todo: parse parameters")
-                            }
                             if (postfix.simpleIdentifier() != null) {
                                 val navigationName = postfix.simpleIdentifier().text
                                 var parameters: Array<CodeProperty> = arrayOf()
@@ -203,7 +197,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                         }
                         else -> {
                             lastPostfixChildType = child.children[0].javaClass.simpleName
-                            println("todo: PostfixUnaryType: $lastPostfixChildType")
                         }
                     }
                 }
