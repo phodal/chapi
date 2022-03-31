@@ -28,7 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * - individual variable/function
  */
 open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstListener() {
-    private var isEnteredClassFunciton: Boolean = false
+    protected var isEnteredIndividualFunction: Boolean = false
+    private var isEnteredClassFunction: Boolean = false
 
     /** inner storage */
 
@@ -39,6 +40,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     protected var currentFunction: CodeFunction = CodeFunction()
     protected val isEnteredClass = AtomicInteger(0)
     private val individualFunctions = mutableListOf<CodeFunction>()
+    protected lateinit var currentIndividualFunction: CodeFunction
     private val individualFields = mutableListOf<CodeField>()
 
     /** outer interfaces */
@@ -86,9 +88,20 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         val functionDeclaration = ctx.declaration().functionDeclaration()
 
         if (propertyDeclaration != null) individualFields.add(buildField(propertyDeclaration))
-        if (functionDeclaration != null) individualFunctions.add(buildFunction(functionDeclaration))
+        if (functionDeclaration != null) {
+            isEnteredIndividualFunction = true
+            currentIndividualFunction = buildFunction(functionDeclaration)
+        }
         // TODO replace enterClassDeclaration
         // TODO support object declaration
+    }
+
+    override fun exitTopLevelObject(ctx: KotlinParser.TopLevelObjectContext) {
+        val functionDeclaration = ctx.declaration().functionDeclaration()
+        if (functionDeclaration != null) {
+            individualFunctions.add(currentIndividualFunction)
+            isEnteredIndividualFunction = false
+        }
     }
 
     override fun enterClassDeclaration(ctx: KotlinParser.ClassDeclarationContext) {
@@ -152,7 +165,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     override fun enterFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext) {
         // TODO scan function declaration under class declaration, skip individual function temporarily
         if (isEnteredClass.get() > 0) {
-            isEnteredClassFunciton = true
+            isEnteredClassFunction = true
             currentFunction = buildFunction(ctx)
         }
     }
@@ -176,7 +189,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
 
     override fun exitFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext?) {
         if (isEnteredClass.get() > 0) {
-            isEnteredClassFunciton = false
+            isEnteredClassFunction = false
             currentNode.Functions += currentFunction
         }
     }

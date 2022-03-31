@@ -212,7 +212,6 @@ class QualityGateClientImpl(@Value("\${'$'}{client.host}") val baseUrl: String) 
         }
 
         @Test
-        @Disabled
         internal fun `multiple call for testing`() {
             val code = """
 package com.thoughtworks.archguard.packages.domain
@@ -262,7 +261,7 @@ class SystemOverviewRepositoryImpl(val jdbi: Jdbi) : SystemOverviewRepository {
 
             var hasCatchVariable = false;
             calls.forEach {
-                if (it.FunctionName == "it.createQuery") {
+                if (it.FunctionName == "createQuery") {
                     if (it.Parameters[0].TypeValue.contains("select repo from system_info where id = :id")) {
                         hasCatchVariable = true
                     }
@@ -270,7 +269,7 @@ class SystemOverviewRepositoryImpl(val jdbi: Jdbi) : SystemOverviewRepository {
             }
 
             assert(hasCatchVariable)
-            assertEquals(10, calls.size)
+            assertEquals(9, calls.size)
         }
     }
 }

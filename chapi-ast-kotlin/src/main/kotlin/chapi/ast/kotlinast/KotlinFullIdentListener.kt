@@ -22,10 +22,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
     private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
     override fun buildFunction(ctx: KotlinParser.FunctionDeclarationContext): CodeFunction =
         super.buildFunction(ctx).apply {
-            val functionCalls = buildFunctionCalls(ctx)
-            if (functionCalls != null) {
-                FunctionCalls = functionCalls.toTypedArray()
-            }
         }
 
     private fun buildFunctionCalls(ctx: KotlinParser.FunctionDeclarationContext): List<CodeCall>? =
@@ -187,7 +183,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
 
                             if (lastPostfixChildType == "NavigationSuffixContext") {
                                 calls = calls.dropLast(1).toTypedArray()
-                                lastIdentifier = "$lastIdentifier.$lastFunctionName"
+                                lastIdentifier = lastFunctionName
                             }
 
                             val call = CodeCall(
@@ -234,7 +230,11 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         }
 
         if (calls.isNotEmpty()) {
-            currentFunction.FunctionCalls += calls
+            if (isEnteredIndividualFunction) {
+                currentIndividualFunction.FunctionCalls += calls
+            } else {
+                currentFunction.FunctionCalls += calls
+            }
         }
     }
 
