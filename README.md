@@ -12,10 +12,10 @@ Languages Stages (Welcome to PR your usage languages)
 | Features/Languages  | Java | Python | Go  | Kotlin | TypeScript | C   | C#  | Scala | C++ |
 |---------------------|------|--------|-----|--------|------------|-----|-----|-------|-----|
 | http api decl       | ✅    | 🆕     | 🆕  | ✅      | ✅          | 🆕  | 🆕  | 🆕    | 🆕  |
-| syntax parse        | ✅    | ✅      | ✅   | 🆕     | ✅          | 🆕  | 🆕  | ✅     | 🆕  |
-| function call       | ✅    | 🆕     |     | 🆕     | ✅          |     |     |       |     |
-| arch/package        | ✅    |        |     |        | ✅          |     |     | ✅     |     |
-| real world validate | ✅    |        |     |        | ✅          |     |     |       |     |
+| syntax parse        | ✅    | ✅      | ✅   | ✅     | ✅          | 🆕  | 🆕  | ✅     | 🆕  |
+| function call       | ✅    | 🆕     |     | ✅     | ✅          |     |     |       |     |
+| arch/package        | ✅    |        |     |✅        | ✅          |     |     | ✅     |     |
+| real world validate | ✅    |        |     | ✅       | ✅          |     |     |       |     |
 | expression  (TBD)   |      |        |     |        |            |     |     |       |     |
 
 language versions（tested）: 
