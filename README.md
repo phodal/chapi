@@ -49,6 +49,10 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 - import analysis support
   - in C#, import `namespace` can use call in namespace
 
+### Kotlin
+
+- need to implementation `warpTargetFullType` to got Class in same package.
+
 ## Todo
 
 - [ ] split Chapi CLI application
