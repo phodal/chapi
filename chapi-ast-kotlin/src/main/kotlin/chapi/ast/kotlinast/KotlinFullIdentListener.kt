@@ -18,9 +18,6 @@ import chapi.domain.core.CodeProperty
 open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileName) {
 
     private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
-    override fun buildFunction(ctx: KotlinParser.FunctionDeclarationContext): CodeFunction =
-        super.buildFunction(ctx).apply {
-        }
 
     private fun buildFunctionCalls(ctx: KotlinParser.FunctionDeclarationContext): List<CodeCall>? =
         ctx.functionBody()?.block()?.statements()?.statement()?.mapNotNull(::buildFunctionCall)
@@ -50,7 +47,8 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
     private var VARIABLE_POOL: MutableMap<String, String> = mutableMapOf()
     override fun enterPropertyDeclaration(ctx: KotlinParser.PropertyDeclarationContext?) {
         if (ctx!!.variableDeclaration() != null) {
-            val key = ctx.variableDeclaration().simpleIdentifier().text
+            val varDecl = ctx.variableDeclaration()
+            val key = varDecl.simpleIdentifier().text
             if (ctx.ASSIGNMENT() != null) {
                 if (ctx.propertyDelegate() != null) {
                     VARIABLE_POOL[key] = ctx.propertyDelegate().text
@@ -59,6 +57,13 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                     VARIABLE_POOL[key] = ctx.expression().text
                 }
             }
+
+            var varType = ""
+            if (varDecl.type() != null) {
+                varType = varDecl.type().text
+            }
+
+            currentFunction.LocalVariables += CodeProperty (TypeValue = key, TypeType = varType)
         }
     }
 
