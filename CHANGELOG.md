@@ -1,8 +1,8 @@
-# [](https://github.com/modernizing/chapi/compare/v1.5.0...v) (2022-04-04)
+# [](https://github.com/modernizing/chapi/compare/v1.5.1...v) (2022-04-04)
 
 
 
-# [1.5.0](https://github.com/modernizing/chapi/compare/v1.4.1...v1.5.0) (2022-04-04)
+## [1.5.1](https://github.com/modernizing/chapi/compare/v1.4.1...v1.5.1) (2022-04-04)
 
 
 ### Bug Fixes
