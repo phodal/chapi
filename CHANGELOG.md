@@ -1,4 +1,20 @@
-# [](https://github.com/modernizing/chapi/compare/v1.4.1...v) (2022-03-31)
+# [](https://github.com/modernizing/chapi/compare/v1.5.0...v) (2022-04-04)
+
+
+
+# [1.5.0](https://github.com/modernizing/chapi/compare/v1.4.1...v1.5.0) (2022-04-04)
+
+
+### Bug Fixes
+
+* fix tests ([3305ae8](https://github.com/modernizing/chapi/commit/3305ae8bca8d0aa5fd1e85c80354e4426c09e11f))
+
+
+### Features
+
+* add local variable pool ([40a17b1](https://github.com/modernizing/chapi/commit/40a17b160195090860ee344b7543f530d715422e))
+* add local vars for currentFuntions ([37d76ae](https://github.com/modernizing/chapi/commit/37d76ae4e6660a46e3b895dbc950b60668ede679))
+* **kotlin:** support for inline variable ([4b64c76](https://github.com/modernizing/chapi/commit/4b64c760f2e2b537e290dd4734d184137a258ff9))
 
 
 
