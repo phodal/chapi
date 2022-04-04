@@ -13,7 +13,7 @@ open class CSharpAnalyserApp(var config: ChapiConfig = ChapiConfig(language = La
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> =
         files.flatMap(::analysisByFile).toTypedArray()
 
-    private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
+    open fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         println("processing file: ${file.absolutePath}")
         val code = readFileAsString(file.absolutePath)
         val codeContainer = analyser.analysis(code, file.fileName)

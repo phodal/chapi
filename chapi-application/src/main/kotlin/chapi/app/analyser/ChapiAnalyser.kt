@@ -10,13 +10,13 @@ open class ChapiAnalyser(
 ) {
 
     open fun analysis(path: String): Array<CodeDataStruct> {
-        val appAnalyser = getLangAppAnalyser()
+        val appAnalyser = getAnalyserByLang(config.language)
         return appAnalyser.analysisNodeByPath(path)
     }
 
-    open fun getLangAppAnalyser(): IAnalyser {
+    open fun getAnalyserByLang(lang: String): IAnalyser {
         val langAnalyser: IAnalyser
-        when (config.language) {
+        when (lang) {
             Language.JAVA -> {
                 langAnalyser = JavaAnalyserApp(config)
             }

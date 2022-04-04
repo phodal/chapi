@@ -4,5 +4,4 @@ import chapi.domain.core.CodeDataStruct
 
 interface IAnalyser {
     fun analysisNodeByPath(path: String = ""): Array<CodeDataStruct>
-//    open fun analysisProject(path: String = ""): Array<CodeDataStruct>
 }

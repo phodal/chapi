@@ -8,16 +8,22 @@ import chapi.domain.core.CodeDataStruct
 
 class GoAnalyserApp(config: ChapiConfig) : BaseAnalyser(config) {
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> {
-        var nodeInfos: Array<CodeDataStruct> = arrayOf()
-        for (file in files) {
-            val fileContent = readFileAsString(file.absolutePath)
-            val codeFile = GoAnalyser().analysis(fileContent, file.fileName)
-            for (dataStructure in codeFile.DataStructures) {
-                dataStructure.Imports = codeFile.Imports
-                nodeInfos += dataStructure
-            }
-        }
+        return files.flatMap(::analysisByFile).toTypedArray()
+    }
 
-        return nodeInfos
+    override fun analysisByFile(
+        file: AbstractFile,
+    ): List<CodeDataStruct> {
+        val fileContent = readFileAsString(file.absolutePath)
+        val codeFile = GoAnalyser().analysis(fileContent, file.fileName)
+
+        return codeFile.Containers.flatMap { container ->
+            container.DataStructures.map {
+                it.apply {
+                    it.Imports = codeFile.Imports
+                    it.FilePath = file.absolutePath
+                }
+            }
+        }.toList()
     }
 }
