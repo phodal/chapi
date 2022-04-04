@@ -15,4 +15,8 @@ object Language {
     const val KOTLIN = "kotlin"
     const val JAVA = "java"
     const val CSharp = "c#"
+    const val CSharpStr = "csharp"
+    const val Golang = "go"
+    const val Scala = "scala"
+    const val Python = "python"
 }
