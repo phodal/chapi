@@ -7,8 +7,10 @@ import java.io.BufferedReader
 import java.io.File
 import kotlin.streams.asStream
 
-abstract class BaseAnalyser(private var config: ChapiConfig) : IAnalyser {
-    override fun analysisNodeByPath(path: String): Array<CodeDataStruct> {
+abstract class BaseAnalyser(private var config: ChapiConfig) {
+    abstract fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct>
+
+    fun analysisNodeByPath(path: String): Array<CodeDataStruct> {
         val files = getFilesByPath(path)
         return this.analysisByFiles(files)
     }
@@ -23,8 +25,6 @@ abstract class BaseAnalyser(private var config: ChapiConfig) : IAnalyser {
         }
         return text
     }
-
-    abstract fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct>
 
     private fun getFilesByPath(path: String): Array<AbstractFile> {
         val workspace = File(path)

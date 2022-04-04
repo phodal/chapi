@@ -11,18 +11,14 @@ class GoAnalyserApp(config: ChapiConfig) : BaseAnalyser(config) {
         return files.flatMap(::analysisByFile).toTypedArray()
     }
 
-    override fun analysisByFile(
-        file: AbstractFile,
-    ): List<CodeDataStruct> {
+    private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         val fileContent = readFileAsString(file.absolutePath)
         val codeFile = GoAnalyser().analysis(fileContent, file.fileName)
 
-        return codeFile.Containers.flatMap { container ->
-            container.DataStructures.map {
-                it.apply {
-                    it.Imports = codeFile.Imports
-                    it.FilePath = file.absolutePath
-                }
+        return codeFile.DataStructures.map {
+            it.apply {
+                it.Imports = codeFile.Imports
+                it.FilePath = file.absolutePath
             }
         }.toList()
     }

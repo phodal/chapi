@@ -19,6 +19,6 @@ internal class GoAnalyserAppTest {
 
         //then
         assertEquals(nodeInfos.size, 1)
-        assertEquals(nodeInfos[0].FilePath, "")
+        assert(nodeInfos[0].FilePath.contains("hello.go"))
     }
 }

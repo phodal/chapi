@@ -5,7 +5,6 @@ import chapi.domain.core.CallType
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeField
-import chapi.domain.core.CodeFunction
 import chapi.domain.core.CodeImport
 import chapi.domain.core.CodeProperty
 
@@ -95,11 +94,11 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                         val withoutVariable = variable.removePrefix("$")
                         val pool = VARIABLE_POOL[withoutVariable]
                         if (pool != null) {
-                            var text = pool
-                            if(text.startsWith("\"") && text.endsWith("\"")) {
-                                text = text.removePrefix("\"").removeSuffix("\"")
+                            var poolText = pool
+                            if(poolText.startsWith("\"") && poolText.endsWith("\"")) {
+                                poolText = poolText.removePrefix("\"").removeSuffix("\"")
                             }
-                            value = value.replace(variable, text)
+                            value = value.replace(variable, poolText)
                         }
                     }
                 }
