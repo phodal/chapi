@@ -109,4 +109,52 @@ open class CodeFunction(
     fun fileName(): String {
         return this.FilePath.substringBeforeLast('.', "")
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CodeFunction) return false
+
+        if (Name != other.Name) return false
+        if (FilePath != other.FilePath) return false
+        if (Package != other.Package) return false
+        if (ReturnType != other.ReturnType) return false
+        if (!MultipleReturns.contentEquals(other.MultipleReturns)) return false
+        if (!Parameters.contentEquals(other.Parameters)) return false
+        if (!FunctionCalls.contentEquals(other.FunctionCalls)) return false
+        if (!Annotations.contentEquals(other.Annotations)) return false
+        if (Override != other.Override) return false
+        if (!Modifiers.contentEquals(other.Modifiers)) return false
+        if (!InnerStructures.contentEquals(other.InnerStructures)) return false
+        if (!InnerFunctions.contentEquals(other.InnerFunctions)) return false
+        if (Position != other.Position) return false
+        if (Extension != other.Extension) return false
+        if (!LocalVariables.contentEquals(other.LocalVariables)) return false
+        if (IsConstructor != other.IsConstructor) return false
+        if (IsReturnHtml != other.IsReturnHtml) return false
+        if (extensionMap != other.extensionMap) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = Name.hashCode()
+        result = 31 * result + FilePath.hashCode()
+        result = 31 * result + Package.hashCode()
+        result = 31 * result + ReturnType.hashCode()
+        result = 31 * result + MultipleReturns.contentHashCode()
+        result = 31 * result + Parameters.contentHashCode()
+        result = 31 * result + FunctionCalls.contentHashCode()
+        result = 31 * result + Annotations.contentHashCode()
+        result = 31 * result + Override.hashCode()
+        result = 31 * result + Modifiers.contentHashCode()
+        result = 31 * result + InnerStructures.contentHashCode()
+        result = 31 * result + InnerFunctions.contentHashCode()
+        result = 31 * result + Position.hashCode()
+        result = 31 * result + Extension.hashCode()
+        result = 31 * result + LocalVariables.contentHashCode()
+        result = 31 * result + IsConstructor.hashCode()
+        result = 31 * result + IsReturnHtml.hashCode()
+        result = 31 * result + extensionMap.hashCode()
+        return result
+    }
 }

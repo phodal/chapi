@@ -73,4 +73,9 @@ internal class CodeFunctionTest {
 
         assertEquals(codeFunction.Extension, expect)
     }
+
+    @Test
+    internal fun shouldEquals() {
+        assertEquals(CodeFunction(Name = "getFunc"), CodeFunction(Name = "getFunc"))
+    }
 }
