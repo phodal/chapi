@@ -1,4 +1,20 @@
-# [](https://github.com/modernizing/chapi/compare/v1.5.1...v) (2022-04-04)
+# [](https://github.com/modernizing/chapi/compare/v1.5.2...v) (2022-04-04)
+
+
+
+## [1.5.2](https://github.com/modernizing/chapi/compare/v1.5.1...v1.5.2) (2022-04-04)
+
+
+### Features
+
+* **domain:** add equals for annotation ([f5a00a9](https://github.com/modernizing/chapi/commit/f5a00a94a9c04bc0d3f7916bc7337bc1e0a61d61))
+* **domain:** add equals for call ([3fed5f5](https://github.com/modernizing/chapi/commit/3fed5f5139de372829e56fc54be148844429991f))
+* **domain:** add equals for data structure ([e5fa8d5](https://github.com/modernizing/chapi/commit/e5fa8d552297af0e4f1cb8e2b70220439fc4b46c))
+* **domain:** add equals for field ([c679924](https://github.com/modernizing/chapi/commit/c679924687c58981675754e9143b50c951669623))
+* **domain:** add equals for function ([25f8d09](https://github.com/modernizing/chapi/commit/25f8d097746005d791e41bcded8c36128d7d7775))
+* **domain:** add equals for import ([b04f882](https://github.com/modernizing/chapi/commit/b04f8829889d158c34bebf243f3bbf2d54bf9567))
+* **domain:** add equals for others ([069d7ef](https://github.com/modernizing/chapi/commit/069d7efbf380fa9f062ba9973746ae83615c9260))
+* **domain:** add more equals for package infos ([ff74e01](https://github.com/modernizing/chapi/commit/ff74e01a3dd8e5b49746e36b3390f223ce227ba3))
 
 
 
