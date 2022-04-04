@@ -33,7 +33,9 @@ abstract class BaseAnalyser(private var config: ChapiConfig) {
                 FileFilter.filterByLanguage(it.absolutePath, config)
             }
             .map {
-                AbstractFile.toAbstractFile(it, workspace)
+                val abstractFile = AbstractFile.toAbstractFile(it, workspace)
+                abstractFile.content = readFileAsString(it.path)
+                abstractFile
             }
             .toArray { length -> arrayOfNulls(length) }
     }

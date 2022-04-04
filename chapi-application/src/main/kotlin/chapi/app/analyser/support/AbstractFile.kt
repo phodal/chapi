@@ -7,6 +7,7 @@ open class AbstractFile(
     var absolutePath: String,
     var isFile: Boolean,
     var relativePath: String,
+    var content: String
 ) {
     companion object {
         fun toAbstractFile(file: File, workspace: File): AbstractFile {
@@ -14,7 +15,8 @@ open class AbstractFile(
                 fileName = file.name,
                 absolutePath = file.absolutePath,
                 relativePath = file.relativeTo(workspace).toString(),
-                isFile = file.isFile
+                isFile = file.isFile,
+                content = ""
             )
         }
     }

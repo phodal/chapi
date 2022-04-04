@@ -35,14 +35,14 @@ open class JavaAnalyserApp(var config: ChapiConfig = ChapiConfig(language = Lang
     ): Array<CodeDataStruct> {
         return files.flatMap {
             println("processing file: ${it.absolutePath}")
-            val codeContainer = JavaAnalyser().identFullInfo(readFileAsString(it.absolutePath), it.fileName, classes, basicNodes)
+            val codeContainer = JavaAnalyser().identFullInfo(it.content, it.fileName, classes, basicNodes)
             codeContainer.DataStructures.map { ds -> ds.apply { ds.Imports = codeContainer.Imports } }
         }.toTypedArray()
     }
 
     private fun analysisBasicInfo(files: Array<AbstractFile>): Array<CodeDataStruct> {
         return files.flatMap {
-            val codeContainer = JavaAnalyser().identBasicInfo(readFileAsString(it.absolutePath), it.fileName)
+            val codeContainer = JavaAnalyser().identBasicInfo(it.content, it.fileName)
             codeContainer.DataStructures.map { ds -> ds.apply { ds.Imports = codeContainer.Imports } }
         }.toTypedArray()
     }

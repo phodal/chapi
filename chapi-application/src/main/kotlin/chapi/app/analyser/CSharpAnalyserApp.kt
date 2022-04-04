@@ -15,8 +15,7 @@ open class CSharpAnalyserApp(var config: ChapiConfig = ChapiConfig(language = La
 
     open fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         println("processing file: ${file.absolutePath}")
-        val code = readFileAsString(file.absolutePath)
-        val codeContainer = analyser.analysis(code, file.fileName)
+        val codeContainer = analyser.analysis(file.content, file.fileName)
 
         return codeContainer.Containers.flatMap { container ->
             container.DataStructures.map {

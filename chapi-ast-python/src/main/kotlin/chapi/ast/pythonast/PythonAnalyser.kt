@@ -11,11 +11,9 @@ open class PythonAnalyser() {
     open fun analysis(str: String, fileName: String): CodeContainer {
         val context = this.parse(str).root()
         val listener = PythonFullIdentListener(fileName = fileName)
-
         ParseTreeWalker().walk(listener, context)
 
-        val codeFile = listener.getNodeInfo()
-        return codeFile
+        return listener.getNodeInfo()
     }
 
     private fun parse(str: String): PythonParser {

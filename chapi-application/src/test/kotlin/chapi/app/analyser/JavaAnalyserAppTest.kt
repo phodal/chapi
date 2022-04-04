@@ -12,13 +12,9 @@ internal class JavaAnalyserAppTest {
     @Test
     fun analysisByFile() {
         val resource = this.javaClass.classLoader.getResource("e2e/step2-java/Main.java")
-        val file = Paths.get(resource!!.toURI()).toFile()
+        val path = Paths.get(resource!!.toURI()).toFile()
 
-        var files = arrayOf<AbstractFile>()
-        val toAbstractFile = AbstractFile.toAbstractFile(file, file)
-        files += toAbstractFile
-
-        val nodes = JavaAnalyserApp().analysisByFiles(files)
+        val nodes = JavaAnalyserApp().analysisNodeByPath(path.absolutePath)
         assertEquals(nodes.size, 1)
     }
 

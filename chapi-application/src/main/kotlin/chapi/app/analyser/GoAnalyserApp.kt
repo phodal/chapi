@@ -12,8 +12,7 @@ class GoAnalyserApp(config: ChapiConfig) : BaseAnalyser(config) {
     }
 
     private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
-        val fileContent = readFileAsString(file.absolutePath)
-        val codeFile = GoAnalyser().analysis(fileContent, file.fileName)
+        val codeFile = GoAnalyser().analysis(file.content, file.fileName)
 
         return codeFile.DataStructures.map {
             it.apply {
