@@ -55,4 +55,9 @@ internal class CodeDataStructTest {
         val ds = CodeDataStruct(NodeName = "FunctionMap", FilePath = "src/main.java")
         assertEquals("src/main", ds.fileWithoutSuffix());
     }
+
+    @Test
+    internal fun shouldEquals() {
+        assertEquals(CodeDataStruct(NodeName = "FunctionMap"), CodeDataStruct(NodeName = "FunctionMap"))
+    }
 }

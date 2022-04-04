@@ -16,4 +16,16 @@ internal class CodeContainerTest {
 
         assertEquals(csharpFile.Containers.size, 1)
     }
+
+    @Test
+    internal fun testEquals() {
+        assertEquals(
+            CodeContainer(
+                PackageName = "hello.cs"
+            ),
+            CodeContainer(
+                PackageName = "hello.cs"
+            )
+        )
+    }
 }
