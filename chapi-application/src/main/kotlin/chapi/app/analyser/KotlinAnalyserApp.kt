@@ -14,7 +14,7 @@ class KotlinAnalyserApp(config: ChapiConfig = ChapiConfig(language = Language.KO
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> =
         files.flatMap(::analysisByFile).toTypedArray()
 
-    private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
+    override fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         fun postProcess(it: CodeDataStruct): CodeDataStruct = it.apply { it.FilePath = file.absolutePath }
 
         val codeContainer = analyser.analysis(file.content, file.fileName, AnalysisMode.Full)

@@ -13,7 +13,7 @@ class TypeScriptAnalyserApp(config: ChapiConfig = ChapiConfig(language = Languag
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> =
         files.filter { it.isFile }.flatMap(::analysisByFile).toTypedArray()
 
-    private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
+    override fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         println("processing file: ${file.absolutePath}")
         val codeContainer = analyser.analysis(file.content, file.relativePath)
         return codeContainer.DataStructures.map {

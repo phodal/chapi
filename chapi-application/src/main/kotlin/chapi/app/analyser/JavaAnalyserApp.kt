@@ -14,6 +14,11 @@ open class JavaAnalyserApp(var config: ChapiConfig = ChapiConfig(language = Lang
         return analysisFullNodes(files, basicNodes)
     }
 
+    override fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
+        val basicNodes = analysisBasicInfo(arrayOf(file))
+        return analysisFullNodes(arrayOf(file), basicNodes).toList()
+    }
+
     private fun analysisFullNodes(
         files: Array<AbstractFile>,
         basicNodes: Array<CodeDataStruct>

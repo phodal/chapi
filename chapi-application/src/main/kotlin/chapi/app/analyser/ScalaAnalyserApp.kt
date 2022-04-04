@@ -7,12 +7,12 @@ import chapi.ast.goast.GoAnalyser
 import chapi.ast.scalaast.ScalaAnalyser
 import chapi.domain.core.CodeDataStruct
 
-class ScalaAnalyserApp(config: ChapiConfig) : BaseAnalyser(config) {
+open class ScalaAnalyserApp(config: ChapiConfig) : BaseAnalyser(config) {
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> {
         return files.flatMap(::analysisByFile).toTypedArray()
     }
 
-    private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
+    override fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         val codeFile = ScalaAnalyser().analysis(file.content, file.fileName)
         return codeFile.DataStructures.map {
             it.apply {

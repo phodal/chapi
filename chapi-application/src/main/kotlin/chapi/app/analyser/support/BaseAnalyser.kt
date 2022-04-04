@@ -9,6 +9,7 @@ import kotlin.streams.asStream
 
 abstract class BaseAnalyser(private var config: ChapiConfig) {
     abstract fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct>
+    abstract fun analysisByFile(file: AbstractFile): List<CodeDataStruct>
 
     fun analysisNodeByPath(path: String): Array<CodeDataStruct> {
         val files = getFilesByPath(path)

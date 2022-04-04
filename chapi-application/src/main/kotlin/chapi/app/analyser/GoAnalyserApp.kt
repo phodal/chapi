@@ -11,7 +11,7 @@ class GoAnalyserApp(config: ChapiConfig) : BaseAnalyser(config) {
         return files.flatMap(::analysisByFile).toTypedArray()
     }
 
-    private fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
+    override fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         val codeFile = GoAnalyser().analysis(file.content, file.fileName)
 
         return codeFile.DataStructures.map {

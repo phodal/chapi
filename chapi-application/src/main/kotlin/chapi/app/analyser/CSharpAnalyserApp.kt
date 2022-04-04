@@ -7,13 +7,13 @@ import chapi.app.analyser.support.BaseAnalyser
 import chapi.ast.csharpast.CSharpAnalyser
 import chapi.domain.core.CodeDataStruct
 
-open class CSharpAnalyserApp(var config: ChapiConfig = ChapiConfig(language = Language.CSharp)) : BaseAnalyser(config) {
+class CSharpAnalyserApp(var config: ChapiConfig = ChapiConfig(language = Language.CSharp)) : BaseAnalyser(config) {
     private val analyser: CSharpAnalyser by lazy { CSharpAnalyser() }
 
     override fun analysisByFiles(files: Array<AbstractFile>): Array<CodeDataStruct> =
         files.flatMap(::analysisByFile).toTypedArray()
 
-    open fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
+    override fun analysisByFile(file: AbstractFile): List<CodeDataStruct> {
         println("processing file: ${file.absolutePath}")
         val codeContainer = analyser.analysis(file.content, file.fileName)
 
