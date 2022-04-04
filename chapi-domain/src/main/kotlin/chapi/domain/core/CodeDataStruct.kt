@@ -84,6 +84,7 @@ open class CodeDataStruct(
         return this.FilePath.substringBeforeLast('.', "")
     }
 
+    // position was removed, if one function change, others position will also change
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CodeDataStruct) return false
@@ -104,7 +105,6 @@ open class CodeDataStruct(
         if (!Imports.contentEquals(other.Imports)) return false
         if (!Exports.contentEquals(other.Exports)) return false
         if (Extension != other.Extension) return false
-        if (Position != other.Position) return false
 
         return true
     }
@@ -126,7 +126,6 @@ open class CodeDataStruct(
         result = 31 * result + Imports.contentHashCode()
         result = 31 * result + Exports.contentHashCode()
         result = 31 * result + Extension.hashCode()
-        result = 31 * result + Position.hashCode()
         return result
     }
 }

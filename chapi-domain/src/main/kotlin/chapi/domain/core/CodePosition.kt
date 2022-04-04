@@ -2,6 +2,7 @@ package chapi.domain.core
 
 import kotlinx.serialization.Serializable
 
+// position need to remove in functions, if one function change, others position will also change
 @Serializable
 class CodePosition(
     var StartLine: Int = 0,

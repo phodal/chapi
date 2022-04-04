@@ -35,6 +35,7 @@ class CodeMember(
         }
     }
 
+    // position was removed, if one function change, others position will also change
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CodeMember) return false
@@ -48,7 +49,6 @@ class CodeMember(
         if (!StructureNodes.contentEquals(other.StructureNodes)) return false
         if (!FunctionNodes.contentEquals(other.FunctionNodes)) return false
         if (!Namespace.contentEquals(other.Namespace)) return false
-        if (Position != other.Position) return false
 
         return true
     }

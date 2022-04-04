@@ -61,6 +61,7 @@ open class CodeCall(
         return false
     }
 
+    // position was removed, if one function change, others position will also change
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CodeCall) return false
@@ -70,7 +71,6 @@ open class CodeCall(
         if (NodeName != other.NodeName) return false
         if (FunctionName != other.FunctionName) return false
         if (!Parameters.contentEquals(other.Parameters)) return false
-        if (Position != other.Position) return false
 
         return true
     }
@@ -81,7 +81,6 @@ open class CodeCall(
         result = 31 * result + NodeName.hashCode()
         result = 31 * result + FunctionName.hashCode()
         result = 31 * result + Parameters.contentHashCode()
-        result = 31 * result + Position.hashCode()
         return result
     }
 }

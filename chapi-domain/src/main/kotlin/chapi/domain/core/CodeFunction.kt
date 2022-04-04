@@ -110,6 +110,7 @@ open class CodeFunction(
         return this.FilePath.substringBeforeLast('.', "")
     }
 
+    // position was removed, if one function change, others position will also change
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CodeFunction) return false
@@ -126,7 +127,6 @@ open class CodeFunction(
         if (!Modifiers.contentEquals(other.Modifiers)) return false
         if (!InnerStructures.contentEquals(other.InnerStructures)) return false
         if (!InnerFunctions.contentEquals(other.InnerFunctions)) return false
-        if (Position != other.Position) return false
         if (Extension != other.Extension) return false
         if (!LocalVariables.contentEquals(other.LocalVariables)) return false
         if (IsConstructor != other.IsConstructor) return false
@@ -149,7 +149,6 @@ open class CodeFunction(
         result = 31 * result + Modifiers.contentHashCode()
         result = 31 * result + InnerStructures.contentHashCode()
         result = 31 * result + InnerFunctions.contentHashCode()
-        result = 31 * result + Position.hashCode()
         result = 31 * result + Extension.hashCode()
         result = 31 * result + LocalVariables.contentHashCode()
         result = 31 * result + IsConstructor.hashCode()
