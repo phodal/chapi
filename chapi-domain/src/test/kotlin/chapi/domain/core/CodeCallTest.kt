@@ -58,4 +58,9 @@ internal class CodeCallTest {
     internal fun shouldReturnFalseWhenNotAssertion() {
         assertEquals(CodeCall(FunctionName = "get").hasAssertion(), false)
     }
+
+    @Test
+    internal fun testEquals() {
+        assertEquals(CodeCall(FunctionName = "get"), CodeCall(FunctionName = "get"))
+    }
 }

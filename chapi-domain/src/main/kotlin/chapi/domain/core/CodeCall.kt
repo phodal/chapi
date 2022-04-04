@@ -29,6 +29,7 @@ open class CodeCall(
     var Parameters: Array<CodeProperty> = arrayOf(),
     var Position: CodePosition = CodePosition()
 ) {
+
     open fun buildClassFullName(): String {
         return this.Package + "." + this.NodeName
     }
@@ -58,5 +59,29 @@ open class CodeCall(
         }
 
         return false
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CodeCall) return false
+
+        if (Package != other.Package) return false
+        if (Type != other.Type) return false
+        if (NodeName != other.NodeName) return false
+        if (FunctionName != other.FunctionName) return false
+        if (!Parameters.contentEquals(other.Parameters)) return false
+        if (Position != other.Position) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = Package.hashCode()
+        result = 31 * result + Type.hashCode()
+        result = 31 * result + NodeName.hashCode()
+        result = 31 * result + FunctionName.hashCode()
+        result = 31 * result + Parameters.contentHashCode()
+        result = 31 * result + Position.hashCode()
+        return result
     }
 }
