@@ -39,13 +39,19 @@ internal class CodeAnnotationTest {
         assertEquals(isComponent, true)
     }
 
-
     @Test
     fun shouldReturnTrueWhenIsOverride() {
         val emptyStringArray = arrayOf<AnnotationKeyValue>()
         assertEquals(CodeAnnotation("Override", emptyStringArray).isOverride(), true)
     }
 
-
+    @Test
+    fun shouldCompareAnnotation() {
+        assertEquals(CodeAnnotation("Sample"), CodeAnnotation("Sample"))
+        assertEquals(
+            CodeAnnotation("Sample", KeyValues = arrayOf(AnnotationKeyValue(Key = "key", Value = "value"))),
+            CodeAnnotation("Sample", KeyValues = arrayOf(AnnotationKeyValue(Key = "key", Value = "value")))
+        )
+    }
 }
 

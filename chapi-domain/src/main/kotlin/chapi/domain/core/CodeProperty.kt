@@ -14,4 +14,6 @@ class CodeProperty(
     var ReturnTypes: Array<CodeProperty> = arrayOf(),
     var Parameters: Array<CodeProperty> = arrayOf(),
 ) {
+
+
 }
