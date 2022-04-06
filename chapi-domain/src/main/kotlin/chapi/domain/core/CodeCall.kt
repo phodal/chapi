@@ -13,7 +13,8 @@ enum class CallType (val calltype: String) {
     SUPER("super"),
     SAME_PACKAGE("same package"),
     SELF("self"),
-    CHAIN("chain")
+    CHAIN("chain"),
+    STATIC("static")
 }
 
 @Serializable

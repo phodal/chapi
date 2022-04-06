@@ -362,7 +362,10 @@ open class JavaFullIdentListener(
             for (imp in imports) {
                 if (imp.Source.endsWith(".$methodName")) {
                     pkgName = imp.Source
-                    clz = ""
+                    clz = target
+                } else if (imp.UsageName.contains(methodName)) {
+                    pkgName = imp.Source
+                    clz = imp.Source.split(".").last()
                 }
             }
 
@@ -440,6 +443,7 @@ open class JavaFullIdentListener(
     }
 
     private fun warpTargetFullType(targetType: String?): JavaTargetType {
+        // first, parse from local type
         val callType: CallType = CallType.FUNCTION
         if (currentClz == targetType) {
             return JavaTargetType(
@@ -448,6 +452,7 @@ open class JavaFullIdentListener(
             )
         }
 
+        // second, parse from import
         val pureTargetType = buildPureTargetType(targetType)
         if (pureTargetType != "") {
             for (imp in imports) {
@@ -456,10 +461,16 @@ open class JavaFullIdentListener(
                         targetType = imp.Source,
                         callType = CallType.CHAIN
                     )
+                } else if (imp.UsageName.isNotEmpty() && imp.UsageName.contains(pureTargetType)) {
+                    return JavaTargetType(
+                        targetType = imp.Source,
+                        callType = CallType.STATIC
+                    )
                 }
             }
         }
 
+        // third, parse in same package
         for (clz in classes) {
             if (clz.endsWith(".$pureTargetType")) {
                 return JavaTargetType(
@@ -469,6 +480,7 @@ open class JavaFullIdentListener(
             }
         }
 
+        // others, may be from parent
         if (pureTargetType == "super" || pureTargetType == "this") {
             for (imp in imports) {
                 if (imp.Source.endsWith(currentClzExtend)) {
@@ -484,6 +496,7 @@ open class JavaFullIdentListener(
         return JavaTargetType(callType = callType)
     }
 
+    // remove array from types
     private fun buildPureTargetType(targetType: String?): String {
         val split = targetType!!.split(".")
         // remove for array
