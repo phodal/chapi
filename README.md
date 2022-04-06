@@ -37,6 +37,9 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 ## Specify Rule
 
+**scan by twice**. In order to success get:
+   - find data struct in same package 
+
 ### TypeScript
 
 1. PackageName will use resolvePath, package of `src/grammar/blbla.ts` is `@.grammar`
