@@ -1,8 +1,17 @@
-# [](https://github.com/modernizing/chapi/compare/v1.5.2...v) (2022-04-04)
+# [](https://github.com/modernizing/chapi/compare/v1.5.4...v) (2022-04-06)
 
 
 
-## [1.5.2](https://github.com/modernizing/chapi/compare/v1.5.1...v1.5.2) (2022-04-04)
+## [1.5.4](https://github.com/modernizing/chapi/compare/v1.5.1...v1.5.4) (2022-04-06)
+
+
+### Bug Fixes
+
+* fix position compare in call, function, struct, member ([748ac82](https://github.com/modernizing/chapi/commit/748ac82454c212f9cefd075b7d582ccfd92454e4))
+* **java:** change import static to usage in names ([c881382](https://github.com/modernizing/chapi/commit/c8813821f409eb94d723e6dceac4c6f3e1c2a086))
+* **java:** fix import static error issues ([293f1bb](https://github.com/modernizing/chapi/commit/293f1bbec79212965879110434b6186a5a3f80c0))
+* **java:** fix packageName error for static import ([75aa5a8](https://github.com/modernizing/chapi/commit/75aa5a85a6dbae142e46aaa3429677553aa01d20))
+* **java:** fix static improt error types issues ([e262aa0](https://github.com/modernizing/chapi/commit/e262aa06476733697f25975d8d5beb8fa4b08175))
 
 
 ### Features
@@ -15,6 +24,7 @@
 * **domain:** add equals for import ([b04f882](https://github.com/modernizing/chapi/commit/b04f8829889d158c34bebf243f3bbf2d54bf9567))
 * **domain:** add equals for others ([069d7ef](https://github.com/modernizing/chapi/commit/069d7efbf380fa9f062ba9973746ae83615c9260))
 * **domain:** add more equals for package infos ([ff74e01](https://github.com/modernizing/chapi/commit/ff74e01a3dd8e5b49746e36b3390f223ce227ba3))
+* fix sqlgenerator and source batch ([9a9beb4](https://github.com/modernizing/chapi/commit/9a9beb4b7ba62405322d481ceb007a911c5b58cb))
 
 
 
