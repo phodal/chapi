@@ -178,5 +178,6 @@ public class BlogRepositoryImpl {
         val firstFunc = codeContainer.DataStructures[0].Functions[0]
         assertEquals(firstFunc.FunctionCalls[0].FunctionName, "generateBatchInsertSql")
         assertEquals(firstFunc.FunctionCalls[0].NodeName, "SqlGenerator")
+        assertEquals(firstFunc.FunctionCalls[0].Package, "infrastructure.utils")
     }
 }

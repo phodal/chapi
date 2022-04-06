@@ -364,8 +364,11 @@ open class JavaFullIdentListener(
                     pkgName = imp.Source
                     clz = target
                 } else if (imp.UsageName.contains(methodName)) {
-                    pkgName = imp.Source
-                    clz = imp.Source.split(".").last()
+                    val splitImp = imp.Source.split(".")
+                    clz = splitImp.last()
+
+                    val maybePackageName = splitImp.dropLast(1).joinToString(".")
+                    pkgName = maybePackageName
                 }
             }
 
