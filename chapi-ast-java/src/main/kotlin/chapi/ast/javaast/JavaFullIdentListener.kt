@@ -52,7 +52,10 @@ open class JavaFullIdentListener(
         var codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
 
         if (ctx.STATIC() != null) {
-            val split = codeImport.Source.split(".").dropLast(1)
+            val sourceSplit = codeImport.Source.split(".")
+            codeImport.UsageName = arrayOf(sourceSplit.last())
+
+            val split = sourceSplit.dropLast(1)
             codeImport.Source = split.joinToString(".")
         }
 
@@ -300,13 +303,13 @@ open class JavaFullIdentListener(
     private fun buildMethodCallMethodInfo(
         codeCall: CodeCall,
         callee: String = "",
-        _targetType: String?,
+        targetType: String?,
         ctx: JavaParser.MethodCallContext
     ) {
         var packageName = codeContainer.PackageName
         var methodName = callee
 
-        var targetTypeStr = _targetType
+        var targetTypeStr = targetType
         val targetType = this.warpTargetFullType(targetTypeStr)
         var callType = targetType.callType
         val fullType = targetType.targetType
@@ -483,6 +486,7 @@ open class JavaFullIdentListener(
 
     private fun buildPureTargetType(targetType: String?): String {
         val split = targetType!!.split(".")
+        // remove for array
         val pureTargetType = split[0].replace("[", "").replace("]", "")
         return pureTargetType
     }

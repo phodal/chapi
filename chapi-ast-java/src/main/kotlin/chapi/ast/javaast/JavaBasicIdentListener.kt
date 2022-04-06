@@ -18,7 +18,10 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         var codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
 
         if (ctx.STATIC() != null) {
-            val split = codeImport.Source.split(".").dropLast(1)
+            val sourceSplit = codeImport.Source.split(".")
+            codeImport.UsageName = arrayOf(sourceSplit.last())
+
+            val split = sourceSplit.dropLast(1)
             codeImport.Source = split.joinToString(".")
         }
 
