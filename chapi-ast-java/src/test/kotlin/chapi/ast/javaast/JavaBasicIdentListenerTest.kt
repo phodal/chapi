@@ -2,6 +2,7 @@ package chapi.ast.javaast
 
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class JavaBasicIdentListenerTest {
@@ -13,7 +14,7 @@ package chapi.ast.javaast;
 import org.junit.Test;
 """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
-        kotlin.test.assertEquals(codeFile.PackageName, "chapi.ast.javaast")
+        assertEquals(codeFile.PackageName, "chapi.ast.javaast")
     }
 
     @Test
@@ -29,9 +30,17 @@ class IntegerArray implements Expandable {
 }
 """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
-        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Implements[0], "Expandable")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
+        assertEquals(codeFile.DataStructures[0].Implements[0], "Expandable")
+    }
+
+    @Test
+    fun shouldAnalysisStaticImport() {
+        val code = this::class.java.getResource("/importstatic/SourceBatch.java").readText()
+        val codeContainer = JavaAnalyser().identBasicInfo(code, "SourceBatch.java")
+
+        assertEquals("infrastructure.utils.SqlGenerator", codeContainer.Imports[0].Source)
     }
 
     @Test
@@ -47,9 +56,9 @@ class IntegerArray extends Expandable {
 }
 """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
-        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Extend, "Expandable")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
+        assertEquals(codeFile.DataStructures[0].Extend, "Expandable")
     }
 
     @Test
@@ -65,9 +74,9 @@ class IntegerArray extends Expandable {
 }
 """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
-        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
     }
 
     @Test
@@ -80,8 +89,8 @@ interface Expandable {
 }
 """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
-        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].NodeName, "Expandable")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "Expandable")
     }
 
     @Test
@@ -94,9 +103,9 @@ interface Expandable {
 }
 """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
-        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "addItem")
     }
 
     @Test
@@ -113,9 +122,9 @@ public class PublishedBlogResource {
 }
 """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
-        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions[0].IsConstructor, true)
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].IsConstructor, true)
     }
 
     @Test
@@ -132,12 +141,12 @@ public class PublishedBlogResource {
 }
 """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
-        kotlin.test.assertEquals(codeFile.DataStructures.size, 1)
-        kotlin.test.assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
 
         val codeFunction = codeFile.DataStructures[0].Functions[0]
 
-        kotlin.test.assertEquals(codeFunction.Extension.jsonObject["IsReturnNull"], JsonPrimitive("true"))
-        kotlin.test.assertEquals(codeFunction.isReturnNull(), true)
+        assertEquals(codeFunction.Extension.jsonObject["IsReturnNull"], JsonPrimitive("true"))
+        assertEquals(codeFunction.isReturnNull(), true)
     }
 }

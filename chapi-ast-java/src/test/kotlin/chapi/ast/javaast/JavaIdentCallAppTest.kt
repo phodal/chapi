@@ -170,12 +170,13 @@ public class BlogRepositoryImpl {
         assertEquals(firstFunc.FunctionCalls[0].NodeName, "CallAssertInClassTests")
     }
 
-    @Test
-    fun shouldAnalysisStaticCall() {
-        val code = this::class.java.getResource("/importstatic/SourceBatch.java").readText()
-        val codeContainer = JavaAnalyser().identFullInfo(code, "SourceBatch.java")
-
-        val firstFunc = codeContainer.DataStructures[0].Functions[0]
-        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "generateBatchInsertSql")
-    }
+//    @Test
+//    fun shouldAnalysisStaticCall() {
+//        val code = this::class.java.getResource("/importstatic/SourceBatch.java").readText()
+//        val codeContainer = JavaAnalyser().identFullInfo(code, "SourceBatch.java")
+//
+//        val firstFunc = codeContainer.DataStructures[0].Functions[0]
+//        assertEquals(firstFunc.FunctionCalls[0].FunctionName, "generateBatchInsertSql")
+//        assertEquals(firstFunc.FunctionCalls[0].NodeName, "SqlGenerator")
+//    }
 }

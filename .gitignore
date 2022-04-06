@@ -39,3 +39,4 @@ output.json
 api.json
 nodes.json
 nohup.out
+*.tokens

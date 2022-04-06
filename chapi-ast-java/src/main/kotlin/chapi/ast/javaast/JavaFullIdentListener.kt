@@ -49,9 +49,14 @@ open class JavaFullIdentListener(
     }
 
     override fun enterImportDeclaration(ctx: JavaParser.ImportDeclarationContext?) {
-        val codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
-        imports += codeImport
+        var codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
 
+        if (ctx.STATIC() != null) {
+            val split = codeImport.Source.split(".").dropLast(1)
+            codeImport.Source = split.joinToString(".")
+        }
+
+        imports += codeImport
         codeContainer.Imports += codeImport
     }
 
