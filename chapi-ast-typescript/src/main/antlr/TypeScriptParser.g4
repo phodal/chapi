@@ -728,6 +728,7 @@ propertyAssignment
     | setAccessor                                             # PropertySetter
     | generatorMethod                                         # MethodProperty
     | identifierOrKeyWord                                     # PropertyShorthand
+    | defaultKeyWord                                          # PropertyShorthand
     | restParameter                                           # RestParameterInObject
     ;
 
@@ -908,9 +909,12 @@ identifierOrKeyWord
     | TypeAlias
     | Require
     | Module
-    | Default
     | Lodash Lodash?
     | Any
+    ;
+
+defaultKeyWord
+    : Default
     ;
 
 reservedWord
@@ -943,7 +947,7 @@ keyword
     | This
     | Is
     | With
-    | Default
+//    | Default
     | If
     | Throw
     | Delete
