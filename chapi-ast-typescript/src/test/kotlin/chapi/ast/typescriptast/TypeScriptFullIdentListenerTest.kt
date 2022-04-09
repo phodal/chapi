@@ -1463,6 +1463,26 @@ export default setting;
         assertEquals(1, codeFile.DataStructures.size)
     }
 
+    @Test
+    internal fun default_in_default_export() {
+        val code = """
+export default defineConfig({
+  nodeModulesTransform: {
+    type: "none",
+    exclude: [],
+  },
+  hash: true,
+  antd: {},
+  dva: false,
+  locale: {
+    default: 'zh-CN'
+  }
+})
+"""
+
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
     // TODO: fix nestedIssued
     @Test
     @Disabled

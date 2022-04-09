@@ -745,6 +745,7 @@ propertyName
     | StringLiteral
     | numericLiteral
     | keyword
+    | Default   // cannot be in other statement, only accept in object
     | predefinedType
     ;
 

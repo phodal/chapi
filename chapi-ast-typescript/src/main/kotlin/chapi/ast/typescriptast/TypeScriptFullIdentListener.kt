@@ -7,6 +7,7 @@ import chapi.domain.core.*
 import chapi.infra.Stack
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.antlr.v4.runtime.ParserRuleContext
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private var hasHtmlElement: Boolean = false
@@ -998,7 +999,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return codeContainer
     }
 
-//    override fun enterEveryRule(ctx: ParserRuleContext?) {
-//        println(ctx!!.javaClass.simpleName)
-//    }
+    override fun enterEveryRule(ctx: ParserRuleContext?) {
+        println(ctx!!.javaClass.simpleName)
+    }
 }
