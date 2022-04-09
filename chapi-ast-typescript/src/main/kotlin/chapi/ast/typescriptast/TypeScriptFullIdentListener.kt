@@ -963,6 +963,16 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return args
     }
 
+    override fun enterExportDefaultDeclaration(ctx: TypeScriptParser.ExportDefaultDeclarationContext?) {
+        val singleExpr = ctx!!.singleExpression()
+        if (singleExpr != null) {
+            if (!singleExpr.text.contains("(")) {
+                currentNode.Exports += CodeExport(singleExpr.text)
+                defaultNode.Exports += CodeExport(singleExpr.text)
+            }
+        }
+    }
+
     fun getNodeInfo(): CodeContainer {
         for (entry in nodeMap) {
             codeContainer.DataStructures += entry.value

@@ -57,6 +57,7 @@ internal class TypeScriptAnalyserTest {
         val codeFile = TypeScriptAnalyser().analysis(content, "BadSmellThreshold.tsx")
 
         assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Exports[0].Name, "BadSmellThreshold")
     }
 
     @Test
