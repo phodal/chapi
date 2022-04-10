@@ -91,10 +91,12 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
             Position = buildPosition(ctx)
         )
 
+        currentStruct = codeDataStruct;
+
         val classMemberDeclarations = ctx.class_body().class_member_declarations()
         if (classMemberDeclarations != null) {
             for (classMemberDecl in classMemberDeclarations.class_member_declaration()) {
-                this.handleClassMember(classMemberDecl, codeDataStruct)
+                this.handleClassMember(classMemberDecl)
             }
         }
 
@@ -102,11 +104,9 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         when (parent.javaClass.simpleName) {
             "Type_declarationContext" -> {
                 val typeDecl = parent as CSharpParser.Type_declarationContext
-                codeDataStruct.Annotations = parseAnnotations(typeDecl.attributes())
+                currentStruct.Annotations = parseAnnotations(typeDecl.attributes())
             }
         }
-
-        currentStruct = codeDataStruct;
     }
 
     override fun exitClass_definition(ctx: CSharpParser.Class_definitionContext?) {
@@ -114,10 +114,7 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
     }
 
 
-    private fun handleClassMember(
-        memberCtx: CSharpParser.Class_member_declarationContext?,
-        codeDataStruct: CodeDataStruct
-    ) {
+    private fun handleClassMember(memberCtx: CSharpParser.Class_member_declarationContext?) {
         val memberDeclaration = memberCtx!!.common_member_declaration() ?: return
         val firstChild = memberDeclaration.getChild(0) ?: return
 
@@ -141,10 +138,10 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
                     returnType = typeContext.text
                 }
 
-                codeDataStruct.Functions += createFunction(
+                currentStruct.Functions += createFunction(
                     returnType,
                     annotations,
-                    codeDataStruct.Package,
+                    currentStruct.Package,
                     modifiers,
                     methodDeclaration.method_member_name().text,
                     methodDeclaration.formal_parameter_list()
@@ -155,10 +152,10 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         if (memberDeclaration.constructor_declaration() != null) {
             val constructorDecl = memberDeclaration.constructor_declaration()
 
-            codeDataStruct.Functions += createFunction(
+            currentStruct.Functions += createFunction(
                 returnType,
                 annotations,
-                codeDataStruct.Package,
+                currentStruct.Package,
                 modifiers,
                 constructorDecl.identifier().text,
                 constructorDecl.formal_parameter_list()
@@ -167,10 +164,10 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
 
         val methodDecl = memberDeclaration.method_declaration()
         if (methodDecl != null) {
-            codeDataStruct.Functions += createFunction(
+            currentStruct.Functions += createFunction(
                 returnType,
                 annotations,
-                codeDataStruct.Package,
+                currentStruct.Package,
                 modifiers,
                 methodDecl.method_member_name().text,
                 methodDecl.formal_parameter_list()
@@ -178,7 +175,13 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         }
     }
 
+    override fun enterMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
 
+    }
+
+    override fun exitMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
+//        currentStruct.Functions += currentFunction
+    }
 
     private fun parseAnnotations(attributes: CSharpParser.AttributesContext?): Array<CodeAnnotation> {
         var annotations = arrayOf<CodeAnnotation>();
