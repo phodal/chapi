@@ -1,6 +1,7 @@
 package chapi.ast.csharpast
 
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 internal class CSharpAstListenerTest  {
     private val helloworld = """
