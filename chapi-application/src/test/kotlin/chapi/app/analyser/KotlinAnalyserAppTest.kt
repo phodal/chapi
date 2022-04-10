@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
@@ -16,9 +17,9 @@ internal class KotlinAnalyserAppTest {
     fun `should return nodes of the sample code file`() {
         val config = ChapiConfig(language = Language.KOTLIN)
         val resource = this.javaClass.classLoader.getResource("languages/kotlin")!!
-        val path = Paths.get(resource.toURI()).toFile()
+        val path = File(resource.toURI()).absolutePath
 
-        val nodeInfos = KotlinAnalyserApp(config).analysisNodeByPath(path.absolutePath)
+        val nodeInfos = KotlinAnalyserApp(config).analysisNodeByPath(path)
 
         Assertions.assertEquals(nodeInfos.size, 2)
 

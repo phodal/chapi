@@ -13,7 +13,7 @@ internal class FrontendApiAnalyserTest {
     @Test
     fun shouldSupportIdentifyComponentApi() {
         val resource = this.javaClass.classLoader.getResource("languages/ts/apicall")!!
-        val path = Paths.get(resource.toURI()).toFile().absolutePath
+        val path = File(resource.toURI()).absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         assertEquals(5, nodes.size)
@@ -34,7 +34,7 @@ internal class FrontendApiAnalyserTest {
     @Test
     internal fun shouldCorrectComponentName() {
         val resource = this.javaClass.classLoader.getResource("languages/ts/interface-error")!!
-        val path = Paths.get(resource.toURI()).toFile().absolutePath
+        val path = File(resource.toURI()).absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         File("nodes.json").writeText(Json.encodeToString(nodes))
@@ -46,7 +46,7 @@ internal class FrontendApiAnalyserTest {
     @Test
     internal fun shouldSaveApiAdapter() {
         val resource = this.javaClass.classLoader.getResource("languages/ts/api-adapter")!!
-        val path = Paths.get(resource.toURI()).toFile().absolutePath
+        val path = File(resource.toURI()).absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
 
@@ -68,7 +68,7 @@ internal class FrontendApiAnalyserTest {
     @Test
     internal fun testForUmi() {
         val resource = this.javaClass.classLoader.getResource("languages/ts/js-umi-request")!!
-        val path = Paths.get(resource.toURI()).toFile().absolutePath
+        val path = File(resource.toURI()).absolutePath
 
         val nodes = TypeScriptAnalyserApp().analysisNodeByPath(path)
         assertEquals(2, nodes.size)
