@@ -103,7 +103,7 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
     }
 
     override fun exitTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
-        if(currentFunction.Name.isNotEmpty()) {
+        if (currentFunction.Name.isNotEmpty()) {
             currentStruct.Functions += currentFunction
         }
 
@@ -187,8 +187,9 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
 
         var ident = ""
         var member = ""
+        var params: Array<CodeProperty> = arrayOf()
         primaryExpr.children.forEach {
-            when(it.javaClass.simpleName) {
+            when (it.javaClass.simpleName) {
                 // todo: merge to primary expression
                 "SimpleNameExpressionContext" -> {
                     ident = (it as CSharpParser.SimpleNameExpressionContext).identifier().text
@@ -198,6 +199,10 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
                 }
                 "Method_invocationContext" -> {
                     // todo: parse parameters
+                    val argumentList = (it as CSharpParser.Method_invocationContext).argument_list()
+                    if (argumentList != null) {
+                        params = parseParameters(argumentList)
+                    }
                 }
                 else -> {
                     println(it.javaClass.simpleName)
@@ -205,8 +210,17 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
             }
         }
 
-        val codeCall = CodeCall(Package = "", NodeName = ident, FunctionName = member)
+        val codeCall = CodeCall(Package = "", NodeName = ident, FunctionName = member, Parameters = params)
         currentFunction.FunctionCalls += codeCall
+    }
+
+    private fun parseParameters(argumentList: CSharpParser.Argument_listContext): Array<CodeProperty> {
+        return argumentList.argument().map {
+            CodeProperty(
+                TypeType = it.refout?.text ?: "",
+                TypeValue = it.expression().text
+            )
+        }.toTypedArray()
     }
 
 //    //for debug only

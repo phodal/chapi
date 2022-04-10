@@ -19,6 +19,9 @@ internal class CSharpFullIdentListenerTest {
         assertEquals("Console", calls[0].NodeName)
         assertEquals("WriteLine", calls[0].FunctionName)
 
+        assertEquals(1, calls[0].Parameters.size)
+        assertEquals("\"Hello World!\"", calls[0].Parameters[0].TypeValue)
+
         assertEquals("Console", calls[1].NodeName)
         assertEquals("ReadKey", calls[1].FunctionName)
     }
