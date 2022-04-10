@@ -148,6 +148,24 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
                     methodDeclaration.formal_parameter_list()
                 )
             }
+
+            val propertyDecl = typedMember.property_declaration()
+            if (propertyDecl != null) {
+                val typeContext = typedMember.type_()
+                if (typeContext != null) {
+                    returnType = typeContext.text
+                }
+
+                currentFunction = createFunction(
+                    returnType,
+                    annotations,
+                    currentStruct.Package,
+                    modifiers,
+                    propertyDecl.member_name().text,
+                    null
+                )
+            }
+
         }
 
         if (memberDeclaration.constructor_declaration() != null) {
@@ -182,6 +200,7 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
 
     override fun exitConstructor_declaration(ctx: CSharpParser.Constructor_declarationContext?) {
         currentStruct.Functions += currentFunction
+        currentFunction = CodeFunction()
     }
 
     override fun enterTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
@@ -189,7 +208,11 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
     }
 
     override fun exitTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
-        currentStruct.Functions += currentFunction
+        if(currentFunction.Name.isNotEmpty()) {
+            currentStruct.Functions += currentFunction
+        }
+
+        currentFunction = CodeFunction()
     }
 
     override fun enterMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
@@ -198,6 +221,7 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
 
     override fun exitMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
         currentStruct.Functions += currentFunction
+        currentFunction = CodeFunction()
     }
 
     private fun buildForMethodDecl(ctx: ParserRuleContext?) {
