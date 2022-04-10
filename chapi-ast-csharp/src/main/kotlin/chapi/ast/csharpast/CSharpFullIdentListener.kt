@@ -75,7 +75,8 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
             }
         }
 
-        println("$ident.$member")
+        val codeCall = CodeCall(Package = "", NodeName = ident, FunctionName = member)
+        currentFunction.FunctionCalls += codeCall
     }
 
 //    //for debug only
