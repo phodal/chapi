@@ -174,6 +174,10 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
         return field
     }
 
+    override fun enterField_declaration(ctx: CSharpParser.Field_declarationContext?) {
+        println(ctx!!.text)
+    }
+
     // call from method invocation parent will be easy to search for method call
     override fun enterMethod_invocation(ctx: CSharpParser.Method_invocationContext?) {
         if (ctx == null) {
