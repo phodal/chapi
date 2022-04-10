@@ -1,4 +1,26 @@
-# [](https://github.com/modernizing/chapi/compare/v1.5.4...v) (2022-04-06)
+# [](https://github.com/modernizing/chapi/compare/v1.5.5...v) (2022-04-10)
+
+
+
+## [1.5.5](https://github.com/modernizing/chapi/compare/v1.5.4...v1.5.5) (2022-04-10)
+
+
+### Bug Fixes
+
+* **app:** fix windows crash issues ([e11e593](https://github.com/modernizing/chapi/commit/e11e593fb0e1b39d233c25ba60267dd4c5fbce89))
+* fix default in object property ([789330b](https://github.com/modernizing/chapi/commit/789330b5e717b85bb699b6807d780058cdc667f9))
+* fix imports ([2bdd161](https://github.com/modernizing/chapi/commit/2bdd1617eefc52d2179211efa05d076f61c45642))
+* fix windows paths issues ([8fa0e16](https://github.com/modernizing/chapi/commit/8fa0e16988eacf6788dde45e342d64d06d97a523))
+* **kotlin:** fix tests in windows path issue ([2712424](https://github.com/modernizing/chapi/commit/27124248d6aefa6e912a55792a5b3de35125c8ef))
+
+
+### Features
+
+* **c#:** add basic parameters for testing ([2c91825](https://github.com/modernizing/chapi/commit/2c918255da3a9e6b6039b65688444a99d6813d37))
+* **c#:** fix proprety memebr issue ([4ebba25](https://github.com/modernizing/chapi/commit/4ebba257477678cd34e0296dd97b518d090d7028))
+* **C#:** init first method call samples ([1daee4e](https://github.com/modernizing/chapi/commit/1daee4e7973cef3db31571531df8fadf308fa693))
+* **c#:** make first function calls ([ca02ac4](https://github.com/modernizing/chapi/commit/ca02ac4f7da260d1c9c0de1ec5ac0f13a7e10c98))
+* **typescript:** add exports to name support ([ec6fafb](https://github.com/modernizing/chapi/commit/ec6fafbd8a3a66db135e070fe00608c6436cadd6))
 
 
 
