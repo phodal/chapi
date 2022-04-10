@@ -261,7 +261,7 @@ namespace Chapi {
         val structs = codeContainer.Containers[0].DataStructures
         assertEquals(structs.size, 1)
 
-        assertEquals(2, structs[0].Functions.size)
+        assertEquals(3, structs[0].Functions.size)
         assertEquals(1, structs[0].Fields.size)
         assertEquals("long", structs[0].Fields[0].TypeType)
         assertEquals("ChapiId", structs[0].Fields[0].TypeValue)
@@ -285,7 +285,7 @@ namespace Chapi {
         val structs = codeContainer.Containers[0].DataStructures
         assertEquals(structs.size, 1)
 
-        assertEquals(2, structs[0].Functions.size)
+        assertEquals(3, structs[0].Functions.size)
         assertEquals(1, structs[0].Fields.size)
         assertEquals("List", structs[0].Fields[0].Modifiers[0])
         assertEquals("DeviceParameter", structs[0].Fields[0].TypeType)

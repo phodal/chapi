@@ -1,6 +1,7 @@
 package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
+import chapi.ast.antlr.CSharpParser.Common_member_declarationContext
 import chapi.ast.antlr.CSharpParserBaseListener
 import chapi.domain.core.*
 import chapi.infra.Stack
@@ -92,13 +93,13 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         )
 
         currentStruct = codeDataStruct;
-
-        val classMemberDeclarations = ctx.class_body().class_member_declarations()
-        if (classMemberDeclarations != null) {
-            for (classMemberDecl in classMemberDeclarations.class_member_declaration()) {
-                this.handleClassMember(classMemberDecl)
-            }
-        }
+//
+//        val classMemberDeclarations = ctx.class_body().class_member_declarations()
+//        if (classMemberDeclarations != null) {
+//            for (classMemberDecl in classMemberDeclarations.class_member_declaration()) {
+//                this.handleClassMember(classMemberDecl)
+//            }
+//        }
 
         val parent = ctx.parent
         when (parent.javaClass.simpleName) {
@@ -138,7 +139,7 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
                     returnType = typeContext.text
                 }
 
-                currentStruct.Functions += createFunction(
+                currentFunction = createFunction(
                     returnType,
                     annotations,
                     currentStruct.Package,
@@ -152,7 +153,7 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         if (memberDeclaration.constructor_declaration() != null) {
             val constructorDecl = memberDeclaration.constructor_declaration()
 
-            currentStruct.Functions += createFunction(
+            currentFunction = createFunction(
                 returnType,
                 annotations,
                 currentStruct.Package,
@@ -164,7 +165,7 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
 
         val methodDecl = memberDeclaration.method_declaration()
         if (methodDecl != null) {
-            currentStruct.Functions += createFunction(
+            currentFunction = createFunction(
                 returnType,
                 annotations,
                 currentStruct.Package,
@@ -175,12 +176,45 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         }
     }
 
-    override fun enterMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
+    override fun enterConstructor_declaration(ctx: CSharpParser.Constructor_declarationContext?) {
+        buildForMethodDecl(ctx)
+    }
 
+    override fun exitConstructor_declaration(ctx: CSharpParser.Constructor_declarationContext?) {
+        currentStruct.Functions += currentFunction
+    }
+
+    override fun enterTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
+        buildForMethodDecl(ctx)
+    }
+
+    override fun exitTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
+        currentStruct.Functions += currentFunction
+    }
+
+    override fun enterMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
+        buildForMethodDecl(ctx)
     }
 
     override fun exitMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
-//        currentStruct.Functions += currentFunction
+        currentStruct.Functions += currentFunction
+    }
+
+    private fun buildForMethodDecl(ctx: ParserRuleContext?) {
+        if (ctx == null) return
+
+        var commonMemberForClass: Common_member_declarationContext? = null
+        if (ctx.parent.javaClass.simpleName == "Common_member_declarationContext") {
+            commonMemberForClass = ctx.parent as Common_member_declarationContext
+        } else if (ctx.parent.parent.javaClass.simpleName == "Common_member_declarationContext") {
+            commonMemberForClass = ctx.parent.parent as Common_member_declarationContext
+        }
+
+        if (commonMemberForClass == null) return
+
+        if (commonMemberForClass.parent.javaClass.simpleName == "Class_member_declarationContext") {
+            handleClassMember(commonMemberForClass.parent as CSharpParser.Class_member_declarationContext?)
+        }
     }
 
     private fun parseAnnotations(attributes: CSharpParser.AttributesContext?): Array<CodeAnnotation> {
