@@ -2,6 +2,7 @@ package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
 import chapi.ast.antlr.CSharpParser.Class_typeContext
+import chapi.ast.antlr.CSharpParser.Primary_expressionContext
 import chapi.ast.antlr.CSharpParser.Type_declarationContext
 import chapi.domain.core.*
 import chapi.infra.Stack
@@ -46,4 +47,39 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
 
         return field
     }
+
+    // call from method invocation parent will be easy to search for method call
+    override fun enterMethod_invocation(ctx: CSharpParser.Method_invocationContext?) {
+        if (ctx == null) {
+            return
+        }
+        val primaryExpr = ctx.parent as Primary_expressionContext
+
+        var ident = ""
+        var member = ""
+        primaryExpr.children.forEach {
+            when(it.javaClass.simpleName) {
+                // todo: merge to primary expression
+                "SimpleNameExpressionContext" -> {
+                    ident = (it as CSharpParser.SimpleNameExpressionContext).identifier().text
+                }
+                "Member_accessContext" -> {
+                    member = (it as CSharpParser.Member_accessContext).identifier().text
+                }
+                "Method_invocationContext" -> {
+                    // todo: parse parameters
+                }
+                else -> {
+                    println(it.javaClass.simpleName)
+                }
+            }
+        }
+
+        println("$ident.$member")
+    }
+
+//    //for debug only
+//    override fun enterEveryRule(ctx: ParserRuleContext?) {
+//        println(ctx!!.javaClass.simpleName)
+//    }
 }

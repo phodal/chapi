@@ -13,6 +13,7 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
     protected var currentContainer: CodeContainer = codeContainer
     protected var containerStack: Stack<CodeContainer> = Stack()
     protected var currentPackage: CodePackage = CodePackage()
+    protected var currentFunction: CodeFunction = CodeFunction()
 
     override fun enterCompilation_unit(ctx: CSharpParser.Compilation_unitContext?) {
         containerStack.push(codeContainer)
@@ -176,6 +177,8 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
             )
         }
     }
+
+
 
     private fun parseAnnotations(attributes: CSharpParser.AttributesContext?): Array<CodeAnnotation> {
         var annotations = arrayOf<CodeAnnotation>();
