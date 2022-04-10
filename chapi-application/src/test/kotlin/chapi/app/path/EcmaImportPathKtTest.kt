@@ -59,11 +59,7 @@ internal class EcmaImportPathKtTest {
     @Test
     internal fun relativePath() {
         val path = relativeRoot("root/src/components/Hello.js", "root/src/components/config.js")
-
-        when (getOS()) {
-            OS.WINDOWS -> assertEquals(path, "..\\config.js")
-            else -> assertEquals(path, "../config.js")
-        }
+        assertEquals(path, "../config.js")
     }
 
     @Test
