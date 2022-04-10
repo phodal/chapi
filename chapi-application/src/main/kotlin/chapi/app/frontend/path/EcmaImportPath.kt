@@ -51,11 +51,6 @@ fun ecmaImportConvert(workspace: String, filepath: String, importPath: String): 
 //
 // output: to normalize path
 fun importConvert(filepath: String, importPath: String): String {
-    var filepath = filepath
-    when (getOS()) {
-        OS.WINDOWS -> filepath.replace("\\", "/")
-    }
-
     // import "@/src/component/Hello.js"
     val isResolvePath = importPath.startsWith("@/")
     if(isResolvePath) {
