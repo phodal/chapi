@@ -2,6 +2,29 @@ package chapi.app.frontend.path
 
 import java.io.File
 
+enum class OS {
+    WINDOWS, LINUX, MAC, SOLARIS
+}
+
+fun getOS(): OS? {
+    val os = System.getProperty("os.name").toLowerCase()
+    return when {
+        os.contains("win") -> {
+            OS.WINDOWS
+        }
+        os.contains("nix") || os.contains("nux") || os.contains("aix") -> {
+            OS.LINUX
+        }
+        os.contains("mac") -> {
+            OS.MAC
+        }
+        os.contains("sunos") -> {
+            OS.SOLARIS
+        }
+        else -> null
+    }
+}
+
 fun ecmaImportConvert(workspace: String, filepath: String, importPath: String): String {
     var pathname = filepath
     val isResolvePath = pathname.startsWith("@/")
@@ -28,6 +51,11 @@ fun ecmaImportConvert(workspace: String, filepath: String, importPath: String): 
 //
 // output: to normalize path
 fun importConvert(filepath: String, importPath: String): String {
+    var filepath = filepath
+    when (getOS()) {
+        OS.WINDOWS -> filepath.replace("\\", "/")
+    }
+
     // import "@/src/component/Hello.js"
     val isResolvePath = importPath.startsWith("@/")
     if(isResolvePath) {
