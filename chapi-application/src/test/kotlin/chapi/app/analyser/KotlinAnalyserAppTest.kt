@@ -21,7 +21,10 @@ internal class KotlinAnalyserAppTest {
         val nodeInfos = KotlinAnalyserApp(config).analysisNodeByPath(path.absolutePath)
 
         Assertions.assertEquals(nodeInfos.size, 2)
-        Assertions.assertEquals(nodeInfos[0].FilePath.endsWith("resources/test/languages/kotlin/Hello.kt"), true)
+
+        // for windows
+        val filePath = nodeInfos[0].FilePath.replace("\\", "/")
+        Assertions.assertEquals(filePath.endsWith("resources/test/languages/kotlin/Hello.kt"), true)
     }
 
     @Test
