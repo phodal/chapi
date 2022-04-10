@@ -9,6 +9,133 @@ import chapi.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 
 class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
+
+    private fun handleClassMember(memberCtx: CSharpParser.Class_member_declarationContext?) {
+        val memberDeclaration = memberCtx!!.common_member_declaration() ?: return
+        val firstChild = memberDeclaration.getChild(0) ?: return
+
+        var returnType = "";
+        when (firstChild::class.java.simpleName) {
+            "TerminalNodeImpl" -> {
+                returnType = firstChild.text
+            }
+        }
+
+        val annotations = parseAnnotations(memberCtx.attributes())
+        val modifiers = buildFunctionModifiers(memberCtx)
+
+        if (memberDeclaration.typed_member_declaration() != null) {
+            val typedMember = memberDeclaration.typed_member_declaration()
+
+            val methodDeclaration = typedMember.method_declaration()
+            if (methodDeclaration != null) {
+                val typeContext = typedMember.type_()
+                if (typeContext != null) {
+                    returnType = typeContext.text
+                }
+
+                currentFunction = createFunction(
+                    returnType,
+                    annotations,
+                    currentStruct.Package,
+                    modifiers,
+                    methodDeclaration.method_member_name().text,
+                    methodDeclaration.formal_parameter_list()
+                )
+            }
+
+            val propertyDecl = typedMember.property_declaration()
+            if (propertyDecl != null) {
+                val typeContext = typedMember.type_()
+                if (typeContext != null) {
+                    returnType = typeContext.text
+                }
+
+                currentFunction = createFunction(
+                    returnType,
+                    annotations,
+                    currentStruct.Package,
+                    modifiers,
+                    propertyDecl.member_name().text,
+                    null
+                )
+            }
+
+        }
+
+        if (memberDeclaration.constructor_declaration() != null) {
+            val constructorDecl = memberDeclaration.constructor_declaration()
+
+            currentFunction = createFunction(
+                returnType,
+                annotations,
+                currentStruct.Package,
+                modifiers,
+                constructorDecl.identifier().text,
+                constructorDecl.formal_parameter_list()
+            )
+        }
+
+        val methodDecl = memberDeclaration.method_declaration()
+        if (methodDecl != null) {
+            currentFunction = createFunction(
+                returnType,
+                annotations,
+                currentStruct.Package,
+                modifiers,
+                methodDecl.method_member_name().text,
+                methodDecl.formal_parameter_list()
+            )
+        }
+    }
+
+    override fun enterConstructor_declaration(ctx: CSharpParser.Constructor_declarationContext?) {
+        buildForMethodDecl(ctx)
+    }
+
+    override fun exitConstructor_declaration(ctx: CSharpParser.Constructor_declarationContext?) {
+        currentStruct.Functions += currentFunction
+        currentFunction = CodeFunction()
+    }
+
+    override fun enterTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
+        buildForMethodDecl(ctx)
+    }
+
+    override fun exitTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
+        if(currentFunction.Name.isNotEmpty()) {
+            currentStruct.Functions += currentFunction
+        }
+
+        currentFunction = CodeFunction()
+    }
+
+    override fun enterMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
+        buildForMethodDecl(ctx)
+    }
+
+    override fun exitMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
+        currentStruct.Functions += currentFunction
+        currentFunction = CodeFunction()
+    }
+
+    private fun buildForMethodDecl(ctx: ParserRuleContext?) {
+        if (ctx == null) return
+
+        var commonMemberForClass: CSharpParser.Common_member_declarationContext? = null
+        if (ctx.parent.javaClass.simpleName == "Common_member_declarationContext") {
+            commonMemberForClass = ctx.parent as CSharpParser.Common_member_declarationContext
+        } else if (ctx.parent.parent.javaClass.simpleName == "Common_member_declarationContext") {
+            commonMemberForClass = ctx.parent.parent as CSharpParser.Common_member_declarationContext
+        }
+
+        if (commonMemberForClass == null) return
+
+        if (commonMemberForClass.parent.javaClass.simpleName == "Class_member_declarationContext") {
+            handleClassMember(commonMemberForClass.parent as CSharpParser.Class_member_declarationContext?)
+        }
+    }
+
     override fun enterProperty_declaration(ctx: CSharpParser.Property_declarationContext?) {
         val memberName = ctx!!.member_name()
         when (ctx.parent.javaClass.simpleName) {
@@ -18,7 +145,6 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
                 val typeContext = typedMember.type_()
 
                 val field = createField(typeValue, typeContext)
-
                 currentStruct.Fields += field
             }
         }
