@@ -1,11 +1,12 @@
 package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
-import chapi.ast.antlr.CSharpParser.Common_member_declarationContext
 import chapi.ast.antlr.CSharpParserBaseListener
 import chapi.domain.core.*
 import chapi.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
+
+typealias PackageName = String
 
 open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListener() {
     protected var currentNamespace: String = ""
@@ -15,6 +16,9 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
     protected var containerStack: Stack<CodeContainer> = Stack()
     protected var currentPackage: CodePackage = CodePackage()
     protected var currentFunction: CodeFunction = CodeFunction()
+
+    // sort by package name
+    protected var containerMap: Map<PackageName, MutableList<CodeContainer>> = mapOf()
 
     override fun enterCompilation_unit(ctx: CSharpParser.Compilation_unitContext?) {
         containerStack.push(codeContainer)
