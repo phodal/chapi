@@ -1,8 +1,8 @@
-# [](https://github.com/modernizing/chapi/compare/v1.5.5...v) (2022-04-10)
+# [](https://github.com/modernizing/chapi/compare/v1.5.6...v) (2022-04-13)
 
 
 
-## [1.5.5](https://github.com/modernizing/chapi/compare/v1.5.4...v1.5.5) (2022-04-10)
+## [1.5.6](https://github.com/modernizing/chapi/compare/v1.5.4...v1.5.6) (2022-04-13)
 
 
 ### Bug Fixes
@@ -11,6 +11,7 @@
 * fix default in object property ([789330b](https://github.com/modernizing/chapi/commit/789330b5e717b85bb699b6807d780058cdc667f9))
 * fix imports ([2bdd161](https://github.com/modernizing/chapi/commit/2bdd1617eefc52d2179211efa05d076f61c45642))
 * fix windows paths issues ([8fa0e16](https://github.com/modernizing/chapi/commit/8fa0e16988eacf6788dde45e342d64d06d97a523))
+* **java:** fix annotation parse issues ([a5f8ccb](https://github.com/modernizing/chapi/commit/a5f8ccbe22389c50fe32a15f04fac18725679002))
 * **kotlin:** fix tests in windows path issue ([2712424](https://github.com/modernizing/chapi/commit/27124248d6aefa6e912a55792a5b3de35125c8ef))
 
 
