@@ -180,4 +180,13 @@ public class BlogRepositoryImpl {
         assertEquals(firstFunc.FunctionCalls[0].NodeName, "SqlGenerator")
         assertEquals(firstFunc.FunctionCalls[0].Package, "infrastructure.utils")
     }
+
+    @Test
+    fun multiple_annotation() {
+        val code = this::class.java.getResource("/bug/annotation/DemoController.java").readText()
+        val codeContainer = JavaAnalyser().identFullInfo(code, "SourceBatch.java")
+
+        val firstFunc = codeContainer.DataStructures[0].Functions[0]
+        assertEquals(3, firstFunc.Annotations.size)
+    }
 }

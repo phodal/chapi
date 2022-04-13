@@ -9,10 +9,10 @@ import org.antlr.v4.runtime.tree.ParseTree
 data class TargetTypePackage(val targetType: String, val packageName: String)
 data class JavaTargetType(var targetType: String = "", var callType: CallType = CallType.FUNCTION)
 
-open class JavaFullIdentListener(
-    fileName: String,
-    val classes: Array<String>
-) : JavaAstListener() {
+open class JavaFullIdentListener(fileName: String, val classes: Array<String>) : JavaAstListener() {
+    private var isEnterFunction: Boolean = false
+    private var currentAnnotations: Array<CodeAnnotation> = arrayOf()
+
     private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
     private var isOverrideMethod: Boolean = false
     private var fields = arrayOf<CodeField>()
@@ -188,6 +188,8 @@ open class JavaFullIdentListener(
         val name = ctx!!.identifier().text
         val typeType = ctx.typeTypeOrVoid().text
 
+        this.isEnterFunction = true
+
         val codeFunction = CodeFunction(
             Name = name,
             ReturnType = typeType,
@@ -195,10 +197,7 @@ open class JavaFullIdentListener(
             IsConstructor = false
         )
 
-        val mayModifierCtx = ctx.parent.parent.getChild(0)
-        if (mayModifierCtx::class.simpleName == "ModifierContext") {
-            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
-        }
+        codeFunction.Annotations = this.currentAnnotations
 
         val params = ctx.formalParameters()
         if (params != null) {
@@ -236,6 +235,8 @@ open class JavaFullIdentListener(
     }
 
     override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
+        this.isEnterFunction = false
+        this.currentAnnotations = arrayOf()
         if (localVars.isNotEmpty()) {
             addLocalVarsToFunction()
         }
@@ -537,6 +538,8 @@ open class JavaFullIdentListener(
 
             buildFieldCall(typeTypeText, ctx)
         }
+
+        this.currentAnnotations = arrayOf()
     }
 
     private fun buildFieldCall(typeType: String, ctx: JavaParser.FieldDeclarationContext) {
@@ -603,6 +606,8 @@ open class JavaFullIdentListener(
             } else {
                 currentNode.Annotations += annotation
             }
+        } else {
+            currentAnnotations += this.buildAnnotation(ctx)
         }
     }
 
