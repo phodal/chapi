@@ -58,7 +58,8 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 ## Todo
 
-- [ ] split Chapi CLI application
+- [x] split Chapi CLI application
+- [ ] .gitignore support with [klob](https://github.com/shyiko/klob) in CLI
 
 ## Chapi-base projects
 
