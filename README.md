@@ -7,7 +7,7 @@
 
 > Chapi is a common language data structure parser, which will parse different language to same JSON object.
 
-Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/)
+Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/). Chapi (pronoounce /paɪ/) also pronounce XP in Chinese, if you always call X in 叉.
 
 Languages Stages (Welcome to PR your usage languages)
 
