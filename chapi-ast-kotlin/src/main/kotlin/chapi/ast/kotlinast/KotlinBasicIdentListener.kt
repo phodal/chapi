@@ -141,8 +141,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
 
     override fun enterPrimaryConstructor(ctx: KotlinParser.PrimaryConstructorContext) {
         val parameters = ctx.classParameters().classParameter().map(::buildProperty)
-        val fields = ctx.classParameters().classParameter()
-            .mapNotNull(::buildField)
+        val fields = ctx.classParameters().classParameter().mapNotNull(::buildField)
         val annotations = ctx.modifiers().getAnnotations()
 
         currentFunction = CodeFunction(
@@ -266,8 +265,15 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             StopLinePosition = stop.charPositionInLine,
         )
 
-    protected fun getTypeFullName(name: String): String =
-        imports.firstOrNull { it.AsName == name }?.Source ?: "kotlin.$name"
+    protected fun getTypeFullName(name: String): String {
+        var resolveByImport = imports.firstOrNull { it.AsName == name }?.Source ?: "kotlin.$name"
+        if(resolveByImport.contains("?\n")) {
+            // in KotlinPaser.g4 QUEST_WS, NL is after quest
+            resolveByImport = resolveByImport.replace("\n", "")
+        }
+
+        return resolveByImport
+    }
 
     companion object {
         const val UNKNOWN_PLACEHOLDER = "<UNKNOWN>"

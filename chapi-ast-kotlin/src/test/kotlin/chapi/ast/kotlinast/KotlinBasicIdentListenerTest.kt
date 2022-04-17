@@ -348,7 +348,8 @@ class Person(val name: String) : Human {
 
         @Test
         fun `should correct field bug`() {
-            val codeContainer = analyse("""
+            val codeContainer = analyse(
+                """
 @Repository
 class RedundancyRepositoryImpl(val jdbi: Jdbi) : RedundancyRepository {
     private val table = "select sum(1) sum, m.clzname as name, m.module as module " +
@@ -363,6 +364,29 @@ class RedundancyRepositoryImpl(val jdbi: Jdbi) : RedundancyRepository {
 }
             """.trimIndent())
             assertEquals(2, codeContainer.DataStructures[0].Fields.size)
+        }
+
+        @Test
+        fun `current type`() {
+            val codeContainer = analyse(
+                """
+@Service
+class BadSmellScanner(@Autowired val badSmellRepo: BadSmellRepo) : Scanner {
+    data class CocaBadSmellModel(
+        val repeatedSwitches: List<CocaBadSmellItem>?
+    ) {
+        fun toBadSmell(systemId: Long): List<BadSmell> {
+
+        }
+    }
+}
+            """.trimIndent()
+            )
+
+            val fields = codeContainer.DataStructures[1].Fields
+            assertEquals(1, fields.size)
+
+            assertEquals("kotlin.List<CocaBadSmellItem>?", fields[0].TypeType)
         }
     }
 }
