@@ -357,4 +357,67 @@ public class LexerTest {
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[0].TypeValue, "args")
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[0].TypeType, "String[]")
     }
+
+    @Test
+    fun shouldExistAnnotationsForCodeField() {
+        var code = """
+package org.apache.dubbo.samples.annotation.action;
+import org.apache.dubbo.samples.annotation.api.HelloService;
+           
+public class AnnotationAction {
+
+    @DubboReference
+    private HelloService helloService;
+}                
+        """
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[0].Name, "DubboReference")
+
+    }
+
+
+    @Test
+    fun testFieldMutilAnnotationParse() {
+        var code = """
+package org.apache.dubbo.samples.annotation.action;
+import org.apache.dubbo.samples.annotation.api.HelloService;
+           
+public class AnnotationAction {
+
+    @Autowired
+    @DubboReference
+    private HelloService helloService;
+}                
+        """
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons.size, 2)
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[0].Name, "Autowired")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[1].Name, "DubboReference")
+
+    }
+
+    @Test
+    fun testFieldAnnotationNestedParse() {
+        var code = """
+package org.apache.dubbo.samples.annotation.action;
+import org.apache.dubbo.samples.annotation.api.HelloService;
+           
+public class AnnotationAction {
+
+    @DubboReference(interfaceClass = GreetingService.class,
+    version = AnnotationConstants.VERSION,
+    timeout = 1000,
+    methods = {@Method(name = "greeting", timeout = 3000, retries = 1)})
+    private GreetingService greetingService;
+}                
+        """
+        // Nested annotations can currently only be parsed as side-by-side annotations
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons.size, 2)
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[0].Name, "DubboReference")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[1].Name, "Method")
+
+    }
+
 }
