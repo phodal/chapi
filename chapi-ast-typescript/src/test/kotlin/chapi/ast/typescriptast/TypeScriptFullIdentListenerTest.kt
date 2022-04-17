@@ -349,7 +349,7 @@ import BadSmellThresholdTable from "./components/BadSmellThresholdTable";
         val codeFile = TypeScriptAnalyser().analysis(personClassCode, "")
         assertEquals(codeFile.DataStructures[0].Fields.size, 5)
         assertEquals(codeFile.DataStructures[0].Fields[0].Modifiers[0], "public")
-        assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "publicString")
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeKey, "publicString")
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "string")
         assertEquals(codeFile.DataStructures[0].Fields[1].TypeType, "string")
         assertEquals(codeFile.DataStructures[0].Fields[4].Modifiers.size, 0)

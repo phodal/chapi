@@ -209,7 +209,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
                 "PropertyDeclarationExpressionContext" -> {
                     val ctx = childCtx as TypeScriptParser.PropertyDeclarationExpressionContext
-                    val codeField = CodeField(TypeValue = ctx.propertyName().text)
+                    val codeField = CodeField(TypeKey = ctx.propertyName().text)
 
                     val modifier = ctx.propertyMemberBase().text
                     if (modifier != "") {
