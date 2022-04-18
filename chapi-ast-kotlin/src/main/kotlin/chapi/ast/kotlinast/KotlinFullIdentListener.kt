@@ -18,9 +18,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
 
     private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
 
-    private fun buildFunctionCalls(ctx: KotlinParser.FunctionDeclarationContext): List<CodeCall>? =
-        ctx.functionBody()?.block()?.statements()?.statement()?.mapNotNull(::buildFunctionCall)
-
     private fun buildFunctionCall(it: KotlinParser.StatementContext): CodeCall? {
         val result = Regex("(\\w+\\.?)+\\((.*)\\)").find(it.text) ?: return null
 
