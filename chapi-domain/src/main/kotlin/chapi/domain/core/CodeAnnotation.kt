@@ -44,14 +44,17 @@ open class CodeAnnotation(
         return result
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     open fun isComponentOrRepository(): Boolean {
         return this.Name == "Component" || this.Name == "Repository"
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     open fun isTest(): Boolean {
         return this.Name == "Test"
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     open fun isIgnore(): Boolean {
         return this.Name == "Ignore"
     }
@@ -60,6 +63,7 @@ open class CodeAnnotation(
         return this.isIgnore() || this.isTest()
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     open fun isOverride(): Boolean {
         return this.Name == "Override"
     }

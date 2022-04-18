@@ -30,10 +30,12 @@ open class CodeFunction(
 ) {
     private var extensionMap = HashMap<String, JsonElement>()
 
+    @Deprecated("is for Java/Kotlin Only")
     fun isJavaLangReturnType(): Boolean {
         return this.ReturnType == "String" || this.ReturnType == "int" || this.ReturnType == "float" || this.ReturnType == "void" || this.ReturnType == "char" || this.ReturnType == "double"
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     fun isStatic(): Boolean {
         for (modifier in this.Modifiers) {
             if (modifier == "static") {
@@ -44,6 +46,7 @@ open class CodeFunction(
         return false
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     fun isGetterSetter(): Boolean {
         return this.Name.startsWith("set") || this.Name.startsWith("get")
     }
@@ -88,6 +91,7 @@ open class CodeFunction(
         this.Extension = JsonObject(this.extensionMap)
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     fun isReturnNull(): Boolean {
         return this.Extension.jsonObject["IsReturnNull"] == JsonPrimitive("true")
     }

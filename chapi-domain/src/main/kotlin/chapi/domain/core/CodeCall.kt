@@ -43,10 +43,12 @@ open class CodeCall(
         return this.Package + "." + this.NodeName + "." + this.FunctionName
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     open fun isSystemOutput(): Boolean {
         return this.NodeName == "System.out" && (this.FunctionName == "println" || this.FunctionName == "printf" || this.FunctionName == "print")
     }
 
+    @Deprecated("is for Java/Kotlin Only")
     open fun isThreadSleep(): Boolean {
         return this.NodeName == "Thread" && this.FunctionName == "sleep"
     }
