@@ -371,8 +371,8 @@ public class AnnotationAction {
 }                
         """
         val codeFile = JavaAnalyser().identFullInfo(code, "")
-        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons.size, 1)
-        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[0].Name, "DubboReference")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotations.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotations[0].Name, "DubboReference")
 
     }
 
@@ -391,9 +391,9 @@ public class AnnotationAction {
 }                
         """
         val codeFile = JavaAnalyser().identFullInfo(code, "")
-        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons.size, 2)
-        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[0].Name, "Autowired")
-        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[1].Name, "DubboReference")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotations.size, 2)
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotations[0].Name, "Autowired")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotations[1].Name, "DubboReference")
 
     }
 
@@ -414,9 +414,9 @@ public class AnnotationAction {
         """
         // Nested annotations can currently only be parsed as side-by-side annotations
         val codeFile = JavaAnalyser().identFullInfo(code, "")
-        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons.size, 2)
-        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[0].Name, "DubboReference")
-        assertEquals(codeFile.DataStructures[0].Fields[0].Annotaitons[1].Name, "Method")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotations.size, 2)
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotations[0].Name, "DubboReference")
+        assertEquals(codeFile.DataStructures[0].Fields[0].Annotations[1].Name, "Method")
 
     }
 

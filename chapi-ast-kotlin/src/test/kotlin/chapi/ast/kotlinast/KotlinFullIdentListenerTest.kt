@@ -303,5 +303,17 @@ class SystemOverviewRepositoryImpl(val jdbi: Jdbi) : SystemOverviewRepository {
             assert(hasCatchVariable)
             assertEquals(9, calls.size)
         }
+
+        @Test
+        internal fun `should support for annotation in property`() {
+            val code = """
+class BadSmellScanner(@Autowired val badSmellRepo: BadSmellRepo) {}
+"""
+
+            val container = analyse(code)
+            val fields = container.DataStructures[0].Fields
+            assertEquals(1, fields.size)
+            assertEquals("Autowired", fields[0].Annotations[0].Name)
+        }
     }
 }

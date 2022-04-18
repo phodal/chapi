@@ -205,21 +205,32 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     private fun buildField(it: KotlinParser.ClassParameterContext): CodeField? {
         if (it.VAL() == null && it.VAR() == null) return null
 
+        val annotations: Array<CodeAnnotation> = it.modifiers()?.annotation()?.map {
+            buildAnnotation(it)
+        }?.toTypedArray() ?: arrayOf()
+
         return CodeField(
             TypeType = getTypeFullName(it.type().text),
             TypeValue = it.expression()?.text ?: "",
             TypeKey = it.simpleIdentifier().text,
+            Annotations = annotations,
             Modifiers = it.modifiers().getModifiers() + listOfNotNull(it.VAL()?.text, it.VAR()?.text),
         )
     }
 
-    private fun buildField(it: KotlinParser.PropertyDeclarationContext): CodeField =
-        CodeField(
+    private fun buildField(it: KotlinParser.PropertyDeclarationContext): CodeField {
+        val annotations: Array<CodeAnnotation> = it.variableDeclaration().annotation()?.map {
+            buildAnnotation(it)
+        }?.toTypedArray() ?: arrayOf()
+
+        return CodeField(
             TypeType = it.variableDeclaration().type()?.run { getTypeFullName(text) } ?: UNKNOWN_PLACEHOLDER,
             TypeValue = it.expression()?.text ?: "",
             TypeKey = it.variableDeclaration().simpleIdentifier().text,
+            Annotations = annotations,
             Modifiers = it.modifiers().getModifiers() + listOfNotNull(it.VAL()?.text, it.VAR()?.text),
         )
+    }
 
     private fun KotlinParser.ModifiersContext?.getModifiers(): Array<String> =
         this?.modifier()?.map { it.text }?.toTypedArray() ?: emptyArray()
