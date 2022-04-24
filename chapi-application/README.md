@@ -1,3 +1,5 @@
+# (DEPRECATED!! the entries of the analyser have been moved into `scanner-cli, analyser-sourcecode/*`)
+
 # Frontend API
 
 ## sample for restful api
@@ -12,9 +14,9 @@ support framework:
 
 - React
 - HTTP request
-  - axios
-  - umi-request
-- 
+    - axios
+    - umi-request
+-
 
 todo:
 
@@ -34,7 +36,7 @@ export function queryScannerConfig() {
 }
 ```
 
-component  
+component
 
 ```
 import { queryScannerConfig } from "../scanner-api.js"
