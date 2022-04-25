@@ -141,7 +141,6 @@ subprojects {
 
 dependencies {
     jacocoAggregation(project(":chapi-domain"))
-    jacocoAggregation(project(":chapi-application"))
     jacocoAggregation(project(":chapi-ast-java"))
     jacocoAggregation(project(":chapi-ast-typescript"))
     jacocoAggregation(project(":chapi-ast-go"))
