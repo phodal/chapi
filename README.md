@@ -76,9 +76,6 @@ PS: welcome to PR to send your projects
 
 ```
 dependencies {
-    implementation 'com.phodal.chapi:chapi-application:0.2.0'
-
-    // or choose languages target
     implementation 'com.phodal.chapi:chapi-ast-java:0.2.0'
     implementation 'com.phodal.chapi:chapi-domain:0.2.0'
 }
@@ -87,13 +84,40 @@ dependencies {
 ### Usage
 
 ```kotlin
-import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeDataStruct
-import chapi.app.analyser
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
+import org.archguard.scanner.core.sourcecode.LanguageSourceCodeAnalyser
+import org.archguard.scanner.core.sourcecode.SourceCodeContext
+import java.io.File
 
-...
-val nodes = ChapiAnalyser().analysisByPath(path.absolutePath)
-...
+class CSharpAnalyser(override val context: SourceCodeContext) 
+    private val client = context.client
+    private val impl = chapi.ast.csharpast.CSharpAnalyser()
+
+    fun analyse(): List<CodeDataStruct> = runBlocking {
+        getFilesByPath(context.path) {
+            it.absolutePath.endsWith(".cs")
+        }
+            .map { async { analysisByFile(it) } }.awaitAll()
+            .flatten()
+            .also { client.saveDataStructure(it) }
+    }
+
+    fun analysisByFile(file: File): List<CodeDataStruct> {
+        val codeContainer = impl.analysis(file.readContent(), file.name)
+        return codeContainer.Containers.flatMap { container ->
+            container.DataStructures.map {
+                it.apply {
+                    it.Imports = codeContainer.Imports
+                    it.FilePath = file.absolutePath
+                }
+            }
+        }
+    }
+}
+
 ```
 
 ## Examples
