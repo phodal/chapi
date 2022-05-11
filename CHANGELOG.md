@@ -1,18 +1,23 @@
-# [](https://github.com/modernizing/chapi/compare/v1.5.6...v) (2022-04-13)
+# [](https://github.com/modernizing/chapi/compare/v2.0.0-beta...v) (2022-05-11)
 
 
 
-## [1.5.6](https://github.com/modernizing/chapi/compare/v1.5.4...v1.5.6) (2022-04-13)
+# [2.0.0-beta](https://github.com/modernizing/chapi/compare/v1.5.4...v2.0.0-beta) (2022-05-11)
 
 
 ### Bug Fixes
 
 * **app:** fix windows crash issues ([e11e593](https://github.com/modernizing/chapi/commit/e11e593fb0e1b39d233c25ba60267dd4c5fbce89))
+* fix alt annnotation issues ([7088f27](https://github.com/modernizing/chapi/commit/7088f279386bd7a4ab8b8ef197465d93b348ad5c))
+* fix annotation lost s issues ([3bced8e](https://github.com/modernizing/chapi/commit/3bced8e545f047e385beaa1a62dcd1e374e6a769))
 * fix default in object property ([789330b](https://github.com/modernizing/chapi/commit/789330b5e717b85bb699b6807d780058cdc667f9))
 * fix imports ([2bdd161](https://github.com/modernizing/chapi/commit/2bdd1617eefc52d2179211efa05d076f61c45642))
 * fix windows paths issues ([8fa0e16](https://github.com/modernizing/chapi/commit/8fa0e16988eacf6788dde45e342d64d06d97a523))
 * **java:** fix annotation parse issues ([a5f8ccb](https://github.com/modernizing/chapi/commit/a5f8ccbe22389c50fe32a15f04fac18725679002))
+* **java:** fix java field annotations is empty issue ([69ba995](https://github.com/modernizing/chapi/commit/69ba9955ea20ed4724afadae962b95690d977388))
+* **kotlin:** fix quest error in newline ([5f3de96](https://github.com/modernizing/chapi/commit/5f3de964503a5ef6b4ca90a4408f63456e090d48))
 * **kotlin:** fix tests in windows path issue ([2712424](https://github.com/modernizing/chapi/commit/27124248d6aefa6e912a55792a5b3de35125c8ef))
+* **typescript:** fix key issues for scan ([feac320](https://github.com/modernizing/chapi/commit/feac3204304f32c2bcfd6540faa73c3983c4d08f))
 
 
 ### Features
@@ -21,6 +26,7 @@
 * **c#:** fix proprety memebr issue ([4ebba25](https://github.com/modernizing/chapi/commit/4ebba257477678cd34e0296dd97b518d090d7028))
 * **C#:** init first method call samples ([1daee4e](https://github.com/modernizing/chapi/commit/1daee4e7973cef3db31571531df8fadf308fa693))
 * **c#:** make first function calls ([ca02ac4](https://github.com/modernizing/chapi/commit/ca02ac4f7da260d1c9c0de1ec5ac0f13a7e10c98))
+* **kotlin:** add annotation support for field ([47fcfe2](https://github.com/modernizing/chapi/commit/47fcfe2a6c2190569bc1ecc4adb096ec1ba109cb))
 * **typescript:** add exports to name support ([ec6fafb](https://github.com/modernizing/chapi/commit/ec6fafbd8a3a66db135e070fe00608c6436cadd6))
 
 
