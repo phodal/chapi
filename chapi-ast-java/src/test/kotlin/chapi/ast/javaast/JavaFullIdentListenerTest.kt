@@ -183,7 +183,7 @@ class Pig implements Animal {
 
     @Test
     fun shouldIdentifyInterface() {
-        var code = """
+        val code = """
 interface AnotherInterface extends Runnable { // local interface
     void work();
 }
@@ -197,7 +197,7 @@ interface AnotherInterface extends Runnable { // local interface
 
     @Test
     fun shouldIdentifyInterfaceMethod() {
-        var code = """
+        val code = """
 interface AnotherInterface extends Runnable { // local interface
     void work();
 }
@@ -213,7 +213,7 @@ interface AnotherInterface extends Runnable { // local interface
 
     @Test
     fun shouldIdentifyInterfaceMethodAnnotation() {
-        var code = """
+        val code = """
 public interface BlogRepository extends Repository {
     @ServiceMethod(value="/hello")
     long count(BlogCriteria criteria);
@@ -230,7 +230,7 @@ public interface BlogRepository extends Repository {
 
     @Test
     fun shouldIdentifyClassAnnotation() {
-        var code = """
+        val code = """
 package adapters.outbound.persistence.blog;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -253,7 +253,7 @@ public class BlogPO implements PersistenceObject<Blog> {
 
     @Test
     fun shouldIdentifyMethodAnnotation() {
-        var code = """
+        val code = """
 package adapters.outbound.persistence.blog;
 
 public class BlogPO implements PersistenceObject<Blog> {
@@ -273,7 +273,7 @@ public class BlogPO implements PersistenceObject<Blog> {
 
     @Test
     fun shouldIdentifyConstructorMethod() {
-        var code = """
+        val code = """
 package adapters.outbound.persistence.blog;
 
 public class PublishedBlogResource {
@@ -340,7 +340,7 @@ public class HostDependentDownloadableContribution {
 
     @Test
     fun shouldEnableGetLocalVarsForFunction() {
-        var code = """
+        val code = """
 package adapters.outbound.persistence.blog;
 
 public class LexerTest {
@@ -360,7 +360,7 @@ public class LexerTest {
 
     @Test
     fun shouldExistAnnotationsForCodeField() {
-        var code = """
+        val code = """
 package org.apache.dubbo.samples.annotation.action;
 import org.apache.dubbo.samples.annotation.api.HelloService;
            
@@ -379,7 +379,7 @@ public class AnnotationAction {
 
     @Test
     fun testFieldMutilAnnotationParse() {
-        var code = """
+        val code = """
 package org.apache.dubbo.samples.annotation.action;
 import org.apache.dubbo.samples.annotation.api.HelloService;
            
@@ -399,7 +399,7 @@ public class AnnotationAction {
 
     @Test
     fun testFieldAnnotationNestedParse() {
-        var code = """
+        val code = """
 package org.apache.dubbo.samples.annotation.action;
 import org.apache.dubbo.samples.annotation.api.HelloService;
            
@@ -418,6 +418,31 @@ public class AnnotationAction {
         assertEquals(codeFile.DataStructures[0].Fields[0].Annotations[0].Name, "DubboReference")
         assertEquals(codeFile.DataStructures[0].Fields[0].Annotations[1].Name, "Method")
 
+    }
+
+    @Test
+    fun testWithLombok() {
+        val code = """
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+
+@RequiredArgsConstructor(staticName = "of")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ConstructorExample<T> {
+  private int x, y;
+  @NonNull private T description;
+  
+  @NoArgsConstructor
+  public static class NoArgsExample {
+    @NonNull private String field;
+  }
+}            
+        """
+
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        assertEquals(codeFile.DataStructures[0].Annotations.size, 2)
     }
 
 }
