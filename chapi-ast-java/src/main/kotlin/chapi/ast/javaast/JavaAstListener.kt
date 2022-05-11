@@ -8,8 +8,21 @@ import chapi.domain.core.CodePosition
 import org.antlr.v4.runtime.ParserRuleContext
 
 open class JavaAstListener : JavaParserBaseListener() {
+    fun annotationName(ctx: JavaParser.AnnotationContext): String {
+        var annotationName = ""
+        if (ctx.qualifiedName() != null) {
+            annotationName = ctx.qualifiedName().text
+        }
+
+        if (ctx.altAnnotationQualifiedName() != null) {
+            annotationName = ctx.altAnnotationQualifiedName().text
+        }
+
+        return annotationName
+    }
+
     fun buildAnnotation(ctx: JavaParser.AnnotationContext): CodeAnnotation {
-        val annotationName = ctx.qualifiedName().text
+        val annotationName = annotationName(ctx)
         val codeAnnotation = CodeAnnotation(
             Name = annotationName
         )

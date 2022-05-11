@@ -595,7 +595,11 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
     }
 
     override fun enterAnnotation(ctx: JavaParser.AnnotationContext?) {
-        val annotationName = ctx!!.qualifiedName().text
+        val annotationName = annotationName(ctx!!)
+        if (annotationName.isEmpty()) {
+            return
+        }
+
         isOverrideMethod = annotationName == "Override"
 
         if (!hasEnterClass) {

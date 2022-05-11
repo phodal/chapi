@@ -445,4 +445,18 @@ public class ConstructorExample<T> {
         assertEquals(codeFile.DataStructures[0].Annotations.size, 2)
     }
 
+    @Test
+    fun altAnnotationName() {
+        val code = """
+public class DTOBuilder {
+  public verify(DTO.@NotBlack(message="NOT_BLANK") DTO dto) {
+
+  }
+}            
+        """
+
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
+
 }
