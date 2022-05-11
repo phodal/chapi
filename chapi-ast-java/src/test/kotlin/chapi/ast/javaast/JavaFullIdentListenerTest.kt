@@ -420,4 +420,42 @@ public class AnnotationAction {
 
     }
 
+    @Test
+    fun testWithLombok() {
+        val code = """
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+
+@RequiredArgsConstructor(staticName = "of")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ConstructorExample<T> {
+  private int x, y;
+  @NonNull private T description;
+  
+  @NoArgsConstructor
+  public static class NoArgsExample {
+    @NonNull private String field;
+  }
+}            
+        """
+
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        assertEquals(codeFile.DataStructures[0].Annotations.size, 2)
+    }
+
+    @Test
+    fun altAnnotationName() {
+        val code = """
+public class DTOBuilder {
+  public verify(DTO.@NotBlack(message="NOT_BLANK") DTO dto) {
+
+  }
+}            
+        """
+
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
 }
