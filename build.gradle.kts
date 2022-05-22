@@ -23,7 +23,7 @@ allprojects {
     apply(plugin = "java")
 
     group = "com.phodal.chapi"
-    version = "2.0.0-beta"
+    version = "2.0.0-beta.2"
     description =
         "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
 
