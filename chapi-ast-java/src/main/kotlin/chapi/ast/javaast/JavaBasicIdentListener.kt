@@ -99,7 +99,8 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
             Name = name,
             ReturnType = typeType,
             Position = buildPosition(ctx),
-            IsConstructor = false
+            IsConstructor = false,
+            BodyHash = ctx.methodBody().text.hashCode()
         )
 
         val mayModifierCtx = ctx.parent.parent.getChild(0)

@@ -26,7 +26,8 @@ open class CodeFunction(
     var Extension: JsonElement = JsonObject(HashMap()),
     var LocalVariables: Array<CodeProperty> = arrayOf(),
     var IsConstructor: Boolean = false, // todo: move to extension
-    var IsReturnHtml: Boolean = false
+    var IsReturnHtml: Boolean = false,
+    var BodyHash: Int = 0
 ) {
     private var extensionMap = HashMap<String, JsonElement>()
 
@@ -136,6 +137,7 @@ open class CodeFunction(
         if (IsConstructor != other.IsConstructor) return false
         if (IsReturnHtml != other.IsReturnHtml) return false
         if (extensionMap != other.extensionMap) return false
+        if (BodyHash != other.BodyHash) return false
 
         return true
     }
