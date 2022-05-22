@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 
 internal class JavaBasicIdentListenerTest {
     @Test
-    internal fun shouldIdentifyImport() {
+    fun shouldIdentifyImport() {
         val code = """
             package chapi.ast.javaast;
 
@@ -20,7 +20,7 @@ internal class JavaBasicIdentListenerTest {
     }
 
     @Test
-    internal fun shouldIdentifyClass() {
+    fun shouldIdentifyClass() {
         val code = """
             package chapi.ast.javaast;
 
@@ -46,7 +46,7 @@ internal class JavaBasicIdentListenerTest {
     }
 
     @Test
-    internal fun shouldIdentifyExtends() {
+    fun shouldIdentifyExtends() {
         val code = """
             package chapi.ast.javaast;
 
@@ -156,7 +156,7 @@ internal class JavaBasicIdentListenerTest {
     }
 
     @Test
-    internal fun shouldInterfaceName() {
+    fun shouldInterfaceName() {
         val code = """
             package chapi.ast.javaast;
 
@@ -170,7 +170,7 @@ internal class JavaBasicIdentListenerTest {
     }
 
     @Test
-    internal fun shouldInterfaceMethod() {
+    fun shouldInterfaceMethod() {
         val code = """
             package chapi.ast.javaast;
 
@@ -185,7 +185,7 @@ internal class JavaBasicIdentListenerTest {
     }
 
     @Test
-    internal fun shouldIdentifyConstructor() {
+    fun shouldIdentifyConstructor() {
         val code = """
             package chapi.ast.javaast;
 
@@ -204,7 +204,7 @@ internal class JavaBasicIdentListenerTest {
     }
 
     @Test
-    internal fun shouldIdentifyReturnNull() {
+    fun shouldIdentifyReturnNull() {
         val code = """
             package chapi.ast.javaast;
 
