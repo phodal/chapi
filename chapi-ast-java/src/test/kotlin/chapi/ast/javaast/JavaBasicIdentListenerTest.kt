@@ -11,10 +11,10 @@ internal class JavaBasicIdentListenerTest {
     @Test
     internal fun shouldIdentifyImport() {
         val code = """
-package chapi.ast.javaast;
+            package chapi.ast.javaast;
 
-import org.junit.Test;
-"""
+            import org.junit.Test;
+        """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         assertEquals(codeFile.PackageName, "chapi.ast.javaast")
     }
@@ -22,15 +22,15 @@ import org.junit.Test;
     @Test
     internal fun shouldIdentifyClass() {
         val code = """
-package chapi.ast.javaast;
+            package chapi.ast.javaast;
 
-import hello.Expandable;
+            import hello.Expandable;
 
-class IntegerArray implements Expandable {
-    void addItem(Integer item) {
-    }
-}
-"""
+            class IntegerArray implements Expandable {
+                void addItem(Integer item) {
+                }
+            }
+        """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
@@ -48,15 +48,15 @@ class IntegerArray implements Expandable {
     @Test
     internal fun shouldIdentifyExtends() {
         val code = """
-package chapi.ast.javaast;
+            package chapi.ast.javaast;
 
-import hello.Expandable;
+            import hello.Expandable;
 
-class IntegerArray extends Expandable {
-    void addItem(Integer item) {
-    }
-}
-"""
+            class IntegerArray extends Expandable {
+                void addItem(Integer item) {
+                }
+            }
+        """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "IntegerArray")
@@ -66,15 +66,15 @@ class IntegerArray extends Expandable {
     @Test
     fun shouldIdentifyMethod() {
         val code = """
-package chapi.ast.javaast;
+            package chapi.ast.javaast;
 
-import hello.Expandable;
+            import hello.Expandable;
 
-class IntegerArray extends Expandable {
-    void addItem(Integer item) {
-    }
-}
-"""
+            class IntegerArray extends Expandable {
+                void addItem(Integer item) {
+                }
+            }
+        """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
@@ -158,12 +158,12 @@ class IntegerArray extends Expandable {
     @Test
     internal fun shouldInterfaceName() {
         val code = """
-package chapi.ast.javaast;
+            package chapi.ast.javaast;
 
-interface Expandable {
-    void addItem(T item);
-}
-"""
+            interface Expandable {
+                void addItem(T item);
+            }
+        """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "Expandable")
@@ -172,12 +172,12 @@ interface Expandable {
     @Test
     internal fun shouldInterfaceMethod() {
         val code = """
-package chapi.ast.javaast;
+            package chapi.ast.javaast;
 
-interface Expandable {
-    void addItem(T item);
-}
-"""
+            interface Expandable {
+                void addItem(T item);
+            }
+        """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
@@ -187,16 +187,16 @@ interface Expandable {
     @Test
     internal fun shouldIdentifyConstructor() {
         val code = """
-package chapi.ast.javaast;
+            package chapi.ast.javaast;
 
-import hello.Expandable;
+            import hello.Expandable;
 
-public class PublishedBlogResource {
-    public PublishedBlogResource() {
+            public class PublishedBlogResource {
+                public PublishedBlogResource() {
 
-    }
-}
-"""
+                }
+            }
+        """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
@@ -206,16 +206,16 @@ public class PublishedBlogResource {
     @Test
     internal fun shouldIdentifyReturnNull() {
         val code = """
-package chapi.ast.javaast;
+            package chapi.ast.javaast;
 
-import hello.Expandable;
+            import hello.Expandable;
 
-public class PublishedBlogResource {
-    public PublishedBlogResource() {
-        return null;
-    }
-}
-"""
+            public class PublishedBlogResource {
+                public PublishedBlogResource() {
+                    return null;
+                }
+            }
+        """
         val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
