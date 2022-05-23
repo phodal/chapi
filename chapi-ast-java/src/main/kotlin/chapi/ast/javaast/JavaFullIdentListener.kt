@@ -194,7 +194,8 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
             Name = name,
             ReturnType = typeType,
             Position = buildPosition(ctx),
-            IsConstructor = false
+            IsConstructor = false,
+            BodyHash = ctx.methodBody().text.hashCode()
         )
 
         codeFunction.Annotations = this.currentAnnotations
