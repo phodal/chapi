@@ -6,21 +6,30 @@ on:
       - '*'
 
 jobs:
-  release:
-    runs-on: ubuntu-18.04
+  publish:
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-
-      - name: Install Java and Maven
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: '11'
+          distribution: 'adopt'
 
-      - name: Release Maven package
-        uses: samuelmeuli/action-maven-publish@v1
-        with:
-          gpg_private_key: ${{ secrets.gpg_private_key }}
-          gpg_passphrase: ${{ secrets.gpg_passphrase }}
-          nexus_username: ${{ secrets.nexus_username }}
-          nexus_password: ${{ secrets.nexus_password }}
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Execute Gradle build
+        run: ./gradlew build
+
+      #After decoding the secret key, place the file in ~ /. Gradle/ secring.gpg
+      - name: Decode
+        run: |
+          echo "${{secrets.GPG_PRIVATE_KEY}}" > ~/.gradle/secring.gpg.b64
+          base64 -d ~/.gradle/secring.gpg.b64 > ~/.gradle/secring.gpg
+
+      - name: Publish
+        run: ./gradlew publish -Psigning.keyId=${{secrets.GPG_PASSPHRASE}} -Psigning.password= -Psigning.secretKeyRingFile=$(echo ~/.gradle/secring.gpg)
+        env:
+          OSSRH_USERNAME: ${{secrets.NEXUS_USERNAME}}
+          OSSRH_PASSWORD: ${{secrets.NEXUS_PASSWORD}}
