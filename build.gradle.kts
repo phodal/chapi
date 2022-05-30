@@ -94,14 +94,6 @@ subprojects {
                     password = (if (project.findProperty("sonatypePassword") != null) project.findProperty("sonatypePassword") else System.getenv("MAVEN_PASSWORD")).toString()
                 }
             }
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/modernizing/chapi")
-                credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
-                }
-            }
         }
     }
 
