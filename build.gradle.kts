@@ -12,6 +12,8 @@ plugins {
     java
     id("jacoco-report-aggregation")
     id("com.github.kt3k.coveralls") version "2.9.0"
+
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
 
