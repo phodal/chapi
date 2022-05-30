@@ -1,4 +1,18 @@
-# [](https://github.com/modernizing/chapi/compare/v2.0.0-beta...v) (2022-05-11)
+# [](https://github.com/modernizing/chapi/compare/v2.0.0-beta.4...v) (2022-05-30)
+
+
+
+# [2.0.0-beta.4](https://github.com/modernizing/chapi/compare/v2.0.0-beta...v2.0.0-beta.4) (2022-05-30)
+
+
+### Bug Fixes
+
+* **java:** add BodyHash calculate in FullIdentListener.enterMethodDeclaration since CodeFunction will be updated in the end of the method ([c718768](https://github.com/modernizing/chapi/commit/c718768df6a219eee63569794f33ea212a2ca171))
+
+
+### Features
+
+* **java:** add BodyHash field in CodeFunction, to determine if Function Body has been changed during code commit ([fdacd84](https://github.com/modernizing/chapi/commit/fdacd8488df853f71e48dd20626e552475163f12))
 
 
 
