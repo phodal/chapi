@@ -24,6 +24,7 @@ open class CodeDataStruct(
     // class and DataStruct Name
     // for TypeScript/JavaScript, if is a variable, function, it will be naming to `default`
     var NodeName: String = "",
+    var Module: String = "",
     var Type: DataStructType = DataStructType.EMPTY,
     var Package: String = "",
     var FilePath: String = "",
