@@ -29,7 +29,7 @@ jobs:
           base64 -d ~/.gradle/secring.gpg.b64 > ~/.gradle/secring.gpg
 
       - name: Publish
-        run: ./gradlew publish -Psigning.keyId=${{secrets.GPG_PASSPHRASE}} -Psigning.password= -Psigning.secretKeyRingFile=$(echo ~/.gradle/secring.gpg)
+        run: ./gradlew publish -Psigning.keyId=${{secrets.GPG_KEY_ID}} -Psigning.password=${{secrets.GPG_PASSPHRASE}} -Psigning.secretKeyRingFile=$(echo ~/.gradle/secring.gpg)
         env:
           OSSRH_USERNAME: ${{secrets.NEXUS_USERNAME}}
           OSSRH_PASSWORD: ${{secrets.NEXUS_PASSWORD}}
