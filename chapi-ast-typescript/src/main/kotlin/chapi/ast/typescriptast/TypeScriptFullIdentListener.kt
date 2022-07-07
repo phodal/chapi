@@ -422,7 +422,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
     // see also in arrow function declaration
     override fun enterFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
-        val funcName = ctx!!.Identifier().text
+        if(ctx == null) return
+        if(ctx.Identifier() == null) return
+
+        val funcName = ctx.Identifier().text
         val func = CodeFunction(FilePath = filePath)
         func.Name = funcName
 
