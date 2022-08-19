@@ -225,4 +225,18 @@ internal class JavaBasicIdentListenerTest {
         assertEquals(codeFunction.Extension.jsonObject["IsReturnNull"], JsonPrimitive("true"))
         assertEquals(codeFunction.isReturnNull(), true)
     }
+
+    @Test
+    fun shouldEnum() {
+        val code = """
+            package chapi.ast.javaast;
+            public enum AbcEnum {
+                A;
+            }
+        """
+        
+        val codeFile = JavaAnalyser().identBasicInfo(code, "basic")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].NodeName, "AbcEnum")
+    }
 }

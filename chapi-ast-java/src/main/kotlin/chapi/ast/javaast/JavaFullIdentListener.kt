@@ -760,4 +760,52 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
         codeContainer.DataStructures = classNodes
         return codeContainer
     }
+
+    override fun enterEnumDeclaration(ctx: JavaParser.EnumDeclarationContext?) {
+        currentType = DataStructType.ENUM
+        currentNode.Type = currentType
+        currentNode.Position = buildPosition(ctx!!)
+
+        hasEnterClass = true
+        buildEnumExtension(ctx, currentNode)
+
+        lastNode = currentNode
+        classNodeStack.push(currentNode)
+    }
+
+    override fun exitEnumDeclaration(ctx: JavaParser.EnumDeclarationContext?) {
+        classNodeStack.pop()
+        if (classNodeStack.count() == 0) {
+            this.exitBody()
+        } else {
+            updateStructMethods()
+        }
+    }
+
+    private fun buildEnumExtension(ctx: JavaParser.EnumDeclarationContext?, classNode: CodeDataStruct) {
+        classNode.Package = codeContainer.PackageName
+        classNode.FilePath = codeContainer.FullName
+
+        if (ctx!!.identifier() != null) {
+            currentClz = ctx.identifier().text
+            classNode.NodeName = currentClz
+        }
+
+        currentClzExtend = ""
+
+        if (ctx.IMPLEMENTS() != null) {
+            classNode.Implements = buildEnumImplements(ctx)
+        }
+    }
+
+    open fun buildEnumImplements(ctx: JavaParser.EnumDeclarationContext): Array<String> {
+        var implements = arrayOf<String>()
+        val type = ctx.typeList()
+        var target = this.warpTargetFullType(type.text).targetType
+        if (target == "") {
+            target = type.text
+        }
+        implements += target
+        return implements
+    }
 }

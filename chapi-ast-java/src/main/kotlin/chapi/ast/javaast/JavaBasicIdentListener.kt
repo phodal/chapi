@@ -75,6 +75,19 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         return implements
     }
 
+    open fun buildImplements(ctx: JavaParser.EnumDeclarationContext): Array<String> {
+        var implements = arrayOf<String>()
+        
+        val typeText = ctx.typeList().text
+        for (imp in imports) {
+            if (imp.Source.endsWith(".$typeText")) {
+                implements += typeText
+            }
+        }
+
+        return implements
+    }
+
     override fun enterInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
         hasEnterClass = true
         currentNode = CodeDataStruct(
@@ -184,6 +197,30 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
                 currentFunction.addExtension("IsReturnNull", isReturnNull.toString())
             }
         }
+    }
+
+    override fun enterEnumDeclaration(ctx: JavaParser.EnumDeclarationContext?) {
+        hasEnterClass = true
+        currentNode.Type = DataStructType.ENUM
+        currentNode.Package = codeContainer.PackageName
+
+        if (ctx!!.identifier() != null) {
+            currentNode.NodeName = ctx.identifier().text
+        }
+
+        if (ctx.IMPLEMENTS() != null) {
+            currentNode.Implements = buildImplements(ctx)
+        }
+
+        currentFunction = CodeFunction()
+    }
+
+    override fun exitEnumBodyDeclarations(ctx: JavaParser.EnumBodyDeclarationsContext?) {
+        hasEnterClass = false
+        if (currentNode.NodeName != "") {
+            classNodes += currentNode
+        }
+        currentNode = CodeDataStruct()
     }
 
     fun getNodeInfo(): CodeContainer {
