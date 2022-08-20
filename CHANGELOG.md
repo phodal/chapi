@@ -1,8 +1,30 @@
-# [](https://github.com/modernizing/chapi/compare/v2.0.0-beta.4...v) (2022-05-30)
+# [](https://github.com/modernizing/chapi/compare/v2.0.0-alpha.5...v) (2022-08-20)
+
+
+### Bug Fixes
+
+* fix identifier issues for archguard/archguard[#108](https://github.com/modernizing/chapi/issues/108) ([28cc9a8](https://github.com/modernizing/chapi/commit/28cc9a84971adeb1be8ab000352376aff560f6d5))
+
+
+### Features
+
+* <java> add enum support ([3fa19ef](https://github.com/modernizing/chapi/commit/3fa19efbcf6966e9ca03b5b453c6cea8620fa483))
 
 
 
-# [2.0.0-beta.4](https://github.com/modernizing/chapi/compare/v2.0.0-beta...v2.0.0-beta.4) (2022-05-30)
+# [2.0.0-alpha.5](https://github.com/modernizing/chapi/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2022-05-30)
+
+
+
+# [2.0.0-alpha.4](https://github.com/modernizing/chapi/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2022-05-30)
+
+
+
+# [2.0.0-alpha.3](https://github.com/modernizing/chapi/compare/v2.0.0-alpha.1...v2.0.0-alpha.3) (2022-05-30)
+
+
+
+# [2.0.0-alpha.1](https://github.com/modernizing/chapi/compare/v2.0.0-beta.4...v2.0.0-alpha.1) (2022-05-30)
 
 
 ### Bug Fixes
@@ -13,6 +35,11 @@
 ### Features
 
 * **java:** add BodyHash field in CodeFunction, to determine if Function Body has been changed during code commit ([fdacd84](https://github.com/modernizing/chapi/commit/fdacd8488df853f71e48dd20626e552475163f12))
+
+
+### Reverts
+
+* Revert "build: remove gdp" ([0a467c8](https://github.com/modernizing/chapi/commit/0a467c8e61e6e1ec907c432c8df0eab122cf8ecf))
 
 
 
