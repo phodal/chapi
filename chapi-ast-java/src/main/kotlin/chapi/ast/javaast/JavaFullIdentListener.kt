@@ -531,10 +531,12 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
             }
 
             val typeTypeText = typeCtx.identifier(0).text
-            val typeValue = declCtx.variableDeclaratorId().identifier().text
-            fieldsMap[typeValue] = typeTypeText
+            val typeKey = declCtx.variableDeclaratorId().identifier().text
+            val typeValue = declCtx.variableInitializer()?.text ?: ""
+            
+            fieldsMap[typeKey] = typeTypeText
 
-            val field = CodeField(typeTypeText, typeValue, Modifiers = arrayOf(), Annotations = this.currentAnnotations)
+            val field = CodeField(typeTypeText, typeValue, typeKey, Modifiers = arrayOf(), Annotations = this.currentAnnotations)
             fields += field
 
             buildFieldCall(typeTypeText, ctx)
