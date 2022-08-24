@@ -113,6 +113,7 @@ package hello;
 
 public class JavaCallApp {
     private JavaDaoParser daoParser;
+    private String name = "abc";
 
     public daoCall() {
         daoParser.Call();
@@ -123,9 +124,13 @@ public class JavaCallApp {
         val codeFile = JavaAnalyser().identFullInfo(code, "")
         println(codeFile.DataStructures[0].Fields.size)
 
-        assertEquals(codeFile.DataStructures[0].Fields.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields.size, 2)
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "JavaDaoParser")
-        assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "daoParser")
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeKey, "daoParser")
+
+        assertEquals(codeFile.DataStructures[0].Fields[1].TypeType, "String")
+        assertEquals(codeFile.DataStructures[0].Fields[1].TypeKey, "name")
+        assertEquals(codeFile.DataStructures[0].Fields[1].TypeValue, "\"abc\"")
     }
 
     @Test
