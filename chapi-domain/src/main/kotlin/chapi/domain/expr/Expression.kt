@@ -11,6 +11,10 @@ sealed class Expression {
         override fun toString(): String = "$op$lhs"
     }
 
+    class ComparisonOp(val lhs: ExpressionNode, val op: ComparisonOpKind, val rhs: ExpressionNode) : ExpressionNode {
+        override fun toString(): String = "$lhs $op $rhs"
+    }
+
     class IntValue(val value: Int) : ExpressionNode {
         override fun toString() = value.toString()
     }
@@ -31,7 +35,8 @@ sealed class Expression {
         override fun toString() = "try { $tryBlock } catch { $catchBlock }"
     }
 
-    class IfElse(val condition: ExpressionNode, val thenBlock: ExpressionNode, val elseBlock: ExpressionNode) : ExpressionNode {
+    class IfElse(val condition: ExpressionNode, val thenBlock: ExpressionNode, val elseBlock: ExpressionNode) :
+        ExpressionNode {
         override fun toString() = "if ($condition) { $thenBlock } else { $elseBlock }"
     }
 
@@ -40,7 +45,8 @@ sealed class Expression {
     }
 
     // lhs: identifier, rhs: expression
-    class MethodCall(val functionName: String, val args: Array<ExpressionNode>, val className: String = "") : ExpressionNode {
+    class MethodCall(val functionName: String, val args: Array<ExpressionNode>, val className: String = "") :
+        ExpressionNode {
         override fun toString(): String {
             return if (className == "") {
                 "$functionName(${args.joinToString(", ")})"
@@ -58,8 +64,47 @@ sealed class Expression {
         override fun toString() = "[${args.joinToString(", ")}]"
     }
 
-    class CustomValueType(val value: ValueType) : ExpressionNode
+    class Value(val value: Any) : ExpressionNode {
+        override fun toString() = value.toString()
+    }
+}
 
+
+sealed class ComparisonOpKind {
+    object Equal : ComparisonOpKind() {
+        override fun toString() = "=="
+    }
+    object NotEqual : ComparisonOpKind() {
+        override fun toString() = "!="
+    }
+
+    object GreaterThan : ComparisonOpKind() {
+        override fun toString() = ">"
+    }
+
+    object GreaterThanOrEqual : ComparisonOpKind() {
+        override fun toString() = ">="
+    }
+
+    object LessThan : ComparisonOpKind() {
+        override fun toString() = "<"
+    }
+
+    object LessThanOrEqual : ComparisonOpKind() {
+        override fun toString() = "<="
+    }
+
+    object In : ComparisonOpKind() {
+        override fun toString() = "in"
+    }
+
+    object NotIn : ComparisonOpKind() {
+        override fun toString() = "!in"
+    }
+
+    object Is : ComparisonOpKind() {
+        override fun toString() = "is"
+    }
 }
 
 sealed class BinOpKind {
@@ -125,10 +170,19 @@ interface ExpressionNode {
     }
 }
 
-
 interface ValueType {
     val name: String
     val value: Any
+}
+
+sealed class Typed {
+    class IntType(val value: Int) : Typed()
+    class FloatType(val value: Float) : Typed()
+    class StringType(val value: String) : Typed()
+    class BoolType(val value: Boolean) : Typed()
+    class ArrayType(val value: Array<Typed>) : Typed()
+    class ObjectType(val value: Any) : Typed()
+    class NullType(val value: Any) : Typed()
 }
 
 interface Operator : ExpressionNode

@@ -85,7 +85,7 @@ class ExpressionTest {
     @Test
     fun tryCatch() {
         assertEquals(Expression.TryCatch(
-                tryBlock = Expression.IntValue(1),
+                tryBlock = Expression.Value(1),
                 catchBlock = Expression.IntValue(2)
             ).toString(), "try { 1 } catch { 2 }"
         )
@@ -98,6 +98,16 @@ class ExpressionTest {
                 thenBlock = Expression.IntValue(2),
                 elseBlock = Expression.IntValue(3)
             ).toString(), "if (1) { 2 } else { 3 }"
+        )
+    }
+
+    @Test
+    fun compareItem() {
+        assertEquals(Expression.ComparisonOp(
+                lhs = Expression.IntValue(1),
+                op = ComparisonOpKind.GreaterThan,
+                rhs = Expression.IntValue(2)
+            ).toString(), "1 > 2"
         )
     }
 }
