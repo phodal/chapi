@@ -78,7 +78,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
-        val receiverName = this.getStructNameFromReceiver(ctx!!.receiver().parameters())!!
+        val receiverName = this.getStructNameFromReceiver(ctx?.receiver()?.parameters())
         currentFunction.addVarsFromMap(localVars)
         this.addReceiverToStruct(receiverName, currentFunction)
         currentFunction = CodeFunction()

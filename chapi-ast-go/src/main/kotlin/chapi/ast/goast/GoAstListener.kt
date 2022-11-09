@@ -18,10 +18,9 @@ open class GoAstListener : GoParserBaseListener() {
         return parameters
     }
 
-    fun getStructNameFromReceiver(parameters: GoParser.ParametersContext?): String? {
-        val parameterDecls = parameters!!.parameterDecl()
-        for (paramCtx in parameterDecls) {
-            var typeType = paramCtx.type_().text
+    fun getStructNameFromReceiver(parameters: GoParser.ParametersContext?): String {
+        parameters?.parameterDecl()?.forEach {
+            var typeType = it.type_().text
             if (typeType.startsWith("*")) {
                 typeType = typeType.removePrefix("*")
             }
@@ -32,9 +31,9 @@ open class GoAstListener : GoParserBaseListener() {
     }
 
     protected fun buildReturnTypeFromSignature(signatureContext: GoParser.SignatureContext?): Array<CodeProperty> {
-        val result = signatureContext!!.result()
         var returns: Array<CodeProperty> = arrayOf()
-        if (result != null) {
+
+        signatureContext?.result()?.let { result ->
             val parameters = result.parameters()
             if (parameters != null) {
                 for (parameterDeclContext in parameters.parameterDecl()) {
