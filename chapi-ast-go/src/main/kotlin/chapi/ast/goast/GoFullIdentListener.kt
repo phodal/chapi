@@ -155,9 +155,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterExpression(ctx: GoParser.ExpressionContext?) {
-        val firstChild = ctx!!.getChild(0)
-        when (firstChild::class.java.simpleName) {
-            "PrimaryExprContext" -> {
+        when (val firstChild = ctx!!.getChild(0)) {
+            is GoParser.PrimaryExprContext -> {
                 if (firstChild.getChild(1) != null) {
                     this.buildPrimaryExprCtx(firstChild)
                 }
@@ -165,29 +164,30 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
-    private fun buildPrimaryExprCtx(primaryExprCtx: ParseTree?) {
+    private fun buildPrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext?) {
         val child = primaryExprCtx!!.getChild(1)
-        when (val className = child::class.java.simpleName) {
-            "ArgumentsContext" -> {
-                val codeCall = CodeCall(
-                    NodeName = primaryExprCtx.getChild(0).text
-                )
-                val argumentsContext = primaryExprCtx.getChild(1) as GoParser.ArgumentsContext
-
-                if (argumentsContext.expressionList() != null) {
-                    for (expressionContext in argumentsContext.expressionList().expression()) {
-                        codeCall.Parameters += CodeProperty(
-                            TypeValue = expressionContext.text,
-                            TypeType = ""
-                        )
-                    }
-                    currentFunction.FunctionCalls += codeCall
+        when (child) {
+            is GoParser.ArgumentsContext -> {
+                val codeCall = codeCallFromExprList(primaryExprCtx.getChild(0))
+                child.expressionList()?.expression()?.forEach {
+                    codeCall.Parameters += CodeProperty(
+                        TypeValue = it.text,
+                        TypeType = ""
+                    )
                 }
+                currentFunction.FunctionCalls += codeCall
             }
 
-            else -> println("$className not implemented")
+            else -> {
+                println("${child.javaClass} not implemented")
+            }
         }
     }
+
+    private fun codeCallFromExprList(primaryExprCtx: ParseTree): CodeCall {
+        return CodeCall(NodeName = primaryExprCtx.text)
+    }
+
 
     override fun enterVarDecl(ctx: GoParser.VarDeclContext?) {
         for (varSpecContext in ctx!!.varSpec()) {

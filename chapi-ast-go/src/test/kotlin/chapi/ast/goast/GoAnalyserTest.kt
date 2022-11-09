@@ -52,7 +52,7 @@ func main() {
 
 	r.Run()
 }"""
-        val analysis = GoAnalyser().analysis(helloworldApi, "")
-        println(analysis)
+        val container = GoAnalyser().analysis(helloworldApi, "")
+        println(Json.encodeToString(container))
     }
 }
