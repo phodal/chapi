@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 internal class GoAnalyserTest {
     @Test
     fun analysis() {
-        var helloworld = """
+        val helloworld = """
 package main
 import "fmt"
 func main() {
@@ -17,7 +17,6 @@ func main() {
     }
 
     @Test
-    @Ignore
     fun analysis2() {
         val helloworldApi = """package main
 

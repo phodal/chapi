@@ -105,6 +105,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 "StructTypeContext" -> {
                     buildStruct(identifyName, typeChild)
                 }
+
                 else -> {
 
                 }
@@ -171,14 +172,16 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                     NodeName = primaryExprCtx.getChild(0).text
                 )
                 val argumentsContext = primaryExprCtx.getChild(1) as GoParser.ArgumentsContext
-                for (expressionContext in argumentsContext.expressionList().expression()) {
-                    val codeProperty = CodeProperty(
-                        TypeValue = expressionContext.text,
-                        TypeType = ""
-                    )
-                    codeCall.Parameters += codeProperty
+
+                if (argumentsContext.expressionList() != null) {
+                    for (expressionContext in argumentsContext.expressionList().expression()) {
+                        codeCall.Parameters += CodeProperty(
+                            TypeValue = expressionContext.text,
+                            TypeType = ""
+                        )
+                    }
+                    currentFunction.FunctionCalls += codeCall
                 }
-                currentFunction.FunctionCalls += codeCall
             }
         }
     }
