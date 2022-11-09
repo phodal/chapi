@@ -135,9 +135,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         when (val child = primaryExprCtx.getChild(1)) {
             is GoParser.ArgumentsContext -> {
                 val codeCall = codeCallFromExprList(primaryExprCtx)
-                codeCall.Parameters = child.expressionList()?.expression()?.map {
-                    CodeProperty(TypeValue = it.text, TypeType = "")
-                }?.toTypedArray() ?: arrayOf()
+                codeCall.Parameters = parseArguments(child)
 
                 currentFunction.FunctionCalls += codeCall
             }
@@ -146,6 +144,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 println("${child.javaClass} not implemented")
             }
         }
+    }
+
+    private fun parseArguments(child: GoParser.ArgumentsContext): Array<CodeProperty> {
+        return child.expressionList()?.expression()?.map {
+            CodeProperty(TypeValue = it.text, TypeType = "")
+        }?.toTypedArray() ?: arrayOf()
     }
 
     private fun codeCallFromExprList(primaryExprCtx: GoParser.PrimaryExprContext): CodeCall {
