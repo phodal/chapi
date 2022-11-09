@@ -59,12 +59,7 @@ open class CodeDataStruct(
     }
 
     fun setMethodsFromMap(methodMap: MutableMap<String, CodeFunction>) {
-        var methodsArray: Array<CodeFunction> = arrayOf()
-        for (entry in methodMap) {
-            methodsArray += entry.value
-        }
-
-        this.Functions = methodsArray
+        this.Functions = methodMap.values.toTypedArray()
     }
 
     fun filterAnnotations(vararg keys: String): List<CodeAnnotation> {
@@ -74,16 +69,16 @@ open class CodeDataStruct(
     }
 
     fun getClassFullName(): String {
-        return this.Package + "." + this.NodeName
+        return "${this.Package}.${this.NodeName}"
     }
 
     fun fileExt(): String {
-        return this.FilePath.substringAfterLast('.', "")
+        return FilePath.substringAfterLast('.', "")
     }
 
     // src/main.ts -> src/main
     fun fileWithoutSuffix(): String {
-        return this.FilePath.substringBeforeLast('.', "")
+        return FilePath.substringBeforeLast('.', "")
     }
 
     // position was removed, if one function change, others position will also change

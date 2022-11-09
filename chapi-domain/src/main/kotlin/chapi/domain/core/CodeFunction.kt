@@ -31,60 +31,44 @@ open class CodeFunction(
 ) {
     private var extensionMap = HashMap<String, JsonElement>()
 
-    @Deprecated("is for Java/Kotlin Only")
+    @Deprecated(
+        "is for Java/Kotlin Only",
+        ReplaceWith("this.ReturnType == \"String\" || this.ReturnType == \"int\" || this.ReturnType == \"float\" || this.ReturnType == \"void\" || this.ReturnType == \"char\" || this.ReturnType == \"double\"")
+    )
     fun isJavaLangReturnType(): Boolean {
         return this.ReturnType == "String" || this.ReturnType == "int" || this.ReturnType == "float" || this.ReturnType == "void" || this.ReturnType == "char" || this.ReturnType == "double"
     }
 
-    @Deprecated("is for Java/Kotlin Only")
+    @Deprecated("is for Java/Kotlin Only", ReplaceWith("this.Modifiers.contains(\"static\")"))
     fun isStatic(): Boolean {
-        for (modifier in this.Modifiers) {
-            if (modifier == "static") {
-                return true
-            }
-        }
-
-        return false
+        return this.Modifiers.contains("static")
     }
 
-    @Deprecated("is for Java/Kotlin Only")
+    @Deprecated(
+        "is for Java/Kotlin Only",
+        ReplaceWith("this.Name.startsWith(\"set\") || this.Name.startsWith(\"get\")")
+    )
     fun isGetterSetter(): Boolean {
         return this.Name.startsWith("set") || this.Name.startsWith("get")
     }
 
     fun buildFullMethodName(node: CodeDataStruct): String {
-        return node.Package + "." + node.NodeName + "." + this.Name
+        return "${node.Package}.${node.NodeName}.${this.Name}"
     }
 
     fun getAllCallString(): Array<String> {
-        var calls = arrayOf<String>()
-        for (codeCall in this.FunctionCalls) {
-            if (codeCall.NodeName != "") {
-                calls += codeCall.buildClassFullName()
-            }
-        }
-
-        return calls
+        return FunctionCalls
+            .filter { it.NodeName != "" }
+            .map { it.buildClassFullName() }
+            .toTypedArray()
     }
 
     fun isJUnitTest(): Boolean {
-        var isTest = false
-        for (annotation in this.Annotations) {
-            if (annotation.isIgnoreOrTest()) {
-                isTest = true
-            }
-        }
-        return isTest
+        return Annotations.any { it.isIgnoreOrTest() }
     }
 
     fun isOverride(): Boolean {
-        for (annotation in this.Annotations) {
-            if (annotation.isOverride()) {
-                return true
-            }
-        }
-
-        return false
+        return this.Annotations.any { it.isOverride() }
     }
 
     fun addExtension(key: String, value: String) {
@@ -92,19 +76,20 @@ open class CodeFunction(
         this.Extension = JsonObject(this.extensionMap)
     }
 
-    @Deprecated("is for Java/Kotlin Only")
+    @Deprecated("is for Java/Kotlin Only", ReplaceWith(
+        "this.Extension.jsonObject[\"IsReturnNull\"] == JsonPrimitive(\"true\")",
+        "kotlinx.serialization.json.jsonObject",
+        "kotlinx.serialization.json.JsonPrimitive"
+    )
+    )
     fun isReturnNull(): Boolean {
         return this.Extension.jsonObject["IsReturnNull"] == JsonPrimitive("true")
     }
 
     fun addVarsFromMap(localVars: MutableMap<String, String>) {
-        var vars: Array<CodeProperty> = arrayOf()
-        for (entry in localVars) {
-            val param = CodeProperty(TypeValue = entry.key, TypeType = entry.value)
-            vars += param
-        }
-
-        this.LocalVariables = vars
+        this.LocalVariables = localVars.map { entry ->
+            CodeProperty(TypeValue = entry.key, TypeType = entry.value)
+        }.toTypedArray()
     }
 
     fun fileExt(): String {
