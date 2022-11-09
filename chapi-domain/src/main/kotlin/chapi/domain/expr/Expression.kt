@@ -69,7 +69,8 @@ sealed class Expression {
         override fun toString() = "[${args.joinToString(", ")}]"
     }
 
-    class SwitchCases(val lhs: ExpressionNode, val cases: Array<CaseOp>, val defaultBlock: ExpressionNode?) : ExpressionNode {
+    class SwitchCases(val lhs: ExpressionNode, val cases: Array<CaseOp>, val defaultBlock: ExpressionNode?) :
+        ExpressionNode {
         override fun toString(): String {
             val casesStr = cases.joinToString("\n") { "case ${it.condition}: ${it.thenBlock}" }
             val defaultStr = if (defaultBlock != null) {
@@ -84,13 +85,36 @@ sealed class Expression {
     class RangeOp(val lhs: ExpressionNode, val rhs: ExpressionNode) : ExpressionNode {
         override fun toString() = "$lhs..$rhs"
     }
-    
+
     class CaseOp(val condition: ExpressionNode, val thenBlock: ExpressionNode) : ExpressionNode {
         override fun toString() = "$condition -> $thenBlock"
     }
-    
+
     class Value(val value: Any) : ExpressionNode {
         override fun toString() = value.toString()
+    }
+
+    class JumpOp(val op: JumpOpKind) : ExpressionNode {
+        override fun toString() = op.toString()
+    }
+}
+
+// Throw, Return, Break, Continue
+sealed class JumpOpKind {
+    class Throw(val expr: ExpressionNode) : JumpOpKind() {
+        override fun toString() = "throw $expr"
+    }
+
+    class Return(val expr: ExpressionNode) : JumpOpKind() {
+        override fun toString() = "return $expr"
+    }
+
+    class Break(val expr: ExpressionNode) : JumpOpKind() {
+        override fun toString() = "break $expr"
+    }
+
+    class Continue(val expr: ExpressionNode) : JumpOpKind() {
+        override fun toString() = "continue $expr"
     }
 }
 
@@ -146,6 +170,7 @@ sealed class ComparisonOpKind {
     object Equal : ComparisonOpKind() {
         override fun toString() = "=="
     }
+
     object NotEqual : ComparisonOpKind() {
         override fun toString() = "!="
     }

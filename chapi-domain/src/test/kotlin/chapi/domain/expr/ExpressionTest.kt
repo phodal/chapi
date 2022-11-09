@@ -195,4 +195,13 @@ class ExpressionTest {
             ).toString(), "add(1, 2).sub(3)"
         )
     }
+
+    @Test
+    fun returnExprOp() {
+        assertEquals(
+            Expression.JumpOp(
+                op = JumpOpKind.Return(Expression.IntValue(1))
+            ).toString(), "return 1"
+        )
+    }
 }
