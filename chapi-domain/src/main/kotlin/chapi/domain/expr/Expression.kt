@@ -1,8 +1,5 @@
 package chapi.domain.expr
 
-import java.util.function.BinaryOperator
-import java.util.function.IntBinaryOperator
-
 // todo: mapping to pratt parser ?
 // mini sample <https://github.com/segeljakt/pratt>
 //
@@ -19,9 +16,32 @@ sealed class Expression {
         }
     }
 
-    class UnOp(lhs: ExpressionNode, op: UnOpKind) : ExpressionNode
+    class UnaryOp(lhs: ExpressionNode, op: UnaryOpKind) : ExpressionNode
     class IntValue(val value: kotlin.Int) : ExpressionNode {
         override fun toString() = value.toString()
+    }
+
+    class Variable(val name: kotlin.String) : ExpressionNode {
+        override fun toString() = name
+    }
+
+    class Identifier(val name: kotlin.String) : ExpressionNode {
+        override fun toString() = name
+    }
+
+    // lhs: identifier, rhs: expression
+    class MethodCall(val functionName: String, val args: Array<ExpressionNode>, val className: String = "") : ExpressionNode {
+        override fun toString(): String {
+            return if (className == "") {
+                "$functionName(${args.joinToString(", ")})"
+            } else {
+                "$className.$functionName(${args.joinToString(", ")})"
+            }
+        }
+    }
+
+    class Arguments(val args: kotlin.Array<ExpressionNode>) : ExpressionNode {
+        override fun toString() = args.joinToString(", ")
     }
 
     class CustomValueType(val value: ValueType) : ExpressionNode
@@ -48,12 +68,28 @@ sealed class BinOpKind {
     object Pow : BinOpKind() {
         override fun toString() = "^"
     }
+
+    object Mod : BinOpKind() {
+        override fun toString() = "%"
+    }
 }
 
-sealed class UnOpKind {
-    object Not : UnOpKind() // !
-    object Neg : UnOpKind() // -
-    object Try : UnOpKind() // ?
+sealed class UnaryOpKind {
+    object Not : UnaryOpKind() {
+        override fun toString() = "!"
+    }
+
+    object Neg : UnaryOpKind() {
+        override fun toString() = "-"
+    }
+
+    object Try : UnaryOpKind() {
+        override fun toString() = "?"
+    }
+
+    class Custom(val symbol: String = "") : UnaryOpKind() {
+        override fun toString() = symbol
+    }
 }
 
 interface ExpressionType {
@@ -82,14 +118,3 @@ interface ValueType {
 }
 
 interface Operator : ExpressionNode
-
-enum class Arithmetics : BinaryOperator<Int>, IntBinaryOperator {
-    PLUS {
-        override fun apply(t: Int, u: Int): Int {
-            return t + u
-        }
-    }
-    ;
-
-    override fun applyAsInt(t: Int, u: Int) = apply(t, u)
-}
