@@ -2,13 +2,10 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
 import chapi.domain.core.*
-import org.antlr.v4.runtime.tree.ParseTree
 
 class GoFullIdentListener(var fileName: String) : GoAstListener() {
-    private var codeContainer: CodeContainer =
-        CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
-    private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
     private var structMap = mutableMapOf<String, CodeDataStruct>()
     private var localVars = mutableMapOf<String, String>()
@@ -20,21 +17,18 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterPackageClause(ctx: GoParser.PackageClauseContext?) {
-        codeContainer.PackageName = ctx!!.IDENTIFIER().text
+        codeContainer.PackageName = ctx?.IDENTIFIER()?.text ?: ""
     }
 
     override fun enterImportSpec(ctx: GoParser.ImportSpecContext?) {
         val originSource = ctx!!.importPath().text
         val sourceName = originSource.replace("\"", "")
-        val codeImport = CodeImport(Source = sourceName)
 
-        if (ctx.DOT() != null) {
-            codeImport.AsName = "."
-        }
-
-        if (ctx.IDENTIFIER() != null) {
-            codeImport.UsageName += ctx.IDENTIFIER().text
-        }
+        val codeImport = CodeImport(
+            Source = sourceName,
+            AsName = ctx.DOT()?.text ?: "",
+            UsageName = arrayOf(ctx.IDENTIFIER()?.text ?: "")
+        )
 
         codeContainer.Imports += codeImport
     }
@@ -66,15 +60,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterMethodDecl(ctx: GoParser.MethodDeclContext?) {
-        val funcName = ctx!!.IDENTIFIER().text
-        val codeFunction = CodeFunction(
-            Name = funcName
+
+        currentFunction = CodeFunction(
+            Name = ctx!!.IDENTIFIER().text,
+            MultipleReturns = buildReturnTypeFromSignature(ctx.signature()),
+            Parameters = buildParameters(ctx.signature().parameters())
         )
-
-        codeFunction.MultipleReturns = this.buildReturnTypeFromSignature(ctx.signature())
-        codeFunction.Parameters = this.buildParameters(ctx.signature().parameters())
-
-        currentFunction = codeFunction
     }
 
     override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
@@ -120,12 +111,13 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun buildStructFields(structTypeCtx: GoParser.StructTypeContext): Array<CodeField> {
-        return structTypeCtx.fieldDecl().map { fieldDeclContext ->
-            CodeField(
-                TypeType = fieldDeclContext.type_().text,
-                TypeValue = fieldDeclContext.identifierList().text
-            )
-        }.toTypedArray()
+        return structTypeCtx.fieldDecl()
+            .map { field ->
+                CodeField(
+                    TypeType = field.type_().text,
+                    TypeValue = field.identifierList().text
+                )
+            }.toTypedArray()
     }
 
     override fun enterExpression(ctx: GoParser.ExpressionContext?) {
@@ -138,16 +130,14 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
-    private fun buildPrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext?) {
-        when (val child = primaryExprCtx!!.getChild(1)) {
+    private fun buildPrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext) {
+        when (val child = primaryExprCtx.getChild(1)) {
             is GoParser.ArgumentsContext -> {
-                val codeCall = codeCallFromExprList(primaryExprCtx.getChild(0))
-                child.expressionList()?.expression()?.forEach {
-                    codeCall.Parameters += CodeProperty(
-                        TypeValue = it.text,
-                        TypeType = ""
-                    )
-                }
+                val codeCall = codeCallFromExprList(primaryExprCtx)
+                codeCall.Parameters = child.expressionList()?.expression()?.map {
+                    CodeProperty(TypeValue = it.text, TypeType = "")
+                }?.toTypedArray() ?: arrayOf()
+
                 currentFunction.FunctionCalls += codeCall
             }
 
@@ -157,8 +147,25 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
-    private fun codeCallFromExprList(primaryExprCtx: ParseTree): CodeCall {
-        return CodeCall(NodeName = primaryExprCtx.text)
+    private fun codeCallFromExprList(primaryExprCtx: GoParser.PrimaryExprContext): CodeCall {
+        return when (val child = primaryExprCtx.getChild(0)) {
+            is GoParser.OperandContext -> {
+                CodeCall(NodeName = child.text)
+            }
+
+            is GoParser.MethodDeclContext -> {
+                CodeCall(NodeName = child.text)
+            }
+
+            is GoParser.PrimaryExprContext -> {
+                CodeCall(NodeName = child.text)
+            }
+
+            else -> {
+                println("${child.javaClass} not implemented")
+                CodeCall(NodeName = child.text)
+            }
+        }
     }
 
 
@@ -171,8 +178,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterShortVarDecl(ctx: GoParser.ShortVarDeclContext?) {
-        for (terminalNode in ctx!!.identifierList().IDENTIFIER()) {
-            localVars[terminalNode.text] = ""
+        ctx?.identifierList()?.IDENTIFIER()?.forEach {
+            localVars[it.text] = ""
         }
     }
 
