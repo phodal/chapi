@@ -11,21 +11,22 @@ package chapi.domain.expr
 // }
 sealed class Expression {
     class BinOp(val lhs: ExpressionNode, val op: BinOpKind, val rhs: ExpressionNode) : ExpressionNode {
-        override fun toString(): String {
-            return "$lhs $op $rhs"
-        }
+        override fun toString() = "$lhs $op $rhs"
     }
 
-    class UnaryOp(lhs: ExpressionNode, op: UnaryOpKind) : ExpressionNode
-    class IntValue(val value: kotlin.Int) : ExpressionNode {
+    class UnaryOp(val lhs: ExpressionNode, val op: UnaryOpKind) : ExpressionNode {
+        override fun toString(): String = "$op$lhs"
+    }
+
+    class IntValue(val value: Int) : ExpressionNode {
         override fun toString() = value.toString()
     }
 
-    class Variable(val name: kotlin.String) : ExpressionNode {
+    class Variable(val name: String) : ExpressionNode {
         override fun toString() = name
     }
 
-    class Identifier(val name: kotlin.String) : ExpressionNode {
+    class Identifier(val name: String) : ExpressionNode {
         override fun toString() = name
     }
 
