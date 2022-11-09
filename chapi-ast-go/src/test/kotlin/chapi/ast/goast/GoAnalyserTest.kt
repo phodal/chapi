@@ -58,5 +58,17 @@ func main() {
 }"""
         val container = GoAnalyser().analysis(helloworldApi, "")
         println(Json.encodeToString(container))
+        val codeFunction = container.DataStructures[0].Functions[0]
+        assertEquals(codeFunction.FunctionCalls[0].NodeName, "gin")
+        assertEquals(codeFunction.FunctionCalls[0].FunctionName, "Default")
+
+        assertEquals(codeFunction.FunctionCalls[1].NodeName, "gin.Default()")
+        assertEquals(codeFunction.FunctionCalls[1].FunctionName, "GET")
+
+        assertEquals(codeFunction.FunctionCalls[2].NodeName, "c")
+        assertEquals(codeFunction.FunctionCalls[2].FunctionName, "String")
+
+        assertEquals(codeFunction.FunctionCalls[3].NodeName, "gin.Default()")
+        assertEquals(codeFunction.FunctionCalls[3].FunctionName, "Run")
     }
 }

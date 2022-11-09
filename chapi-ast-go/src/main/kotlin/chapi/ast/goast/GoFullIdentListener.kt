@@ -160,18 +160,29 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
             is GoParser.PrimaryExprContext -> {
                 CodeCall(NodeName = child.text)
-                when(val subchild = child.getChild(1)) {
-                    // primaryExpr '.' IDENTIFIER
+                when (child.getChild(1)) {
                     is TerminalNodeImpl -> {
-                        // todo: verify child1
-                        val child1 = child.getChild(0)
-                        val identifier = child.getChild(2).text
+                        // primaryExpr '.' IDENTIFIER
+                        val nodeName = when (val first = child.getChild(0)) {
+                            is GoParser.OperandContext -> {
+                                first.text
+                            }
+
+                            is GoParser.PrimaryExprContext -> {
+                                localVars.getOrDefault(first.text, first.text)
+                            }
+
+                            else -> {
+                                first.text
+                            }
+                        }
 
                         CodeCall(
-                            NodeName = child1.text,
-                            FunctionName = identifier
+                            NodeName = nodeName,
+                            FunctionName = child.getChild(2).text
                         )
                     }
+
                     else -> {
                         CodeCall(NodeName = child.text)
                     }
@@ -196,7 +207,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     override fun enterShortVarDecl(ctx: GoParser.ShortVarDeclContext?) {
         ctx?.identifierList()?.IDENTIFIER()?.forEach {
-            localVars[it.text] = ""
+            localVars[it.text] = ctx.expressionList()?.text ?: ""
         }
     }
 
