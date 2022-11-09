@@ -37,16 +37,10 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         hasEnterClass = true
         currentNode.Type = DataStructType.CLASS
         currentNode.Package = codeContainer.PackageName
+        currentNode.NodeName = ctx?.identifier()?.text ?: ""
+        currentNode.Extend = ctx?.typeType()?.text ?: ""
 
-        if (ctx!!.identifier() != null) {
-            currentNode.NodeName = ctx.identifier().text
-        }
-
-        if (ctx.EXTENDS() != null) {
-            currentNode.Extend = ctx.typeType().text
-        }
-
-        if (ctx.IMPLEMENTS() != null) {
+        if (ctx?.IMPLEMENTS() != null) {
             currentNode.Implements = buildImplements(ctx)
         }
 
@@ -62,22 +56,19 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     }
 
     open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
-        var implements = arrayOf<String>()
-        for (_type in ctx.typeList()) {
-            val typeText = _type.text
-            for (imp in imports) {
-                if (imp.Source.endsWith(".$typeText")) {
-                    implements += typeText
-                }
-            }
+        return ctx.typeList()
+            .map { it.text }
+            .filter { imports.containsType(it) }
+            .toTypedArray()
+    }
 
-        }
-        return implements
+    private fun <T> Array<T>.containsType(it: String?): Boolean {
+        return imports.filter { imp -> imp.Source.endsWith(".$it") }.toTypedArray().isNotEmpty()
     }
 
     open fun buildImplements(ctx: JavaParser.EnumDeclarationContext): Array<String> {
         var implements = arrayOf<String>()
-        
+
         val typeText = ctx.typeList().text
         for (imp in imports) {
             if (imp.Source.endsWith(".$typeText")) {
@@ -228,3 +219,4 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         return codeContainer
     }
 }
+

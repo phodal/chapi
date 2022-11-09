@@ -5,6 +5,7 @@ import chapi.domain.core.*
 import chapi.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
+import kotlin.reflect.typeOf
 
 data class TargetTypePackage(val targetType: String, val packageName: String)
 data class JavaTargetType(var targetType: String = "", var callType: CallType = CallType.FUNCTION)
@@ -277,15 +278,9 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
     }
 
     private fun buildMethodCallParameters(codeCall: CodeCall, ctx: JavaParser.MethodCallContext) {
-        if (ctx.expressionList() != null) {
-            var parameters = arrayOf<CodeProperty>()
-            for (exprCtx in ctx.expressionList().expression()) {
-                val parameter = CodeProperty(TypeType = "", TypeValue = exprCtx.text)
-                parameters += parameter
-            }
-
-            codeCall.Parameters = parameters
-        }
+        codeCall.Parameters = ctx.expressionList()?.expression()?.map {
+            CodeProperty(TypeType = "", TypeValue = it.text)
+        }?.toTypedArray() ?: arrayOf()
     }
 
     private fun buildMethodCallLocation(codeCall: CodeCall, ctx: JavaParser.MethodCallContext) {
@@ -294,6 +289,7 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
 
     private fun sendResultToMethodCallMap(codeCall: CodeCall) {
         methodCalls += codeCall
+
         val currentMethodName = getMethodMapName(currentFunction)
         val method = methodMap[currentMethodName]
         if (method != null) {
@@ -408,9 +404,11 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
             fieldType != null && fieldType != "" -> {
                 targetType = fieldType
             }
+
             formalType != null && formalType != "" -> {
                 targetType = formalType
             }
+
             localVarType != null && localVarType != "" -> {
                 targetType = localVarType
             }
@@ -533,10 +531,16 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
             val typeTypeText = typeCtx.identifier(0).text
             val typeKey = declCtx.variableDeclaratorId().identifier().text
             val typeValue = declCtx.variableInitializer()?.text ?: ""
-            
+
             fieldsMap[typeKey] = typeTypeText
 
-            val field = CodeField(typeTypeText, typeValue, typeKey, Modifiers = arrayOf(), Annotations = this.currentAnnotations)
+            val field = CodeField(
+                typeTypeText,
+                typeValue,
+                typeKey,
+                Modifiers = arrayOf(),
+                Annotations = this.currentAnnotations
+            )
             fields += field
 
             buildFieldCall(typeTypeText, ctx)
@@ -619,12 +623,22 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
     }
 
     override fun enterLocalVariableDeclaration(ctx: JavaParser.LocalVariableDeclarationContext?) {
-        val typ = ctx!!.getChild(0).text
-        if (ctx.getChild(1) != null) {
-            if (ctx.getChild(1).getChild(0) != null && ctx.getChild(1).getChild(0).getChild(0) != null) {
-                val variableName = ctx.getChild(1).getChild(0).getChild(0).text
-                localVars[variableName] = typ
+        val typ = getTypeType(ctx!!)
+        // variableDeclarators,variableDeclarator, variableDeclaratorId, identifier
+        ctx.getChild(1)?.getChild(0)?.getChild(0)?.let {
+            val variableName = it.text
+            localVars[variableName] = typ
+        }
+    }
+
+    private fun getTypeType(ctx: JavaParser.LocalVariableDeclarationContext?): String {
+        return when (val child = ctx!!.getChild(0)) {
+            is JavaParser.VariableModifierContext -> {
+                child.getChild(1)?.text ?: ""
             }
+
+            is JavaParser.TypeTypeContext -> child.text
+            else -> ""
         }
     }
 
