@@ -1,7 +1,10 @@
 package chapi.ast.goast
 
-import org.junit.Ignore
+import chapi.domain.core.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 internal class GoAnalyserTest {
     @Test
@@ -13,7 +16,22 @@ func main() {
     fmt.Println("hello world")
 }
 """
-        GoAnalyser().analysis(helloworld, "")
+        val codeContainer = GoAnalyser().analysis(helloworld, "")
+        val value = codeContainer.DataStructures[0]
+        val expect = CodeDataStruct(
+            Functions = arrayOf(
+                CodeFunction(
+                    Name = "main", Package = "main",
+                    FunctionCalls = arrayOf(
+                        CodeCall(
+                            NodeName = "fmt.Println",
+                            Parameters = arrayOf(CodeProperty(TypeValue = "\"hello world\"", TypeType = ""))
+                        )
+                    ),
+                )
+            ),
+        )
+        assertEquals(Json.encodeToString(value), Json.encodeToString(expect))
     }
 
     @Test

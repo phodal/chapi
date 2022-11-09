@@ -166,7 +166,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun buildPrimaryExprCtx(primaryExprCtx: ParseTree?) {
-        when (primaryExprCtx!!.getChild(1)::class.java.simpleName) {
+        val child = primaryExprCtx!!.getChild(1)
+        when (val className = child::class.java.simpleName) {
             "ArgumentsContext" -> {
                 val codeCall = CodeCall(
                     NodeName = primaryExprCtx.getChild(0).text
@@ -183,6 +184,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                     currentFunction.FunctionCalls += codeCall
                 }
             }
+
+            else -> println("$className not implemented")
         }
     }
 
