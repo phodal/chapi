@@ -60,9 +60,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterTypeDecl(ctx: GoParser.TypeDeclContext?) {
-        val typeSpecs = ctx!!.typeSpec()
-        for (typeSpec in typeSpecs) {
-            buildTypeSpec(typeSpec)
+        ctx?.typeSpec()?.forEach {
+            buildTypeSpec(it)
         }
     }
 
@@ -86,21 +85,15 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun addReceiverToStruct(receiverName: String, codeFunction: CodeFunction) {
-        if (structMap[receiverName] == null) {
-            val struct = createStructByName(receiverName)
-
-            struct.Functions += codeFunction
-            structMap[receiverName] = struct
-        } else {
-            structMap[receiverName]!!.Functions += codeFunction
-        }
+        structMap.getOrPut(receiverName) {
+            createStructByName(receiverName)
+        }.Functions += codeFunction
     }
 
     private fun buildTypeSpec(typeSpec: GoParser.TypeSpecContext) {
         val identifyName = typeSpec.IDENTIFIER().text
-        val typeLit = typeSpec.type_().typeLit()
-        if (typeLit != null) {
-            when (val typeChild = typeLit.getChild(0)) {
+        typeSpec.type_().typeLit()?.let {
+            when (val typeChild = it.getChild(0)) {
                 is GoParser.StructTypeContext -> {
                     buildStruct(identifyName, typeChild)
                 }
@@ -118,13 +111,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun createStructByName(identifyName: String): CodeDataStruct {
-        val struct = CodeDataStruct(
+        return CodeDataStruct(
             NodeName = identifyName,
             Type = DataStructType.STRUCT,
             Package = codeContainer.PackageName,
             FilePath = codeContainer.FullName
         )
-        return struct
     }
 
     private fun buildStructFields(structTypeCtx: GoParser.StructTypeContext): Array<CodeField> {
@@ -147,8 +139,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun buildPrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext?) {
-        val child = primaryExprCtx!!.getChild(1)
-        when (child) {
+        when (val child = primaryExprCtx!!.getChild(1)) {
             is GoParser.ArgumentsContext -> {
                 val codeCall = codeCallFromExprList(primaryExprCtx.getChild(0))
                 child.expressionList()?.expression()?.forEach {
