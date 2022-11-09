@@ -13,18 +13,41 @@ import java.util.function.IntBinaryOperator
 //     Postfix;
 // }
 sealed class Expression {
-    class BinOp(lhs: Expression, op: BinOpKind, rhs: Expression) : ExpressionNode
-    class UnOp(lhs: Expression, op: UnOpKind) : ExpressionNode
-    class Int(val value: Int?) : ExpressionNode
+    class BinOp(val lhs: ExpressionNode, val op: BinOpKind, val rhs: ExpressionNode) : ExpressionNode {
+        override fun toString(): String {
+            return "$lhs $op $rhs"
+        }
+    }
+
+    class UnOp(lhs: ExpressionNode, op: UnOpKind) : ExpressionNode
+    class IntValue(val value: kotlin.Int) : ExpressionNode {
+        override fun toString() = value.toString()
+    }
+
+    class CustomValueType(val value: ValueType) : ExpressionNode
+
 }
 
 sealed class BinOpKind {
-    object Add : BinOpKind() // +
-    object Sub : BinOpKind() // -
-    object Mul : BinOpKind() // *
-    object Div : BinOpKind() // /
-    object Pow : BinOpKind() // ^
-    object Eq : BinOpKind() // =
+    object Add : BinOpKind() {
+        override fun toString() = "+"
+    }
+
+    object Sub : BinOpKind() {
+        override fun toString() = "-"
+    }
+
+    object Mul : BinOpKind() {
+        override fun toString() = "*"
+    }
+
+    object Div : BinOpKind() {
+        override fun toString() = "/"
+    }
+
+    object Pow : BinOpKind() {
+        override fun toString() = "^"
+    }
 }
 
 sealed class UnOpKind {
@@ -52,6 +75,11 @@ interface ExpressionNode {
     }
 }
 
+
+interface ValueType {
+    val name: String
+    val value: Any
+}
 
 interface Operator : ExpressionNode
 

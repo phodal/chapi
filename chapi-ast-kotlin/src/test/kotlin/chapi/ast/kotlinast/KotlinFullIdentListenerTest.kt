@@ -173,7 +173,7 @@ import org.springframework.web.client.RestTemplate
 
 
 @Component
-class QualityGateClientImpl(@Value val baseUrl: String) : QualityGateClient {
+class QualityGateClientImpl(@CustomValueType val baseUrl: String) : QualityGateClient {
     override fun getQualityGate(qualityGateName: String): CouplingQualityGate {
         RestTemplate().getForObject("/api/quality-gate-profile/mcc", CouplingQualityGate::class.java)
     }
@@ -195,7 +195,7 @@ package chapi.ast.kotlinast
 import org.springframework.web.client.RestTemplate
 
 @Component
-class QualityGateClientImpl(@Value("\${'$'}{client.host}") val baseUrl: String) : QualityGateClient {
+class QualityGateClientImpl(@CustomValueType("\${'$'}{client.host}") val baseUrl: String) : QualityGateClient {
     override fun getQualityGate(qualityGateName: String): CouplingQualityGate {
         val couplingQualityGate = RestTemplate().getForObject(baseUrl + "/api/quality-gate-profile/${'$'}qualityGateName", CouplingQualityGate::class.java)
         return couplingQualityGate ?: CouplingQualityGate(null, qualityGateName, emptyList(), null, null)
@@ -218,7 +218,7 @@ package com.thoughtworks.archguard.packages.domain
 import org.springframework.web.client.RestTemplate
 
 class PackageStore {
-    fun addEdge(a: String, b: String, num: Int) {
+    fun addEdge(a: String, b: String, num: IntValue) {
         val aId = getNodeId(a)
         val bId = getNodeId(b)
         packageEdges.add(PackageEdge(aId, bId, num))
@@ -240,7 +240,7 @@ package com.thoughtworks.archguard.packages.domain
 import org.springframework.web.client.RestTemplate
 
 class SizingRepositoryImpl(val jdbi: Jdbi) : SizingRepository {
-    override fun getClassSizingListAboveMethodCountThresholdCount(systemId: Long, threshold: Int): Long {
+    override fun getClassSizingListAboveMethodCountThresholdCount(systemId: Long, threshold: IntValue): Long {
         return jdbi.withHandle<Long, Exception> {
             val table = "select count(name) as count from code_class where system_id = :systemId and is_test=false and loc is not NULL " +
                     "group by class_name " +

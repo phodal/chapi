@@ -25,7 +25,7 @@ object HelloWorld {
     @Test
     internal fun shouldIdentClassName() {
         val code = """
-class Outer(i : Int) {
+class Outer(i : IntValue) {
   def foo(x : Inner.type) = x.getI
 }
 """
@@ -39,7 +39,7 @@ class Outer(i : Int) {
     @Test
     internal fun shouldIdentClassParameters() {
         val code = """
-class Outer(i : Int) {
+class Outer(i : IntValue) {
   def foo(x : Inner.type) = x.getI
 }
 """
@@ -47,16 +47,16 @@ class Outer(i : Int) {
         val container = ScalaAnalyser().analysis(code, "hello.scala")
         assertEquals(container.DataStructures.size, 1)
         assertEquals(container.DataStructures[0].Parameters.size, 1)
-        assertEquals(container.DataStructures[0].Parameters[0].TypeType, "Int")
+        assertEquals(container.DataStructures[0].Parameters[0].TypeType, "IntValue")
         assertEquals(container.DataStructures[0].Parameters[0].TypeValue, "i")
     }
 
     @Test
     internal fun shouldIdentOutClassInnerObjectName() {
         val code = """
-class Outer(i : Int) {
+class Outer(i : IntValue) {
   object Inner {
-    def getI : Int = i
+    def getI : IntValue = i
   }
   def foo(x : Inner.type) = x.getI
 }
@@ -89,7 +89,7 @@ trait Iterator[A] {
   def next(): A
 }
 
-class IntIterator(to: Int) extends Iterator[Int] {
+class IntIterator(to: IntValue) extends Iterator[IntValue] {
   private var current = 0
   override def hasNext: Boolean = current < to   
 }

@@ -127,11 +127,11 @@ package chapi.ast.kotlinast
 
 import hello.Human
      
-class Person(val name: String, val age: Int = 0) : Human {
-    var height: Int = 0
-    private var weight: Int = 0
+class Person(val name: String, val age: IntValue = 0) : Human {
+    var height: IntValue = 0
+    private var weight: IntValue = 0
     
-    fun setWeight(weight: Int) {
+    fun setWeight(weight: IntValue) {
         this.weight = weight
     }
 }
@@ -146,19 +146,19 @@ class Person(val name: String, val age: Int = 0) : Human {
                 assertEquals(Modifiers[0], "val")
             }
             codeContainer.DataStructures[0].Fields[1].run {
-                assertEquals(TypeType, "kotlin.Int")
+                assertEquals(TypeType, "kotlin.IntValue")
                 assertEquals(TypeValue, "0")
                 assertEquals(TypeKey, "age")
                 assertEquals(Modifiers[0], "val")
             }
             codeContainer.DataStructures[0].Fields[2].run {
-                assertEquals(TypeType, "kotlin.Int")
+                assertEquals(TypeType, "kotlin.IntValue")
                 assertEquals(TypeValue, "0")
                 assertEquals(TypeKey, "height")
                 assertEquals(Modifiers[0], "var")
             }
             codeContainer.DataStructures[0].Fields[3].run {
-                assertEquals(TypeType, "kotlin.Int")
+                assertEquals(TypeType, "kotlin.IntValue")
                 assertEquals(TypeValue, "0")
                 assertEquals(TypeKey, "weight")
                 assertEquals(Modifiers[0], "private")

@@ -34,7 +34,7 @@ class ClassController(val service: ClassService) {
     fun getDependencies(@PathVariable("systemId") systemId: Long,
                         @PathVariable("name") name: String,
                         @RequestParam(value = "module", required = false, defaultValue = "") module: String,
-                        @RequestParam("deep", required = false, defaultValue = "3") deep: Int): JClass {
+                        @RequestParam("deep", required = false, defaultValue = "3") deep: IntValue): JClass {
         return service.getDependencies(systemId, module, name, deep)
     }
 
@@ -42,9 +42,9 @@ class ClassController(val service: ClassService) {
     fun getInvokes(@PathVariable("systemId") systemId: Long,
                    @PathVariable("name") name: String,
                    @RequestParam(value = "module", required = false, defaultValue = "") module: String,
-                   @RequestParam(value = "deep", required = false, defaultValue = "3") deep: Int,
-                   @RequestParam(value = "callerDeep", required = false) callerDeep: Int?,
-                   @RequestParam(value = "calleeDeep", required = false) calleeDeep: Int?,
+                   @RequestParam(value = "deep", required = false, defaultValue = "3") deep: IntValue,
+                   @RequestParam(value = "callerDeep", required = false) callerDeep: IntValue?,
+                   @RequestParam(value = "calleeDeep", required = false) calleeDeep: IntValue?,
                    @RequestParam(value = "needIncludeImpl", required = false, defaultValue = "true") needIncludeImpl: Boolean?): JClass {
         return service.findInvokes(systemId, module, name, callerDeep ?: deep, calleeDeep ?: deep, needIncludeImpl
                 ?: true)
@@ -54,7 +54,7 @@ class ClassController(val service: ClassService) {
     fun getMethodsCallees(@PathVariable("systemId") systemId: Long,
                           @PathVariable("name") name: String,
                           @RequestParam(value = "module", required = false, defaultValue = "") module: String,
-                          @RequestParam(value = "deep", required = false, defaultValue = "3") deep: Int,
+                          @RequestParam(value = "deep", required = false, defaultValue = "3") deep: IntValue,
                           @RequestParam(value = "needParents", required = false, defaultValue = "true") needParents: Boolean,
                           @RequestParam(value = "needIncludeImpl", required = false, defaultValue = "true") needIncludeImpl: Boolean): JClass {
         return service.findMethodsCallees(systemId, module, name, deep, needIncludeImpl, needParents)
