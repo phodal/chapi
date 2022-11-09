@@ -15,7 +15,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var currentFunction = CodeFunction(IsConstructor = false)
 
     override fun enterImportDeclaration(ctx: JavaParser.ImportDeclarationContext?) {
-        var codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
+        val codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
 
         if (ctx.STATIC() != null) {
             val sourceSplit = codeImport.Source.split(".")
@@ -162,9 +162,10 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
             IsConstructor = true
         )
 
-        val mayModifierCtx = ctx.parent.parent.getChild(0)
-        if (mayModifierCtx::class.simpleName == "ModifierContext") {
-            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
+        when (val modifier = ctx.parent.parent.getChild(0)) {
+            is JavaParser.ModifierContext -> {
+                codeFunction.Annotations = this.buildAnnotationForMethod(modifier)
+            }
         }
 
         currentFunction = codeFunction
@@ -175,13 +176,14 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     }
 
     override fun enterExpression(ctx: JavaParser.ExpressionContext?) {
-        if (ctx!!.parent::class.java.simpleName == "StatementContext") {
-            val statementCtx = ctx.parent as JavaParser.StatementContext
-            val firstChild = statementCtx.getChild(0).text
+        when (val parent = ctx!!.parent) {
+            is JavaParser.StatementContext -> {
+                val firstChild = parent.getChild(0).text
 
-            if (firstChild.lowercase() == "return") {
-                val isReturnNull = ctx.text == "null"
-                currentFunction.addExtension("IsReturnNull", isReturnNull.toString())
+                if (firstChild.lowercase() == "return") {
+                    val isReturnNull = ctx.text == "null"
+                    currentFunction.addExtension("IsReturnNull", isReturnNull.toString())
+                }
             }
         }
     }
@@ -191,11 +193,9 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         currentNode.Type = DataStructType.ENUM
         currentNode.Package = codeContainer.PackageName
 
-        if (ctx!!.identifier() != null) {
-            currentNode.NodeName = ctx.identifier().text
-        }
+        currentNode.NodeName = ctx?.identifier()?.text ?: ""
 
-        if (ctx.IMPLEMENTS() != null) {
+        if (ctx?.IMPLEMENTS() != null) {
             currentNode.Implements = buildImplements(ctx)
         }
 

@@ -9,33 +9,27 @@ import org.antlr.v4.runtime.ParserRuleContext
 
 open class JavaAstListener : JavaParserBaseListener() {
     fun annotationName(ctx: JavaParser.AnnotationContext): String {
-        var annotationName = ""
-        if (ctx.qualifiedName() != null) {
-            annotationName = ctx.qualifiedName().text
-        }
-
-        if (ctx.altAnnotationQualifiedName() != null) {
-            annotationName = ctx.altAnnotationQualifiedName().text
-        }
-
-        return annotationName
+        val annotationName = ctx.qualifiedName()?.text ?: ""
+        return ctx.altAnnotationQualifiedName()?.text ?: annotationName
     }
 
     fun buildAnnotation(ctx: JavaParser.AnnotationContext): CodeAnnotation {
-        val annotationName = annotationName(ctx)
         val codeAnnotation = CodeAnnotation(
-            Name = annotationName
+            Name = annotationName(ctx)
         )
-        if (ctx.elementValuePairs() != null) {
-            for (pairContext in ctx.elementValuePairs().elementValuePair()) {
-                val key = pairContext.identifier().text
-                val value = pairContext.elementValue().text
 
-                codeAnnotation.KeyValues += AnnotationKeyValue(key, value)
+        when {
+            ctx.elementValuePairs() != null -> {
+                codeAnnotation.KeyValues = ctx.elementValuePairs()?.elementValuePair()
+                    ?.map {
+                        AnnotationKeyValue(it.identifier().text, it.elementValue().text)
+                    }?.toTypedArray() ?: arrayOf()
             }
-        } else if (ctx.elementValue() != null) {
-            val value = ctx.elementValue().text
-            codeAnnotation.KeyValues += AnnotationKeyValue(value, value)
+
+            ctx.elementValue() != null -> {
+                val value = ctx.elementValue().text
+                codeAnnotation.KeyValues += AnnotationKeyValue(value, value)
+            }
         }
 
         return codeAnnotation
