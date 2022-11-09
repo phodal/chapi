@@ -2,13 +2,6 @@ package chapi.domain.expr
 
 // todo: mapping to pratt parser ?
 // mini sample <https://github.com/segeljakt/pratt>
-//
-// enum class TokenTree {
-//     Primary,
-//     Prefix,
-//     Infix,
-//     Postfix;
-// }
 sealed class Expression {
     class BinOp(val lhs: ExpressionNode, val op: BinOpKind, val rhs: ExpressionNode) : ExpressionNode {
         override fun toString() = "$lhs $op $rhs"
@@ -22,8 +15,24 @@ sealed class Expression {
         override fun toString() = value.toString()
     }
 
+    class FloatValue(val value: Float) : ExpressionNode {
+        override fun toString() = value.toString()
+    }
+
+    class StringValue(val value: String) : ExpressionNode {
+        override fun toString() = value
+    }
+
     class Variable(val name: String) : ExpressionNode {
         override fun toString() = name
+    }
+
+    class TryCatch(val tryBlock: ExpressionNode, val catchBlock: ExpressionNode) : ExpressionNode {
+        override fun toString() = "try { $tryBlock } catch { $catchBlock }"
+    }
+
+    class IfElse(val condition: ExpressionNode, val thenBlock: ExpressionNode, val elseBlock: ExpressionNode) : ExpressionNode {
+        override fun toString() = "if ($condition) { $thenBlock } else { $elseBlock }"
     }
 
     class Identifier(val name: String) : ExpressionNode {
@@ -43,6 +52,10 @@ sealed class Expression {
 
     class Arguments(val args: kotlin.Array<ExpressionNode>) : ExpressionNode {
         override fun toString() = args.joinToString(", ")
+    }
+
+    class ArrayLiteral(val args: kotlin.Array<ExpressionNode>) : ExpressionNode {
+        override fun toString() = "[${args.joinToString(", ")}]"
     }
 
     class CustomValueType(val value: ValueType) : ExpressionNode

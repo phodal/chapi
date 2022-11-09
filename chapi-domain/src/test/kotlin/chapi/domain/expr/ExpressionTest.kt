@@ -70,4 +70,34 @@ class ExpressionTest {
             ).toString(), "add(1, 2)"
         )
     }
+
+    @Test
+    fun arrayLiteral() {
+        assertEquals(Expression.ArrayLiteral(
+                args = arrayOf(
+                    Expression.IntValue(1),
+                    Expression.IntValue(2)
+                )
+            ).toString(), "[1, 2]"
+        )
+    }
+
+    @Test
+    fun tryCatch() {
+        assertEquals(Expression.TryCatch(
+                tryBlock = Expression.IntValue(1),
+                catchBlock = Expression.IntValue(2)
+            ).toString(), "try { 1 } catch { 2 }"
+        )
+    }
+
+    @Test
+    fun ifElse() {
+        assertEquals(Expression.IfElse(
+                condition = Expression.IntValue(1),
+                thenBlock = Expression.IntValue(2),
+                elseBlock = Expression.IntValue(3)
+            ).toString(), "if (1) { 2 } else { 3 }"
+        )
+    }
 }
