@@ -55,15 +55,14 @@ open class JavaAstListener : JavaParserBaseListener() {
     }
 
     fun buildAnnotationForMethod(modifierCtx: JavaParser.ModifierContext): Array<CodeAnnotation> {
-        var annotations: Array<CodeAnnotation> = arrayOf()
-        if (modifierCtx.classOrInterfaceModifier() != null) {
-            val childCtx = modifierCtx.classOrInterfaceModifier().getChild(0)
-            if (childCtx::class.simpleName == "AnnotationContext") {
-                val annotation = this.buildAnnotation(childCtx as JavaParser.AnnotationContext)
-                annotations += annotation
+        return when (val child = modifierCtx.classOrInterfaceModifier()?.getChild(0)) {
+            is JavaParser.AnnotationContext -> {
+                arrayOf(buildAnnotation(child))
+            }
+
+            else -> {
+                arrayOf()
             }
         }
-
-        return annotations
     }
 }

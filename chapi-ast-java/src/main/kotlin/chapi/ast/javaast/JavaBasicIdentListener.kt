@@ -67,16 +67,11 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     }
 
     open fun buildImplements(ctx: JavaParser.EnumDeclarationContext): Array<String> {
-        var implements = arrayOf<String>()
-
         val typeText = ctx.typeList().text
-        for (imp in imports) {
-            if (imp.Source.endsWith(".$typeText")) {
-                implements += typeText
-            }
+        return when {
+            imports.containsType(typeText) -> arrayOf(typeText)
+            else -> arrayOf()
         }
-
-        return implements
     }
 
     override fun enterInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
@@ -99,7 +94,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         val name = ctx!!.identifier().text
         val typeType = ctx.typeTypeOrVoid().text
 
-        var codeFunction = CodeFunction(
+        val codeFunction = CodeFunction(
             Name = name,
             ReturnType = typeType,
             Position = buildPosition(ctx),
@@ -107,19 +102,20 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
             BodyHash = ctx.methodBody().text.hashCode()
         )
 
-        val mayModifierCtx = ctx.parent.parent.getChild(0)
-        if (mayModifierCtx::class.simpleName == "ModifierContext") {
-            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
+        when (val mayModifierCtx = ctx.parent.parent.getChild(0)) {
+            is JavaParser.ModifierContext -> {
+                codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx)
+            }
         }
+
         currentFunction = codeFunction
 
-        if (ctx.parent.parent::class.simpleName == "ClassBodyDeclarationContext") {
-            val bodyDeclCtx = ctx.parent.parent as JavaParser.ClassBodyDeclarationContext
-            for (modifierContext in bodyDeclCtx.modifier()) {
-                val text = modifierContext!!.text
-                if (!text.contains("@")) {
-                    currentFunction.Modifiers += text
-                }
+        when (val child = ctx.parent.parent) {
+            is JavaParser.ClassBodyDeclarationContext -> {
+                currentFunction.Modifiers = child.modifier()
+                    .map { it.text }
+                    .filter { "@" in it }
+                    .toTypedArray()
             }
         }
 
@@ -135,17 +131,17 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         val name = ctx!!.interfaceCommonBodyDeclaration().identifier().text
         val typeType = ctx.interfaceCommonBodyDeclaration().typeTypeOrVoid().text
 
-        val position = buildPosition(ctx)
-        var codeFunction = CodeFunction(
+        val codeFunction = CodeFunction(
             Name = name,
             ReturnType = typeType,
-            Position = position,
+            Position = buildPosition(ctx),
             IsConstructor = false
         )
 
-        val mayModifierCtx = ctx.parent.parent.getChild(0)
-        if (mayModifierCtx::class.simpleName == "ModifierContext") {
-            codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx as JavaParser.ModifierContext)
+        when (val mayModifierCtx = ctx.parent.parent.getChild(0)) {
+            is JavaParser.ModifierContext -> {
+                codeFunction.Annotations = this.buildAnnotationForMethod(mayModifierCtx)
+            }
         }
 
         currentFunction = codeFunction
