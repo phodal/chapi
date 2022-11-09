@@ -1,5 +1,6 @@
 package chapi.domain.core
 
+import chapi.domain.expr.Expression
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -27,7 +28,9 @@ open class CodeFunction(
     var LocalVariables: Array<CodeProperty> = arrayOf(),
     var IsConstructor: Boolean = false, // todo: move to extension
     var IsReturnHtml: Boolean = false,
-    var BodyHash: Int = 0
+    var BodyHash: Int = 0,
+    // a experimental api for code analysis, please carefully use it.
+//    @property:ExperimentalStdlibApi val expression: Expression? = null,
 ) {
     private var extensionMap = HashMap<String, JsonElement>()
 
@@ -76,11 +79,12 @@ open class CodeFunction(
         this.Extension = JsonObject(this.extensionMap)
     }
 
-    @Deprecated("is for Java/Kotlin Only", ReplaceWith(
-        "this.Extension.jsonObject[\"IsReturnNull\"] == JsonPrimitive(\"true\")",
-        "kotlinx.serialization.json.jsonObject",
-        "kotlinx.serialization.json.JsonPrimitive"
-    )
+    @Deprecated(
+        "is for Java/Kotlin Only", ReplaceWith(
+            "this.Extension.jsonObject[\"IsReturnNull\"] == JsonPrimitive(\"true\")",
+            "kotlinx.serialization.json.jsonObject",
+            "kotlinx.serialization.json.JsonPrimitive"
+        )
     )
     fun isReturnNull(): Boolean {
         return this.Extension.jsonObject["IsReturnNull"] == JsonPrimitive("true")

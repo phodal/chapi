@@ -643,7 +643,7 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
     }
 
     override fun enterExpression(ctx: JavaParser.ExpressionContext?) {
-        if (ctx!!.COLONCOLON() != null) {
+        if (ctx?.COLONCOLON() != null) {
             if (ctx.expression(0) == null) {
                 return
             }

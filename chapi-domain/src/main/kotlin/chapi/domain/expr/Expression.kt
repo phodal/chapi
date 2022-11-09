@@ -1,7 +1,8 @@
 package chapi.domain.expr
 
-// todo: mapping to pratt parser ?
-// mini sample <https://github.com/segeljakt/pratt>
+import kotlinx.serialization.Serializable
+
+@Serializable
 sealed class Expression {
     class BinOp(val lhs: ExpressionNode, val op: BinOpKind, val rhs: ExpressionNode) : ExpressionNode {
         override fun toString() = "$lhs $op $rhs"
@@ -99,7 +100,7 @@ sealed class Expression {
     }
 }
 
-// Throw, Return, Break, Continue
+@Serializable
 sealed class JumpOpKind {
     class Throw(val expr: ExpressionNode) : JumpOpKind() {
         override fun toString() = "throw $expr"
@@ -118,6 +119,7 @@ sealed class JumpOpKind {
     }
 }
 
+@Serializable
 sealed class AssignOpKind {
     object Assign : AssignOpKind() {
         override fun toString() = "="
@@ -166,6 +168,7 @@ sealed class AssignOpKind {
 }
 
 
+@Serializable
 sealed class ComparisonOpKind {
     object Equal : ComparisonOpKind() {
         override fun toString() = "=="
@@ -204,6 +207,7 @@ sealed class ComparisonOpKind {
     }
 }
 
+@Serializable
 sealed class BinOpKind {
     object Add : BinOpKind() {
         override fun toString() = "+"
@@ -230,6 +234,7 @@ sealed class BinOpKind {
     }
 }
 
+@Serializable
 sealed class UnaryOpKind {
     object Not : UnaryOpKind() {
         override fun toString() = "!"
@@ -272,6 +277,7 @@ interface ValueType {
     val value: Any
 }
 
+@Serializable
 sealed class Typed {
     class IntType(val value: Int) : Typed()
     class FloatType(val value: Float) : Typed()
