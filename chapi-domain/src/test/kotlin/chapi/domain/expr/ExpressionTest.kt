@@ -51,19 +51,21 @@ class ExpressionTest {
 
     @Test
     fun functionCall() {
-        assertEquals(Expression.MethodCall(
-                functionName = "add",
-                className = "math",
-                args = arrayOf(
+        assertEquals(
+            Expression.MethodCall(
+                lhs = Expression.Identifier("math"),
+                caller = Expression.Identifier("add"),
+                rhs = arrayOf(
                     Expression.IntValue(1),
                     Expression.IntValue(2)
                 )
             ).toString(), "math.add(1, 2)"
         )
 
-        assertEquals(Expression.MethodCall(
-                functionName = "add",
-                args = arrayOf(
+        assertEquals(
+            Expression.MethodCall(
+                lhs = Expression.Identifier("add"),
+                rhs = arrayOf(
                     Expression.IntValue(1),
                     Expression.IntValue(2)
                 )
@@ -73,7 +75,8 @@ class ExpressionTest {
 
     @Test
     fun arrayLiteral() {
-        assertEquals(Expression.ArrayLiteral(
+        assertEquals(
+            Expression.ArrayLiteral(
                 args = arrayOf(
                     Expression.IntValue(1),
                     Expression.IntValue(2)
@@ -84,7 +87,8 @@ class ExpressionTest {
 
     @Test
     fun tryCatch() {
-        assertEquals(Expression.TryCatch(
+        assertEquals(
+            Expression.TryCatch(
                 tryBlock = Expression.Value(1),
                 catchBlock = Expression.IntValue(2)
             ).toString(), "try { 1 } catch { 2 }"
@@ -93,7 +97,8 @@ class ExpressionTest {
 
     @Test
     fun ifElse() {
-        assertEquals(Expression.IfElse(
+        assertEquals(
+            Expression.IfElse(
                 condition = Expression.IntValue(1),
                 thenBlock = Expression.IntValue(2),
                 elseBlock = Expression.IntValue(3)
@@ -103,7 +108,8 @@ class ExpressionTest {
 
     @Test
     fun compareItem() {
-        assertEquals(Expression.ComparisonOp(
+        assertEquals(
+            Expression.ComparisonOp(
                 lhs = Expression.IntValue(1),
                 op = ComparisonOpKind.GreaterThan,
                 rhs = Expression.IntValue(2)
@@ -123,12 +129,13 @@ class ExpressionTest {
             )
         )
 
-        assertEquals("a + (b - c)", binOp.toString())
+        assertEquals("a + b - c", binOp.toString())
     }
 
     @Test
     fun assignment() {
-        assertEquals(Expression.AssignOp(
+        assertEquals(
+            Expression.AssignOp(
                 lhs = Expression.Variable("a"),
                 op = AssignOpKind.Assign,
                 rhs = Expression.IntValue(1)
@@ -138,7 +145,8 @@ class ExpressionTest {
 
     @Test
     fun switchCase() {
-        assertEquals(Expression.SwitchCases(
+        assertEquals(
+            Expression.SwitchCases(
                 lhs = Expression.Variable("a"),
                 cases = arrayOf(
                     Expression.CaseOp(
@@ -151,7 +159,40 @@ class ExpressionTest {
                     )
                 ),
                 defaultBlock = Expression.IntValue(4)
-            ).toString(), "switch (a) { case 1: 2; case 2: 3; default: 4; }"
+            ).toString(), "switch (a) {\n" +
+                "case 1: 2\n" +
+                "case 2: 3\n" +
+                "default: 4\n" +
+                "}"
+        )
+    }
+
+    @Test
+    fun range() {
+        assertEquals(
+            Expression.RangeOp(
+                lhs = Expression.IntValue(1),
+                rhs = Expression.IntValue(2)
+            ).toString(), "1..2"
+        )
+    }
+
+    @Test
+    fun chainedMethodCall() {
+        assertEquals(
+            Expression.MethodCall(
+                lhs = Expression.MethodCall(
+                    lhs = Expression.StringValue("add"),
+                    rhs = arrayOf(
+                        Expression.IntValue(1),
+                        Expression.IntValue(2)
+                    ),
+                ),
+                caller = Expression.Identifier("sub"),
+                rhs = arrayOf(
+                    Expression.IntValue(3)
+                )
+            ).toString(), "add(1, 2).sub(3)"
         )
     }
 }

@@ -48,14 +48,15 @@ sealed class Expression {
         override fun toString() = name
     }
 
-    // lhs: identifier, rhs: expression
-    class MethodCall(val functionName: String, val args: Array<ExpressionNode>, val className: String = "") :
+    /// lhs.call(rhs)
+    class MethodCall(val lhs: ExpressionNode, val rhs: Array<ExpressionNode>, val caller: ExpressionNode? = null) :
         ExpressionNode {
         override fun toString(): String {
-            return if (className == "") {
-                "$functionName(${args.joinToString(", ")})"
+            val argsStr = rhs.joinToString(", ") { it.toString() }
+            return if (caller == null) {
+                "$lhs($argsStr)"
             } else {
-                "$className.$functionName(${args.joinToString(", ")})"
+                "$lhs.$caller($argsStr)"
             }
         }
     }
@@ -78,6 +79,10 @@ sealed class Expression {
             }
             return "switch ($lhs) {\n$casesStr\n$defaultStr\n}"
         }
+    }
+
+    class RangeOp(val lhs: ExpressionNode, val rhs: ExpressionNode) : ExpressionNode {
+        override fun toString() = "$lhs..$rhs"
     }
     
     class CaseOp(val condition: ExpressionNode, val thenBlock: ExpressionNode) : ExpressionNode {
