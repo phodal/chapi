@@ -15,6 +15,10 @@ sealed class Expression {
         override fun toString(): String = "$lhs $op $rhs"
     }
 
+    class AssignOp(val lhs: ExpressionNode, val op: AssignOpKind, val rhs: ExpressionNode) : ExpressionNode {
+        override fun toString(): String = "$lhs $op $rhs"
+    }
+
     class IntValue(val value: Int) : ExpressionNode {
         override fun toString() = value.toString()
     }
@@ -67,6 +71,53 @@ sealed class Expression {
     class Value(val value: Any) : ExpressionNode {
         override fun toString() = value.toString()
     }
+}
+
+sealed class AssignOpKind {
+    object Assign : AssignOpKind() {
+        override fun toString() = "="
+    }
+
+    object PlusAssign : AssignOpKind() {
+        override fun toString() = "+="
+    }
+
+    object MinusAssign : AssignOpKind() {
+        override fun toString() = "-="
+    }
+
+    object MultiplyAssign : AssignOpKind() {
+        override fun toString() = "*="
+    }
+
+    object DivideAssign : AssignOpKind() {
+        override fun toString() = "/="
+    }
+
+    object ModuloAssign : AssignOpKind() {
+        override fun toString() = "%="
+    }
+
+    object BitwiseAndAssign : AssignOpKind() {
+        override fun toString() = "&="
+    }
+
+    object BitwiseOrAssign : AssignOpKind() {
+        override fun toString() = "|="
+    }
+
+    object BitwiseXorAssign : AssignOpKind() {
+        override fun toString() = "^="
+    }
+
+    object LeftShiftAssign : AssignOpKind() {
+        override fun toString() = "<<="
+    }
+
+    object RightShiftAssign : AssignOpKind() {
+        override fun toString() = ">>="
+    }
+
 }
 
 

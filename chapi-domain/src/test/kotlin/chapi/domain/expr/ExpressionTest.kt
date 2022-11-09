@@ -110,4 +110,29 @@ class ExpressionTest {
             ).toString(), "1 > 2"
         )
     }
+
+    @Test
+    fun shouldPresentationIdentSubWithParen() {
+        val binOp = Expression.BinOp(
+            lhs = Expression.Variable("a"),
+            op = BinOpKind.Add,
+            rhs = Expression.BinOp(
+                lhs = Expression.Variable("b"),
+                op = BinOpKind.Sub,
+                rhs = Expression.Variable("c")
+            )
+        )
+
+        assertEquals("a + (b - c)", binOp.toString())
+    }
+
+    @Test
+    fun assignment() {
+        assertEquals(Expression.AssignOp(
+                lhs = Expression.Variable("a"),
+                op = AssignOpKind.Assign,
+                rhs = Expression.IntValue(1)
+            ).toString(), "a = 1"
+        )
+    }
 }
