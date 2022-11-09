@@ -135,4 +135,23 @@ class ExpressionTest {
             ).toString(), "a = 1"
         )
     }
+
+    @Test
+    fun switchCase() {
+        assertEquals(Expression.SwitchCases(
+                lhs = Expression.Variable("a"),
+                cases = arrayOf(
+                    Expression.CaseOp(
+                        condition = Expression.IntValue(1),
+                        thenBlock = Expression.IntValue(2)
+                    ),
+                    Expression.CaseOp(
+                        condition = Expression.IntValue(2),
+                        thenBlock = Expression.IntValue(3)
+                    )
+                ),
+                defaultBlock = Expression.IntValue(4)
+            ).toString(), "switch (a) { case 1: 2; case 2: 3; default: 4; }"
+        )
+    }
 }

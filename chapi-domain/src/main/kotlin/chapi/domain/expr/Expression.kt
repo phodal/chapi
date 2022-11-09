@@ -68,6 +68,22 @@ sealed class Expression {
         override fun toString() = "[${args.joinToString(", ")}]"
     }
 
+    class SwitchCases(val lhs: ExpressionNode, val cases: Array<CaseOp>, val defaultBlock: ExpressionNode?) : ExpressionNode {
+        override fun toString(): String {
+            val casesStr = cases.joinToString("\n") { "case ${it.condition}: ${it.thenBlock}" }
+            val defaultStr = if (defaultBlock != null) {
+                "default: $defaultBlock"
+            } else {
+                ""
+            }
+            return "switch ($lhs) {\n$casesStr\n$defaultStr\n}"
+        }
+    }
+    
+    class CaseOp(val condition: ExpressionNode, val thenBlock: ExpressionNode) : ExpressionNode {
+        override fun toString() = "$condition -> $thenBlock"
+    }
+    
     class Value(val value: Any) : ExpressionNode {
         override fun toString() = value.toString()
     }
