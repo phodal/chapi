@@ -138,26 +138,18 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun buildStructFields(structTypeCtx: GoParser.StructTypeContext): Array<CodeField> {
-        var fields: Array<CodeField> = arrayOf()
-        for (fieldDeclContext in structTypeCtx.fieldDecl()) {
-            val typeValue = fieldDeclContext.identifierList().text
-            val typeType = fieldDeclContext.type_().text
-
-            val field = CodeField(
-                TypeType = typeType,
-                TypeValue = typeValue
+        return structTypeCtx.fieldDecl().map { fieldDeclContext ->
+            CodeField(
+                TypeType = fieldDeclContext.type_().text,
+                TypeValue = fieldDeclContext.identifierList().text
             )
-
-            fields += field
-        }
-
-        return fields
+        }.toTypedArray()
     }
 
     override fun enterExpression(ctx: GoParser.ExpressionContext?) {
         when (val firstChild = ctx!!.getChild(0)) {
             is GoParser.PrimaryExprContext -> {
-                if (firstChild.getChild(1) != null) {
+                firstChild.getChild(1)?.let {
                     this.buildPrimaryExprCtx(firstChild)
                 }
             }
@@ -190,13 +182,9 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
 
     override fun enterVarDecl(ctx: GoParser.VarDeclContext?) {
-        for (varSpecContext in ctx!!.varSpec()) {
-            var varType = ""
-            if (varSpecContext.type_() != null) {
-                varType = varSpecContext.type_().text
-            }
-            for (terminalNode in varSpecContext.identifierList().IDENTIFIER()) {
-                localVars[terminalNode.text] = varType
+        ctx?.varSpec()?.forEach { varSpec ->
+            varSpec.identifierList().IDENTIFIER().forEach { terminalNode ->
+                localVars[terminalNode.text] = varSpec.type_()?.text ?: ""
             }
         }
     }
@@ -208,13 +196,9 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterConstDecl(ctx: GoParser.ConstDeclContext?) {
-        for (constSpecContext in ctx!!.constSpec()) {
-            var varType = ""
-            if (constSpecContext.type_() != null) {
-                varType = constSpecContext.type_().text
-            }
-            for (terminalNode in constSpecContext.identifierList().IDENTIFIER()) {
-                localVars[terminalNode.text] = varType
+        ctx?.constSpec()?.forEach { constSpecContext ->
+            constSpecContext.identifierList().IDENTIFIER().forEach { terminalNode ->
+                localVars[terminalNode.text] = constSpecContext.type_()?.text ?: ""
             }
         }
     }
