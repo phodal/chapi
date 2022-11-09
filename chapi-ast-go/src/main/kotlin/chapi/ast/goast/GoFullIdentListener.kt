@@ -100,9 +100,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         val identifyName = typeSpec.IDENTIFIER().text
         val typeLit = typeSpec.type_().typeLit()
         if (typeLit != null) {
-            val typeChild = typeLit.getChild(0)
-            when (typeChild::class.java.simpleName) {
-                "StructTypeContext" -> {
+            when (val typeChild = typeLit.getChild(0)) {
+                is GoParser.StructTypeContext -> {
                     buildStruct(identifyName, typeChild)
                 }
 
@@ -113,18 +112,9 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
-    private fun buildStruct(identifyName: String, typeChild: ParseTree?) {
+    private fun buildStruct(identifyName: String, typeChild: GoParser.StructTypeContext) {
         val struct = createStructByName(identifyName)
-        val structTypeCtx = typeChild as GoParser.StructTypeContext
-
-        val fields = buildStructFields(structTypeCtx)
-
-        if (structMap[identifyName] != null) {
-            structMap[identifyName]!!.Fields = fields
-        } else {
-            struct.Fields = fields
-            structMap[identifyName] = struct
-        }
+        structMap.getOrPut(identifyName) { struct }.Fields = buildStructFields(typeChild)
     }
 
     private fun createStructByName(identifyName: String): CodeDataStruct {
