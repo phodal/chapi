@@ -196,7 +196,7 @@ func (a *Animal) Move() {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls.size, 1)
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].NodeName, "fmt.Println")
+        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].NodeName, "fmt")
         assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters.size, 1)
     }
 
@@ -215,7 +215,7 @@ func main() {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls.size, 1)
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].NodeName, "fmt.Println")
+        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].NodeName, "fmt")
         assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters.size, 1)
     }
 

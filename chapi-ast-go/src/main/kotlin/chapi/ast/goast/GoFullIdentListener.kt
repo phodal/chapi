@@ -2,6 +2,7 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
 import chapi.domain.core.*
+import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -159,6 +160,22 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
             is GoParser.PrimaryExprContext -> {
                 CodeCall(NodeName = child.text)
+                when(val subchild = child.getChild(1)) {
+                    // primaryExpr '.' IDENTIFIER
+                    is TerminalNodeImpl -> {
+                        // todo: verify child1
+                        val child1 = child.getChild(0)
+                        val identifier = child.getChild(2).text
+
+                        CodeCall(
+                            NodeName = child1.text,
+                            FunctionName = identifier
+                        )
+                    }
+                    else -> {
+                        CodeCall(NodeName = child.text)
+                    }
+                }
             }
 
             else -> {
