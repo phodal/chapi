@@ -6,16 +6,12 @@ import chapi.domain.core.CodeProperty
 
 open class GoAstListener : GoParserBaseListener() {
     fun buildParameters(parametersCtx: GoParser.ParametersContext?): Array<CodeProperty> {
-        var parameters: Array<CodeProperty> = arrayOf()
-        for (paramCtx in parametersCtx!!.parameterDecl()) {
-            val parameter = CodeProperty(
-                TypeValue = paramCtx.identifierList().text,
-                TypeType = paramCtx.type_().text
+        return parametersCtx?.parameterDecl()?.map {
+            CodeProperty(
+                TypeValue = it.identifierList().text,
+                TypeType = it.type_().text
             )
-
-            parameters += parameter
-        }
-        return parameters
+        }?.toTypedArray() ?: return arrayOf()
     }
 
     fun getStructNameFromReceiver(parameters: GoParser.ParametersContext?): String {
@@ -24,6 +20,7 @@ open class GoAstListener : GoParserBaseListener() {
             if (typeType.startsWith("*")) {
                 typeType = typeType.removePrefix("*")
             }
+
             return typeType
         }
 
@@ -34,20 +31,12 @@ open class GoAstListener : GoParserBaseListener() {
         var returns: Array<CodeProperty> = arrayOf()
 
         signatureContext?.result()?.let { result ->
-            val parameters = result.parameters()
-            if (parameters != null) {
-                for (parameterDeclContext in parameters.parameterDecl()) {
-                    val typeType = parameterDeclContext.text
-                    val returnType =
-                        CodeProperty(TypeType = typeType, TypeValue = "")
-                    returns += returnType
-                }
+            result.parameters()?.parameterDecl()?.forEach {
+                returns += CodeProperty(TypeType = it.text, TypeValue = "")
             }
 
             if (result.type_() != null) {
-                val typeType = result.type_().text
-                val returnType = CodeProperty(TypeType = typeType, TypeValue = "")
-                returns += returnType
+                returns += CodeProperty(TypeType = result.type_().text, TypeValue = "")
             }
         }
 
