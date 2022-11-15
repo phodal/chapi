@@ -686,7 +686,7 @@ formalParameterList
     ;
 
 formalParameterArg
-    : decorator? accessibilityModifier? identifierOrKeyWord '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
+    : decorator? accessibilityModifier? ReadOnly? identifierOrKeyWord '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
     | lastFormalParameterArg
     // ([key, value]: [string, string[]])
     | arrayLiteral (':' formalParameterList)?                                                                // ECMAScript 6: Parameter Context Matching

@@ -84,4 +84,17 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
 }"""
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
+
+    @Test
+    fun readonly_property() {
+        val code = """class DataSource extends Data<Item> {
+  readonly pageSize = 5;
+
+  constructor(public readonly type: TaskEnum,) {
+    super();
+  }
+}"""
+
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
 }
