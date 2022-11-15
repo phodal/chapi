@@ -611,7 +611,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
             }
             else -> {
-                println("parseStmt childType -> :$childType")
+//                println("parseStmt childType -> :$childType")
             }
         }
     }
@@ -677,7 +677,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             // todo: add other case for call chain in arrow function
             if (argText.contains(").")) {
                 val args = parseArguments(argument)
-                println("argText with )." + Json.encodeToString(args))
+//                println("argText with )." + Json.encodeToString(args))
             }
 
             // axios.get() or _.orderBy()

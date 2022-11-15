@@ -70,7 +70,7 @@ class TypeScriptAnalyserTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     fun someBug() {
         val dir = File("/Users/phodal/bug-ui-system")
         dir.walkTopDown().forEach {
@@ -78,7 +78,6 @@ class TypeScriptAnalyserTest {
                 val content = it.readText()
                 println(it.absolutePath)
                 val codeFile = TypeScriptAnalyser().analysis(content, it.name)
-                println(codeFile)
             }
         }
     }
