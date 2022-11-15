@@ -56,4 +56,15 @@ import {EMPTY, Observable, of} from 'rxjs';
 """
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
+
+    @Test
+    fun query_array_literal() {
+        val code = """
+export class DemoComponent implements OnInit, ControlValueAccessor {
+  confirm(): void {
+      return this.form.value?.id?.[0] || null
+  }
+}"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
 }

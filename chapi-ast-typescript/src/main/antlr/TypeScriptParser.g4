@@ -784,7 +784,7 @@ singleExpression
     // for: `onHotUpdateSuccess?.();`
     | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
     // onChange?.(userName || password || null)
-    | singleExpression '?'? '!'? '.' '#'? '(' singleExpression? ')'          # MemberDotExpression
+    | singleExpression '?'? '!'? '.' '#'? '('? singleExpression? ')'?          # MemberDotExpression
     // samples: `error?.response?.data?.message ?? error.message;`
     | singleExpression '??' singleExpression                                 # NullCoalesceExpression
     | singleExpression '!'                                                   # PropCheckExpression
