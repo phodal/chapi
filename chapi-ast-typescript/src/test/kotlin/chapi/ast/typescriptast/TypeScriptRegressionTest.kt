@@ -47,4 +47,13 @@ import {EMPTY, Observable, of} from 'rxjs';
 } """
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
+
+    @Test
+    fun nested_type_type_error() {
+        val code = """Object.entries(values).forEach(([key, value]: [string, string[]]) => {
+     
+});
+"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
 }
