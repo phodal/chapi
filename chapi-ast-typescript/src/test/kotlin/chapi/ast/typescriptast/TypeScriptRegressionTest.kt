@@ -109,6 +109,15 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
     }
 
     @Test
+    fun type_in_interface() {
+        val code = """export abstract class ReactiveOptionProviderService<T extends SelectOption> {
+  abstract create?(name: string): Observable<T>;
+}"""
+
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
     fun numeric_separators() {
         val code = """if (+value > 1_000_000_000) {
     }"""

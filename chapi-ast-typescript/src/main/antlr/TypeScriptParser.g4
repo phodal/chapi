@@ -211,7 +211,7 @@ typeAnnotation
     ;
 
 callSignature
-    : typeParameters? '(' parameterList? ','? ')' typeAnnotation?
+    : typeParameters? '(' parameterList? ','? ')' typeAnnotation? ';'?
     ;
 
 parameterList
@@ -390,7 +390,7 @@ statementList
     ;
 
 abstractDeclaration
-    : Abstract (Identifier callSignature | variableStatement) eos
+    : Abstract (Identifier '?'? callSignature | variableStatement) eos
     ;
 
 importStatement
