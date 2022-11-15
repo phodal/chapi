@@ -782,10 +782,12 @@ singleExpression
     | jsxArrowFunction                                                       # JsxArrowFunctionExpression
     | Class Identifier? classTail                                            # ClassExpression
     // this.form.value?.id?.[0]
-    | singleExpression '?'? '!'? '.''[' expressionSequence ']'               # MemberIndexExpression
+    | singleExpression '?'? '!'? '.'? '[' expressionSequence ']'               # MemberIndexExpression
     // for: `onHotUpdateSuccess?.();`
     // onChange?.(userName || password || null)
-    | singleExpression '?'? '!'? '.' '#'? identifierName? nestedTypeGeneric? # MemberDotExpression
+    | singleExpression '?'? '!'? '.' '#'? identifierName? nestedTypeGeneric?  # MemberDotExpression
+    // for: `onHotUpdateSuccess?.();`
+    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
 
     // samples: `error?.response?.data?.message ?? error.message;`
     | singleExpression '??' singleExpression                                 # NullCoalesceExpression
@@ -835,6 +837,7 @@ singleExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
     | objectLiteral                                                          # ObjectLiteralExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
+    | Of '(' expressionSequence ')'                                          # OfParenthesizedExpression
     | typeArguments expressionSequence?                                      # GenericTypes
     | singleExpression As asExpression                                       # CastAsExpression
     | htmlElements                                                           # HtmlElementExpression

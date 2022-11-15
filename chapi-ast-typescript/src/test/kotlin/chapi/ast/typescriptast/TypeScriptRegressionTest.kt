@@ -29,6 +29,8 @@ if (node in graph) {
 
   }
 }
+
+of(data)
 """
 
         TypeScriptAnalyser().analysis(code, "index.tsx")
@@ -59,6 +61,15 @@ if (node in graph) {
         val code = """Object.entries(values).forEach(([key, value]: [string, string[]]) => {
      
 });
+"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
+    fun array_in_for_loop() {
+        val code = """this.names.forEach((it, index) => {
+  multiSelect('', this.accessor[index])
+})
 """
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }

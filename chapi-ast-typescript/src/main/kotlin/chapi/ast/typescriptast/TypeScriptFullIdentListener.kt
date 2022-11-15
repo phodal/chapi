@@ -74,7 +74,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
                     }
                     else -> {
-                        println("enterVariableStatement: ${it::class.java.simpleName} === ${it.text}")
+//                        println("enterVariableStatement: ${it::class.java.simpleName} === ${it.text}")
                     }
                 }
             }
@@ -116,7 +116,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         }
                     }
                     else -> {
-                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
+//                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
                     }
                 }
 
@@ -144,7 +144,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     field.Calls += CodeCall("", CallType.FIELD, "", identExpr.identifierName().text)
                 }
                 else -> {
-                    println("todo -> var -> decl call: $name")
+//                    println("todo -> var -> decl call: $name")
                 }
             }
         }
@@ -236,7 +236,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     currentNode.Functions += codeFunction
                 }
                 else -> {
-                    println("handleClassBodyElements -> childElementType : $childElementType")
+//                    println("handleClassBodyElements -> childElementType : $childElementType")
                 }
             }
         }
@@ -319,7 +319,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     currentNode.Functions += func
                 }
                 else -> {
-                    println("enterInterfaceDeclaration -> buildInterfaceBody")
+//                    println("enterInterfaceDeclaration -> buildInterfaceBody")
                 }
             }
         }
@@ -494,7 +494,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             }
             else -> {
                 val text = statementParent.text
-                println("enterArrowFunctionDeclaration -> $parentName, $text")
+//                println("enterArrowFunctionDeclaration -> $parentName, $text")
             }
         }
 
@@ -589,7 +589,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 defaultNode.Functions += currentFunc
             }
             else -> {
-                println("enterFunctionExpressionDeclaration -> $parentName, ${statementParent.text} ")
+//                println("enterFunctionExpressionDeclaration -> $parentName, ${statementParent.text} ")
             }
         }
     }
@@ -655,7 +655,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, parameters)
             }
             else -> {
-                println("todo -> need support type: ${ctx::class.java.simpleName} ==== ${ctx.text}")
+//                println("todo -> need support type: ${ctx::class.java.simpleName} ==== ${ctx.text}")
             }
         }
     }
@@ -708,7 +708,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                             currentExprIdent = ident.identifierName().text
                         }
                         else -> {
-                            println("MemberDotExpressionContext: -> $subName")
+//                            println("MemberDotExpressionContext: -> $subName")
                         }
                     }
 
@@ -722,7 +722,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
                 }
                 else -> {
-                    println("singleExpression -> ArgumentsExpressionContext -> $childName")
+//                    println("singleExpression -> ArgumentsExpressionContext -> $childName")
                 }
             }
         }
@@ -762,7 +762,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     parameter = CodeProperty(TypeValue = singleExpToText(subSingle), TypeType = "string")
                 }
                 else -> {
-                    println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")
+//                    println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")
                 }
             }
 
@@ -791,7 +791,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     root += prop
                 }
                 else -> {
-                    println(propName)
+//                    println(propName)
                 }
             }
         }
@@ -847,10 +847,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     currentFunc.FunctionCalls += codeCall
                 }
                 "IdentifierExpressionContext" -> {
-                    println("enterExpressionStatement -> IdentifierExpressionContext: ${singleExprCtx.text}")
+//                    println("enterExpressionStatement -> IdentifierExpressionContext: ${singleExprCtx.text}")
                 }
                 else -> {
-                    println("enterExpressionStatement : $singleCtxType")
+//                    println("enterExpressionStatement : $singleCtxType")
                 }
             }
 
@@ -918,7 +918,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                             parseSingleExpression(identExpr.singleExpression())
                         }
                         else -> {
-                            println("IdentifierExpressionContext -> others variable decl: $identExprText ==== ${singleExprCtx.text}")
+//                            println("IdentifierExpressionContext -> others variable decl: $identExprText ==== ${singleExprCtx.text}")
                         }
                     }
                 }
@@ -936,7 +936,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     parseParenthesizedExpression(singleExprCtx as ParenthesizedExpressionContext)
                 }
                 else -> {
-                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
+//                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
                 }
             }
         }
