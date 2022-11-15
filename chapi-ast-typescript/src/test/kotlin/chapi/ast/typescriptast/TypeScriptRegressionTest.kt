@@ -2,7 +2,7 @@ package chapi.ast.typescriptast
 
 import org.junit.jupiter.api.Test
 
-class TypeScriptBugTest {
+class TypeScriptRegressionTest {
 
     @Test
     internal fun backend_arrow_function() {
@@ -35,6 +35,16 @@ import {EMPTY, Observable, of} from 'rxjs';
         this.onChange?.(userName || password || null);
     }
 }"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
+    fun end_with_dot() {
+        val code = """export class SomeComponent implements OnInit, ControlValueAccessor {
+  constructor(
+    private fb: FormBuilder,
+  ) { }
+} """
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
 }

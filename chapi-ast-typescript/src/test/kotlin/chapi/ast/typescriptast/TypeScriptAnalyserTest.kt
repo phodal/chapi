@@ -2,6 +2,7 @@ package chapi.ast.typescriptast
 
 import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File
 
@@ -69,7 +70,7 @@ class TypeScriptAnalyserTest {
     }
 
     @Test
-    @Ignore
+//    @Disabled
     fun someBug() {
         val dir = File("/Users/phodal/bug-ui-system")
         dir.walkTopDown().forEach {

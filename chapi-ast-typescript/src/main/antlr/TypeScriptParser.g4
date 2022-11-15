@@ -680,7 +680,7 @@ iteratorDefinition
     ;
 
 formalParameterList
-    : formalParameterArg (',' formalParameterArg)* (',' lastFormalParameterArg)?
+    : formalParameterArg (',' formalParameterArg)* (',' lastFormalParameterArg)? ','?
     ;
 
 formalParameterArg
