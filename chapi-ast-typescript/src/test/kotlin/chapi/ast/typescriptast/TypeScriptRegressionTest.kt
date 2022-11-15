@@ -103,7 +103,25 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
         val code = """export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };"""
         TypeScriptAnalyser().analysis(code, "index.tsx")
 
-        val code2 = """export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };"""
+        val code2 =
+            """export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };"""
         TypeScriptAnalyser().analysis(code2, "index.tsx")
+    }
+
+    @Test
+    fun numeric_separators() {
+        val code = """if (+value > 1_000_000_000) {
+    }"""
+
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
+    fun annotated_in_constructor() {
+        val code = """export class DemoComponent implements OnInit {
+    constructor(@Optional() @Inject(GROUP) private group: Component) {}
+}"""
+
+        TypeScriptAnalyser().analysis(code, "index.tsx")
     }
 }
