@@ -170,7 +170,7 @@ typeMember
     | indexSignature
     | methodSignature ('=>' type_)?
     | enumSignature
-    | '[' typeReference In (Keyof | Typeof)* typeReference ']' typeAnnotation
+    | '[' typeReference In (Keyof | Typeof)* typeReference ']' '?'? typeAnnotation
     ;
 
 arrayType
