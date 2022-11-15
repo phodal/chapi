@@ -18,4 +18,13 @@ exports.test = test;
 
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
+
+    @Test
+    fun backend_arrow_function2() {
+        val code = """
+import {EMPTY, Observable, of} from 'rxjs';
+"""
+
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
 }

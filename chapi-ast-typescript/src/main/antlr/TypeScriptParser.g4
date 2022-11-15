@@ -983,6 +983,7 @@ keyword
     | Namespace
     | Number
     | Boolean
+    | Of
     ;
 
 getter

@@ -589,7 +589,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     private fun parseStatement(context: TypeScriptParser.SourceElementContext) {
-        val stmtChild = context.statement().getChild(0)
+        val stmtChild = context.statement()?.getChild(0) ?: return
         when (val childType = stmtChild::class.java.simpleName) {
             "ReturnStatementContext" -> {
                 val returnStmt = stmtChild as TypeScriptParser.ReturnStatementContext
