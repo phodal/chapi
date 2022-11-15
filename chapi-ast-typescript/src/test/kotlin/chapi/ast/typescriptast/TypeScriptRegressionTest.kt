@@ -23,6 +23,12 @@ exports.test = test;
     fun of_keyword_lost() {
         val code = """
 import {EMPTY, Observable, of} from 'rxjs';
+
+if (node in graph) {
+  for (const n of graph[node]) {
+
+  }
+}
 """
 
         TypeScriptAnalyser().analysis(code, "index.tsx")

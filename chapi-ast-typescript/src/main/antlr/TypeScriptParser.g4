@@ -411,6 +411,8 @@ importDefault
 
 aliasName
     : identifierName (As identifierName)?
+    // for import { of } from 'rxjs';
+    | Of
     ;
 
 importNamespace
@@ -779,12 +781,12 @@ singleExpression
     | arrowFunctionDeclaration                                               # ArrowFunctionExpression   // ECMAScript 6
     | jsxArrowFunction                                                       # JsxArrowFunctionExpression
     | Class Identifier? classTail                                            # ClassExpression
-    | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
-    | singleExpression '?'? '!'? '.' '#'? identifierName nestedTypeGeneric?  # MemberDotExpression
+    // this.form.value?.id?.[0]
+    | singleExpression '?'? '!'? '.''[' expressionSequence ']'               # MemberIndexExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
     // onChange?.(userName || password || null)
-    | singleExpression '?'? '!'? '.' '#'? '('? singleExpression? ')'?          # MemberDotExpression
+    | singleExpression '?'? '!'? '.' '#'? identifierName? nestedTypeGeneric? # MemberDotExpression
+
     // samples: `error?.response?.data?.message ?? error.message;`
     | singleExpression '??' singleExpression                                 # NullCoalesceExpression
     | singleExpression '!'                                                   # PropCheckExpression
@@ -986,7 +988,6 @@ keyword
     | Namespace
     | Number
     | Boolean
-    | Of
     ;
 
 getter

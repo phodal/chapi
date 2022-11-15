@@ -361,9 +361,15 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         if (ctx.moduleItems() != null) {
             for (nameContext in ctx.moduleItems().aliasName()) {
-                codeImport.UsageName += nameContext.identifierName()[0].text
-                if (nameContext.As() != null) {
-                    codeImport.AsName += nameContext.identifierName()[1].text
+                if (nameContext.identifierName().isNotEmpty()) {
+                    codeImport.UsageName += nameContext.identifierName()[0].text
+                    if (nameContext.As() != null) {
+                        codeImport.AsName += nameContext.identifierName()[1].text
+                    }
+                }
+                if (nameContext.Of() != null) {
+                    codeImport.UsageName += nameContext.Of().text
+                    codeImport.AsName += nameContext.Of().text
                 }
             }
         }
@@ -690,7 +696,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     val memberDot = it as TypeScriptParser.MemberDotExpressionContext
                     when (val subName = memberDot.singleExpression()::class.java.simpleName) {
                         "ParenthesizedExpressionContext" -> {
-                            params += parseParenthesizedExpression(memberDot.singleExpression().first())
+                            params += parseParenthesizedExpression(memberDot.singleExpression())
                         }
                         "ArgumentsExpressionContext" -> {
                             // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response)}).catch()

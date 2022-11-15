@@ -1065,7 +1065,7 @@ export class ELKLayout {
     }
 
     @Test
-    internal fun forOfStatement() {
+    fun forOfStatement() {
         val code = """
 function dfs() {
   if (node in graph) {
