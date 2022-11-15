@@ -97,4 +97,10 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
 
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
+
+    @Test
+    fun type_definition() {
+        val code = """export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
 }

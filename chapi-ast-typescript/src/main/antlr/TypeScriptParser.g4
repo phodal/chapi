@@ -87,6 +87,7 @@ type_
     | constructorType
     | typeGeneric
     | '|'? propertyName ('|' (propertyName))*
+    | Unknown
     ;
 
 unionOrIntersectionOrPrimaryType
