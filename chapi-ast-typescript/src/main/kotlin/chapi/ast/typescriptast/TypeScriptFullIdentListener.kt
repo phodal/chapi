@@ -690,7 +690,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     val memberDot = it as TypeScriptParser.MemberDotExpressionContext
                     when (val subName = memberDot.singleExpression()::class.java.simpleName) {
                         "ParenthesizedExpressionContext" -> {
-                            params += parseParenthesizedExpression(memberDot.singleExpression())
+                            params += parseParenthesizedExpression(memberDot.singleExpression().first())
                         }
                         "ArgumentsExpressionContext" -> {
                             // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response)}).catch()

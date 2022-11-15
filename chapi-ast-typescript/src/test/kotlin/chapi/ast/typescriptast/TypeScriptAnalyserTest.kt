@@ -3,8 +3,9 @@ package chapi.ast.typescriptast
 import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.io.File
 
-internal class TypeScriptAnalyserTest {
+class TypeScriptAnalyserTest {
     @Test
     internal fun shouldAnalysisTypeScriptMultipleClass() {
         val content = this::class.java.getResource("/grammar/Class.ts")!!.readText()
@@ -65,5 +66,19 @@ internal class TypeScriptAnalyserTest {
 
         assertEquals(codeFile.PackageName, "@.grammar.AbstractClass")
         assertEquals(codeFile.DataStructures[0].Package, "@.grammar.AbstractClass")
+    }
+
+    @Test
+    @Ignore
+    fun someBug() {
+        val dir = File("/Users/phodal/bug-ui-system")
+        dir.walkTopDown().forEach {
+            if (it.extension == "ts" || it.extension == "js") {
+                val content = it.readText()
+                println(it.absolutePath)
+                val codeFile = TypeScriptAnalyser().analysis(content, it.name)
+                println(codeFile)
+            }
+        }
     }
 }
