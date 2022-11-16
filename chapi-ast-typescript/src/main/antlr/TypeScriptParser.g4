@@ -374,11 +374,10 @@ statement
     | functionDeclaration
     | arrowFunctionDeclaration
     | generatorFunctionDeclaration
-    | variableStatement
     | typeAliasDeclaration //ADDED
     | enumDeclaration      //ADDED
+    | variableStatement
     | expressionStatement
-    | Export statement
     ;
 
 block
