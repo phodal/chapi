@@ -563,10 +563,10 @@ async function getUser() {
         val codeFile = TypeScriptAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures.size, 1)
 
-        val firstCall = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        val codeCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
 
-        assertEquals(3, firstCall.size)
-        assertEquals("axios.get", firstCall[0].FunctionName);
+        assertEquals(3, codeCalls.size)
+        assertEquals("axios.get", codeCalls[0].FunctionName);
     }
 
     @Test
@@ -1406,6 +1406,10 @@ export const querySystemInfo = (data) => {
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeFile.DataStructures.size)
+
+        println(Json.encodeToString(codeFile))
+
         val parameters = codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters
         assertEquals(parameters.size, 2)
         assertEquals(parameters[0].TypeValue, "/api/system-info")

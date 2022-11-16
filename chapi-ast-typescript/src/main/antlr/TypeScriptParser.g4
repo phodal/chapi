@@ -394,7 +394,7 @@ enumMember
 // Function Declaration
 
 functionDeclaration
-    : Function '*'? identifierName callSignature functionBody? SemiColon?
+    : propertyMemberBase Function '*'? identifierName callSignature functionBody? SemiColon?
     ;
 
 functionBody
@@ -601,6 +601,8 @@ objectLiteral
 
 propertyAssignment
     : propertyName (':' identifierOrKeyWord | bindingPattern)? ('=' singleExpression)?  # PropertyExpressionAssignment
+    | propertyName '?'? (':' |'=') singleExpression               # PropertyExpressionAssignment
+    | '[' singleExpression ']' '?'?  ':' singleExpression         # ComputedPropertyExpressionAssignment
     | getAccessor                                                 # PropertyGetter
     | setAccessor                                                 # PropertySetter
     | generatorMethod                                             # MethodProperty
@@ -815,6 +817,7 @@ breakStatement
 
 returnStatement
     : Return ({this.notLineTerminator()}? expressionSequence)? eos
+//    | Return '(' htmlElements ')' eos
     ;
 
 
@@ -853,7 +856,7 @@ expressionSequence
 
 singleExpression
     : functionExpression                                                     # FunctionExpressionL
-    | arrowFunctionExpression                                                # ArrowFunctionExpressionL
+    | arrowFunctionDeclaration                                               # ArrowFunctionExpressionL
     | classExpression                                                        # ClassExpressionL
 
     | Yield ({this.notLineTerminator()}? expressionSequence)?                # YieldExpression
@@ -880,19 +883,20 @@ singleExpression
     // onChange?.(userName || password || null)
     | singleExpression '?'? '!'? '.' '#'? identifierName? typeArguments?     # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'             # MemberDotExpression
-
+    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
+    // request('/api/system-info', { method: 'GET' });
+//    | singleExpression arguments                                             # MemberDotExpression
 
     | singleExpression ('.' | '?''.') identifierName                         # PropertyAccessExpression
     |  New (Dot Target| singleExpression )                                   # NewExpression
     // find arguments first, then found the call expression
     | singleExpression typeArguments? arguments                              # ArgumentsExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
+
   // TODO:
   //  | iteratorBlock                                                          # IteratorsExpression
   //  | generatorBlock                                                         # GeneratorsExpression
 
-    | '(' expressionSequence ')'                                             # ParenthesizedExpression
     | This                                                                   # ThisExpression
     | Super                                                                  # SuperExpression
     | identifierName                                                         # IdentifierExpression
@@ -911,13 +915,18 @@ functionExpression
     : Function '*'? Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
     ;
 
-arrowFunctionExpression
-    : Async? '(' formalParameterList? ')' typeAnnotation? '=>' arrowFunctionBody
+arrowFunctionDeclaration
+    : Async? arrowFunctionParameters? typeAnnotation? '=>' arrowFunctionBody
+    ;
+
+arrowFunctionParameters
+    : identifierName
+    | typeRef? '(' formalParameterList? ','? ')'
     ;
 
 arrowFunctionBody
     : singleExpression
-    | '{' functionBody '}'
+    | '{' statementList? '}'
     ;
 
 classExpression
