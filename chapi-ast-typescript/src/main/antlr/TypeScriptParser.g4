@@ -349,7 +349,7 @@ constructSignature
     ;
 
 callSignature
-    : typeParameters? parameterBlock (':' (typePredicateWithOperatorTypeRef | typeRef))?
+    : typeParameters? parameterBlock ( ':' typePredicateWithOperatorTypeRef | typeAnnotation)?
     ;
 
 indexSignature
@@ -438,23 +438,30 @@ constructorDeclaration
     : accessibilityModifier? Constructor '(' formalParameterList? ')' block?
     ;
 
+//propertyMemberDeclaration
+//    : abstractDeclaration
+//    | propertyMember
+//    ;
+
 propertyMemberDeclaration
-    : abstractDeclaration
-    | propertyMember
+    : propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer? SemiColon             # PropertyDeclarationExpression
+    | propertyMemberBase propertyName callSignature ( ('{' functionBody '}') | SemiColon)           # MethodDeclarationExpression
+    | propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
+    | abstractDeclaration                                                                           # AbstractMemberDeclaration
     ;
 
 abstractDeclaration
     : Abstract (Identifier callSignature | variableStatement) eos
     ;
 
-propertyMember
-    : propertyMemberBase
-    (
-          getAccessor
-        | setAccessor
-        | propertyOrMethod
-    )
-    ;
+//propertyMember
+//    : propertyMemberBase
+//    (
+//          getAccessor
+//        | setAccessor
+//        | propertyOrMethod
+//    )
+//    ;
 
 propertyMemberBase
     : Async? accessibilityModifier? Static?

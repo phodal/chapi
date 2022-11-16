@@ -207,32 +207,32 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     codeFunction.FilePath = filePath
                     currentNode.Functions += codeFunction
                 }
-//                is TypeScriptParser.PropertyDeclarationExpressionContext -> {
-//                    val codeField = CodeField(TypeKey = childCtx.propertyName().text)
-//
-//                    val modifier = childCtx.propertyMemberBase().text
-//                    if (modifier != "") {
-//                        codeField.Modifiers += modifier
-//                    }
-//                    if (childCtx.typeAnnotation() != null) {
-//                        codeField.TypeType = this.buildTypeAnnotation(childCtx.typeAnnotation())!!
-//                    }
-//
-//                    currentNode.Fields += codeField
-//                }
-//                is TypeScriptParser.MethodDeclarationExpressionContext -> {
-//                    val codeFunction = CodeFunction(
-//                        Name = childCtx.propertyName().text, Position = buildPosition(childCtx)
-//                    )
-//                    val callSignCtx = childCtx.callSignature()
-//
-//                    if (callSignCtx.typeAnnotation() != null) {
-//                        codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
-//                    }
-//
-//                    codeFunction.FilePath = filePath
-//                    currentNode.Functions += codeFunction
-//                }
+                is TypeScriptParser.PropertyDeclarationExpressionContext -> {
+                    val codeField = CodeField(TypeKey = childCtx.propertyName().text)
+
+                    val modifier = childCtx.propertyMemberBase().text
+                    if (modifier != "") {
+                        codeField.Modifiers += modifier
+                    }
+                    if (childCtx.typeAnnotation() != null) {
+                        codeField.TypeType = this.buildTypeAnnotation(childCtx.typeAnnotation())!!
+                    }
+
+                    currentNode.Fields += codeField
+                }
+                is TypeScriptParser.MethodDeclarationExpressionContext -> {
+                    val codeFunction = CodeFunction(
+                        Name = childCtx.propertyName().text, Position = buildPosition(childCtx)
+                    )
+                    val callSignCtx = childCtx.callSignature()
+
+                    if (callSignCtx.typeAnnotation() != null) {
+                        codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
+                    }
+
+                    codeFunction.FilePath = filePath
+                    currentNode.Functions += codeFunction
+                }
                 else -> {
 //                    println("handleClassBodyElements -> childElementType : $childElementType")
                 }
@@ -968,7 +968,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return codeContainer
     }
 
-    override fun enterEveryRule(ctx: ParserRuleContext?) {
-        println(ctx!!.javaClass.simpleName)
-    }
+//    override fun enterEveryRule(ctx: ParserRuleContext?) {
+//        println(ctx!!.javaClass.simpleName)
+//    }
 }

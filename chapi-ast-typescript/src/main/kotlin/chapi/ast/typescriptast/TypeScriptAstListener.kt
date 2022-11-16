@@ -58,7 +58,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
 //            }
 //        }
 
-        return type
+        return processRef(type)
     }
 
 //    private fun handleTypeAnnotationPrimary(typeContext: TypeScriptParser.PrimaryContext, typ: String?): String? {
@@ -153,5 +153,9 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
             annotation.Name = member.Identifier().text
         }
         return annotation
+    }
+
+    private fun processRef(type: String): String {
+        return type
     }
 }
