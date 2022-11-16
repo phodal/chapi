@@ -438,10 +438,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             return
         }
 
-        if (ctx.functionBody().statementList() != null) {
-            ctx.functionBody().statementList().statement().forEach { context ->
-                parseStatement(context)
-            }
+        ctx.functionBody()?.statementList()?.statement()?.forEach { context ->
+            parseStatement(context)
         }
     }
 
@@ -810,17 +808,19 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
             when (singleExprCtx) {
-//                is TypeScriptParser.ArgumentsExpressionContext -> {
-//                    currentFunc.FunctionCalls += CodeCall(
-//                        Parameters = buildArguments(singleExprCtx.arguments()),
-//                        FunctionName = buildFunctionName(singleExprCtx),
-//                        NodeName = wrapTargetType(singleExprCtx),
-//                        Position = buildPosition(ctx)
-//                    )
-//                }
+                is TypeScriptParser.ArgumentsExpressionContext -> {
+                    currentFunc.FunctionCalls += CodeCall(
+                        Parameters = buildArguments(singleExprCtx.arguments()),
+                        FunctionName = buildFunctionName(singleExprCtx),
+                        NodeName = wrapTargetType(singleExprCtx),
+                        Position = buildPosition(ctx)
+                    )
+                }
+
                 is TypeScriptParser.IdentifierExpressionContext -> {
 //                    println("enterExpressionStatement -> IdentifierExpressionContext: ${singleExprCtx.text}")
                 }
+
                 else -> {
 //                    println("enterExpressionStatement : $singleCtxType")
                 }
@@ -829,33 +829,36 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
     }
 
-//    private fun buildFunctionName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
-//        var text = argsCtx.singleExpression().text
-//        if (text.contains(".")) {
-//            val split = text.split(".")
-//            text = split[split.size - 1]
-//        }
-//
-//        return text
-//    }
-//
-//    private fun wrapTargetType(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
-//        var text = argsCtx.singleExpression().text
-//        if (text.contains(".")) {
-//            text = text.split(".")[0]
-//        }
-//
-//        if (localVars[text] != null && localVars[text] != "") {
-//            text = localVars[text]
-//        }
-//
-//        if (text == null) {
-//            text = ""
-//        }
-//
-//        return text
-//    }
+    private fun buildFunctionName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
+        var text = argsCtx.singleExpression().text
+        if (text.contains(".")) {
+            val split = text.split(".")
+            text = split[split.size - 1]
+        }
 
+        return text
+    }
+
+    private fun wrapTargetType(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
+        var text = argsCtx.singleExpression().text
+        if (text.contains(".")) {
+            text = text.split(".")[0]
+        }
+
+        if (localVars[text] != null && localVars[text] != "") {
+            text = localVars[text]
+        }
+
+        if (text == null) {
+            text = ""
+        }
+
+        return text
+    }
+
+    /**
+     *     create local var when new object
+     */
     override fun enterVariableDeclaration(ctx: TypeScriptParser.VariableDeclarationContext?) {
         if (ctx == null) {
             return
@@ -865,47 +868,46 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
 
         val varName = ctx.getChild(0).text
-        if (ctx.singleExpression().size == 1 && ctx.typeParameters() == null) {
-            when (val singleExprCtx = ctx.singleExpression()[0]) {
-                is TypeScriptParser.NewExpressionLContext -> {
-                    val newSingleExpr = singleExprCtx.newExpression().singleExpression()
-                    when (newSingleExpr::class.java.simpleName) {
-                        "IdentifierExpressionContext" -> {
-                            val identExprCtx = newSingleExpr as IdentifierExpressionContext
-                            val varType = identExprCtx.identifierName().text
+        when (val singleExprCtx = ctx.singleExpression()) {
+            is TypeScriptParser.NewExpressionContext -> {
+                when (val newSingleExpr = singleExprCtx.singleExpression()) {
+                    is IdentifierExpressionContext -> {
+                        val identExprCtx = newSingleExpr as IdentifierExpressionContext
+                        val varType = identExprCtx.identifierName().text
 
-                            localVars[varName] = varType
-                        }
+                        localVars[varName] = varType
                     }
                 }
-                is IdentifierExpressionContext -> {
-                    when (singleExprCtx.identifierName().text) {
+            }
+
+            is IdentifierExpressionContext -> {
+                when (singleExprCtx.identifierName().text) {
 //                        "await" -> {
 //                            parseSingleExpression(singleExprCtx.singleExpression())
 //                        }
 //                        "Number" -> {
 //                            parseSingleExpression(singleExprCtx.singleExpression())
 //                        }
-                        else -> {
-//                            println("IdentifierExpressionContext -> others variable decl: $identExprText ==== ${singleExprCtx.text}")
-                        }
+                    else -> {
+                        println("IdentifierExpressionContext ->  ${singleExprCtx.text}")
                     }
                 }
-                is TypeScriptParser.AwaitExpressionContext -> {
-                    parseSingleExpression(singleExprCtx.singleExpression())
-                }
-//                is TypeScriptParser.ArrowFunctionExpressionContext -> {
-//                    // will recall by ArrowFunctionDeclaration
-//                }
-                is TypeScriptParser.ArgumentsExpressionContext -> {
-                    argumentsExpressionToCall(singleExprCtx, varName)
-                }
-                is ParenthesizedExpressionContext -> {
-                    parseParenthesizedExpression(singleExprCtx)
-                }
-                else -> {
+            }
+
+            is TypeScriptParser.AwaitExpressionContext -> {
+                parseSingleExpression(singleExprCtx.singleExpression())
+            }
+
+            is TypeScriptParser.ArgumentsExpressionContext -> {
+                argumentsExpressionToCall(singleExprCtx, varName)
+            }
+
+            is ParenthesizedExpressionContext -> {
+                parseParenthesizedExpression(singleExprCtx)
+            }
+
+            else -> {
 //                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
-                }
             }
         }
     }
@@ -968,8 +970,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         return codeContainer
     }
-//
-//    override fun enterEveryRule(ctx: ParserRuleContext?) {
-//        println(ctx!!.javaClass.simpleName)
-//    }
+
+    override fun enterEveryRule(ctx: ParserRuleContext?) {
+        println(ctx!!.javaClass.simpleName)
+    }
 }

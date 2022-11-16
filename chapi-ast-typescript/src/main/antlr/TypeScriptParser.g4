@@ -733,7 +733,8 @@ variableDeclarationList
     ;
 
 variableDeclaration
-    : ( identifierName | arrayLiteral | objectLiteral) typeAnnotation? singleExpression? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+//    : ( identifierName | arrayLiteral | objectLiteral) typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    : identifierName typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
     ;
 
 
@@ -879,12 +880,13 @@ singleExpression
     // onChange?.(userName || password || null)
     | singleExpression '?'? '!'? '.' '#'? identifierName? typeArguments?     # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
+    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'             # MemberDotExpression
 
 
     | singleExpression ('.' | '?''.') identifierName                         # PropertyAccessExpression
-    | newExpression                                                          # NewExpressionL
-    | singleExpression arguments                                             # ArgumentsExpression
+    |  New (Dot Target| singleExpression )                                   # NewExpression
+    // find arguments first, then found the call expression
+    | singleExpression typeArguments? arguments                              # ArgumentsExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
   // TODO:
   //  | iteratorBlock                                                          # IteratorsExpression
@@ -935,10 +937,6 @@ relationalOperator
 unaryOperator
     : Delete | Void | Typeof | '++' | '--' | '+' | '-' | '~' | '!'
     ;
-
-newExpression
-    : New (Dot Target| singleExpression typeArguments? arguments?);
-
 
 
 
