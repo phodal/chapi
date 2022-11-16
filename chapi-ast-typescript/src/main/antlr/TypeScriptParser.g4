@@ -73,11 +73,7 @@ typeArguments
     ;
 
 typeArgumentList
-    : typeArgument (',' typeArgument)*
-    ;
-
-typeArgument
-    : type_
+    : type_ (',' type_)*
     ;
 
 type_
