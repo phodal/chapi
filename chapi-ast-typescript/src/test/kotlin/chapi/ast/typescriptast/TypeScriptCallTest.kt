@@ -1,12 +1,14 @@
 package chapi.ast.typescriptast;
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class TypeScriptCallTest {
 
     @Test
-    internal fun shouldIdentifyNewObjectCall() {
+    fun shouldIdentifyNewObjectCall() {
         val code = """
 function testNew() {
   let emp = new Employee(100,"Steve");
@@ -14,6 +16,7 @@ function testNew() {
 }
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "")
+        println(Json.encodeToString(codeFile))
         assertEquals(codeFile.DataStructures.size, 1)
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)

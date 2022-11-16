@@ -733,7 +733,7 @@ variableDeclarationList
     ;
 
 variableDeclaration
-    : identifierName typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    : ( identifierName | arrayLiteral | objectLiteral) typeAnnotation? singleExpression? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
     ;
 
 
@@ -905,18 +905,17 @@ singleExpression
 
 
 
-
 functionExpression
-    : Function '*'? Identifier? parameterBlock typeAnnotation? block
+    : Function '*'? Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
     ;
 
 arrowFunctionExpression
-    : Async? parameterBlock typeAnnotation? '=>' arrowFunctionBody
+    : Async? '(' formalParameterList? ')' typeAnnotation? '=>' arrowFunctionBody
     ;
 
 arrowFunctionBody
     : singleExpression
-    | block
+    | '{' functionBody '}'
     ;
 
 classExpression
