@@ -830,19 +830,18 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
 
         for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
-            when (val singleCtxType = singleExprCtx::class.java.simpleName) {
-                "ArgumentsExpressionContext" -> {
+            when (singleExprCtx) {
+                is TypeScriptParser.ArgumentsExpressionContext -> {
                     val codeCall = CodeCall()
 
-                    val argsCtx = singleExprCtx as TypeScriptParser.ArgumentsExpressionContext
-                    codeCall.Parameters = this.buildArguments(argsCtx.arguments())
-                    codeCall.FunctionName = buildFunctionName(argsCtx)
-                    codeCall.NodeName = wrapTargetType(argsCtx)
+                    codeCall.Parameters = this.buildArguments(singleExprCtx.arguments())
+                    codeCall.FunctionName = buildFunctionName(singleExprCtx)
+                    codeCall.NodeName = wrapTargetType(singleExprCtx)
                     codeCall.Position = this.buildPosition(ctx)
 
                     currentFunc.FunctionCalls += codeCall
                 }
-                "IdentifierExpressionContext" -> {
+                is TypeScriptParser.IdentifierExpressionContext -> {
 //                    println("enterExpressionStatement -> IdentifierExpressionContext: ${singleExprCtx.text}")
                 }
                 else -> {
@@ -891,10 +890,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         val varName = ctx.getChild(0).text
         if (ctx.singleExpression().size == 1 && ctx.typeParameters() == null) {
             val singleExprCtx = ctx.singleExpression()[0]
-            when (val singleCtxType = singleExprCtx::class.java.simpleName) {
-                "NewExpressionContext" -> {
-                    val newExprCtx = singleExprCtx as TypeScriptParser.NewExpressionContext
-                    val newSingleExpr = newExprCtx.singleExpression()
+            when (singleExprCtx) {
+                is TypeScriptParser.NewExpressionContext -> {
+                    val newSingleExpr = singleExprCtx.singleExpression()
                     when (newSingleExpr::class.java.simpleName) {
                         "IdentifierExpressionContext" -> {
                             val identExprCtx = newSingleExpr as IdentifierExpressionContext
@@ -904,32 +902,30 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         }
                     }
                 }
-                "IdentifierExpressionContext" -> {
-                    val identExpr = singleExprCtx as IdentifierExpressionContext
-                    when (val identExprText = identExpr.identifierName().text) {
+                is IdentifierExpressionContext -> {
+                    when (val identExprText = singleExprCtx.identifierName().text) {
                         "await" -> {
-                            parseSingleExpression(identExpr.singleExpression())
+                            parseSingleExpression(singleExprCtx.singleExpression())
                         }
                         "Number" -> {
-                            parseSingleExpression(identExpr.singleExpression())
+                            parseSingleExpression(singleExprCtx.singleExpression())
                         }
                         else -> {
 //                            println("IdentifierExpressionContext -> others variable decl: $identExprText ==== ${singleExprCtx.text}")
                         }
                     }
                 }
-                "AwaitExpressionContext" -> {
-                    val identExpr = singleExprCtx as TypeScriptParser.AwaitExpressionContext
-                    parseSingleExpression(identExpr.singleExpression())
+                is TypeScriptParser.AwaitExpressionContext -> {
+                    parseSingleExpression(singleExprCtx.singleExpression())
                 }
-                "ArrowFunctionExpressionContext" -> {
+                is TypeScriptParser.ArrowFunctionExpressionContext -> {
                     // will recall by ArrowFunctionDeclaration
                 }
-                "ArgumentsExpressionContext" -> {
-                    argumentsExpressionToCall(singleExprCtx as TypeScriptParser.ArgumentsExpressionContext, varName)
+                is TypeScriptParser.ArgumentsExpressionContext -> {
+                    argumentsExpressionToCall(singleExprCtx, varName)
                 }
-                "ParenthesizedExpressionContext" -> {
-                    parseParenthesizedExpression(singleExprCtx as ParenthesizedExpressionContext)
+                is ParenthesizedExpressionContext -> {
+                    parseParenthesizedExpression(singleExprCtx)
                 }
                 else -> {
 //                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
@@ -947,11 +943,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         arguments.argumentList().argument().forEach {
             parseSingleExpression(it.singleExpression())
-            val typeValue: String = when (it.singleExpression().javaClass.simpleName) {
-                "LiteralExpressionContext" -> {
-                    val literalExpr = (it.singleExpression() as TypeScriptParser.LiteralExpressionContext).literal()
-                    if (literalExpr.templateStringLiteral() != null) {
-                        literalExpr.templateStringLiteral().text.drop(1).dropLast(1)
+            val typeValue: String = when (val expr = it.singleExpression()) {
+                is TypeScriptParser.LiteralExpressionContext -> {
+                    if (expr.literal().templateStringLiteral() != null) {
+                        expr.literal().templateStringLiteral().text.drop(1).dropLast(1)
                     } else {
                         it.text
                     }
@@ -1002,8 +997,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         return codeContainer
     }
-
-    override fun enterEveryRule(ctx: ParserRuleContext?) {
-        println(ctx!!.javaClass.simpleName)
-    }
+//
+//    override fun enterEveryRule(ctx: ParserRuleContext?) {
+//        println(ctx!!.javaClass.simpleName)
+//    }
 }
