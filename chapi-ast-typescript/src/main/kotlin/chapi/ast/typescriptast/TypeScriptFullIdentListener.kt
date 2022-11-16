@@ -5,7 +5,7 @@ import chapi.ast.antlr.TypeScriptParser.IdentifierExpressionContext
 import chapi.ast.antlr.TypeScriptParser.ParenthesizedExpressionContext
 import chapi.domain.core.*
 import chapi.infra.Stack
-import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private var hasHtmlElement: Boolean = false
@@ -50,14 +50,13 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         // todo: add support for not only const?
         if (isExport) {
             var modifier = ""
-            ctx.children.forEach {
-                when (it::class.java.simpleName) {
-                    "VarModifierContext" -> {
-                        modifier = it.text
+            ctx.children.forEach { child ->
+                when (child) {
+                    is TypeScriptParser.VarModifierContext -> {
+                        modifier = child.text
                     }
-                    "VariableDeclarationListContext" -> {
-                        val varDeclList = it as TypeScriptParser.VariableDeclarationListContext
-                        val fields = variableToFields(varDeclList, arrayOf(modifier))
+                    is TypeScriptParser.VariableDeclarationListContext -> {
+                        val fields = variableToFields(child, arrayOf(modifier))
 
                         if (fields.isNotEmpty()) {
                             defaultNode.Exports += CodeExport(
@@ -69,7 +68,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                             defaultNode.Fields += fields
                         }
                     }
-                    "TerminalNodeImpl" -> {
+                    is TerminalNodeImpl -> {
 
                     }
                     else -> {
@@ -93,22 +92,19 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 val lastExpr = singleExpression.last()
                 val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
 
-                when (lastExpr::class.simpleName) {
-                    "LiteralExpressionContext" -> {
-                        val literal = lastExpr as TypeScriptParser.LiteralExpressionContext
-                        if (literal.literal().StringLiteral() != null) {
-                            field.TypeValue = unQuote(literal.text)
+                when (lastExpr) {
+                    is TypeScriptParser.LiteralExpressionContext -> {
+                        if (lastExpr.literal().StringLiteral() != null) {
+                            field.TypeValue = unQuote(lastExpr.text)
                             field.TypeType = "String"
                         }
                     }
-                    "IdentifierExpressionContext" -> {
-                        val identExpr = lastExpr as IdentifierExpressionContext
-                        singleExprToFieldCall(field, identExpr.singleExpression(), identExpr.identifierName().text)
+                    is  IdentifierExpressionContext -> {
+                        singleExprToFieldCall(field, lastExpr.singleExpression(), lastExpr.identifierName().text)
                     }
-                    "YieldExpressionContext" -> {
-                        val yieldExpr = lastExpr as TypeScriptParser.YieldExpressionContext
-                        if (yieldExpr.yieldStatement().expressionSequence() != null) {
-                            val singeExprs = yieldExpr.yieldStatement().expressionSequence().singleExpression()
+                    is TypeScriptParser.YieldExpressionContext -> {
+                        if (lastExpr.yieldStatement().expressionSequence() != null) {
+                            val singeExprs = lastExpr.yieldStatement().expressionSequence().singleExpression()
                             singeExprs.forEach { expr ->
                                 singleExprToFieldCall(field, expr, expr.text)
                             }
@@ -133,14 +129,13 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         funcName: String
     ) {
         if (singleExpr != null) {
-            when (val name = singleExpr::class.simpleName) {
-                "ParenthesizedExpressionContext" -> {
+            when (singleExpr) {
+                is TypeScriptParser.ParenthesizedExpressionContext -> {
                     val parameters = parseParenthesizedExpression(singleExpr)
                     field.Calls += CodeCall("", CallType.FIELD, "", funcName, parameters)
                 }
-                "IdentifierExpressionContext" -> {
-                    val identExpr = singleExpr as IdentifierExpressionContext
-                    field.Calls += CodeCall("", CallType.FIELD, "", identExpr.identifierName().text)
+                is IdentifierExpressionContext -> {
+                    field.Calls += CodeCall("", CallType.FIELD, "", singleExpr.identifierName().text)
                 }
                 else -> {
 //                    println("todo -> var -> decl call: $name")
@@ -616,10 +611,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     private fun singleExpToText(ctx: TypeScriptParser.SingleExpressionContext): String {
-        val childType = ctx::class.java.simpleName
         var text = ctx.text
-        when (childType) {
-            "LiteralExpressionContext" -> {
+        when (ctx) {
+            is TypeScriptParser.LiteralExpressionContext -> {
                 val singleStr = text.startsWith("'") && text.endsWith("'")
                 val doubleStr = text.startsWith("\"") && text.endsWith("\"")
                 val templateStr = text.startsWith("`") && text.endsWith("`")
@@ -633,23 +627,21 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     private fun parseSingleExpression(ctx: TypeScriptParser.SingleExpressionContext?) {
-        when (ctx!!::class.java.simpleName) {
-            "IdentifierExpressionContext" -> {
-                val context = ctx as IdentifierExpressionContext
-                currentExprIdent = context.identifierName().text
+        when (ctx) {
+            is IdentifierExpressionContext -> {
+                currentExprIdent = ctx.identifierName().text
 
-                if (context.singleExpression() != null) {
-                    parseSingleExpression(context.singleExpression())
+                if (ctx.singleExpression() != null) {
+                    parseSingleExpression(ctx.singleExpression())
                 }
             }
-            "GenericTypesContext" -> {
-                val context = ctx as TypeScriptParser.GenericTypesContext
-                parseExpressionSequence(context.expressionSequence())
+            is TypeScriptParser.GenericTypesContext -> {
+                parseExpressionSequence(ctx.expressionSequence())
             }
-            "ArgumentsExpressionContext" -> {
-                argumentsExpressionToCall(ctx as TypeScriptParser.ArgumentsExpressionContext)
+            is TypeScriptParser.ArgumentsExpressionContext -> {
+                argumentsExpressionToCall(ctx)
             }
-            "ParenthesizedExpressionContext" -> {
+            is ParenthesizedExpressionContext -> {
                 val parameters = parseParenthesizedExpression(ctx)
                 currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, parameters)
             }
@@ -690,34 +682,33 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         // for: `axios<Module[]>({parameter}).then`
         // create then and update parameter
         argument.children.forEach {
-            when (val childName = it::class.java.simpleName) {
-                "MemberDotExpressionContext" -> {
-                    val memberDot = it as TypeScriptParser.MemberDotExpressionContext
-                    when (val subName = memberDot.singleExpression()::class.java.simpleName) {
-                        "ParenthesizedExpressionContext" -> {
-                            params += parseParenthesizedExpression(memberDot.singleExpression())
+            when (it) {
+                is TypeScriptParser.MemberDotExpressionContext -> {
+                    when (val expr = it.singleExpression()) {
+                        is TypeScriptParser.ParenthesizedExpressionContext -> {
+                            params += parseParenthesizedExpression(expr)
                         }
-                        "ArgumentsExpressionContext" -> {
+
+                        is TypeScriptParser.ArgumentsExpressionContext -> {
                             // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response)}).catch()
-                            val args = memberDot.singleExpression() as TypeScriptParser.ArgumentsExpressionContext
-                            parseArguments(args)
+                            parseArguments(expr)
                         }
-                        "IdentifierExpressionContext" -> {
-                            val ident = memberDot.singleExpression() as IdentifierExpressionContext
-                            currentExprIdent = ident.identifierName().text
+
+                        is IdentifierExpressionContext -> {
+                            currentExprIdent = expr.identifierName().text
                         }
+
                         else -> {
 //                            println("MemberDotExpressionContext: -> $subName")
                         }
                     }
 
-                    currentExprIdent += "->${memberDot.identifierName().text}"
+                    currentExprIdent += "->${it.identifierName().text}"
                 }
-                "ParenthesizedExpressionContext" -> {
-                    val prop = parseParenthesizedExpression(it as ParenthesizedExpressionContext)
-                    params += prop
+                is ParenthesizedExpressionContext -> {
+                    params += parseParenthesizedExpression(it)
                 }
-                "ArgumentsContext" -> {
+                is TypeScriptParser.ArgumentsContext -> {
 
                 }
                 else -> {
@@ -730,9 +721,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return params
     }
 
-    private fun parseParenthesizedExpression(ctx: TypeScriptParser.SingleExpressionContext?): Array<CodeProperty> {
+    private fun parseParenthesizedExpression(context: ParenthesizedExpressionContext): Array<CodeProperty> {
         var parameters: Array<CodeProperty> = arrayOf()
-        val context = ctx as ParenthesizedExpressionContext
         for (subSingle in context.expressionSequence().singleExpression()) {
             var parameter = CodeProperty(TypeValue = "", TypeType = "object")
 
