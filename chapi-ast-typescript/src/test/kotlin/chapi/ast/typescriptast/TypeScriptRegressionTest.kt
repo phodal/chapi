@@ -134,4 +134,15 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
         val code2 = """export type Query = Array<Array<Array<Maybe<Number>>>>"""
         TypeScriptAnalyser().analysis(code2, "index.tsx")
     }
+
+    @Test
+    fun nested_type2() {
+        val code = """
+export type CaseQuery = (
+  { user?: Maybe<Array<Maybe<(
+    UserQuery
+  )>>> }
+);"""
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
 }

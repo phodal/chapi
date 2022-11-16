@@ -542,10 +542,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         var parameters: Array<CodeProperty> = arrayOf()
         if (arrowFuncCtx.identifierOrKeyWord() != null) {
-            val parameter = CodeProperty(
+            parameters += CodeProperty(
                 TypeValue = arrowFuncCtx.identifierOrKeyWord().text, TypeType = "any"
             )
-            parameters += parameter
         }
 
         return parameters
@@ -782,7 +781,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     private fun parseExpressionSequence(ctx: TypeScriptParser.ExpressionSequenceContext) {
-        for (singleExpressionContext in ctx.singleExpression()) {
+        ctx.singleExpression().forEach { singleExpressionContext ->
             parseSingleExpression(singleExpressionContext)
         }
     }

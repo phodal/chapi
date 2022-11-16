@@ -725,14 +725,14 @@ objectLiteral
 
 // MODIFIED
 propertyAssignment
-    : propertyName (':' |'=') singleExpression                # PropertyExpressionAssignment
-    | '[' singleExpression ']' ':' singleExpression           # ComputedPropertyExpressionAssignment
-    | getAccessor                                             # PropertyGetter
-    | setAccessor                                             # PropertySetter
-    | generatorMethod                                         # MethodProperty
-    | identifierOrKeyWord                                     # PropertyShorthand
-    | defaultKeyWord                                          # PropertyShorthand
-    | restParameter                                           # RestParameterInObject
+    : propertyName '?'? (':' |'=') singleExpression            # PropertyExpressionAssignment
+    | '[' singleExpression ']' '?'?  ':' singleExpression      # ComputedPropertyExpressionAssignment
+    | getAccessor                                              # PropertyGetter
+    | setAccessor                                              # PropertySetter
+    | generatorMethod                                          # MethodProperty
+    | identifierOrKeyWord                                      # PropertyShorthand
+    | defaultKeyWord                                           # PropertyShorthand
+    | restParameter                                            # RestParameterInObject
     ;
 
 getAccessor
