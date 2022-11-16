@@ -871,43 +871,41 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         when (val singleExprCtx = ctx.singleExpression()) {
             is TypeScriptParser.NewExpressionContext -> {
                 when (val newSingleExpr = singleExprCtx.singleExpression()) {
+                    // todo: legacy expression, remove
                     is IdentifierExpressionContext -> {
-                        val identExprCtx = newSingleExpr as IdentifierExpressionContext
-                        val varType = identExprCtx.identifierName().text
-
-                        localVars[varName] = varType
+                        localVars[varName] = newSingleExpr.identifierName().text
                     }
-                }
-            }
+                    is TypeScriptParser.ArgumentsExpressionContext -> {
+                        localVars[varName] = newSingleExpr.singleExpression().text
+                    }
 
-            is IdentifierExpressionContext -> {
-                when (singleExprCtx.identifierName().text) {
+
+                    is IdentifierExpressionContext -> {
+                        when (newSingleExpr.identifierName().text) {
 //                        "await" -> {
 //                            parseSingleExpression(singleExprCtx.singleExpression())
 //                        }
 //                        "Number" -> {
 //                            parseSingleExpression(singleExprCtx.singleExpression())
 //                        }
+                            else -> {
+                                println("IdentifierExpressionContext ->  ${newSingleExpr.text}")
+                            }
+                        }
+                    }
+
+                    is TypeScriptParser.AwaitExpressionContext -> {
+                        parseSingleExpression(newSingleExpr.singleExpression())
+                    }
+
+                    is ParenthesizedExpressionContext -> {
+                        parseParenthesizedExpression(newSingleExpr)
+                    }
+
                     else -> {
-                        println("IdentifierExpressionContext ->  ${singleExprCtx.text}")
+//                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
                     }
                 }
-            }
-
-            is TypeScriptParser.AwaitExpressionContext -> {
-                parseSingleExpression(singleExprCtx.singleExpression())
-            }
-
-            is TypeScriptParser.ArgumentsExpressionContext -> {
-                argumentsExpressionToCall(singleExprCtx, varName)
-            }
-
-            is ParenthesizedExpressionContext -> {
-                parseParenthesizedExpression(singleExprCtx)
-            }
-
-            else -> {
-//                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
             }
         }
     }
