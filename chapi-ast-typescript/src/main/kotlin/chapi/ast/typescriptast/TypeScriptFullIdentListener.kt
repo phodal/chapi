@@ -48,32 +48,32 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         // such as: `export const baseURL = '/api'`
         // todo: add support for not only const?
-        if (isExport) {
-            var modifier = ""
-            ctx.children.forEach { child ->
-                when (child) {
-                    is TypeScriptParser.VarModifierContext -> {
-                        modifier = child.text
-                    }
-                    is TypeScriptParser.VariableDeclarationListContext -> {
-                        val fields = variableToFields(child, arrayOf(modifier))
+        if (!isExport) return
 
-                        if (fields.isNotEmpty()) {
-                            defaultNode.Exports += CodeExport(
-                                Name = fields[0].TypeKey,
-                                Type = DataStructType.Variable,
-                                SourceFile = codeContainer.FullName
-                            )
+        var modifier = ""
+        ctx.children.forEach { child ->
+            when (child) {
+                is TypeScriptParser.VarModifierContext -> {
+                    modifier = child.text
+                }
+                is TypeScriptParser.VariableDeclarationListContext -> {
+                    val fields = variableToFields(child, arrayOf(modifier))
 
-                            defaultNode.Fields += fields
-                        }
-                    }
-                    is TerminalNodeImpl -> {
+                    if (fields.isNotEmpty()) {
+                        defaultNode.Exports += CodeExport(
+                            Name = fields[0].TypeKey,
+                            Type = DataStructType.Variable,
+                            SourceFile = codeContainer.FullName
+                        )
 
+                        defaultNode.Fields += fields
                     }
-                    else -> {
+                }
+                is TerminalNodeImpl -> {
+
+                }
+                else -> {
 //                        println("enterVariableStatement: ${it::class.java.simpleName} === ${it.text}")
-                    }
                 }
             }
         }
@@ -83,44 +83,49 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         varDecl: TypeScriptParser.VariableDeclarationListContext,
         modifiers: Array<String> = arrayOf()
     ): Array<CodeField> {
-        var fields = arrayOf<CodeField>()
-        varDecl.variableDeclaration().forEach { it ->
-            if (it.Assign() != null) {
-                val key = it.getChild(0).text
-                val singleExpression = it.singleExpression()
+        return varDecl.variableDeclaration()
+            .filter { it.Assign() != null }
+            .map { decl ->
+                variableToField(decl, modifiers)
+            }.toTypedArray()
+    }
 
-                val lastExpr = singleExpression.last()
-                val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
+    private fun variableToField(
+        it: TypeScriptParser.VariableDeclarationContext,
+        modifiers: Array<String>
+    ): CodeField {
+        val key = it.getChild(0).text
+        val singleExpression = it.singleExpression()
 
-                when (lastExpr) {
-                    is TypeScriptParser.LiteralExpressionContext -> {
-                        if (lastExpr.literal().StringLiteral() != null) {
-                            field.TypeValue = unQuote(lastExpr.text)
-                            field.TypeType = "String"
-                        }
-                    }
-                    is  IdentifierExpressionContext -> {
-                        singleExprToFieldCall(field, lastExpr.singleExpression(), lastExpr.identifierName().text)
-                    }
-                    is TypeScriptParser.YieldExpressionContext -> {
-                        if (lastExpr.yieldStatement().expressionSequence() != null) {
-                            val singeExprs = lastExpr.yieldStatement().expressionSequence().singleExpression()
-                            singeExprs.forEach { expr ->
-                                singleExprToFieldCall(field, expr, expr.text)
-                            }
-                        }
-                    }
-                    else -> {
-//                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
+        val lastExpr = singleExpression.last()
+        val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
+
+        when (lastExpr) {
+            is TypeScriptParser.LiteralExpressionContext -> {
+                if (lastExpr.literal().StringLiteral() != null) {
+                    field.TypeValue = unQuote(lastExpr.text)
+                    field.TypeType = "String"
+                }
+            }
+
+            is IdentifierExpressionContext -> {
+                singleExprToFieldCall(field, lastExpr.singleExpression(), lastExpr.identifierName().text)
+            }
+
+            is TypeScriptParser.YieldExpressionContext -> {
+                if (lastExpr.yieldStatement().expressionSequence() != null) {
+                    val singeExprs = lastExpr.yieldStatement().expressionSequence().singleExpression()
+                    singeExprs.forEach { expr ->
+                        singleExprToFieldCall(field, expr, expr.text)
                     }
                 }
+            }
 
-
-                fields += field
+            else -> {
+    //                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
             }
         }
-
-        return fields
+        return field
     }
 
     private fun singleExprToFieldCall(
@@ -583,7 +588,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private fun parseStatement(context: TypeScriptParser.SourceElementContext) {
         when (val child = context.statement()?.getChild(0)) {
             is TypeScriptParser.ReturnStatementContext -> {
-                hasHtmlElement = false;
+                hasHtmlElement = false
 
                 if (child.expressionSequence() != null) {
                     for (singleExpressionContext in child.expressionSequence()
