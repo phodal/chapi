@@ -91,16 +91,16 @@ unionOrIntersectionOrPrimaryType
     ;
 
 primaryType
-    : '(' type_ ')'                                 #ParenthesizedPrimType
-    | predefinedType                                #PredefinedPrimType
-    | typeReference                                 #ReferencePrimType
-    | objectType                                    #ObjectPrimType
-    | primaryType {notLineTerminator()}? '[' ']'    #ArrayPrimType
-    | '[' tupleElementTypes ']'                     #TuplePrimType
-    | typeQuery                                     #QueryPrimType
-    | This                                          #ThisPrimType
-    | This Is primaryType                           #RedefinitionOfThisType
-    | typeReference Is primaryType                  #RedefinitionOfType
+    : '(' type_ ')'                                                  #ParenthesizedPrimType
+    | predefinedType                                                 #PredefinedPrimType
+    | typeReference                                                  #ReferencePrimType
+    | objectType                                                     #ObjectPrimType
+    | primaryType {notLineTerminator()}? '[' ']'                     #ArrayPrimType
+    | '[' tupleElementTypes ']'                                      #TuplePrimType
+    | typeQuery                                                      #QueryPrimType
+    | This                                                           #ThisPrimType
+    | This Is primaryType                                            #RedefinitionOfThisType
+    | typeReference Is primaryType                                   #RedefinitionOfType
     | primaryType {notLineTerminator()}? '[' singleExpression ']'    #SingleExprPrimType
     ;
 
