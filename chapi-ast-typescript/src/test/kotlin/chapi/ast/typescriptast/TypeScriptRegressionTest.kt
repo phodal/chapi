@@ -1,5 +1,7 @@
 package chapi.ast.typescriptast
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 
 class TypeScriptRegressionTest {
@@ -106,6 +108,13 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
         val code2 =
             """export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };"""
         TypeScriptAnalyser().analysis(code2, "index.tsx")
+
+        val code3 = """export type Maybe<T> = Maybe<Array<Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'name'>
+        )>>>"""
+
+        TypeScriptAnalyser().analysis(code3, "index.tsx")
     }
 
     @Test
@@ -121,15 +130,6 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
     fun numeric_separators() {
         val code = """if (+value > 1_000_000_000) {
     }"""
-
-        TypeScriptAnalyser().analysis(code, "index.tsx")
-    }
-
-    @Test
-    fun annotated_in_constructor() {
-        val code = """export class DemoComponent implements OnInit {
-    constructor(@Optional() @Inject(GROUP) private group: Component) {}
-}"""
 
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
