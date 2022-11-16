@@ -1,7 +1,5 @@
 package chapi.ast.typescriptast
 
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 
 class TypeScriptRegressionTest {
@@ -108,13 +106,6 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
         val code2 =
             """export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };"""
         TypeScriptAnalyser().analysis(code2, "index.tsx")
-
-        val code3 = """export type Maybe<T> = Maybe<Array<Maybe<(
-          { __typename?: 'User' }
-          & Pick<User, 'name'>
-        )>>>"""
-
-        TypeScriptAnalyser().analysis(code3, "index.tsx")
     }
 
     @Test
@@ -132,5 +123,15 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
     }"""
 
         TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
+    fun nested_type() {
+        val code = """export type Query = Array<Array<Maybe<Number>>>"""
+
+        TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        val code2 = """export type Query = Array<Array<Array<Maybe<Number>>>>"""
+        TypeScriptAnalyser().analysis(code2, "index.tsx")
     }
 }

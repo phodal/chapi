@@ -139,11 +139,11 @@ nestedTypeGeneric
 // TODO: Fix recursive
 //
 typeGeneric
-    : '<' typeArgumentList '>'
+    : '<' typeArgumentList typeGeneric? '>'
     ;
 
 typeIncludeGeneric
-    :'<' typeArgumentList '<' typeArgumentList ('>' bindingPattern '>' | '>>')
+    :'<' typeArgumentList '<' typeArgumentList ('>' bindingPattern '>' | '>>' | '>>>' | '>'*)
     ;
 
 typeName
