@@ -78,12 +78,10 @@ typeArgumentList
 
 type_
     : (Keyof | Typeof)* unionOrIntersectionOrPrimaryType
-    | unionOrIntersectionOrPrimaryType
     | functionType
     | constructorType
     | typeGeneric
     | '|'? propertyName ('|' (propertyName))*
-    | Unknown
     ;
 
 unionOrIntersectionOrPrimaryType
@@ -736,8 +734,9 @@ propertyName
     | StringLiteral
     | numericLiteral
     | keyword
-    | Default   // cannot be in other statement, only accept in object
+    | Default         // cannot be in other statement, only accept in object
     | predefinedType
+    | Unknown
     ;
 
 arguments
