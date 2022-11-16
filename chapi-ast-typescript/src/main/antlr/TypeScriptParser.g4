@@ -65,7 +65,7 @@ typeParameter
     ;
 
 constraint
-    : 'extends' type_
+    : 'extends' typeRef
     ;
 
 typeArguments
@@ -73,10 +73,10 @@ typeArguments
     ;
 
 typeArgumentList
-    : type_ (',' type_)*
+    : typeRef (',' typeRef)*
     ;
 
-type_
+typeRef
     : (Keyof | Typeof)* unionOrIntersectionOrPrimaryType
     | functionType
     | constructorType
@@ -91,7 +91,7 @@ unionOrIntersectionOrPrimaryType
     ;
 
 primaryType
-    : '(' type_ ')'                                                  #ParenthesizedPrimType
+    : '(' typeRef ')'                                                #ParenthesizedPrimType
     | predefinedType                                                 #PredefinedPrimType
     | typeReference                                                  #ReferencePrimType
     | objectType                                                     #ObjectPrimType
@@ -162,21 +162,21 @@ typeMember
     | callSignature
     | constructSignature
     | indexSignature
-    | methodSignature ('=>' type_)?
+    | methodSignature ('=>' typeRef)?
     | enumSignature
     | '[' typeReference In (Keyof | Typeof)* typeReference ']' '?'? typeAnnotation
     ;
 
 tupleElementTypes
-    : type_ (',' type_)*
+    : typeRef (',' typeRef)*
     ;
 
 functionType
-    : typeParameters? '(' parameterList? ')' '=>' type_
+    : typeParameters? '(' parameterList? ')' '=>' typeRef
     ;
 
 constructorType
-    : 'new' typeParameters? '(' parameterList? ')' '=>' type_
+    : 'new' typeParameters? '(' parameterList? ')' '=>' typeRef
     ;
 
 typeQuery
@@ -189,11 +189,11 @@ typeQueryExpression
     ;
 
 propertySignature
-    : ReadOnly? propertyName '?'? typeAnnotation? ('=>' type_)?
+    : ReadOnly? propertyName '?'? typeAnnotation? ('=>' typeRef)?
     ;
 
 typeAnnotation
-    : ':' type_
+    : ':' typeRef
     ;
 
 callSignature
@@ -242,7 +242,7 @@ indexSignature
     ;
 
 enumSignature
-    : identifierOrKeyWord '?'? ':' '|'? type_ ('|' type_)*
+    : identifierOrKeyWord '?'? ':' '|'? typeRef ('|' typeRef)*
     ;
 
 methodSignature
@@ -250,7 +250,7 @@ methodSignature
     ;
 
 typeAliasDeclaration
-    : 'type' Identifier typeParameters? '=' type_ SemiColon?
+    : 'type' Identifier typeParameters? '=' typeRef SemiColon?
     ;
 
 constructorDeclaration

@@ -40,12 +40,12 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         return position
     }
 
-    fun buildTypeAnnotation(typeAnnotation: TypeScriptParser.TypeAnnotationContext?): String? {
+    fun buildTypeAnnotation(typeAnnotation: TypeScriptParser.TypeAnnotationContext?): String {
         if (typeAnnotation == null) {
             return ""
         }
 
-        val typeContext = typeAnnotation.type_() ?: return ""
+        val typeContext = typeAnnotation.typeRef() ?: return ""
         var type = typeContext.text
 
         if (typeContext.children == null) {
@@ -65,7 +65,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         var typeStr = typ
         when (val childPrimaryCtx = typeContext.getChild(0)) {
             is TypeScriptParser.ParenthesizedPrimTypeContext -> {
-                typeStr = childPrimaryCtx.type_().text
+                typeStr = childPrimaryCtx.typeRef().text
             }
         }
         return typeStr

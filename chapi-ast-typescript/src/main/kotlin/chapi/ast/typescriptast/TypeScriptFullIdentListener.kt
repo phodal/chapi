@@ -320,10 +320,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     private fun buildInterfacePropertySignature(signCtx: TypeScriptParser.PropertySignatureContext) {
-        val typeType = buildTypeAnnotation(signCtx.typeAnnotation())!!
+        val typeType = buildTypeAnnotation(signCtx.typeAnnotation())
         val typeValue = signCtx.propertyName().text
 
-        val isArrowFunc = signCtx.type_() != null
+        val isArrowFunc = signCtx.typeRef() != null
         if (isArrowFunc) {
             val codeFunction = CodeFunction(
                 Name = typeValue
@@ -333,7 +333,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             )
 
             val returnType = CodeProperty(
-                TypeType = signCtx.type_().text, TypeValue = ""
+                TypeType = signCtx.typeRef().text, TypeValue = ""
             )
 
             codeFunction.Parameters += param
