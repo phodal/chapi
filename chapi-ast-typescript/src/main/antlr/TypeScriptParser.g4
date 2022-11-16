@@ -169,14 +169,6 @@ typeMember
     | '[' typeReference In (Keyof | Typeof)* typeReference ']' '?'? typeAnnotation
     ;
 
-arrayType
-    : primaryType {notLineTerminator()}? '[' ']'
-    ;
-
-tupleType
-    : '[' tupleElementTypes ']'
-    ;
-
 tupleElementTypes
     : type_ (',' type_)*
     ;
