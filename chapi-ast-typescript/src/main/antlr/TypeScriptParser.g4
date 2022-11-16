@@ -308,9 +308,9 @@ decoratorMemberExpression
     ;
 
 decoratorCallExpression
-    : decoratorMemberExpression arguments;
-
-
+    : decoratorMemberExpression arguments
+    | objectLiteral
+    ;
 
 // Interface
 
@@ -341,7 +341,13 @@ interfaceMember
     | getAccessor
     | setAccessor
     | methodSignature
+    | enumSignature
     | propertySignature
+    | '[' typeRef In (Keyof | Typeof)* typeRef ']' '?'? typeAnnotation
+    ;
+
+enumSignature
+    : identifierOrKeyWord '?'? ':' '|'? typeRef ('|' typeRef)*
     ;
 
 constructSignature
@@ -480,7 +486,7 @@ initializer
 
 
 parameterBlock
-    : '(' formalParameterList? ')'
+    : '(' (This typeAnnotation? ',')?  ( formalParameterList ','?)? ')'
     ;
 
 
@@ -492,14 +498,14 @@ formalParameterArg
     : decoratorList? accessibilityModifier? ReadOnly? identifierOrKeyWord '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
     | lastFormalParameterArg
     // ([key, value]: [string, string[]])
-    | arrayLiteral (':' formalParameterList)?                                                                // ECMAScript 6: Parameter Context Matching
-    | objectLiteral (':' formalParameterList)?                                                               // ECMAScript 6: Parameter Context Matching
+//    | arrayLiteral (':' formalParameterList)?                                                                // ECMAScript 6: Parameter Context Matching
+//    | objectLiteral (':' formalParameterList)?                                                               // ECMAScript 6: Parameter Context Matching
     // `addThing({ payload }, { call }){}`
-    | objectLiteral (',' objectLiteral)*                                                                     // ECMAScript 6: Parameter Context Matching
+//    | objectLiteral (',' objectLiteral)*                                                                     // ECMAScript 6: Parameter Context Matching
     ;
 
 lastFormalParameterArg                        // ECMAScript 6: Rest Parameter
-    : Ellipsis Identifier
+    : Ellipsis identifierOrPattern typeAnnotation?
     ;
 
 parameterList
@@ -561,6 +567,7 @@ accessibilityModifier
     : Public
     | Private
     | Protected
+    | ReadOnly
     ;
 
 identifierOrPattern
@@ -610,6 +617,7 @@ propertyAssignment
     : propertyName (':' identifierOrKeyWord | bindingPattern)? ('=' singleExpression)?  # PropertyExpressionAssignment
     | propertyName '?'? (':' |'=') singleExpression               # PropertyExpressionAssignment
     | '[' singleExpression ']' '?'?  ':' singleExpression         # ComputedPropertyExpressionAssignment
+    | propertyName '?'? (':' |'=') '[' singleExpression ']'       # PropertyExpressionAssignment
     | getAccessor                                                 # PropertyGetter
     | setAccessor                                                 # PropertySetter
     | generatorMethod                                             # MethodProperty
