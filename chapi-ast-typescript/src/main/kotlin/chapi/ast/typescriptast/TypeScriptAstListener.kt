@@ -52,24 +52,20 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
             return type
         }
 
-        when (typeContext.getChild(0)::class.java.simpleName) {
-            "PrimaryContext" -> {
-                type = handleTypeAnnotationPrimary(typeContext, type)
+        when (val primaryCtx = typeContext.getChild(0)) {
+            is TypeScriptParser.PrimaryContext -> {
+                type = handleTypeAnnotationPrimary(primaryCtx, type)
             }
         }
 
         return type
     }
 
-    private fun handleTypeAnnotationPrimary(typeContext: TypeScriptParser.Type_Context, typ: String?): String? {
+    private fun handleTypeAnnotationPrimary(typeContext: TypeScriptParser.PrimaryContext, typ: String?): String? {
         var typeStr = typ
-        val primaryContext = typeContext.getChild(0) as TypeScriptParser.PrimaryContext
-        val childPrimaryCtx = primaryContext.getChild(0)
-
-        when (childPrimaryCtx::class.java.simpleName) {
-            "ParenthesizedPrimTypeContext" -> {
-                val parentCtx = childPrimaryCtx as TypeScriptParser.ParenthesizedPrimTypeContext
-                typeStr = parentCtx.type_().text
+        when (val childPrimaryCtx = typeContext.getChild(0)) {
+            is TypeScriptParser.ParenthesizedPrimTypeContext -> {
+                typeStr = childPrimaryCtx.type_().text
             }
         }
         return typeStr
@@ -79,13 +75,14 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         var parameters: Array<CodeProperty> = arrayOf()
 
         val type = paramListCtx!!.getChild(0)
-        when (type.parent::class.simpleName) {
-            "OnlyRestParameterContext" -> {
+        when (type.parent) {
+            is TypeScriptParser.OnlyRestParameterContext -> {
                 val restCtx = paramListCtx as TypeScriptParser.OnlyRestParameterContext
                 val restParameters = this.buildRestParameter(restCtx.restParameter())
                 parameters += restParameters
             }
-            "NormalParameterContext" -> {
+
+            is TypeScriptParser.NormalParameterContext -> {
                 val normalParam = paramListCtx as TypeScriptParser.NormalParameterContext
 
                 normalParam.parameter().forEach {
