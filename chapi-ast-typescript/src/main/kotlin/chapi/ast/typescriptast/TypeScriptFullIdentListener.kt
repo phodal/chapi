@@ -361,10 +361,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         codeImport.AsName += nameContext.identifierName()[1].text
                     }
                 }
-                if (nameContext.Of() != null) {
-                    codeImport.UsageName += nameContext.Of().text
-                    codeImport.AsName += nameContext.Of().text
-                }
+//                if (nameContext.Of() != null) {
+//                    codeImport.UsageName += nameContext.Of().text
+//                    codeImport.AsName += nameContext.Of().text
+//                }
             }
         }
 

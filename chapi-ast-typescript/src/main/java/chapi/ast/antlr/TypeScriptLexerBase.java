@@ -57,8 +57,19 @@ public abstract class TypeScriptLexerBase extends Lexer
         return useStrictCurrent;
     }
 
+    /**
+     * @return {@code true} iff the cursor is inside a template string
+     * @implNote method name starts with upper case latter: see {@link #TypeScriptLexerBase}
+     */
     public boolean IsInTemplateString() {
         return this.templateDepth > 0;
+    }
+
+    /** Pops the current mode iff the cursor is inside a template string. */
+    public void popModeIfInTamplateString() {
+        if (IsInTemplateString()) {
+            popMode();
+        }
     }
 
     /**

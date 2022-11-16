@@ -16,9 +16,9 @@ OpenBracket:                    '[';
 CloseBracket:                   ']';
 OpenParen:                      '(';
 CloseParen:                     ')';
-OpenBrace:                      '{' {this.ProcessOpenBrace();};
-TemplateCloseBrace:             {this.IsInTemplateString()}? '}' -> popMode;
-CloseBrace:                     '}' {this.ProcessCloseBrace();};
+OpenBrace:                      '{';
+CloseBrace:                     '}' {this.popModeIfInTamplateString();};
+//TemplateCloseBrace:             {this.IsInTemplateString()}? '}' -> popMode;
 SemiColon:                      ';';
 Comma:                          ',';
 Assign:                         '=';
@@ -38,9 +38,9 @@ Modulus:                        '%';
 Power:                          '**';
 NullCoalesce:                   '??';
 Hashtag:                        '#';
-RightShiftArithmetic:           '>>';
+//RightShiftArithmetic:           '>''>'; // split up to allow nested generics
 LeftShiftArithmetic:            '<<';
-RightShiftLogical:              '>>>';
+//RightShiftLogical:              '>''>''>'; // split up to allow nested generics
 LessThan:                       '<';
 MoreThan:                       '>';
 LessThanEquals:                 '<=';
@@ -100,14 +100,18 @@ BigDecimalIntegerLiteral:       DecimalIntegerLiteral 'n';
 
 /// Keywords
 
+/// Keywords
+
 Break:                          'break';
 Do:                             'do';
 Instanceof:                     'instanceof';
 Typeof:                         'typeof';
+Unique:                         'unique';
 Keyof:                          'keyof';
 Case:                           'case';
 Else:                           'else';
 New:                            'new';
+Target:                         'target';
 Var:                            'var';
 Catch:                          'catch';
 Finally:                        'finally';
@@ -118,7 +122,7 @@ For:                            'for';
 Switch:                         'switch';
 While:                          'while';
 Debugger:                       'debugger';
-Function_:                       'function';
+Function:                       'function';
 This:                           'this';
 With:                           'with';
 Default:                        'default';
@@ -131,8 +135,6 @@ As:                             'as';
 From:                           'from';
 ReadOnly:                       'readonly';
 Async:                          'async';
-
-Of:                             'of';
 Await:                          'await';
 
 /// Future Reserved Words
@@ -196,7 +198,7 @@ Identifier:                     IdentifierStart IdentifierPart*;
 
 /// String Literals
 StringLiteral:                 ('"' DoubleStringCharacter* '"'
-             |                  '\'' SingleStringCharacter* '\'') {this.ProcessStringLiteral();}
+             |                  '\'' SingleStringCharacter* '\'')
              ;
 
 BackTick:                       '`' {this.IncreaseTemplateDepth();} -> pushMode(TEMPLATE);

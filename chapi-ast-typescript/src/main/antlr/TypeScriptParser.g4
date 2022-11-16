@@ -137,7 +137,7 @@ typeGeneric
     ;
 
 typeIncludeGeneric
-    :'<' typeArgumentList '<' typeArgumentList ('>' bindingPattern '>' | '>>' | '>>>' | '>'*)
+    :'<' typeArgumentList '<' typeArgumentList ('>' bindingPattern '>' | '>'*)
     ;
 
 typeName
@@ -398,7 +398,7 @@ importDefault
 aliasName
     : identifierName (As identifierName)?
     // for import { of } from 'rxjs';
-    | Of
+//    | Of
     ;
 
 importNamespace
@@ -460,7 +460,7 @@ iterationStatement
           statement                                                                                             # ForVarStatement
     | For '(' singleExpression (In | Identifier{this.p("of")}?) expressionSequence ')' statement                # ForInStatement
     | For '(' varModifier variableDeclaration (In | Identifier{this.p("of")}?) expressionSequence ')' statement # ForVarInStatement
-    | For Await? '(' (singleExpression | variableDeclarationList) 'of' expressionSequence ')' statement         # ForOfStatement
+//    | For Await? '(' (singleExpression | variableDeclarationList) 'of' expressionSequence ')' statement         # ForOfStatement
     ;
 
 varModifier
@@ -596,7 +596,7 @@ debuggerStatement
     ;
 
 functionDeclaration
-    : Default? Async? Function_ Identifier callSignature ( ('{' functionBody '}') | SemiColon)
+    : Default? Async? Function Identifier callSignature ( ('{' functionBody '}') | SemiColon)
     ;
 
 //Ovveride ECMA
@@ -648,7 +648,7 @@ generatorMethod
     ;
 
 generatorFunctionDeclaration
-    : Function_ '*' Identifier? '(' formalParameterList? ')' '{' functionBody '}'
+    : Function '*' Identifier? '(' formalParameterList? ')' '{' functionBody '}'
     ;
 
 generatorBlock
@@ -756,7 +756,7 @@ expressionSequence
     ;
 
 functionExpressionDeclaration
-    : Function_ Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
+    : Function Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
     ;
 
 jsxArrowFunction
@@ -799,7 +799,8 @@ singleExpression
     | <assoc=right> singleExpression '**' singleExpression                   # PowerExpression
     | singleExpression ('*' | '/' | '%') singleExpression                    # MultiplicativeExpression
     | singleExpression ('+' | '-') singleExpression                          # AdditiveExpression
-    | singleExpression ('<<' | '>>' | '>>>') singleExpression                # BitShiftExpression
+//    | singleExpression ('<<' | '>>' | '>>>') singleExpression                # BitShiftExpression
+    | singleExpression ('<<' | '>''>' | '>''>''>') singleExpression          # BitShiftExpression
     | singleExpression ('<' | '>' | '<=' | '>=') singleExpression            # RelationalExpression
     | singleExpression Instanceof singleExpression                           # InstanceofExpression
     | singleExpression In singleExpression                                   # InExpression
@@ -824,7 +825,7 @@ singleExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
     | objectLiteral                                                          # ObjectLiteralExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
-    | Of '(' expressionSequence ')'                                          # OfParenthesizedExpression
+//    | Of '(' expressionSequence ')'                                          # OfParenthesizedExpression
     | typeArguments expressionSequence?                                      # GenericTypes
     | singleExpression As asExpression                                       # CastAsExpression
     | htmlElements                                                           # HtmlElementExpression
@@ -939,7 +940,7 @@ keyword
     | Switch
     | While
     | Debugger
-    | Function_
+    | Function
     | This
     | Is
     | With
