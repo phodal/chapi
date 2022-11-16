@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    antlr("org.antlr:antlr4:4.9.3")
+    antlr("org.antlr:antlr4:4.11.1")
 
     // project deps
     implementation(project(":chapi-domain"))
@@ -32,8 +32,8 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
     testRuntimeOnly("org.junit.platform:junit-platform-console:1.6.0")
 
-    implementation("org.antlr:antlr4:4.9.3")
-    implementation("org.antlr:antlr4-runtime:4.9.3")
+    implementation("org.antlr:antlr4:4.11.1")
+    implementation("org.antlr:antlr4-runtime:4.11.1")
 }
 
 sourceSets.main {
