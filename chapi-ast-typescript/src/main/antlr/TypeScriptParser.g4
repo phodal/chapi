@@ -483,66 +483,6 @@ returnStatement
 //    | Return '{' statement '}' eos
     ;
 
-htmlElements
-    : htmlElement+
-    ;
-
-htmlElement
-    : '<' htmlTagStartName htmlAttribute* '>' htmlContent '<''/' htmlTagClosingName '>'
-    // for React
-    | '<' '>' htmlContent '<''/' '>'
-    | '<' htmlTagName htmlAttribute* htmlContent '/''>'
-    | '<' htmlTagName htmlAttribute* '/''>'
-    | '<' htmlTagName htmlAttribute* '>'
-    ;
-
-htmlContent
-    : htmlChardata? ((htmlElement) htmlChardata?)*
-    | htmlChardata? ((htmlElement | objectExpressionSequence) htmlChardata?)*
-    ;
-
-htmlTagStartName
-    : htmlTagName {this.pushHtmlTagName($htmlTagName.text);}
-    ;
-
-htmlTagClosingName
-    : htmlTagName {this.popHtmlTagName($htmlTagName.text)}?
-    ;
-
-htmlTagName
-    : TagName
-    | keyword
-    | Identifier
-    | Identifier ('.' Identifier)*   // bug fix: for <Form.Item></Form.Item>
-    ;
-
-htmlAttribute
-    : htmlAttributeName '=' htmlAttributeValue
-    | htmlAttributeName
-    | objectLiteral
-    ;
-
-htmlAttributeName
-    : TagName
-    | identifierOrKeyWord
-    | Identifier ('-' Identifier)*		// 2020/10/28 bugfix: '-' is recognized as MINUS and TagName is splited by '-'.
-    ;
-
-htmlChardata
-    : ~('<'|'{')+
-    ;
-
-htmlAttributeValue
-    : AttributeValue
-    | StringLiteral
-    | objectExpressionSequence
-    ;
-
-objectExpressionSequence
-    : '{' expressionSequence '}'
-    ;
-
-
 yieldStatement
     : Yield ({this.notLineTerminator()}? expressionSequence)? eos
     ;
@@ -994,4 +934,64 @@ eos
     | EOF
     | {this.lineTerminatorAhead()}?
     | {this.closeBrace()}?
+    ;
+
+
+htmlElements
+    : htmlElement+
+    ;
+
+htmlElement
+    : '<' htmlTagStartName htmlAttribute* '>' htmlContent '<''/' htmlTagClosingName '>'
+    // for React
+    | '<' '>' htmlContent '<''/' '>'
+    | '<' htmlTagName htmlAttribute* htmlContent '/''>'
+    | '<' htmlTagName htmlAttribute* '/''>'
+    | '<' htmlTagName htmlAttribute* '>'
+    ;
+
+htmlContent
+    : htmlChardata? ((htmlElement) htmlChardata?)*
+    | htmlChardata? ((htmlElement | objectExpressionSequence) htmlChardata?)*
+    ;
+
+htmlTagStartName
+    : htmlTagName {this.pushHtmlTagName($htmlTagName.text);}
+    ;
+
+htmlTagClosingName
+    : htmlTagName {this.popHtmlTagName($htmlTagName.text)}?
+    ;
+
+htmlTagName
+    : TagName
+    | keyword
+    | Identifier
+    | Identifier ('.' Identifier)*   // bug fix: for <Form.Item></Form.Item>
+    ;
+
+htmlAttribute
+    : htmlAttributeName '=' htmlAttributeValue
+    | htmlAttributeName
+    | objectLiteral
+    ;
+
+htmlAttributeName
+    : TagName
+    | identifierOrKeyWord
+    | Identifier ('-' Identifier)*		// 2020/10/28 bugfix: '-' is recognized as MINUS and TagName is splited by '-'.
+    ;
+
+htmlChardata
+    : ~('<'|'{')+
+    ;
+
+htmlAttributeValue
+    : AttributeValue
+    | StringLiteral
+    | objectExpressionSequence
+    ;
+
+objectExpressionSequence
+    : '{' expressionSequence '}'
     ;
