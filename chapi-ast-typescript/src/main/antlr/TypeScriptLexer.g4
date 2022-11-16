@@ -1,15 +1,47 @@
-lexer grammar TypeScriptLexer;
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 by Bart Kiers (original author) and Alexandre Vitorelli (contributor -> ported to CSharp)
+ * Copyright (c) 2017 by Ivan Kochurkin (Positive Technologies):
+    added ECMAScript 6 support, cleared and transformed to the universal grammar.
+ * Copyright (c) 2018 by Juan Alvarez (contributor -> ported to Go)
+ * Copyright (c) 2019 by Andrii Artiushok (contributor -> added TypeScript support)
+ * Copyright (c) 2022 by NumberFour AG (contributor -> overall restructuring and d.ts support)
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-channels { ERROR }
+lexer grammar TypeScriptLexer;
 
 options {
     superClass=TypeScriptLexerBase;
 }
 
 
-JsxComment:                     '{/*' .*? '*/}'           -> channel(HIDDEN);
-MultiLineComment:               '/*' .*? '*/'             -> channel(HIDDEN);
-SingleLineComment:              '//' ~[\r\n\u2028\u2029]* -> channel(HIDDEN);
+channels { ERROR, JSDOC }
+
+JSDocComment:                   '/**' .*? '*/'             -> channel(JSDOC);
+MultiLineComment:               '/*'  .*? '*/'             -> channel(HIDDEN);
+SingleLineComment:              '//' ~[\r\n\u2028\u2029]*  -> channel(HIDDEN);
 RegularExpressionLiteral:       '/' RegularExpressionFirstChar RegularExpressionChar* {this.IsRegexPossible()}? '/' IdentifierPart*;
 
 OpenBracket:                    '[';
@@ -18,7 +50,6 @@ OpenParen:                      '(';
 CloseParen:                     ')';
 OpenBrace:                      '{';
 CloseBrace:                     '}' {this.popModeIfInTamplateString();};
-//TemplateCloseBrace:             {this.IsInTemplateString()}? '}' -> popMode;
 SemiColon:                      ';';
 Comma:                          ',';
 Assign:                         '=';
@@ -35,9 +66,6 @@ Not:                            '!';
 Multiply:                       '*';
 Divide:                         '/';
 Modulus:                        '%';
-Power:                          '**';
-NullCoalesce:                   '??';
-Hashtag:                        '#';
 //RightShiftArithmetic:           '>''>'; // split up to allow nested generics
 LeftShiftArithmetic:            '<<';
 //RightShiftLogical:              '>''>''>'; // split up to allow nested generics
@@ -67,12 +95,17 @@ BitXorAssign:                   '^=';
 BitOrAssign:                    '|=';
 ARROW:                          '=>';
 
+Hashtag:                        '#';
 Lodash:                         '_'; // lodash
 Dollar:                         '$'; // jquery
 
 /// Null Literals
 
 NullLiteral:                    'null';
+
+/// Undefined Literals
+
+UndefinedLiteral:               'undefined';
 
 /// Boolean Literals
 
@@ -177,15 +210,22 @@ Set: 'set';
 
 Constructor: 'constructor';
 Namespace: 'namespace';
+Global: 'global';
 Require: 'require';
 Module: 'module';
 Declare: 'declare';
-Unknown: 'unknown';
-Undefined: 'undefined';
 
 Abstract: 'abstract';
 
 Is: 'is';
+
+Infer: 'infer';
+
+Never: 'never';
+
+Unknown: 'unknown';
+
+Asserts: 'asserts';
 
 //
 // Ext.2 Additions to 1.8: Decorators
@@ -200,6 +240,7 @@ Identifier:                     IdentifierStart IdentifierPart*;
 StringLiteral:                 ('"' DoubleStringCharacter* '"'
              |                  '\'' SingleStringCharacter* '\'')
              ;
+
 
 BackTick:                       '`' {this.IncreaseTemplateDepth();} -> pushMode(TEMPLATE);
 
@@ -219,106 +260,6 @@ mode TEMPLATE;
 BackTickInside:                 '`' {this.DecreaseTemplateDepth();} -> type(BackTick), popMode;
 TemplateStringStartExpression:  '${' -> pushMode(DEFAULT_MODE);
 TemplateStringAtom:             ~[`];
-
-//
-// html tag declarations
-//
-mode TAG;
-
-TagOpen
-    : LessThan -> pushMode(TAG)
-    ;
-TagClose
-    : MoreThan -> popMode
-    ;
-
-TagSlashClose
-    : '/>' -> popMode
-    ;
-
-TagSlash
-    : Divide
-    ;
-
-TagName
-    : TagNameStartChar TagNameChar*
-    ;
-
-// an attribute value may have spaces b/t the '=' and the value
-AttributeValue
-    : [ ]* Attribute -> popMode
-    ;
-
-Attribute
-    : DoubleQuoteString
-    | SingleQuoteString
-    | AttributeChar
-    | HexChars
-    | DecChars
-    ;
-
-
-// Fragment rules
-fragment AttributeChar
-    : '-'
-    | '_'
-    | '.'
-    | '/'
-    | '+'
-    | ','
-    | '?'
-    | '='
-    | ':'
-    | ';'
-    | '#'
-    | [0-9a-zA-Z]
-    ;
-
-fragment AttributeChars
-    : AttributeChar+ ' '?
-    ;
-
-fragment HexChars
-    : '#' [0-9a-fA-F]+
-    ;
-
-fragment DecChars
-    : [0-9]+ '%'?
-    ;
-
-fragment DoubleQuoteString
-    : '"' ~[<"]* '"'
-    ;
-fragment SingleQuoteString
-    : '\'' ~[<']* '\''
-    ;
-
-fragment
-TagNameStartChar
-    :   [:a-zA-Z]
-    |   '\u2070'..'\u218F'
-    |   '\u2C00'..'\u2FEF'
-    |   '\u3001'..'\uD7FF'
-    |   '\uF900'..'\uFDCF'
-    |   '\uFDF0'..'\uFFFD'
-    ;
-
-fragment
-TagNameChar
-    : TagNameStartChar
-    | '-'
-    | '_'
-    | '.'
-    | Digit
-    |   '\u00B7'
-    |   '\u0300'..'\u036F'
-    |   '\u203F'..'\u2040'
-    ;
-
-fragment
-Digit
-    : [0-9]
-    ;
 
 // Fragment rules
 
@@ -383,7 +324,7 @@ fragment HexDigit
 
 fragment DecimalIntegerLiteral
     : '0'
-    | [1-9] [0-9_]*
+    | [1-9] [0-9]*
     ;
 
 fragment ExponentPart
@@ -424,5 +365,105 @@ fragment RegularExpressionClassChar
 
 fragment RegularExpressionBackslashSequence
     : '\\' ~[\r\n\u2028\u2029]
+    ;
+
+//
+// html tag declarations
+//
+mode TAG;
+
+TagOpen
+    : LessThan -> pushMode(TAG)
+    ;
+TagClose
+    : MoreThan -> popMode
+    ;
+
+TagSlashClose
+    : '/>' -> popMode
+    ;
+
+TagSlash
+    : Divide
+    ;
+
+TagName
+    : TagNameStartChar TagNameChar*
+    ;
+
+// an attribute value may have spaces b/t the '=' and the value
+AttributeValue
+    : [ ]* Attribute -> popMode
+    ;
+
+Attribute
+    : DoubleQuoteString
+    | SingleQuoteString
+    | AttributeChar
+    | HexChars
+    | DecChars
+    ;
+
+// Fragment rules
+fragment AttributeChar
+    : '-'
+    | '_'
+    | '.'
+    | '/'
+    | '+'
+    | ','
+    | '?'
+    | '='
+    | ':'
+    | ';'
+    | '#'
+    | [0-9a-zA-Z]
+    ;
+
+fragment AttributeChars
+    : AttributeChar+ ' '?
+    ;
+
+fragment HexChars
+    : '#' [0-9a-fA-F]+
+    ;
+
+fragment DecChars
+    : [0-9]+ '%'?
+    ;
+
+
+fragment
+TagNameStartChar
+    :   [:a-zA-Z]
+    |   '\u2070'..'\u218F'
+    |   '\u2C00'..'\u2FEF'
+    |   '\u3001'..'\uD7FF'
+    |   '\uF900'..'\uFDCF'
+    |   '\uFDF0'..'\uFFFD'
+    ;
+
+fragment
+TagNameChar
+    : TagNameStartChar
+    | '-'
+    | '_'
+    | '.'
+    | Digit
+    |   '\u00B7'
+    |   '\u0300'..'\u036F'
+    |   '\u203F'..'\u2040'
+    ;
+
+fragment DoubleQuoteString
+    : '"' ~[<"]* '"'
+    ;
+fragment SingleQuoteString
+    : '\'' ~[<']* '\''
+    ;
+
+fragment
+Digit
+    : [0-9]
     ;
 

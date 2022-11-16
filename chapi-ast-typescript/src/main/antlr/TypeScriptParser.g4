@@ -62,7 +62,7 @@ statement
     | throwStatement
     | tryStatement
     | debuggerStatement
-//    | expressionStatement
+    | expressionStatement
     | emptyStatement
     ;
 
@@ -851,18 +851,14 @@ expressionSequence
 // Expressions
 
 singleExpression
-    :
-      This                                                                   # ThisExpression
-    | Super                                                                  # SuperExpression
-    | literal                                                                # LiteralExpression
-    | arrayLiteral                                                           # ArrayLiteralExpression
-    | objectLiteral                                                          # ObjectLiteralExpression
-    | templateStringLiteral                                                  # TemplateStringExpression
+    : functionExpression                                                     # FunctionExpressionL
+    | arrowFunctionExpression                                                # ArrowFunctionExpressionL
+    | classExpression                                                        # ClassExpressionL
 
     | Yield ({this.notLineTerminator()}? expressionSequence)?                # YieldExpression
     | Await singleExpression                                                 # AwaitExpression
 
-// respect precedence by order of sub-rules
+    // respect precedence by order of sub-rules
     | singleExpression assignmentOperator singleExpression                   # AssignmentExpression
     | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
     | singleExpression '?''?' singleExpression                               # coalesceExpression
@@ -876,21 +872,34 @@ singleExpression
     | unaryOperator singleExpression                                         # UnaryExpression
     | singleExpression As typeRef                                            # CastAsExpression
     | singleExpression {this.notLineTerminator()}? ('++' | '--')             # PostfixExpression
-    | singleExpression '?''.'? '[' expressionSequence ']'                    # IndexedAccessExpression
-    | singleExpression '?''.'? identifierName typeArguments? arguments       # CallExpression
+
+    // this.form.value?.id?.[0]
+    | singleExpression '?'? '!'? '.'? '[' expressionSequence ']'             # MemberIndexExpression
+    // for: `onHotUpdateSuccess?.();`
+    // onChange?.(userName || password || null)
+    | singleExpression '?'? '!'? '.' '#'? identifierName? typeArguments?     # MemberDotExpression
+    // for: `onHotUpdateSuccess?.();`
+    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
+
+
     | singleExpression ('.' | '?''.') identifierName                         # PropertyAccessExpression
     | newExpression                                                          # NewExpressionL
-
-    | functionExpression                                                     # FunctionExpressionL
-    | arrowFunctionExpression                                                # ArrowFunctionExpressionL
-    | classExpression                                                        # ClassExpressionL
-
+    | singleExpression arguments                                             # ArgumentsExpression
+    | '(' expressionSequence ')'                                             # ParenthesizedExpression
   // TODO:
   //  | iteratorBlock                                                          # IteratorsExpression
   //  | generatorBlock                                                         # GeneratorsExpression
 
-    | identifierName                                                         # IdentifierExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
+    | This                                                                   # ThisExpression
+    | Super                                                                  # SuperExpression
+    | identifierName                                                         # IdentifierExpression
+    | literal                                                                # LiteralExpression
+    | arrayLiteral                                                           # ArrayLiteralExpression
+    | objectLiteral                                                          # ObjectLiteralExpression
+    | templateStringLiteral                                                  # TemplateStringExpression
+
+    | htmlElements                                                           # HtmlElementExpression
     ;
 
 
@@ -929,10 +938,7 @@ unaryOperator
     ;
 
 newExpression
-    : New (
-          Dot Target
-        | singleExpression typeArguments? arguments?
-    );
+    : New (Dot Target| singleExpression typeArguments? arguments?);
 
 
 
