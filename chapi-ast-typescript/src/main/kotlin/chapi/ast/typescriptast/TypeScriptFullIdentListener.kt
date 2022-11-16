@@ -736,28 +736,26 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         for (subSingle in context.expressionSequence().singleExpression()) {
             var parameter = CodeProperty(TypeValue = "", TypeType = "object")
 
-            when (val simpleName = subSingle::class.java.simpleName) {
-                "ObjectLiteralExpressionContext" -> {
-                    val obj = subSingle as TypeScriptParser.ObjectLiteralExpressionContext
-                    val objectLiteral = parseObjectLiteral(obj.objectLiteral())
+            when (subSingle) {
+                is TypeScriptParser.ObjectLiteralExpressionContext -> {
+                    val objectLiteral = parseObjectLiteral(subSingle.objectLiteral())
                     parameter =
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
-                "HtmlElementExpressionContext" -> {
+                is TypeScriptParser.HtmlElementExpressionContext -> {
                     hasHtmlElement = true
 //                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
                 }
-                "ArgumentsExpressionContext" -> {
-                    parseArguments(subSingle as TypeScriptParser.ArgumentsExpressionContext)
+                is TypeScriptParser.ArgumentsExpressionContext -> {
+                    parseArguments(subSingle)
                 }
-                "IdentifierExpressionContext" -> {
-                    val identExpr = subSingle as IdentifierExpressionContext
-                    parameter = CodeProperty(TypeValue = identExpr.text, TypeType = "parameter")
+                is TypeScriptParser.IdentifierExpressionContext -> {
+                    parameter = CodeProperty(TypeValue = subSingle.text, TypeType = "parameter")
                 }
-                "ArrayLiteralExpressionContext" -> {
+                is TypeScriptParser.ArrayLiteralExpressionContext -> {
                     parameter = CodeProperty(TypeValue = "[]", TypeType = "parameter")
                 }
-                "LiteralExpressionContext" -> {
+                is TypeScriptParser.LiteralExpressionContext -> {
                     parameter = CodeProperty(TypeValue = singleExpToText(subSingle), TypeType = "string")
                 }
                 else -> {
@@ -774,17 +772,16 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private fun parseObjectLiteral(objectLiteral: TypeScriptParser.ObjectLiteralContext): Array<CodeProperty> {
         var root: Array<CodeProperty> = arrayOf()
         objectLiteral.propertyAssignment().forEach { property ->
-            when (val propName = property::class.java.simpleName) {
-                "PropertyExpressionAssignmentContext" -> {
-                    val assignCtx = property as TypeScriptParser.PropertyExpressionAssignmentContext
-                    val text = singleExpToText(assignCtx.singleExpression())
+            when (property) {
+                is TypeScriptParser.PropertyExpressionAssignmentContext -> {
+                    val text = singleExpToText(property.singleExpression())
                     val value = CodeProperty(TypeType = "value", TypeValue = text)
-                    val propText = assignCtx.propertyName().text
+                    val propText = property.propertyName().text
 
                     root += CodeProperty(TypeType = "key", TypeValue = propText, ObjectValue = arrayOf(value))
                 }
-                "PropertyShorthandContext" -> {
-                    val short = (property as TypeScriptParser.PropertyShorthandContext).text
+                is TypeScriptParser.PropertyShorthandContext -> {
+                    val short = property.text
                     val value = CodeProperty(TypeType = "value", TypeValue = short)
                     val prop = CodeProperty(TypeType = "key", TypeValue = short, ObjectValue = arrayOf(value))
                     root += prop
@@ -1005,8 +1002,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         return codeContainer
     }
-//
-//    override fun enterEveryRule(ctx: ParserRuleContext?) {
-//        println(ctx!!.javaClass.simpleName)
-//    }
+
+    override fun enterEveryRule(ctx: ParserRuleContext?) {
+        println(ctx!!.javaClass.simpleName)
+    }
 }
