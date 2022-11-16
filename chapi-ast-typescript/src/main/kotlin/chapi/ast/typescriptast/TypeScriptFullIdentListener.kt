@@ -5,7 +5,6 @@ import chapi.ast.antlr.TypeScriptParser.IdentifierExpressionContext
 import chapi.ast.antlr.TypeScriptParser.ParenthesizedExpressionContext
 import chapi.domain.core.*
 import chapi.infra.Stack
-import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
@@ -97,35 +96,36 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     ): CodeField {
         val key = it.getChild(0).text
         val singleExpression = it.singleExpression()
+        val field = CodeField(TypeKey = key, TypeValue = "", Modifiers = modifiers)
 
-        val lastExpr = singleExpression.last()
-        val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
-
-        when (lastExpr) {
-            is TypeScriptParser.LiteralExpressionContext -> {
-                if (lastExpr.literal().StringLiteral() != null) {
-                    field.TypeValue = unQuote(lastExpr.text)
-                    field.TypeType = "String"
-                }
-            }
-
-            is IdentifierExpressionContext -> {
-                singleExprToFieldCall(field, lastExpr.singleExpression(), lastExpr.identifierName().text)
-            }
-
-            is TypeScriptParser.YieldExpressionContext -> {
-                if (lastExpr.yieldStatement().expressionSequence() != null) {
-                    val singeExprs = lastExpr.yieldStatement().expressionSequence().singleExpression()
-                    singeExprs.forEach { expr ->
-                        singleExprToFieldCall(field, expr, expr.text)
-                    }
-                }
-            }
-
-            else -> {
-    //                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
-            }
-        }
+//        val lastExpr = singleExpression.last()
+//        val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
+//
+//        when (lastExpr) {
+//            is TypeScriptParser.LiteralExpressionContext -> {
+//                if (lastExpr.literal().StringLiteral() != null) {
+//                    field.TypeValue = unQuote(lastExpr.text)
+//                    field.TypeType = "String"
+//                }
+//            }
+//
+//            is IdentifierExpressionContext -> {
+//                singleExprToFieldCall(field, lastExpr.singleExpression(), lastExpr.identifierName().text)
+//            }
+//
+//            is TypeScriptParser.YieldExpressionContext -> {
+//                if (lastExpr.yieldStatement().expressionSequence() != null) {
+//                    val singeExprs = lastExpr.yieldStatement().expressionSequence().singleExpression()
+//                    singeExprs.forEach { expr ->
+//                        singleExprToFieldCall(field, expr, expr.text)
+//                    }
+//                }
+//            }
+//
+//            else -> {
+//    //                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
+//            }
+//        }
         return field
     }
 
@@ -162,7 +162,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     override fun enterClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
-        val nodeName = ctx!!.Identifier().text
+        val nodeName = ctx!!.identifierName().text
 
         hasEnterClass = true
         currentNode = CodeDataStruct(
@@ -174,13 +174,13 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         )
 
         val heritageCtx = ctx.classHeritage()
-        if (heritageCtx.implementsClause() != null) {
-            val typeList = heritageCtx.implementsClause().classOrInterfaceTypeList()
-            currentNode.Implements = buildImplements(typeList)
+        if (heritageCtx.classImplementsClause() != null) {
+            val typeList = heritageCtx.classImplementsClause().classOrInterfaceTypeList()
+//            currentNode.Implements = buildImplements(typeList)
         }
 
         if (heritageCtx.classExtendsClause() != null) {
-            val refCtx = heritageCtx.classExtendsClause().typeReference()
+            val refCtx = heritageCtx.classExtendsClause().parameterizedTypeRef()
             currentNode.Extend = refCtx.typeName().text
         }
 
@@ -189,16 +189,16 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         currentAnnotations = arrayOf()
         hasAnnotation = false
 
-        if (ctx.classTail() != null) {
-            this.handleClassBodyElements(ctx.classTail())
+        if (ctx.classBody() != null) {
+            this.handleClassBodyElements(ctx.classBody())
         }
 
         classNodeStack.push(currentNode)
         nodeMap[nodeName] = currentNode
     }
 
-    private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassTailContext) {
-        for (clzElementCtx in classTailCtx.classElement()) {
+    private fun handleClassBodyElements(classTailCtx: TypeScriptParser.ClassBodyContext) {
+        for (clzElementCtx in classTailCtx.classMemberList().classMember()) {
             val childCtx = clzElementCtx.getChild(0) ?: continue
             when (childCtx) {
                 is TypeScriptParser.ConstructorDeclarationContext -> {
@@ -206,32 +206,32 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     codeFunction.FilePath = filePath
                     currentNode.Functions += codeFunction
                 }
-                is TypeScriptParser.PropertyDeclarationExpressionContext -> {
-                    val codeField = CodeField(TypeKey = childCtx.propertyName().text)
-
-                    val modifier = childCtx.propertyMemberBase().text
-                    if (modifier != "") {
-                        codeField.Modifiers += modifier
-                    }
-                    if (childCtx.typeAnnotation() != null) {
-                        codeField.TypeType = this.buildTypeAnnotation(childCtx.typeAnnotation())!!
-                    }
-
-                    currentNode.Fields += codeField
-                }
-                is TypeScriptParser.MethodDeclarationExpressionContext -> {
-                    val codeFunction = CodeFunction(
-                        Name = childCtx.propertyName().text, Position = buildPosition(childCtx)
-                    )
-                    val callSignCtx = childCtx.callSignature()
-
-                    if (callSignCtx.typeAnnotation() != null) {
-                        codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
-                    }
-
-                    codeFunction.FilePath = filePath
-                    currentNode.Functions += codeFunction
-                }
+//                is TypeScriptParser.PropertyDeclarationExpressionContext -> {
+//                    val codeField = CodeField(TypeKey = childCtx.propertyName().text)
+//
+//                    val modifier = childCtx.propertyMemberBase().text
+//                    if (modifier != "") {
+//                        codeField.Modifiers += modifier
+//                    }
+//                    if (childCtx.typeAnnotation() != null) {
+//                        codeField.TypeType = this.buildTypeAnnotation(childCtx.typeAnnotation())!!
+//                    }
+//
+//                    currentNode.Fields += codeField
+//                }
+//                is TypeScriptParser.MethodDeclarationExpressionContext -> {
+//                    val codeFunction = CodeFunction(
+//                        Name = childCtx.propertyName().text, Position = buildPosition(childCtx)
+//                    )
+//                    val callSignCtx = childCtx.callSignature()
+//
+//                    if (callSignCtx.typeAnnotation() != null) {
+//                        codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
+//                    }
+//
+//                    codeFunction.FilePath = filePath
+//                    currentNode.Functions += codeFunction
+//                }
                 else -> {
 //                    println("handleClassBodyElements -> childElementType : $childElementType")
                 }
@@ -255,11 +255,11 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return codeFunction
     }
 
-    private fun buildImplements(typeList: TypeScriptParser.ClassOrInterfaceTypeListContext?): Array<String> {
-        return typeList?.typeReference()?.map { typeRefCtx ->
-            typeRefCtx.typeName().text
-        }?.toTypedArray() ?: arrayOf()
-    }
+//    private fun buildImplements(typeList: TypeScriptParser.ClassOrInterfaceTypeListContext?): Array<String> {
+//        return typeList?.typeReference()?.map { typeRefCtx ->
+//            typeRefCtx.typeName().text
+//        }?.toTypedArray() ?: arrayOf()
+//    }
 
     override fun exitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
         hasEnterClass = false
@@ -267,7 +267,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     override fun enterInterfaceDeclaration(ctx: TypeScriptParser.InterfaceDeclarationContext?) {
-        val nodeName = ctx!!.Identifier().text
+        val nodeName = ctx!!.identifierName().text
         val currentType = DataStructType.INTERFACE
 
         currentNode = CodeDataStruct(
@@ -278,15 +278,15 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             Position = buildPosition(ctx)
         )
 
-        if (ctx.interfaceExtendsClause() != null) {
-            val elements = buildImplements(ctx.interfaceExtendsClause().classOrInterfaceTypeList())
-            currentNode.Extend = elements[0]
-        }
-
-        val objectTypeCtx = ctx.objectType()
-        if (objectTypeCtx.typeBody() != null) {
-            this.buildInterfaceBody(objectTypeCtx.typeBody().typeMemberList())
-        }
+//        if (ctx.interfaceExtendsClause() != null) {
+//            val elements = buildImplements(ctx.interfaceExtendsClause().classOrInterfaceTypeList())
+//            currentNode.Extend = elements[0]
+//        }
+//
+//        val objectTypeCtx = ctx.objectType()
+//        if (objectTypeCtx.typeBody() != null) {
+//            this.buildInterfaceBody(objectTypeCtx.typeBody().typeMemberList())
+//        }
 
         nodeMap[nodeName] = currentNode
     }
@@ -295,8 +295,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         currentNode = CodeDataStruct(Package = codeContainer.PackageName, FilePath = codeContainer.FullName)
     }
 
-    private fun buildInterfaceBody(typeMemberList: TypeScriptParser.TypeMemberListContext?) {
-        typeMemberList?.typeMember()?.forEach { memberContext ->
+    private fun buildInterfaceBody(typeMemberList: TypeScriptParser.InterfaceMemberListContext) {
+        typeMemberList?.interfaceMember()?.forEach { memberContext ->
             when (val memberChild = memberContext.getChild(0)) {
                 is TypeScriptParser.PropertySignatureContext -> {
                     buildInterfacePropertySignature(memberChild)
@@ -320,10 +320,11 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     private fun buildInterfacePropertySignature(signCtx: TypeScriptParser.PropertySignatureContext) {
-        val typeType = buildTypeAnnotation(signCtx.typeAnnotation())
+        val annotation = signCtx.typeAnnotation()
+        val typeType = buildTypeAnnotation(annotation)
         val typeValue = signCtx.propertyName().text
 
-        val isArrowFunc = signCtx.typeRef() != null
+        val isArrowFunc = annotation.typeRef() != null
         if (isArrowFunc) {
             val codeFunction = CodeFunction(
                 Name = typeValue
@@ -333,7 +334,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             )
 
             val returnType = CodeProperty(
-                TypeType = signCtx.typeRef().text, TypeValue = ""
+                TypeType = annotation.typeRef().text, TypeValue = ""
             )
 
             codeFunction.Parameters += param
@@ -405,7 +406,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         )
 
         if (ctx.Require() != null) {
-            codeImport.UsageName += ctx.Identifier().text
+            codeImport.UsageName += ctx.identifierName().text
         }
 
         codeContainer.Imports += codeImport
@@ -420,9 +421,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     // see also in arrow function declaration
     override fun enterFunctionDeclaration(ctx: TypeScriptParser.FunctionDeclarationContext?) {
         if(ctx == null) return
-        if(ctx.Identifier() == null) return
+        if(ctx.identifierName() == null) return
 
-        val funcName = ctx.Identifier().text
+        val funcName = ctx.identifierName().text
         val func = CodeFunction(FilePath = filePath)
         func.Name = funcName
 
@@ -436,8 +437,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             return
         }
 
-        if (ctx.functionBody().sourceElements() != null) {
-            ctx.functionBody().sourceElements().sourceElement().forEach { context ->
+        if (ctx.functionBody().statementList() != null) {
+            ctx.functionBody().statementList().statement().forEach { context ->
                 parseStatement(context)
             }
         }
@@ -449,56 +450,56 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     // see also in function declaration
-    override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
-        isCallbackOrAnonymousFunction = false
-
-        when (val grad = ctx?.parent?.parent) {
-            // for: const blabla = () => { }
-            is TypeScriptParser.VariableDeclarationContext -> {
-                val func = CodeFunction(
-                    FilePath = filePath,
-                    Name = grad.identifierOrKeyWord().text,
-                    Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters()),
-                    Position = this.buildPosition(ctx)
-                )
-
-                if (ctx.typeAnnotation() != null) {
-                    func.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
-                }
-
-                isCallbackOrAnonymousFunction = false
-                processingNewArrowFunc(func)
-            }
-
-            is TypeScriptParser.ArgumentContext -> {
-                // todo: add arg ctx
-                isCallbackOrAnonymousFunction = true
-                currentFunc.FunctionCalls += CodeCall(FunctionName = currentExprIdent, Type = CallType.ARROW)
-            }
-            // such as: `(e) => e.stopPropagation()`
-            is TypeScriptParser.ExpressionSequenceContext -> {
-                val func = CodeFunction(FilePath = filePath, Name = "")
-
-                isCallbackOrAnonymousFunction = true
-                processingNewArrowFunc(func)
-            }
-
-            else -> {
-//                val text = ctx!!.parent.parent.text
-//                println("enterArrowFunctionDeclaration -> $parentName, $text")
-            }
-        }
-
-        if (ctx?.arrowFunctionBody() == null) return
-
-        ctx.arrowFunctionBody()?.functionBody()?.sourceElements()?.sourceElement()?.forEach {
-            parseStatement(it)
-        }
-
-        if (ctx.arrowFunctionBody().singleExpression() != null) {
-            parseSingleExpression(ctx.arrowFunctionBody().singleExpression())
-        }
-    }
+//    override fun enterArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
+//        isCallbackOrAnonymousFunction = false
+//
+//        when (val grad = ctx?.parent?.parent) {
+//            // for: const blabla = () => { }
+//            is TypeScriptParser.VariableDeclarationContext -> {
+//                val func = CodeFunction(
+//                    FilePath = filePath,
+//                    Name = grad.identifierOrKeyWord().text,
+//                    Parameters = this.buildArrowFunctionParameters(ctx.arrowFunctionParameters()),
+//                    Position = this.buildPosition(ctx)
+//                )
+//
+//                if (ctx.typeAnnotation() != null) {
+//                    func.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
+//                }
+//
+//                isCallbackOrAnonymousFunction = false
+//                processingNewArrowFunc(func)
+//            }
+//
+//            is TypeScriptParser.ArgumentContext -> {
+//                // todo: add arg ctx
+//                isCallbackOrAnonymousFunction = true
+//                currentFunc.FunctionCalls += CodeCall(FunctionName = currentExprIdent, Type = CallType.ARROW)
+//            }
+//            // such as: `(e) => e.stopPropagation()`
+//            is TypeScriptParser.ExpressionSequenceContext -> {
+//                val func = CodeFunction(FilePath = filePath, Name = "")
+//
+//                isCallbackOrAnonymousFunction = true
+//                processingNewArrowFunc(func)
+//            }
+//
+//            else -> {
+////                val text = ctx!!.parent.parent.text
+////                println("enterArrowFunctionDeclaration -> $parentName, $text")
+//            }
+//        }
+//
+//        if (ctx?.arrowFunctionBody() == null) return
+//
+//        ctx.arrowFunctionBody()?.functionBody()?.sourceElements()?.sourceElement()?.forEach {
+//            parseStatement(it)
+//        }
+//
+//        if (ctx.arrowFunctionBody().singleExpression() != null) {
+//            parseSingleExpression(ctx.arrowFunctionBody().singleExpression())
+//        }
+//    }
 
     private fun processingNewArrowFunc(func: CodeFunction) {
         if (isCallbackOrAnonymousFunction) {
@@ -513,9 +514,9 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         currentFunc = func
     }
 
-    override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
-        handleFuncDeclExit()
-    }
+//    override fun exitArrowFunctionDeclaration(ctx: TypeScriptParser.ArrowFunctionDeclarationContext?) {
+//        handleFuncDeclExit()
+//    }
 
     private fun handleFuncDeclExit() {
         if (!isCallbackOrAnonymousFunction) {
@@ -536,53 +537,53 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
     }
 
-    private fun buildArrowFunctionParameters(arrowFuncCtx: TypeScriptParser.ArrowFunctionParametersContext?): Array<CodeProperty> {
-        if (arrowFuncCtx!!.formalParameterList() != null) {
-            return this.buildParameters(arrowFuncCtx.formalParameterList())
-        }
+//    private fun buildArrowFunctionParameters(arrowFuncCtx: TypeScriptParser.ArrowFunctionParametersContext?): Array<CodeProperty> {
+//        if (arrowFuncCtx!!.formalParameterList() != null) {
+//            return this.buildParameters(arrowFuncCtx.formalParameterList())
+//        }
+//
+//        var parameters: Array<CodeProperty> = arrayOf()
+//        if (arrowFuncCtx.identifierOrKeyWord() != null) {
+//            parameters += CodeProperty(
+//                TypeValue = arrowFuncCtx.identifierOrKeyWord().text, TypeType = "any"
+//            )
+//        }
+//
+//        return parameters
+//    }
 
-        var parameters: Array<CodeProperty> = arrayOf()
-        if (arrowFuncCtx.identifierOrKeyWord() != null) {
-            parameters += CodeProperty(
-                TypeValue = arrowFuncCtx.identifierOrKeyWord().text, TypeType = "any"
-            )
-        }
+//    override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
+//        when (val grad = ctx?.parent?.parent) {
+//            is TypeScriptParser.VariableDeclarationContext -> {
+//                currentFunc.Name = grad.identifierOrKeyWord().text
+//
+//                if (ctx.formalParameterList() != null) {
+//                    currentFunc.Parameters = this.buildParameters(ctx.formalParameterList())
+//                }
+//
+//                if (ctx.typeAnnotation() != null) {
+//                    currentFunc.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
+//                }
+//
+//                currentFunc.Position = this.buildPosition(ctx)
+//                currentFunc.FilePath = filePath
+//                defaultNode.Functions += currentFunc
+//            }
+//
+//            is IdentifierExpressionContext -> {
+//                currentFunc.Position = this.buildPosition(ctx)
+//                currentFunc.FilePath = filePath
+//                defaultNode.Functions += currentFunc
+//            }
+//
+//            else -> {
+////                println("enterFunctionExpressionDeclaration -> $parentName, ${statementParent.text} ")
+//            }
+//        }
+//    }
 
-        return parameters
-    }
-
-    override fun enterFunctionExpressionDeclaration(ctx: TypeScriptParser.FunctionExpressionDeclarationContext?) {
-        when (val grad = ctx?.parent?.parent) {
-            is TypeScriptParser.VariableDeclarationContext -> {
-                currentFunc.Name = grad.identifierOrKeyWord().text
-
-                if (ctx.formalParameterList() != null) {
-                    currentFunc.Parameters = this.buildParameters(ctx.formalParameterList())
-                }
-
-                if (ctx.typeAnnotation() != null) {
-                    currentFunc.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
-                }
-
-                currentFunc.Position = this.buildPosition(ctx)
-                currentFunc.FilePath = filePath
-                defaultNode.Functions += currentFunc
-            }
-
-            is IdentifierExpressionContext -> {
-                currentFunc.Position = this.buildPosition(ctx)
-                currentFunc.FilePath = filePath
-                defaultNode.Functions += currentFunc
-            }
-
-            else -> {
-//                println("enterFunctionExpressionDeclaration -> $parentName, ${statementParent.text} ")
-            }
-        }
-    }
-
-    private fun parseStatement(context: TypeScriptParser.SourceElementContext) {
-        when (val child = context.statement()?.getChild(0)) {
+    private fun parseStatement(context: TypeScriptParser.StatementContext) {
+        when (val child = context.getChild(0)) {
             is TypeScriptParser.ReturnStatementContext -> {
                 hasHtmlElement = false
 
@@ -624,17 +625,17 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         when (ctx) {
             is IdentifierExpressionContext -> {
                 currentExprIdent = ctx.identifierName().text
-
-                if (ctx.singleExpression() != null) {
-                    parseSingleExpression(ctx.singleExpression())
-                }
+//
+//                if (ctx.singleExpression() != null) {
+//                    parseSingleExpression(ctx.singleExpression())
+//                }
             }
-            is TypeScriptParser.GenericTypesContext -> {
-                parseExpressionSequence(ctx.expressionSequence())
-            }
-            is TypeScriptParser.ArgumentsExpressionContext -> {
-                argumentsExpressionToCall(ctx)
-            }
+//            is TypeScriptParser.GenericTypesContext -> {
+//                parseExpressionSequence(ctx.expressionSequence())
+//            }
+//            is TypeScriptParser.ArgumentsExpressionContext -> {
+//                argumentsExpressionToCall(ctx)
+//            }
             is ParenthesizedExpressionContext -> {
                 val parameters = parseParenthesizedExpression(ctx)
                 currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, parameters)
@@ -645,75 +646,75 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
     }
 
-    private fun argumentsExpressionToCall(argument: TypeScriptParser.ArgumentsExpressionContext, varName: String = "") {
-        val argText = argument.singleExpression().text
-
-        if (varName != "") {
-            currentExprIdent = varName
-        }
-
-        if (argText.startsWith("(")) {
-            // axios("/demo")
-            val args = parseArguments(argument)
-            currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, args)
-        } else {
-            currentExprIdent = argText
-
-            // todo: add other case for call chain in arrow function
-            if (argText.contains(").")) {
-                val args = parseArguments(argument)
-//                println("argText with )." + Json.encodeToString(args))
-            }
-
-            // axios.get() or _.orderBy()
-            currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, arrayOf())
-        }
-    }
-
-    private fun parseArguments(argument: TypeScriptParser.ArgumentsExpressionContext): Array<CodeProperty> {
-        var params = arrayOf<CodeProperty>()
-
-        // for: `axios<Module[]>({parameter}).then`
-        // create then and update parameter
-        argument.children.forEach {
-            when (it) {
-                is TypeScriptParser.MemberDotExpressionContext -> {
-                    when (val expr = it.singleExpression()) {
-                        is TypeScriptParser.ParenthesizedExpressionContext -> {
-                            params += parseParenthesizedExpression(expr)
-                        }
-
-                        is TypeScriptParser.ArgumentsExpressionContext -> {
-                            // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response)}).catch()
-                            parseArguments(expr)
-                        }
-
-                        is IdentifierExpressionContext -> {
-                            currentExprIdent = expr.identifierName().text
-                        }
-
-                        else -> {
-//                            println("MemberDotExpressionContext: -> $subName")
-                        }
-                    }
-
-                    currentExprIdent += "->${it.identifierName().text}"
-                }
-                is ParenthesizedExpressionContext -> {
-                    params += parseParenthesizedExpression(it)
-                }
-                is TypeScriptParser.ArgumentsContext -> {
-
-                }
-                else -> {
-//                    println("singleExpression -> ArgumentsExpressionContext -> $childName")
-                }
-            }
-        }
-
-
-        return params
-    }
+//    private fun argumentsExpressionToCall(argument: TypeScriptParser.ArgumentsExpressionContext, varName: String = "") {
+//        val argText = argument.singleExpression().text
+//
+//        if (varName != "") {
+//            currentExprIdent = varName
+//        }
+//
+//        if (argText.startsWith("(")) {
+//            // axios("/demo")
+//            val args = parseArguments(argument)
+//            currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, args)
+//        } else {
+//            currentExprIdent = argText
+//
+//            // todo: add other case for call chain in arrow function
+//            if (argText.contains(").")) {
+//                val args = parseArguments(argument)
+////                println("argText with )." + Json.encodeToString(args))
+//            }
+//
+//            // axios.get() or _.orderBy()
+//            currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, arrayOf())
+//        }
+//    }
+//
+//    private fun parseArguments(argument: TypeScriptParser.ArgumentsExpressionContext): Array<CodeProperty> {
+//        var params = arrayOf<CodeProperty>()
+//
+//        // for: `axios<Module[]>({parameter}).then`
+//        // create then and update parameter
+//        argument.children.forEach {
+//            when (it) {
+//                is TypeScriptParser.MemberDotExpressionContext -> {
+//                    when (val expr = it.singleExpression()) {
+//                        is TypeScriptParser.ParenthesizedExpressionContext -> {
+//                            params += parseParenthesizedExpression(expr)
+//                        }
+//
+//                        is TypeScriptParser.ArgumentsExpressionContext -> {
+//                            // request.get('/api/v1/xxx?id=1').then(function(response){console.log(response)}).catch()
+//                            parseArguments(expr)
+//                        }
+//
+//                        is IdentifierExpressionContext -> {
+//                            currentExprIdent = expr.identifierName().text
+//                        }
+//
+//                        else -> {
+////                            println("MemberDotExpressionContext: -> $subName")
+//                        }
+//                    }
+//
+//                    currentExprIdent += "->${it.identifierName().text}"
+//                }
+//                is ParenthesizedExpressionContext -> {
+//                    params += parseParenthesizedExpression(it)
+//                }
+//                is TypeScriptParser.ArgumentsContext -> {
+//
+//                }
+//                else -> {
+////                    println("singleExpression -> ArgumentsExpressionContext -> $childName")
+//                }
+//            }
+//        }
+//
+//
+//        return params
+//    }
 
     private fun parseParenthesizedExpression(context: ParenthesizedExpressionContext): Array<CodeProperty> {
         return context.expressionSequence().singleExpression().map { subSingle ->
@@ -725,15 +726,15 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     parameter =
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
-
-                is TypeScriptParser.HtmlElementExpressionContext -> {
-                    hasHtmlElement = true
-//                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
-                }
-
-                is TypeScriptParser.ArgumentsExpressionContext -> {
-                    parseArguments(subSingle)
-                }
+//
+//                is TypeScriptParser.HtmlElementExpressionContext -> {
+//                    hasHtmlElement = true
+////                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
+//                }
+//
+//                is TypeScriptParser.ArgumentsExpressionContext -> {
+//                    parseArguments(subSingle)
+//                }
 
                 is TypeScriptParser.IdentifierExpressionContext -> {
                     parameter = CodeProperty(TypeValue = subSingle.text, TypeType = "parameter")
@@ -766,13 +767,13 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
                     CodeProperty(TypeType = "key", TypeValue = propText, ObjectValue = arrayOf(value))
                 }
-
-                is TypeScriptParser.PropertyShorthandContext -> {
-                    val short = property.text
-                    val value = CodeProperty(TypeType = "value", TypeValue = short)
-
-                    CodeProperty(TypeType = "key", TypeValue = short, ObjectValue = arrayOf(value))
-                }
+//
+//                is TypeScriptParser.PropertyShorthandContext -> {
+//                    val short = property.text
+//                    val value = CodeProperty(TypeType = "value", TypeValue = short)
+//
+//                    CodeProperty(TypeType = "key", TypeValue = short, ObjectValue = arrayOf(value))
+//                }
 
                 else -> {
                     null
@@ -791,15 +792,15 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         callSignCtx: TypeScriptParser.CallSignatureContext,
         currentFunc: CodeFunction
     ) {
-        if (callSignCtx.parameterList() != null) {
-            val parameters = buildMethodParameters(callSignCtx.parameterList())
-            currentFunc.Parameters = parameters
-        }
-
-        if (callSignCtx.typeAnnotation() != null) {
-            val returnType = buildReturnTypeByType(callSignCtx.typeAnnotation())
-            currentFunc.MultipleReturns += returnType
-        }
+//        if (callSignCtx.parameterList() != null) {
+//            val parameters = buildMethodParameters(callSignCtx.parameterList())
+//            currentFunc.Parameters = parameters
+//        }
+//
+//        if (callSignCtx.typeAnnotation() != null) {
+//            val returnType = buildReturnTypeByType(callSignCtx.typeAnnotation())
+//            currentFunc.MultipleReturns += returnType
+//        }
     }
 
     private fun buildReturnTypeByType(typeAnnotationContext: TypeScriptParser.TypeAnnotationContext?): CodeProperty =
@@ -812,14 +813,14 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
         for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
             when (singleExprCtx) {
-                is TypeScriptParser.ArgumentsExpressionContext -> {
-                    currentFunc.FunctionCalls += CodeCall(
-                        Parameters = buildArguments(singleExprCtx.arguments()),
-                        FunctionName = buildFunctionName(singleExprCtx),
-                        NodeName = wrapTargetType(singleExprCtx),
-                        Position = buildPosition(ctx)
-                    )
-                }
+//                is TypeScriptParser.ArgumentsExpressionContext -> {
+//                    currentFunc.FunctionCalls += CodeCall(
+//                        Parameters = buildArguments(singleExprCtx.arguments()),
+//                        FunctionName = buildFunctionName(singleExprCtx),
+//                        NodeName = wrapTargetType(singleExprCtx),
+//                        Position = buildPosition(ctx)
+//                    )
+//                }
                 is TypeScriptParser.IdentifierExpressionContext -> {
 //                    println("enterExpressionStatement -> IdentifierExpressionContext: ${singleExprCtx.text}")
                 }
@@ -831,32 +832,32 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
     }
 
-    private fun buildFunctionName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
-        var text = argsCtx.singleExpression().text
-        if (text.contains(".")) {
-            val split = text.split(".")
-            text = split[split.size - 1]
-        }
-
-        return text
-    }
-
-    private fun wrapTargetType(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
-        var text = argsCtx.singleExpression().text
-        if (text.contains(".")) {
-            text = text.split(".")[0]
-        }
-
-        if (localVars[text] != null && localVars[text] != "") {
-            text = localVars[text]
-        }
-
-        if (text == null) {
-            text = ""
-        }
-
-        return text
-    }
+//    private fun buildFunctionName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
+//        var text = argsCtx.singleExpression().text
+//        if (text.contains(".")) {
+//            val split = text.split(".")
+//            text = split[split.size - 1]
+//        }
+//
+//        return text
+//    }
+//
+//    private fun wrapTargetType(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
+//        var text = argsCtx.singleExpression().text
+//        if (text.contains(".")) {
+//            text = text.split(".")[0]
+//        }
+//
+//        if (localVars[text] != null && localVars[text] != "") {
+//            text = localVars[text]
+//        }
+//
+//        if (text == null) {
+//            text = ""
+//        }
+//
+//        return text
+//    }
 
     override fun enterVariableDeclaration(ctx: TypeScriptParser.VariableDeclarationContext?) {
         if (ctx == null) {
@@ -867,49 +868,49 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }
 
         val varName = ctx.getChild(0).text
-        if (ctx.singleExpression().size == 1 && ctx.typeParameters() == null) {
-            when (val singleExprCtx = ctx.singleExpression()[0]) {
-                is TypeScriptParser.NewExpressionContext -> {
-                    val newSingleExpr = singleExprCtx.singleExpression()
-                    when (newSingleExpr::class.java.simpleName) {
-                        "IdentifierExpressionContext" -> {
-                            val identExprCtx = newSingleExpr as IdentifierExpressionContext
-                            val varType = identExprCtx.identifierName().text
-
-                            localVars[varName] = varType
-                        }
-                    }
-                }
-                is IdentifierExpressionContext -> {
-                    when (singleExprCtx.identifierName().text) {
-                        "await" -> {
-                            parseSingleExpression(singleExprCtx.singleExpression())
-                        }
-                        "Number" -> {
-                            parseSingleExpression(singleExprCtx.singleExpression())
-                        }
-                        else -> {
-//                            println("IdentifierExpressionContext -> others variable decl: $identExprText ==== ${singleExprCtx.text}")
-                        }
-                    }
-                }
-                is TypeScriptParser.AwaitExpressionContext -> {
-                    parseSingleExpression(singleExprCtx.singleExpression())
-                }
-                is TypeScriptParser.ArrowFunctionExpressionContext -> {
-                    // will recall by ArrowFunctionDeclaration
-                }
-                is TypeScriptParser.ArgumentsExpressionContext -> {
-                    argumentsExpressionToCall(singleExprCtx, varName)
-                }
-                is ParenthesizedExpressionContext -> {
-                    parseParenthesizedExpression(singleExprCtx)
-                }
-                else -> {
-//                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
-                }
-            }
-        }
+//        if (ctx.singleExpression().size == 1 && ctx.typeParameters() == null) {
+//            when (val singleExprCtx = ctx.singleExpression()[0]) {
+//                is TypeScriptParser.NewExpressionContext -> {
+//                    val newSingleExpr = singleExprCtx.singleExpression()
+//                    when (newSingleExpr::class.java.simpleName) {
+//                        "IdentifierExpressionContext" -> {
+//                            val identExprCtx = newSingleExpr as IdentifierExpressionContext
+//                            val varType = identExprCtx.identifierName().text
+//
+//                            localVars[varName] = varType
+//                        }
+//                    }
+//                }
+//                is IdentifierExpressionContext -> {
+//                    when (singleExprCtx.identifierName().text) {
+//                        "await" -> {
+//                            parseSingleExpression(singleExprCtx.singleExpression())
+//                        }
+//                        "Number" -> {
+//                            parseSingleExpression(singleExprCtx.singleExpression())
+//                        }
+//                        else -> {
+////                            println("IdentifierExpressionContext -> others variable decl: $identExprText ==== ${singleExprCtx.text}")
+//                        }
+//                    }
+//                }
+//                is TypeScriptParser.AwaitExpressionContext -> {
+//                    parseSingleExpression(singleExprCtx.singleExpression())
+//                }
+//                is TypeScriptParser.ArrowFunctionExpressionContext -> {
+//                    // will recall by ArrowFunctionDeclaration
+//                }
+//                is TypeScriptParser.ArgumentsExpressionContext -> {
+//                    argumentsExpressionToCall(singleExprCtx, varName)
+//                }
+//                is ParenthesizedExpressionContext -> {
+//                    parseParenthesizedExpression(singleExprCtx)
+//                }
+//                else -> {
+////                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
+//                }
+//            }
+//        }
     }
 
     private fun buildArguments(arguments: TypeScriptParser.ArgumentsContext?): Array<CodeProperty> {
@@ -936,15 +937,15 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         }?.toTypedArray() ?: arrayOf()
     }
 
-    override fun enterExportDefaultDeclaration(ctx: TypeScriptParser.ExportDefaultDeclarationContext?) {
-        val singleExpr = ctx!!.singleExpression()
-        if (singleExpr != null) {
-            if (!singleExpr.text.contains("(")) {
-                currentNode.Exports += CodeExport(singleExpr.text)
-                defaultNode.Exports += CodeExport(singleExpr.text)
-            }
-        }
-    }
+//    override fun enterExportDefaultDeclaration(ctx: TypeScriptParser.ExportDefaultDeclarationContext?) {
+//        val singleExpr = ctx!!.singleExpression()
+//        if (singleExpr != null) {
+//            if (!singleExpr.text.contains("(")) {
+//                currentNode.Exports += CodeExport(singleExpr.text)
+//                defaultNode.Exports += CodeExport(singleExpr.text)
+//            }
+//        }
+//    }
 
     fun getNodeInfo(): CodeContainer {
         for (entry in nodeMap) {

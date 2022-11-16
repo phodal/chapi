@@ -6,6 +6,7 @@
     added ECMAScript 6 support, cleared and transformed to the universal grammar.
  * Copyright (c) 2018 by Juan Alvarez (contributor -> ported to Go)
  * Copyright (c) 2019 by Andrii Artiushok (contributor -> added TypeScript support)
+ * Copyright (c) 2022 by NumberFour AG (contributor -> overall restructuring and d.ts support)
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -35,18 +36,213 @@ options {
     superClass=TypeScriptParserBase;
 }
 
-// SupportSyntax
 
-initializer
-    : '=' singleExpression
+program
+    : statementList? EOF
     ;
 
-bindingPattern
-    : (arrayLiteral | objectLiteral)
+
+
+// Statement
+
+statement
+    : block
+    | importStatement
+    | decoratorList
+    | exportStatement
+    | declareStatement
+    | ifStatement
+    | iterationStatement
+    | continueStatement
+    | breakStatement
+    | returnStatement
+    | withStatement
+    | labelledStatement
+    | switchStatement
+    | throwStatement
+    | tryStatement
+    | debuggerStatement
+//    | expressionStatement
+    | emptyStatement
     ;
 
-// TypeScript SPart
-// A.1 Types
+declareStatement
+    : Declare? declarationStatement
+    ;
+
+declarationStatement
+    : moduleDeclaration
+    | namespaceDeclaration
+    | globalScopeAugmentation
+    | interfaceDeclaration
+    | typeAliasDeclaration
+    | functionDeclaration
+    | classDeclaration
+    | enumDeclaration
+    | variableStatement
+    ;
+
+block
+    : '{' statementList? '}'
+    ;
+
+statementList
+    : statement+
+    ;
+
+
+
+// Types References
+
+typeAnnotation
+    : ':' typeRef
+    ;
+
+typeRef
+    : conditionalTypeRef
+    ;
+
+conditionalTypeRef
+    : unionTypeExpression ('extends' unionTypeExpression '?' conditionalTypeRef ':' conditionalTypeRef)?
+    ;
+
+unionTypeExpression
+    : '|'? intersectionTypeExpression ('|' intersectionTypeExpression)*
+    ;
+
+intersectionTypeExpression
+    : '&'? operatorTypeRef ('&' operatorTypeRef)*
+    ;
+
+operatorTypeRef
+    : typeOperator? arrayTypeExpression
+    ;
+
+typeOperator
+    : Keyof
+    | Unique
+    | ReadOnly
+    ;
+
+arrayTypeExpression
+    : primaryTypeExpression arrayTypeExpressionSuffix*
+    ;
+
+arrayTypeExpressionSuffix
+    : '[' ']'
+    | '[' typeRef ']' // index access type
+    ;
+
+primaryTypeExpression:
+    ( literalType
+    | arrowFunctionTypeExpression
+    | tupleTypeExpression
+    | queryTypeRef
+    | importTypeRef
+    | inferTypeRef
+    | typeRefWithModifiers
+    | parenthesizedTypeRef
+    );
+
+
+
+literalType
+    : BooleanLiteral
+    | StringLiteral
+    | numericLiteral
+    ;
+
+arrowFunctionTypeExpression
+    : (
+        ('abstract'? 'new')?
+        typeParameters?
+        '(' parameterList? ')'
+        '=>'
+    ) (typePredicateWithOperatorTypeRef | unionTypeExpression)
+    ;
+
+tupleTypeExpression
+    : '['
+    (
+        ']'
+    |   tupleTypeArgument (',' tupleTypeArgument)* ','? ']'
+    );
+
+tupleTypeArgument
+    : '...'? Infer? (Identifier ':')? typeRef '?'?
+    ;
+
+typeVariable
+    : Identifier (Extends typeRef)?
+    ;
+
+typeRefWithModifiers
+    : thisTypeRef
+    | parameterizedTypeRef
+    | objectLiteralTypeRef
+    ;
+
+parenthesizedTypeRef
+    : '(' typeRef ')'
+    ;
+
+parameterizedTypeRef
+    : typeName typeArguments?
+    ;
+
+typeName
+    : typeReferenceName ('.' typeReferenceName)*
+    ;
+
+typeArguments
+    : '<' (typeArgumentList ','?)? '>'
+    ;
+
+typeArgumentList
+    : typeArgument (',' typeArgument)*
+    ;
+
+typeArgument
+    : Infer? typeRef
+    ;
+
+objectLiteralTypeRef
+    : '{' interfaceBody? '}'
+    ;
+
+thisTypeRef
+    : This
+    ;
+
+queryTypeRef
+    : 'typeof' propertyAccessExpressionInTypeRef
+;
+
+importTypeRef
+    : Import '(' StringLiteral ')' ('.' parameterizedTypeRef)?
+;
+
+typePredicateWithOperatorTypeRef
+    : Asserts? (This | bindingIdentifier) Is conditionalTypeRef
+    | Asserts bindingIdentifier
+;
+
+bindingIdentifier
+    : identifierName
+    ;
+
+
+propertyAccessExpressionInTypeRef
+    : typeReferenceName ('.' typeReferenceName)* // e.g. Symbol.iterator or osConstants.priority (in node/constants.d.ts)
+;
+
+inferTypeRef:
+	Infer typeReferenceName
+;
+
+typeAliasDeclaration
+    : TypeAlias identifierName typeParameters? '=' typeRef SemiColon?
+    ;
 
 typeParameters
     : '<' typeParameterList? '>'
@@ -57,147 +253,246 @@ typeParameterList
     ;
 
 typeParameter
-    : Identifier constraint?
-    | Identifier '=' objectType
-    | Identifier '=' identifierOrKeyWord typeIncludeGeneric?
-    | Identifier '=' primaryType typeIncludeGeneric?
-    | typeParameters
+    : identifierName constraint? ('=' defaultType)?
     ;
 
 constraint
     : 'extends' typeRef
     ;
 
-typeArguments
-    : '<' typeArgumentList? '>'
+defaultType
+    : typeRef
     ;
 
-typeArgumentList
-    : typeRef (',' typeRef)*
+
+// Module
+
+moduleDeclaration
+    : Module moduleName block
     ;
 
-typeRef
-    : (Keyof | Typeof)* unionOrIntersectionOrPrimaryType
-    | functionType
-    | constructorType
-    | typeGeneric
-    | '|'? propertyName ('|' (propertyName))*
+moduleName
+    : StringLiteral
+    | Identifier
     ;
 
-unionOrIntersectionOrPrimaryType
-    : unionOrIntersectionOrPrimaryType '|' unionOrIntersectionOrPrimaryType #Union
-    | unionOrIntersectionOrPrimaryType '&' unionOrIntersectionOrPrimaryType #Intersection
-    | primaryType                                                           #Primary
+
+
+// Namespace
+
+namespaceDeclaration
+    : Namespace namespaceName block
     ;
 
-primaryType
-    : '(' typeRef ')'                                                #ParenthesizedPrimType
-    | predefinedType                                                 #PredefinedPrimType
-    | typeReference                                                  #ReferencePrimType
-    | objectType                                                     #ObjectPrimType
-    | primaryType {notLineTerminator()}? '[' ']'                     #ArrayPrimType
-    | '[' tupleElementTypes ']'                                      #TuplePrimType
-    | typeQuery                                                      #QueryPrimType
-    | This                                                           #ThisPrimType
-    | This Is primaryType                                            #RedefinitionOfThisType
-    | typeReference Is primaryType                                   #RedefinitionOfType
-    | primaryType {notLineTerminator()}? '[' singleExpression ']'    #SingleExprPrimType
+namespaceName
+    : typeReferenceName ('.' typeReferenceName)*
     ;
 
-predefinedType
-    : Any
-    | Number
-    | Boolean
-    | String
-    | Symbol
-    | Void
-    | NullLiteral
-    | StringLiteral
-    | Undefined
+globalScopeAugmentation
+    : Global block
     ;
 
-typeReference
-    : typeName nestedTypeGeneric?
+// Decorators
+
+decoratorList
+    : decorator+ ;
+
+decorator
+    : '@' (decoratorMemberExpression | decoratorCallExpression)
     ;
 
-nestedTypeGeneric
-    : typeIncludeGeneric
-    | typeGeneric
-    ;
-
-// I tried recursive include, but it's not working.
-// typeGeneric
-//    : '<' typeArgumentList typeGeneric?'>'
-//    ;
-//
-// TODO: Fix recursive
-//
-typeGeneric
-    : '<' typeArgumentList typeGeneric? '>'
-    ;
-
-typeIncludeGeneric
-    :'<' typeArgumentList '<' typeArgumentList ('>' bindingPattern '>' | '>'*)
-    ;
-
-typeName
+decoratorMemberExpression
     : Identifier
-    | namespaceName
+    | decoratorMemberExpression '.' identifierName
+    | '(' singleExpression ')'
     ;
 
-objectType
-    : '{' typeBody? '}'
+decoratorCallExpression
+    : decoratorMemberExpression arguments;
+
+
+
+// Interface
+
+interfaceDeclaration
+    : Interface identifierName typeParameters? interfaceExtendsClause? '{' interfaceBody? '}' SemiColon?
     ;
 
-typeBody
-    : typeMemberList (SemiColon | ',')?
+interfaceExtendsClause
+    : Extends classOrInterfaceTypeList
     ;
 
-typeMemberList
-    : typeMember ((SemiColon | ',') typeMember)*
+classOrInterfaceTypeList
+    : parameterizedTypeRef (',' parameterizedTypeRef)*
     ;
 
-typeMember
-    : propertySignature
+interfaceBody
+    : interfaceMemberList (SemiColon | ',')?
+    ;
+
+interfaceMemberList
+    : interfaceMember (({lineTerminatorAhead();} | SemiColon | ',') interfaceMember)*
+    ;
+
+interfaceMember
+    : constructSignature
     | callSignature
-    | constructSignature
     | indexSignature
-    | methodSignature ('=>' typeRef)?
-    | enumSignature
-    | '[' typeReference In (Keyof | Typeof)* typeReference ']' '?'? typeAnnotation
+    | getAccessor
+    | setAccessor
+    | methodSignature
+    | propertySignature
     ;
 
-tupleElementTypes
-    : typeRef (',' typeRef)*
-    ;
-
-functionType
-    : typeParameters? '(' parameterList? ')' '=>' typeRef
-    ;
-
-constructorType
-    : 'new' typeParameters? '(' parameterList? ')' '=>' typeRef
-    ;
-
-typeQuery
-    : Typeof* typeQueryExpression
-    ;
-
-typeQueryExpression
-    : Identifier
-    | (identifierName '!'? '.')+ identifierName
-    ;
-
-propertySignature
-    : ReadOnly? propertyName '?'? typeAnnotation? ('=>' typeRef)?
-    ;
-
-typeAnnotation
-    : ':' typeRef
+constructSignature
+    : 'new' typeParameters? parameterBlock typeAnnotation?
     ;
 
 callSignature
-    : typeParameters? '(' parameterList? ','? ')' typeAnnotation? ';'?
+    : typeParameters? parameterBlock (':' (typePredicateWithOperatorTypeRef | typeRef))?
+    ;
+
+indexSignature
+    : ReadOnly? ('+'? 'readonly' | '-' 'readonly')? '[' indexSignatureElement ']' ('+'? '?' | '-' '?')? typeAnnotation
+    ;
+
+indexSignatureElement
+    : identifierName ':' (Number|String)
+    | Identifier In typeRef
+    ;
+
+methodSignature
+    : propertyName '?'? callSignature
+    ;
+
+propertySignature
+    : ReadOnly? propertyName '?'? typeAnnotation?
+    ;
+
+
+
+// Enum
+
+enumDeclaration
+    : Const? Enum identifierName '{' enumBody? '}' SemiColon?
+    ;
+
+enumBody
+    : enumMemberList ','?
+    ;
+
+enumMemberList
+    : enumMember (',' enumMember)*
+    ;
+
+enumMember
+    : propertyName ('=' singleExpression)?
+    ;
+
+
+
+// Function Declaration
+
+functionDeclaration
+    : Function '*'? identifierName callSignature functionBody? SemiColon?
+    ;
+
+functionBody
+    : '{' statementList? '}'
+    ;
+
+
+// Class Declaration
+
+classDeclaration
+    : Abstract? Class identifierName typeParameters? classHeritage classBody SemiColon?
+    ;
+
+classHeritage
+    : classExtendsClause? classImplementsClause?
+    ;
+
+classExtendsClause
+    : Extends parameterizedTypeRef
+    ;
+
+classImplementsClause
+    : Implements classOrInterfaceTypeList
+    ;
+
+classBody
+    :  '{' classMemberList? SemiColon? '}'
+    ;
+
+classMemberList
+    : classMember (({lineTerminatorAhead();} | SemiColon) classMember)*
+    ;
+
+classMember
+    : constructorDeclaration
+    | indexSignature
+    | decoratorList? propertyMemberDeclaration
+    ;
+
+constructorDeclaration
+    : accessibilityModifier? Constructor '(' formalParameterList? ')' block?
+    ;
+
+propertyMemberDeclaration
+    : abstractDeclaration
+    | propertyMember
+    ;
+
+abstractDeclaration
+    : Abstract (Identifier callSignature | variableStatement) eos
+    ;
+
+propertyMember
+    : propertyMemberBase
+    (
+          getAccessor
+        | setAccessor
+        | propertyOrMethod
+    )
+    ;
+
+propertyMemberBase
+    : Async? accessibilityModifier? Static?
+    ;
+
+propertyOrMethod
+    : ReadOnly? propertyName '?'? (
+          (typeAnnotation? initializer?)
+        | (callSignature block?)
+    )
+    ;
+
+initializer
+    : '=' singleExpression
+    ;
+
+
+parameterBlock
+    : '(' formalParameterList? ')'
+    ;
+
+
+formalParameterList
+    : formalParameterArg (',' formalParameterArg)* (',' lastFormalParameterArg)? ','?
+    ;
+
+formalParameterArg
+    : decoratorList? accessibilityModifier? ReadOnly? identifierOrKeyWord '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
+    | lastFormalParameterArg
+    // ([key, value]: [string, string[]])
+    | arrayLiteral (':' formalParameterList)?                                                                // ECMAScript 6: Parameter Context Matching
+    | objectLiteral (':' formalParameterList)?                                                               // ECMAScript 6: Parameter Context Matching
+    // `addThing({ payload }, { call }){}`
+    | objectLiteral (',' objectLiteral)*                                                                     // ECMAScript 6: Parameter Context Matching
+    ;
+
+lastFormalParameterArg                        // ECMAScript 6: Rest Parameter
+    : Ellipsis Identifier
     ;
 
 parameterList
@@ -222,10 +517,38 @@ restParameter
     : '...' singleExpression typeAnnotation?
     ;
 
-identifierOrPattern
-    : identifierName
-    | bindingPattern
-    ;
+//parameterBlock:
+//    '(' (This colonSepTypeRef? ',')?  parameterListTrailingComma? ')'
+//    ;
+//
+//parameterListTrailingComma
+//    : parameterList ','?
+//    ;
+//
+//parameterList
+//    : restParameter
+//    | parameter (',' parameter)* (',' restParameter)?
+//    ;
+//
+//restParameter
+//    : '...' identifierOrPattern colonSepTypeRef?
+//    ;
+//
+//parameter
+//    : requiredParameter
+//    | optionalParameter
+//    ;
+//
+//requiredParameter
+//    : decoratorList? accessibilityModifier? identifierOrPattern colonSepTypeRef?
+//    ;
+//
+//optionalParameter
+//    : decoratorList? accessibilityModifier? identifierOrPattern
+//    (   '?' typeAnnotation?
+//        | typeAnnotation? initializer
+//    )
+//    ;
 
 accessibilityModifier
     : Public
@@ -233,150 +556,99 @@ accessibilityModifier
     | Protected
     ;
 
-constructSignature
-    : 'new' typeParameters? '(' parameterList? ')' typeAnnotation?
+identifierOrPattern
+    : identifierName
+    | bindingPattern
     ;
 
-indexSignature
-    : '[' Identifier ':' (Number|String) ']' typeAnnotation
+
+
+
+
+bindingPattern
+    : arrayLiteral
+    | objectLiteral
     ;
 
-enumSignature
-    : identifierOrKeyWord '?'? ':' '|'? typeRef ('|' typeRef)*
+
+
+// Array Literal
+
+arrayLiteral
+    : '[' elementList? ']'
     ;
 
-methodSignature
-    : propertyName '?'? callSignature
+elementList
+    : arrayElement (','+ arrayElement)* ','?
     ;
 
-typeAliasDeclaration
-    : 'type' Identifier typeParameters? '=' typeRef SemiColon?
+arrayElement
+    : Ellipsis? bindingElement
     ;
 
-constructorDeclaration
-    : accessibilityModifier? Constructor '(' formalParameterList? ')' ( ('{' functionBody '}') | SemiColon)?
+bindingElement
+    : bindingPattern
+    | Identifier
     ;
 
-// A.5 Interface
 
-interfaceDeclaration
-    : Export? Declare? Interface Identifier typeParameters? interfaceExtendsClause? objectType SemiColon?
+
+// Object Literal
+
+objectLiteral
+    : '{' (propertyAssignment (',' propertyAssignment)* ','?)? '}'
     ;
 
-interfaceExtendsClause
-    : Extends classOrInterfaceTypeList
+propertyAssignment
+    : propertyName (':' identifierOrKeyWord | bindingPattern)? ('=' singleExpression)?  # PropertyExpressionAssignment
+    | getAccessor                                                 # PropertyGetter
+    | setAccessor                                                 # PropertySetter
+    | generatorMethod                                             # MethodProperty
+    | restParameter                                               # RestParameterInObject
     ;
 
-classOrInterfaceTypeList
-    : typeReference (',' typeReference)*
+propertyName
+    : StringLiteral                                               # StringProperty
+    | numericLiteral                                              # NumericProperty
+    | computedPropertyName                                        # ComputedProperty
+    | identifierName                                              # IdentifierProperty
     ;
 
-// A.7 Interface
-
-enumDeclaration
-    : Const? Enum Identifier '{' enumBody? '}'
+computedPropertyName
+    : '[' (identifierName '.' identifierName // usually Symbol.iterator
+          | StringLiteral
+          )
+      ']'
     ;
 
-enumBody
-    : enumMemberList ','?
+getAccessor
+    : getter '(' ')' typeAnnotation? block?
     ;
 
-enumMemberList
-    : enumMember (',' enumMember)*
+setAccessor
+    : setter '(' (Identifier | bindingPattern) typeAnnotation? ')' block?
     ;
 
-enumMember
-    : propertyName ('=' singleExpression)?
+generatorMethod
+    : '*'?  Identifier parameterBlock block
     ;
 
-// A.8 Namespaces
-
-namespaceDeclaration
-    : Namespace namespaceName '{' statementList? '}'
+arguments
+    : '(' (argumentList ','?)? ')'
     ;
 
-namespaceName
-    : Identifier ('.'+ Identifier)*
+argumentList
+    : argument (',' argument)*
     ;
 
-importAliasDeclaration
-    : Identifier '=' namespaceName SemiColon
-    | Identifier '=' Require '(' StringLiteral ')' SemiColon
+argument                      // ECMAScript 6: Spread Operator
+    : Ellipsis? (singleExpression | Identifier)
     ;
 
-importAll
-    : StringLiteral
-    ;
 
-// Ext.2 Additions to 1.8: Decorators
 
-decoratorList
-    : decorator+ ;
 
-decorator
-    : '@' (decoratorMemberExpression | decoratorCallExpression)
-    ;
-
-decoratorMemberExpression
-    : Identifier
-    | decoratorMemberExpression '.' identifierName
-    | '(' singleExpression ')'
-    ;
-
-decoratorCallExpression
-    : decoratorMemberExpression arguments;
-
-// ECMAPart
-program
-    : sourceElements? EOF
-    ;
-
-sourceElement
-    : Export? statement
-    ;
-
-statement
-    : block
-    | importStatement
-    | exportStatement
-    | emptyStatement_
-    | abstractDeclaration //ADDED
-    | decoratorList
-    | classDeclaration
-    | interfaceDeclaration //ADDED
-    | namespaceDeclaration //ADDED
-    | ifStatement
-    | iterationStatement
-    | continueStatement
-    | breakStatement
-    | returnStatement
-    | yieldStatement
-    | withStatement
-    | labelledStatement
-    | switchStatement
-    | throwStatement
-    | tryStatement
-    | debuggerStatement
-    | functionDeclaration
-    | arrowFunctionDeclaration
-    | generatorFunctionDeclaration
-    | typeAliasDeclaration //ADDED
-    | enumDeclaration      //ADDED
-    | variableStatement
-    | expressionStatement
-    ;
-
-block
-    : '{' statementList? '}'
-    ;
-
-statementList
-    : statement+
-    ;
-
-abstractDeclaration
-    : Abstract (Identifier '?'? callSignature | variableStatement) eos
-    ;
+// Import Statement
 
 importStatement
     : Import (fromBlock | importAliasDeclaration | importAll)
@@ -398,69 +670,52 @@ importDefault
 aliasName
     : identifierName (As identifierName)?
     // for import { of } from 'rxjs';
-//    | Of
+    | Of
     ;
 
 importNamespace
     : ('*' | identifierName) (As identifierName)?
     ;
 
-exportStatement
-    : Export (exportFromBlock | declaration) eos    # ExportDeclaration
-    | Export Default singleExpression eos           # ExportDefaultDeclaration
-    ;
-
 importFrom
     : From StringLiteral
     ;
 
-exportFromBlock
-    : importNamespace importFrom eos
-    | moduleItems importFrom? eos
+importAliasDeclaration
+    : identifierName '=' namespaceName SemiColon
+    | identifierName '=' Require '(' StringLiteral ')' SemiColon
     ;
 
-declaration
-    : variableStatement
-    | classDeclaration
-    | functionDeclaration
+importAll
+    : StringLiteral
     ;
+
+
+// Export Statement
+
+exportStatement
+    : Export Declare? exportStatementTail
+    ;
+
+exportStatementTail
+    : Default? declarationStatement                     #ExportElementDirectly
+    | Default identifierName                            #ExportElementAsDefault
+    | multipleExportElements (From StringLiteral)?      #ExportElements
+    | Multiply (As identifierName)? From StringLiteral  #ExportModule
+    | As Namespace identifierName eos                   #ExportAsNamespace
+    | '=' namespaceName eos                             #ExportEquals
+    | Import identifierName '=' namespaceName eos       #ExportImport
+    ;
+
+multipleExportElements
+    : '{' aliasName (',' aliasName)* ','? '}'
+    ;
+
+
+// Variable Statement
 
 variableStatement
-    : bindingPattern typeAnnotation? initializer SemiColon?
-    | accessibilityModifier? varModifier? ReadOnly? variableDeclarationList SemiColon?
-    | Declare varModifier? variableDeclarationList SemiColon?
-    ;
-
-variableDeclarationList
-    : variableDeclaration (',' variableDeclaration)*
-    ;
-
-variableDeclaration
-    : ( identifierOrKeyWord | arrayLiteral | objectLiteral) typeAnnotation? singleExpression? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
-    ;
-
-emptyStatement_
-    : SemiColon
-    ;
-
-expressionStatement
-    : {this.notOpenBraceAndNotFunction()}? expressionSequence SemiColon?
-    ;
-
-ifStatement
-    : If '(' expressionSequence ')' statement (Else statement)?
-    ;
-
-
-iterationStatement
-    : Do statement While '(' expressionSequence ')' eos                                                         # DoStatement
-    | While '(' expressionSequence ')' statement                                                                # WhileStatement
-    | For '(' expressionSequence? SemiColon expressionSequence? SemiColon expressionSequence? ')' statement     # ForStatement
-    | For '(' varModifier variableDeclarationList SemiColon expressionSequence? SemiColon expressionSequence? ')'
-          statement                                                                                             # ForVarStatement
-    | For '(' singleExpression (In | Identifier{this.p("of")}?) expressionSequence ')' statement                # ForInStatement
-    | For '(' varModifier variableDeclaration (In | Identifier{this.p("of")}?) expressionSequence ')' statement # ForVarInStatement
-//    | For Await? '(' (singleExpression | variableDeclarationList) 'of' expressionSequence ')' statement         # ForOfStatement
+    : accessibilityModifier? ReadOnly? varModifier (bindingPatternBlock | variableDeclarationList) SemiColon?
     ;
 
 varModifier
@@ -469,27 +724,21 @@ varModifier
     | Const
     ;
 
-continueStatement
-    : Continue ({this.notLineTerminator()}? Identifier)? eos
+bindingPatternBlock
+    : bindingPattern typeAnnotation? initializer?
     ;
 
-breakStatement
-    : Break ({this.notLineTerminator()}? Identifier)? eos
+variableDeclarationList
+    : variableDeclaration (',' variableDeclaration)*
     ;
 
-returnStatement
-    : Return ({this.notLineTerminator()}? expressionSequence)? eos
-    | Return '(' htmlElements ')' eos
-//    | Return '{' statement '}' eos
+variableDeclaration
+    : identifierName typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
     ;
 
-yieldStatement
-    : Yield ({this.notLineTerminator()}? expressionSequence)? eos
-    ;
 
-withStatement
-    : With '(' expressionSequence ')' statement
-    ;
+
+// Switch Statement
 
 switchStatement
     : Switch '(' expressionSequence ')' caseBlock
@@ -511,13 +760,9 @@ defaultClause
     : Default ':' statementList?
     ;
 
-labelledStatement
-    : Identifier ':' statement
-    ;
 
-throwStatement
-    : Throw {this.notLineTerminator()}? expressionSequence eos
-    ;
+
+// Try Statement
 
 tryStatement
     : Try block (catchProduction finallyProduction? | finallyProduction)
@@ -531,65 +776,167 @@ finallyProduction
     : Finally block
     ;
 
+
+
+
+// Other Statements
+
+emptyStatement
+    : SemiColon
+    ;
+
+
+ifStatement
+    : If '(' expressionSequence ')' statement (Else statement)?
+    ;
+
+
+iterationStatement
+    : Do statement While '(' expressionSequence ')' eos                                                         # DoStatement
+    | While '(' expressionSequence ')' statement                                                                # WhileStatement
+    | For '(' expressionSequence? SemiColon expressionSequence? SemiColon expressionSequence? ')' statement     # ForStatement
+    | For '(' varModifier variableDeclarationList SemiColon expressionSequence? SemiColon expressionSequence? ')'
+          statement                                                                                             # ForVarStatement
+    | For '(' singleExpression (In | Identifier{this.p("of")}?) expressionSequence ')' statement                # ForInStatement
+    | For '(' varModifier variableDeclaration (In | Identifier{this.p("of")}?) expressionSequence ')' statement # ForVarInStatement
+    ;
+
+
+continueStatement
+    : Continue ({this.notLineTerminator()}? Identifier)? eos
+    ;
+
+
+breakStatement
+    : Break ({this.notLineTerminator()}? Identifier)? eos
+    ;
+
+
+returnStatement
+    : Return ({this.notLineTerminator()}? expressionSequence)? eos
+    ;
+
+
+withStatement
+    : With '(' expressionSequence ')' statement
+    ;
+
+
+labelledStatement
+    : Identifier ':' statement
+    ;
+
+
+throwStatement
+    : Throw {this.notLineTerminator()}? expressionSequence eos
+    ;
+
+
 debuggerStatement
     : Debugger eos
     ;
 
-functionDeclaration
-    : Default? Async? Function Identifier callSignature ( ('{' functionBody '}') | SemiColon)
+
+expressionStatement
+    : {this.notOpenBraceAndNotFunction()}? expressionSequence eos
     ;
 
-//Ovveride ECMA
-classDeclaration
-    : Declare? Abstract? Class Identifier typeParameters? classHeritage classTail
+
+expressionSequence
+    : singleExpression (',' singleExpression)*
     ;
 
-classHeritage
-    : classExtendsClause? implementsClause?
+
+
+// Expressions
+
+singleExpression
+    :
+      This                                                                   # ThisExpression
+    | Super                                                                  # SuperExpression
+    | literal                                                                # LiteralExpression
+    | arrayLiteral                                                           # ArrayLiteralExpression
+    | objectLiteral                                                          # ObjectLiteralExpression
+    | templateStringLiteral                                                  # TemplateStringExpression
+
+    | Yield ({this.notLineTerminator()}? expressionSequence)?                # YieldExpression
+    | Await singleExpression                                                 # AwaitExpression
+
+// respect precedence by order of sub-rules
+    | singleExpression assignmentOperator singleExpression                   # AssignmentExpression
+    | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
+    | singleExpression '?''?' singleExpression                               # coalesceExpression
+    | singleExpression ('||' | '&&') singleExpression                        # LogicalExpression
+    | singleExpression ('&' | '^' | '|' ) singleExpression                   # BinaryExpression
+    | singleExpression ('==' | '!=' | '===' | '!==') singleExpression        # EqualityExpression
+    | singleExpression relationalOperator singleExpression                   # RelationalExpression
+    | singleExpression ('<<' | '>''>' | '>''>''>') singleExpression          # BitShiftExpression
+    | singleExpression ('+' | '-') singleExpression                          # AdditiveExpression
+    | singleExpression ('*' | '/' | '%') singleExpression                    # MultiplicativeExpression
+    | unaryOperator singleExpression                                         # UnaryExpression
+    | singleExpression As typeRef                                            # CastAsExpression
+    | singleExpression {this.notLineTerminator()}? ('++' | '--')             # PostfixExpression
+    | singleExpression '?''.'? '[' expressionSequence ']'                    # IndexedAccessExpression
+    | singleExpression '?''.'? identifierName typeArguments? arguments       # CallExpression
+    | singleExpression ('.' | '?''.') identifierName                         # PropertyAccessExpression
+    | newExpression                                                          # NewExpressionL
+
+    | functionExpression                                                     # FunctionExpressionL
+    | arrowFunctionExpression                                                # ArrowFunctionExpressionL
+    | classExpression                                                        # ClassExpressionL
+
+  // TODO:
+  //  | iteratorBlock                                                          # IteratorsExpression
+  //  | generatorBlock                                                         # GeneratorsExpression
+
+    | identifierName                                                         # IdentifierExpression
+    | '(' expressionSequence ')'                                             # ParenthesizedExpression
     ;
 
-classTail
-    :  '{' classElement* '}'
+
+
+
+
+functionExpression
+    : Function '*'? Identifier? parameterBlock typeAnnotation? block
     ;
 
-classExtendsClause
-    : Extends typeReference
+arrowFunctionExpression
+    : Async? parameterBlock typeAnnotation? '=>' arrowFunctionBody
     ;
 
-implementsClause
-    : Implements classOrInterfaceTypeList
+arrowFunctionBody
+    : singleExpression
+    | block
     ;
 
-// Classes modified
-classElement
-    : constructorDeclaration
-    | decoratorList? propertyMemberDeclaration
-    | indexMemberDeclaration
-    | statement
+classExpression
+    : Class Identifier? classBody
     ;
 
-propertyMemberDeclaration
-    : propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer? SemiColon             # PropertyDeclarationExpression
-    | propertyMemberBase propertyName callSignature ( ('{' functionBody '}') | SemiColon)           # MethodDeclarationExpression
-    | propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
-    | abstractDeclaration                                                                           # AbstractMemberDeclaration
+assignmentOperator
+    : '=' | '*=' | '/=' | '%=' | '+='
+    | '-' '=' /* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */
+    | '<<=' | '>' '>' '>'? '=' | '&=' | '^=' | '|='
     ;
 
-propertyMemberBase
-    : Async? accessibilityModifier? Static? ReadOnly?
+relationalOperator
+    : Instanceof | In | '<' | '>' | '<=' | '>='
     ;
 
-indexMemberDeclaration
-    : indexSignature SemiColon
+unaryOperator
+    : Delete | Void | Typeof | '++' | '--' | '+' | '-' | '~' | '!'
     ;
 
-generatorMethod
-    : '*'?  Identifier '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
-    ;
+newExpression
+    : New (
+          Dot Target
+        | singleExpression typeArguments? arguments?
+    );
 
-generatorFunctionDeclaration
-    : Function '*' Identifier? '(' formalParameterList? ')' '{' functionBody '}'
-    ;
+
+
+
 
 generatorBlock
     : '{' generatorDefinition (',' generatorDefinition)* ','? '}'
@@ -604,207 +951,7 @@ iteratorBlock
     ;
 
 iteratorDefinition
-    : '[' singleExpression ']' '(' formalParameterList? ')' '{' functionBody '}'
-    ;
-
-formalParameterList
-    : formalParameterArg (',' formalParameterArg)* (',' lastFormalParameterArg)? ','?
-    ;
-
-formalParameterArg
-    : decoratorList? accessibilityModifier? ReadOnly? identifierOrKeyWord '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
-    | lastFormalParameterArg
-    // ([key, value]: [string, string[]])
-    | arrayLiteral (':' formalParameterList)?                                                                // ECMAScript 6: Parameter Context Matching
-    | objectLiteral (':' formalParameterList)?                                                               // ECMAScript 6: Parameter Context Matching
-    // `addThing({ payload }, { call }){}`
-    | objectLiteral (',' objectLiteral)*                                                                     // ECMAScript 6: Parameter Context Matching
-    ;
-
-lastFormalParameterArg                        // ECMAScript 6: Rest Parameter
-    : Ellipsis Identifier
-    ;
-
-functionBody
-    : sourceElements?
-    ;
-
-sourceElements
-    : sourceElement+
-    ;
-
-arrayLiteral
-    : ('[' elementList? ']')
-    ;
-
-elementList
-    : arrayElement (','+ arrayElement)*
-    ;
-
-arrayElement                      // ECMAScript 6: Spread Operator
-    : Ellipsis? (singleExpression | Identifier) ','?
-    ;
-
-objectLiteral
-    : '{' (propertyAssignment (',' propertyAssignment)* ','?)? '}'
-    ;
-
-// MODIFIED
-propertyAssignment
-    : propertyName '?'? (':' |'=') singleExpression            # PropertyExpressionAssignment
-    | '[' singleExpression ']' '?'?  ':' singleExpression      # ComputedPropertyExpressionAssignment
-    | getAccessor                                              # PropertyGetter
-    | setAccessor                                              # PropertySetter
-    | generatorMethod                                          # MethodProperty
-    | identifierOrKeyWord                                      # PropertyShorthand
-    | defaultKeyWord                                           # PropertyShorthand
-    | restParameter                                            # RestParameterInObject
-    ;
-
-getAccessor
-    : getter '(' ')' typeAnnotation? '{' functionBody '}'
-    ;
-
-setAccessor
-    : setter '(' ( Identifier | bindingPattern) typeAnnotation? ')' '{' functionBody '}'
-    ;
-
-propertyName
-    : identifierName
-    | StringLiteral
-    | numericLiteral
-    | keyword
-    | Default         // cannot be in other statement, only accept in object
-    | predefinedType
-    | Unknown
-    ;
-
-arguments
-    : '(' (argumentList ','?)? ')'
-    ;
-
-argumentList
-    : argument (',' argument)*
-    ;
-
-argument                      // ECMAScript 6: Spread Operator
-    : Ellipsis? (singleExpression | identifierOrKeyWord)
-    ;
-
-expressionSequence
-    : singleExpression (',' singleExpression)*
-    ;
-
-functionExpressionDeclaration
-    : Function Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
-    ;
-
-jsxArrowFunction
-    : '(' formalParameterList (',' formalParameterList)* ')' '=>' arrowFunctionBody      # JsxArrowFunctionDecl
-    ;
-
-singleExpression
-    : functionExpressionDeclaration                                          # FunctionExpression
-    | arrowFunctionDeclaration                                               # ArrowFunctionExpression   // ECMAScript 6
-    | jsxArrowFunction                                                       # JsxArrowFunctionExpression
-    | Class Identifier? classTail                                            # ClassExpression
-    // this.form.value?.id?.[0]
-    | singleExpression '?'? '!'? '.'? '[' expressionSequence ']'               # MemberIndexExpression
-    // for: `onHotUpdateSuccess?.();`
-    // onChange?.(userName || password || null)
-    | singleExpression '?'? '!'? '.' '#'? identifierName? nestedTypeGeneric?  # MemberDotExpression
-    // for: `onHotUpdateSuccess?.();`
-    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
-
-    // samples: `error?.response?.data?.message ?? error.message;`
-    | singleExpression '??' singleExpression                                 # NullCoalesceExpression
-    | singleExpression '!'                                                   # PropCheckExpression
-    // Split to try `new Date()` first, then `new Date`.
-    | New singleExpression typeArguments? arguments                          # NewExpression
-    | New singleExpression typeArguments?                                    # NewExpression
-    | singleExpression arguments                                             # ArgumentsExpression
-    | singleExpression {this.notLineTerminator()}? '++'                      # PostIncrementExpression
-    | singleExpression {this.notLineTerminator()}? '--'                      # PostDecreaseExpression
-    | Delete singleExpression                                                # DeleteExpression
-    | Void singleExpression                                                  # VoidExpression
-    | Typeof singleExpression                                                # TypeofExpression
-    | Keyof singleExpression                                                 # KeyofExpression
-    | '++' singleExpression                                                  # PreIncrementExpression
-    | '--' singleExpression                                                  # PreDecreaseExpression
-    | '+' singleExpression                                                   # UnaryPlusExpression
-    | '-' singleExpression                                                   # UnaryMinusExpression
-    | '~' singleExpression                                                   # BitNotExpression
-    | '!' singleExpression                                                   # NotExpression
-    | Await singleExpression                                                 # AwaitExpression
-    | <assoc=right> singleExpression '**' singleExpression                   # PowerExpression
-    | singleExpression ('*' | '/' | '%') singleExpression                    # MultiplicativeExpression
-    | singleExpression ('+' | '-') singleExpression                          # AdditiveExpression
-//    | singleExpression ('<<' | '>>' | '>>>') singleExpression                # BitShiftExpression
-    | singleExpression ('<<' | '>''>' | '>''>''>') singleExpression          # BitShiftExpression
-    | singleExpression ('<' | '>' | '<=' | '>=') singleExpression            # RelationalExpression
-    | singleExpression Instanceof singleExpression                           # InstanceofExpression
-    | singleExpression In singleExpression                                   # InExpression
-    | singleExpression ('==' | '!=' | '===' | '!==') singleExpression        # EqualityExpression
-    | singleExpression '&' singleExpression                                  # BitAndExpression
-    | singleExpression '^' singleExpression                                  # BitXOrExpression
-    | singleExpression '|' singleExpression                                  # BitOrExpression
-    | singleExpression '&&' singleExpression                                 # LogicalAndExpression
-    | singleExpression '||' singleExpression                                 # LogicalOrExpression
-    | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
-    | singleExpression '=' singleExpression                                  # AssignmentExpression
-    | singleExpression assignmentOperator singleExpression                   # AssignmentOperatorExpression
-    | singleExpression templateStringLiteral                                 # TemplateStringExpression  // ECMAScript 6
-    | iteratorBlock                                                          # IteratorsExpression // ECMAScript 6
-    | generatorBlock                                                         # GeneratorsExpression // ECMAScript 6
-    | generatorFunctionDeclaration                                           # GeneratorsFunctionExpression // ECMAScript 6
-    | yieldStatement                                                         # YieldExpression // ECMAScript 6
-    | This                                                                   # ThisExpression
-    | identifierName nestedTypeGeneric? singleExpression?                    # IdentifierExpression
-    | Super                                                                  # SuperExpression
-    | literal                                                                # LiteralExpression
-    | arrayLiteral                                                           # ArrayLiteralExpression
-    | objectLiteral                                                          # ObjectLiteralExpression
-    | '(' expressionSequence ')'                                             # ParenthesizedExpression
-//    | Of '(' expressionSequence ')'                                          # OfParenthesizedExpression
-    | typeArguments expressionSequence?                                      # GenericTypes
-    | singleExpression As asExpression                                       # CastAsExpression
-    | htmlElements                                                           # HtmlElementExpression
-    | Require '(' literal ')' '.'? Default?                                  # LazyRequiredExpression
-    ;
-
-asExpression
-    : predefinedType ('[' ']')?
-    | singleExpression
-    | objectType
-    | Unknown
-    ;
-
-arrowFunctionDeclaration
-    : Async? arrowFunctionParameters typeAnnotation? '=>' arrowFunctionBody
-    ;
-
-arrowFunctionParameters
-    : identifierOrKeyWord
-    | nestedTypeGeneric? '(' formalParameterList? ','? ')'
-    ;
-
-arrowFunctionBody
-    : singleExpression
-    | '{' functionBody '}'
-    ;
-
-assignmentOperator
-    : '*='
-    | '/='
-    | '%='
-    | '+='
-    | '-='
-    | '<<='
-    | '>>='
-    | '>>>='
-    | '&='
-    | '^='
-    | '|='
+    : '[' singleExpression ']' parameterBlock block
     ;
 
 literal
@@ -814,7 +961,6 @@ literal
     | templateStringLiteral
     | RegularExpressionLiteral
     | numericLiteral
-    | Module  // only for es6 dev config
     ;
 
 templateStringLiteral
@@ -823,102 +969,118 @@ templateStringLiteral
 
 templateStringAtom
     : TemplateStringAtom
-    | TemplateStringStartExpression singleExpression TemplateCloseBrace
+    | TemplateStringStartExpression singleExpression CloseBrace
     ;
 
 numericLiteral
-    : DecimalLiteral
+    : '-'? DecimalLiteral
     | HexIntegerLiteral
     | OctalIntegerLiteral
     | OctalIntegerLiteral2
     | BinaryIntegerLiteral
     ;
 
-identifierName
-    : Identifier
-    | reservedWord
-    | Lodash Lodash?
-    | Dollar Dollar?
-    ;
-
 identifierOrKeyWord
     : Identifier
-    | TypeAlias
     | Require
-    | Module
-    | Lodash Lodash?
-    | Any
+    | TypeAlias
     ;
 
-defaultKeyWord
-    : Default
+identifierName
+    : reservedWord
+    | Identifier
     ;
 
 reservedWord
     : keyword
-    | NullLiteral
     | BooleanLiteral
-    | Module
     ;
 
-keyword
-    : Break
-    | Do
-    | Instanceof
+
+typeReferenceName
+    : keywordAllowedInTypeReferences
+    | BooleanLiteral
+    | Identifier
+    ;
+
+keyword:
+    keywordAllowedInTypeReferences
+    | ReadOnly // cannot reference types named 'readonly'
     | Typeof
-    | Keyof
-    | Case
-    | Else
-    | New
-    | Var
-    | Catch
-    | Finally
-    | Return
-    | Void
-    | Continue
-    | For
-    | Switch
-    | While
-    | Debugger
-    | Function
-    | This
-    | Is
-    | With
-//    | Default
-    | If
-    | Throw
-    | Delete
-    | In
-    | Try
-    | ReadOnly
-    | Async
-    | From
-    | Class
-    | Enum
-    | Extends
-    | Super
-    | Const
-    | Export
-    | Import
-    | Implements
-    | Let
-    | Private
-    | Public
-    | Interface
-    | Package
-    | Protected
-    | Static
-    | Yield
-    | Get
-    | Set
-    | Require
-    | TypeAlias
-    | String
-    | Undefined
+    ;
+
+keywordAllowedInTypeReferences:
+    Abstract
     | Any
-    | Namespace
-    | Number
+    | As
+    | Asserts
+    | Async
+    | Await
+    | Break
     | Boolean
+    | Case
+    | Catch
+    | Class
+    | Const
+    | Constructor
+    | Continue
+    | Debugger
+    | Declare
+    | Default
+    | Delete
+    | Do
+    | Else
+    | Enum
+    | Export
+    | Extends
+    | Finally
+    | For
+    | From
+    | Function
+    | Get
+    | Global
+    | If
+    | Implements
+    | Import
+    | In
+    | Infer
+    | Instanceof
+    | Interface
+    | Is
+    | Let
+    | Module
+    | Namespace
+    | Never
+    | New
+    | NullLiteral
+    | Number
+    | Package
+    | Private
+    | Protected
+    | Public
+    // | ReadOnly // cannot reference types named 'readonly'
+    | Require
+    | Return
+    | Set
+    | Static
+    | String
+    | Super
+    | Switch
+    | Symbol
+    | Target
+    | This
+    | Throw
+    | Try
+    | TypeAlias
+    // | Typeof // cannot reference types named 'typeof'
+    | UndefinedLiteral
+    | Unknown
+    | Unique
+    | Var
+    | Void
+    | While
+    | With
+    | Yield
     ;
 
 getter
@@ -935,7 +1097,6 @@ eos
     | {this.lineTerminatorAhead()}?
     | {this.closeBrace()}?
     ;
-
 
 htmlElements
     : htmlElement+

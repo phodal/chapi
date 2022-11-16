@@ -52,24 +52,24 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
             return type
         }
 
-        when (val primaryCtx = typeContext.getChild(0)) {
-            is TypeScriptParser.PrimaryContext -> {
-                type = handleTypeAnnotationPrimary(primaryCtx, type)
-            }
-        }
+//        when (val primaryCtx = typeContext.getChild(0)) {
+//            is TypeScriptParser.PrimaryContext -> {
+//                type = handleTypeAnnotationPrimary(primaryCtx, type)
+//            }
+//        }
 
         return type
     }
 
-    private fun handleTypeAnnotationPrimary(typeContext: TypeScriptParser.PrimaryContext, typ: String?): String? {
-        var typeStr = typ
-        when (val childPrimaryCtx = typeContext.getChild(0)) {
-            is TypeScriptParser.ParenthesizedPrimTypeContext -> {
-                typeStr = childPrimaryCtx.typeRef().text
-            }
-        }
-        return typeStr
-    }
+//    private fun handleTypeAnnotationPrimary(typeContext: TypeScriptParser.PrimaryContext, typ: String?): String? {
+//        var typeStr = typ
+//        when (val childPrimaryCtx = typeContext.getChild(0)) {
+//            is TypeScriptParser.ParenthesizedPrimTypeContext -> {
+//                typeStr = childPrimaryCtx.typeRef().text
+//            }
+//        }
+//        return typeStr
+//    }
 
     fun buildMethodParameters(paramListCtx: TypeScriptParser.ParameterListContext?): Array<CodeProperty> {
         var parameters: Array<CodeProperty> = arrayOf()
