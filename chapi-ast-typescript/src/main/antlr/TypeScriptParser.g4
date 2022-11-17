@@ -769,7 +769,7 @@ breakStatement
 
 returnStatement
     : Return ({this.notLineTerminator()}? expressionSequence)? eos
-    | {isJsx()}? Return '(' htmlElements ')' eos
+    | Return htmlAssign eos
     ;
 
 
@@ -866,7 +866,7 @@ singleExpression
     | objectLiteral                                                          # ObjectLiteralExpression
     | templateStringLiteral                                                  # TemplateStringExpression
     | singleExpression As asExpression                                       # CastAsExpression
-    | {isJsx()}? htmlElements                                                # HtmlElementExpression
+    | singleExpression '=' htmlAssign                                        # HtmlAssignmentExpression
     ;
 
 yieldStatement
@@ -891,7 +891,8 @@ arrowFunctionParameters
     ;
 
 arrowFunctionBody
-    : '{' statementList? '}'
+    : htmlAssign
+    | '{' statementList? '}'
     | singleExpression
     ;
 
@@ -1083,8 +1084,19 @@ eos
     | {this.closeBrace()}?
     ;
 
-htmlElements
-    : htmlElement+
+//htmlElements
+//    : htmlElement+
+//    ;
+
+// case 1: const element = <h1>{title}</h1>;
+// case 2:
+// const element = (
+//  <h1 className="greeting">
+//    Hello, world!
+//  </h1>
+//);
+htmlAssign
+    :'('? '<' htmlTagCenter '>' ')'?
     ;
 
 htmlElement
@@ -1094,6 +1106,14 @@ htmlElement
     | '<' htmlTagName htmlAttribute* htmlContent '/''>'
     | '<' htmlTagName htmlAttribute* '/''>'
     | '<' htmlTagName htmlAttribute* '>'
+    ;
+
+htmlTagCenter
+    : htmlTagStartName htmlAttribute* '>' htmlContent '<''/' htmlTagClosingName
+    | '>' htmlContent '<''/'
+    | htmlTagName htmlAttribute* htmlContent '/'
+    | htmlTagName htmlAttribute* '/'
+    | htmlTagName htmlAttribute*
     ;
 
 htmlContent

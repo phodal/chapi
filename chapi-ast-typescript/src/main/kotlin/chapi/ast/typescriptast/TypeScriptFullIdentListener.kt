@@ -8,7 +8,7 @@ import chapi.domain.core.*
 import chapi.infra.Stack
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
-class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
+class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener() {
     private var hasHtmlElement: Boolean = false
     private var filePath: String = node.filePath
 
@@ -596,13 +596,12 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     private fun parseStatement(context: TypeScriptParser.StatementContext) {
         when (val child = context.getChild(0)) {
             is TypeScriptParser.ReturnStatementContext -> {
-                hasHtmlElement = false
 
                 if (child.expressionSequence() != null) {
                     child.expressionSequence().singleExpression().forEach(::parseSingleExpression)
                 }
 
-                if (hasHtmlElement) {
+                if (node.isJsxFile()) {
                     currentFunc.IsReturnHtml = true
                 }
             }
@@ -731,10 +730,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
 
-                is TypeScriptParser.HtmlElementExpressionContext -> {
-                    hasHtmlElement = true
+//                is TypeScriptParser.HtmlElementExpressionContext -> {
+//                    hasHtmlElement = true
 //                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
-                }
+//                }
 
                 is TypeScriptParser.ArgumentsExpressionContext -> {
                     parseArguments(subSingle)

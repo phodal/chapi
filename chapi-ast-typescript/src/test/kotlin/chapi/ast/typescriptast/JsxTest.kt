@@ -71,7 +71,7 @@ const BadSmellThreshold = () => {
         val innerFunctions = defaultStruct.Functions[0].InnerFunctions
         assertEquals(3, innerFunctions.size)
 
-        assertEquals(2, innerFunctions[0].FunctionCalls.size)
+        assertEquals(1, innerFunctions[0].FunctionCalls.size)
         assertEquals(1, innerFunctions[1].FunctionCalls.size)
         assertEquals(1, innerFunctions[2].FunctionCalls.size)
     }
