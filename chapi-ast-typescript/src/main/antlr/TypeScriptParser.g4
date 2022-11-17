@@ -111,6 +111,7 @@ unionTypeExpression
 
 intersectionTypeExpression
     : '&'? operatorTypeRef ('&' operatorTypeRef)*
+    | extendRef (',' extendRef)* ','?
     ;
 
 operatorTypeRef
@@ -142,6 +143,12 @@ primaryTypeExpression:
     | typeRefWithModifiers
     | parenthesizedTypeRef
     );
+
+extendRef
+    : operatorTypeRef Extends operatorTypeRef
+    | operatorTypeRef Extends operatorTypeRef '=' operatorTypeRef
+    | operatorTypeRef '=' operatorTypeRef
+    ;
 
 
 
@@ -396,7 +403,7 @@ enumMember
 // Function Declaration
 
 functionDeclaration
-    : propertyMemberBase Function '*'? identifierName callSignature '{' functionBody? '}' eos
+    : propertyMemberBase Function '*'? identifierName callSignature ('{' functionBody? '}' | eos )
     ;
 
 functionBody
@@ -883,7 +890,7 @@ asExpression
     ;
 
 functionExpression
-    : Function '*'? Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody? '}'
+    : Function '*'? Identifier? '(' formalParameterList? ')' typeAnnotation? ('{' functionBody? '}' | eos)
     ;
 
 arrowFunctionDeclaration
@@ -892,7 +899,7 @@ arrowFunctionDeclaration
 
 arrowFunctionParameters
     : typeRef? '(' formalParameterList? ','? ')'
-    | identifierName
+    | typeRef? identifierName
     ;
 
 arrowFunctionBody
@@ -923,7 +930,7 @@ unaryOperator
 
 
 generatorFunctionDeclaration
-    : Function '*' Identifier? '(' formalParameterList? ')' '{' functionBody? '}'
+    : Function '*' Identifier? '(' formalParameterList? ')' ('{' functionBody? '}' | eos)
     ;
 
 generatorBlock

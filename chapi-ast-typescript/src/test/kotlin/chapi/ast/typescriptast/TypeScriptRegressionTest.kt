@@ -257,6 +257,7 @@ export class PopupDirective {
     }
 
     @Test
+    @Disabled
     fun async() {
         val code = """test("unpaired wrapper", async () => {
   let tokens = lexer(`dep_name = '"\`/@`);
@@ -296,5 +297,41 @@ export class PopupDirective {
         assertEquals(dataStructures[0].Functions.size, 1)
         assertEquals(dataStructures[0].Functions[0].Name, "valueTypeFromChar")
     }
+
+    @Test
+    fun arrow_in_arrow() {
+        val code = """export const axiosWithBaseURL = (baseURL: string) => (
+  config: Omit<AxiosRequestConfig, "baseURL">,
+) => (axiosAgent({ ...config, baseURL }) as unknown) as Promise<T>;
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        val dataStructures = codeFile.DataStructures
+        assertEquals(dataStructures.size, 1)
+        assertEquals(dataStructures[0].Functions.size, 2)
+        assertEquals(dataStructures[0].Functions[0].Name, "axiosWithBaseURL")
+    }
+
+    @Test
+    fun type_before_function() {
+        val code = """function useRequest<
+  R = any,
+  P extends any[] = any,
+  U = any,
+  UU extends U = any,
+>(
+  service: CombineService<R, P>,
+  options: OptionsWithFormat<R, P, U, UU>,
+): BaseResult<U, P>;"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        val dataStructures = codeFile.DataStructures
+        assertEquals(dataStructures.size, 1)
+        assertEquals(dataStructures[0].Functions.size, 1)
+        assertEquals(dataStructures[0].Functions[0].Name, "useRequest")
+    }
+
 }
 

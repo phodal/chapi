@@ -1,6 +1,8 @@
 package chapi.ast.typescriptast
 
 import chapi.domain.core.DataStructType
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -72,13 +74,16 @@ class TypeScriptAnalyserTest {
     @Test
     @Disabled
     fun someBug() {
-        val dir = File("/Users/phodal/bug-ui-system")
-        dir.walkTopDown().forEach {
+        val dir = File("/Users/phodal/source/archguard/archguard-frontend/archguard/src")
+        val toCollection = dir.walkTopDown().map {
             if (it.extension == "ts" || it.extension == "js") {
                 val content = it.readText()
                 println(it.absolutePath)
-                val codeFile = TypeScriptAnalyser().analysis(content, it.name)
+                TypeScriptAnalyser().analysis(content, it.name)
+            } else {
+                null
             }
-        }
+        }.filterNotNull().toCollection(ArrayList())
+        val json = Json.encodeToString(toCollection)
     }
 }
