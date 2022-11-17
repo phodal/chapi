@@ -446,14 +446,14 @@ constructorDeclaration
     ;
 
 propertyMemberDeclaration
-    : propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer?                      # PropertyDeclarationExpression
+    : abstractDeclaration                                                                           # AbstractMemberDeclaration
+    | propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer?                       # PropertyDeclarationExpression
     | propertyMemberBase propertyName callSignature ( ('{' functionBody '}'))                       # MethodDeclarationExpression
     | propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
-    | abstractDeclaration                                                                           # AbstractMemberDeclaration
     ;
 
 abstractDeclaration
-    : Abstract (identifierName '?'? callSignature | variableStatement)
+    : Abstract (identifierName '?'?  typeAnnotation?  callSignature? | variableStatement)
     ;
 
 //propertyMember
