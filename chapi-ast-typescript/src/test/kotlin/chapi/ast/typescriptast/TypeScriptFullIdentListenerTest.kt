@@ -417,20 +417,17 @@ interface IEmployee extends IPerson {
     empCode: number;
     readonly empName: string;
     empDept?:string;
-    getSalary: (number) => number; // arrow function
+    getSalary: (number) => number; // arrow type
     getManagerName(number): string;
 }
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "")
-        assertEquals(codeFile.DataStructures[0].Fields.size, 3)
-        assertEquals(codeFile.DataStructures[0].Functions.size, 2)
+        println(Json.encodeToString(codeFile))
 
-        val firstFunc = codeFile.DataStructures[0].Functions[0]
-        assertEquals(firstFunc.Name, "getSalary")
-        assertEquals(firstFunc.MultipleReturns[0].TypeType, "number")
-        assertEquals(firstFunc.Parameters[0].TypeType, "number")
+        assertEquals(codeFile.DataStructures[0].Fields.size, 4)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
 
-        val secondFunc = codeFile.DataStructures[0].Functions[1]
+        val secondFunc = codeFile.DataStructures[0].Functions[0]
         assertEquals(secondFunc.Name, "getManagerName")
         assertEquals(secondFunc.MultipleReturns[0].TypeType, "string")
     }

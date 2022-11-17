@@ -46,34 +46,21 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         }
 
         val typeContext = typeAnnotation.typeRef() ?: return ""
-        var type = typeContext.text
 
         if (typeContext.children == null) {
-            return type
+            return typeContext.text
         }
-
-//        when (val primaryCtx = typeContext.getChild(0)) {
-//            is TypeScriptParser.PrimaryContext -> {
-//                type = handleTypeAnnotationPrimary(primaryCtx, type)
-//            }
-//        }
 
         return processRef(typeContext)
     }
 
-    fun processRef(type: TypeScriptParser.TypeRefContext): String {
-        return type.text
-    }
+    fun processRef(typeRef: TypeScriptParser.TypeRefContext): String {
+        typeRef.conditionalTypeRef().unionTypeExpression().forEach {
+            return it.text
+        }
 
-//    private fun handleTypeAnnotationPrimary(typeContext: TypeScriptParser.PrimaryContext, typ: String?): String? {
-//        var typeStr = typ
-//        when (val childPrimaryCtx = typeContext.getChild(0)) {
-//            is TypeScriptParser.ParenthesizedPrimTypeContext -> {
-//                typeStr = childPrimaryCtx.typeRef().text
-//            }
-//        }
-//        return typeStr
-//    }
+        return typeRef.text
+    }
 
     fun buildMethodParameters(paramListCtx: TypeScriptParser.ParameterListContext?): Array<CodeProperty> {
         var parameters: Array<CodeProperty> = arrayOf()
@@ -111,7 +98,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
     private fun buildRestParameter(restCtx: TypeScriptParser.RestParameterContext?): CodeProperty {
         var paramType = ""
         if (restCtx!!.typeAnnotation() != null) {
-            paramType = buildTypeAnnotation(restCtx.typeAnnotation())!!
+            paramType = buildTypeAnnotation(restCtx.typeAnnotation())
         }
 
         return CodeProperty(

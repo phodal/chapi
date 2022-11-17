@@ -150,6 +150,7 @@ literalType
     : BooleanLiteral
     | StringLiteral
     | numericLiteral
+    | keyword
     ;
 
 arrowFunctionTypeExpression
@@ -341,8 +342,8 @@ interfaceMember
     | getAccessor
     | setAccessor
     | methodSignature
-    | enumSignature
     | propertySignature
+    | enumSignature
     | '[' typeRef In (Keyof | Typeof)* typeRef ']' '?'? typeAnnotation
     ;
 

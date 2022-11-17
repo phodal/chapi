@@ -176,7 +176,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         val heritageCtx = ctx.classHeritage()
         if (heritageCtx.classImplementsClause() != null) {
             val typeList = heritageCtx.classImplementsClause().classOrInterfaceTypeList()
-//            currentNode.Implements = buildImplements(typeList)
+            currentNode.Implements = buildImplements(typeList)
         }
 
         if (heritageCtx.classExtendsClause() != null) {
@@ -323,28 +323,30 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         val typeType = buildTypeAnnotation(annotation)
         val typeValue = signCtx.propertyName().text
 
-        val isArrowFunc = annotation.typeRef() != null
-        if (isArrowFunc) {
-            val codeFunction = CodeFunction(
-                Name = typeValue
-            )
-            val param = CodeProperty(
-                TypeValue = "any", TypeType = typeType
-            )
 
-            val returnType = CodeProperty(
-                TypeType = annotation.typeRef().text, TypeValue = ""
-            )
+        val codeField = CodeField(TypeType = typeType, TypeValue = typeValue)
+        currentNode.Fields += codeField
 
-            codeFunction.Parameters += param
-            codeFunction.MultipleReturns += returnType
-
-            codeFunction.FilePath = filePath
-            currentNode.Functions += codeFunction
-        } else {
-            val codeField = CodeField(TypeType = typeType, TypeValue = typeValue)
-            currentNode.Fields += codeField
-        }
+//        val isArrowFunc = annotation.typeRef() != null
+//        if (isArrowFunc) {
+//            val codeFunction = CodeFunction(
+//                Name = typeValue
+//            )
+//            val param = CodeProperty(
+//                TypeValue = "any", TypeType = typeType
+//            )
+//
+//            val returnType = CodeProperty(
+//                TypeType = annotation.typeRef().text, TypeValue = ""
+//            )
+//
+//            codeFunction.Parameters += param
+//            codeFunction.MultipleReturns += returnType
+//
+//            codeFunction.FilePath = filePath
+//            currentNode.Functions += codeFunction
+//        } else {
+//        }
     }
 
     override fun enterFromBlock(ctx: TypeScriptParser.FromBlockContext?) {
@@ -757,13 +759,13 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
                     CodeProperty(TypeType = "key", TypeValue = propText, ObjectValue = arrayOf(value))
                 }
-//
-//                is TypeScriptParser.PropertyShorthandContext -> {
-//                    val short = property.text
-//                    val value = CodeProperty(TypeType = "value", TypeValue = short)
-//
-//                    CodeProperty(TypeType = "key", TypeValue = short, ObjectValue = arrayOf(value))
-//                }
+
+                is TypeScriptParser.PropertyShorthandContext -> {
+                    val short = property.text
+                    val value = CodeProperty(TypeType = "value", TypeValue = short)
+
+                    CodeProperty(TypeType = "key", TypeValue = short, ObjectValue = arrayOf(value))
+                }
 
                 else -> {
                     null
@@ -948,7 +950,6 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 //            }
 //        }
 //    }
-
 
 
     fun getNodeInfo(): CodeContainer {
