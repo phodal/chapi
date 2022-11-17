@@ -597,7 +597,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             }
 
             else -> {
-                println("parseStmt childType -> :${child.javaClass.name}")
+//                println("parseStmt childType -> :${child.javaClass.name}")
             }
         }
     }
@@ -826,7 +826,12 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
 
                 is TypeScriptParser.IdentifierExpressionContext -> {
-//                    println("enterExpressionStatement -> IdentifierExpressionContext: ${singleExprCtx.text}")
+                    currentFunc.FunctionCalls += CodeCall(
+                        Parameters = arrayOf(),
+                        FunctionName = singleExprCtx.identifierName().text,
+                        NodeName = "",
+                        Position = buildPosition(ctx)
+                    )
                 }
 
                 else -> {

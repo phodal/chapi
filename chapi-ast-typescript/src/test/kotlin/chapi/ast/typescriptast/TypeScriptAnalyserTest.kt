@@ -50,10 +50,7 @@ class TypeScriptAnalyserTest {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "default")
         val functions = codeFile.DataStructures[0].Functions
-        assertEquals(functions.size, 3)
-
-        val fields = codeFile.DataStructures[0].Fields
-        assertEquals(fields.size, 6)
+        assertEquals(functions.size, 9)
     }
 
     @Test

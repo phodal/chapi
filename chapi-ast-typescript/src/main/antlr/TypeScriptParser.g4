@@ -947,17 +947,17 @@ functionExpression
     ;
 
 arrowFunctionDeclaration
-    : Async? arrowFunctionParameters? typeAnnotation? '=>' arrowFunctionBody
+    : Async? arrowFunctionParameters typeAnnotation? '=>' arrowFunctionBody
     ;
 
 arrowFunctionParameters
-    : identifierName
-    | typeRef? '(' formalParameterList? ','? ')'
+    : typeRef? '(' formalParameterList? ','? ')'
+    | identifierName
     ;
 
 arrowFunctionBody
-    : singleExpression
-    | '{' statementList? '}'
+    : '{' statementList? '}'
+    | singleExpression
     ;
 
 classExpression
