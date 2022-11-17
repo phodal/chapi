@@ -878,13 +878,11 @@ singleExpression
     | iteratorBlock                                                          # IteratorsExpression // ECMAScript 6
     | generatorBlock                                                         # GeneratorsExpression // ECMAScript 6
     | generatorFunctionDeclaration                                           # GeneratorsFunctionExpression // ECMAScript 6
-    | yieldStatement                                                         # YieldExpression // ECMAScript 6
-    | Await singleExpression                                                 # AwaitExpression
 
     // TODO: careful use those
     | singleExpression '(' (argumentList ','?)? ')'                          # ArgumentsExpression
     //  RealtionExpression will have conflict
-    | singleExpression '<' typeArgumentList '>' '(' (argumentList ','?)? ')'# ArgumentsExpression
+    | singleExpression '<' typeArgumentList '>' '(' (argumentList ','?)? ')' # ArgumentsExpression
 
     // respect precedence by order of sub-rules
     | singleExpression assignmentOperator singleExpression                   # AssignmentExpression
@@ -922,6 +920,8 @@ singleExpression
 
     | This                                                                   # ThisExpression
     | Super                                                                  # SuperExpression
+    | yieldStatement                                                         # YieldExpression // ECMAScript 6
+    | Await singleExpression                                                 # AwaitExpression
     | typeArguments? identifierName singleExpression?                        # IdentifierExpression
     | typeArguments expressionSequence?                                      # GenericTypes
     | literal                                                                # LiteralExpression
