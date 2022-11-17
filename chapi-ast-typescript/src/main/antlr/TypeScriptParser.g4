@@ -598,6 +598,7 @@ arrayElement
 bindingElement
     : bindingPattern
     | Identifier
+    | singleExpression
     ;
 
 
@@ -729,7 +730,7 @@ multipleExportElements
 // Variable Statement
 
 variableStatement
-    : accessibilityModifier? ReadOnly? varModifier (bindingPatternBlock | variableDeclarationList) SemiColon?
+    : accessibilityModifier? ReadOnly? varModifier (bindingPatternBlock | variableDeclarationList) eos?
     ;
 
 varModifier
@@ -747,8 +748,9 @@ variableDeclarationList
     ;
 
 variableDeclaration
-//    : ( identifierName | arrayLiteral | objectLiteral) typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
-    : identifierName typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    :  identifierName typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    | arrayLiteral
+    | objectLiteral
     ;
 
 
@@ -1016,6 +1018,8 @@ identifierOrKeyWord
 
 identifierName
     : reservedWord
+    | Lodash
+    | Dollar
     | Identifier
     ;
 
