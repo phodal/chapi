@@ -849,13 +849,47 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
     }
 
     private fun buildFunctionName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
-        var text = argsCtx.singleExpression().text
-        if (text.contains(".")) {
-            val split = text.split(".")
-            text = split[split.size - 1]
+        val name = functionNameFromArguments(argsCtx)
+
+        if (name.isEmpty()) {
+            var text = argsCtx.singleExpression().text
+            if (text.contains(".")) {
+                val split = text.split(".")
+                text = split[split.size - 1]
+            }
+
+            return text
         }
 
-        return text
+        return name
+    }
+
+    private fun functionNameFromArguments(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
+        return when (val singleExpr = argsCtx.singleExpression()) {
+            is TypeScriptParser.ArgumentsExpressionContext -> {
+                functionNameFromArguments(singleExpr)
+            }
+
+            is TypeScriptParser.MemberDotExpressionContext -> {
+                when (val child = singleExpr.singleExpression().first()) {
+                    is TypeScriptParser.ArgumentsExpressionContext -> {
+                        functionNameFromArguments(child)
+                    }
+
+                    else -> {
+                        ""
+                    }
+                }
+            }
+
+            is IdentifierExpressionContext -> {
+                singleExpr.identifierName().text
+            }
+
+            else -> {
+                ""
+            }
+        }
     }
 
     private fun wrapTargetType(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {

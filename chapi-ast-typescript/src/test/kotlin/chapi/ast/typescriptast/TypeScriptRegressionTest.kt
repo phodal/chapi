@@ -1,5 +1,7 @@
 package chapi.ast.typescriptast
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -204,4 +206,25 @@ export class PopupDirective {
             assertEquals(codeFile.DataStructures[0].Functions.size, 1)
             assertEquals(codeFile.DataStructures[0].Functions[0].Name, "transform")
     }
+
+    @Test
+    fun enum_with_colon2() {
+        val code = """export class Demo {
+ get filter(): FilterInput {
+    return this.fields.value ? filter : {
+      ...filter,
+      orgId: [province.id]
+    };
+  }
 }
+"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        println(Json.encodeToString(codeFile))
+
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "get")
+    }
+}
+

@@ -601,7 +601,7 @@ argumentList
     ;
 
 argument                      // ECMAScript 6: Spread Operator
-    : Ellipsis? (singleExpression | Identifier)
+    : Ellipsis? (singleExpression | Identifier) ('?' | '!')?
     ;
 
 
@@ -842,12 +842,12 @@ singleExpression
     // todo: rename #MemberDotExpression to #CallExpression
     // for: `onHotUpdateSuccess?.();`
     // onChange?.(userName || password || null)
-    | singleExpression  ('?' | '!')* '.' '#'? identifierName typeArguments? ('?' | '!')?  # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? identifierName typeArguments?  # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'        ('?' | '!')?  # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'        # MemberDotExpression
 
     // onChange?.(userName || password || null)
-    | singleExpression  '?''.' '(' singleExpression ')' typeArguments? ('?' | '!')?  # MemberDotExpression
+    | singleExpression  '?''.' '(' singleExpression ')' typeArguments?       # MemberDotExpression
     // request('/api/system-info', { method: 'GET' });
 //    | singleExpression arguments                                             # MemberDotExpression
 
