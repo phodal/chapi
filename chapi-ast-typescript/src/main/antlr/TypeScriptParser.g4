@@ -356,7 +356,7 @@ constructSignature
     ;
 
 callSignature
-    : typeParameters? '(' parameterList? ','? ')' (':' (typePredicateWithOperatorTypeRef | typeRef))?
+    : typeParameters? '(' parameterList? ','? ')' (':' (typePredicateWithOperatorTypeRef | typeRef))? eos?
     ;
 
 indexSignature
@@ -401,7 +401,7 @@ enumMember
 // Function Declaration
 
 functionDeclaration
-    : propertyMemberBase? Function '*'? identifierName callSignature functionBody? SemiColon?
+    : propertyMemberBase? Function '*'? identifierName callSignature '{' functionBody '}' eos?
     ;
 
 functionBody
@@ -831,7 +831,7 @@ breakStatement
 
 
 returnStatement
-    : Return ({this.notLineTerminator()}? expressionSequence)? eos
+    : Return ({this.notLineTerminator()}? expressionSequence)? eos?
 //    | Return '(' htmlElements ')' eos
     ;
 
@@ -857,7 +857,7 @@ debuggerStatement
 
 
 expressionStatement
-    : {this.notOpenBraceAndNotFunction()}? expressionSequence eos
+    : {this.notOpenBraceAndNotFunction()}? expressionSequence eos?
     ;
 
 
@@ -923,6 +923,7 @@ singleExpression
     | yieldStatement                                                         # YieldExpression // ECMAScript 6
     | Await singleExpression                                                 # AwaitExpression
     | typeArguments? identifierName singleExpression?                        # IdentifierExpression
+
     | typeArguments expressionSequence?                                      # GenericTypes
     | literal                                                                # LiteralExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
@@ -981,7 +982,7 @@ unaryOperator
 
 
 generatorFunctionDeclaration
-    : Function '*' Identifier? '(' formalParameterList? ')' '{' functionBody '}'
+    : Function '*' Identifier? '(' formalParameterList? ')' '{' functionBody? '}'
     ;
 
 generatorBlock

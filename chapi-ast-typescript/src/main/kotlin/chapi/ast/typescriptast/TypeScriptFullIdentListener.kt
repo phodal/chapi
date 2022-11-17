@@ -754,7 +754,12 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return objectLiteral.propertyAssignment().mapNotNull { property ->
             when (property) {
                 is TypeScriptParser.PropertyExpressionAssignmentContext -> {
-                    val text = singleExpToText(property.singleExpression())
+                    val text = if(property.singleExpression() != null) {
+                        property.singleExpression().text
+                    } else {
+                        property.text
+                    }
+
                     val value = CodeProperty(TypeType = "value", TypeValue = text)
                     val propText = property.propertyName().text
 

@@ -605,6 +605,8 @@ export function querySystemInfo() {
         val dataStruct = codeFile.DataStructures[0]
         val calls = dataStruct.Functions[0].FunctionCalls
 
+        println(Json.encodeToString(calls))
+
         assertEquals(1, calls.size)
         assertEquals(1, dataStruct.Fields.size);
         assertEquals("systemInfoApi", dataStruct.Fields[0].TypeKey);
