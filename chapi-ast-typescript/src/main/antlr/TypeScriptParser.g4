@@ -404,7 +404,7 @@ functionDeclaration
     ;
 
 functionBody
-    : '{' statementList? '}'
+    : statementList?
     ;
 
 
@@ -905,7 +905,7 @@ singleExpression
     | singleExpression ('.' | '?''.') identifierName                         # PropertyAccessExpression
     |  New (Dot Target| singleExpression )                                   # NewExpression
     // find arguments first, then found the call expression
-    | singleExpression typeArguments? arguments                              # ArgumentsExpression
+//    | singleExpression typeArguments? arguments                              # ArgumentsExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
 
   // TODO:
