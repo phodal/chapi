@@ -309,7 +309,7 @@ parenthesizedUserType
 // SECTION: statements
 
 statements
-    : (statement (semis statement)*)? semis?
+    : (statement ((';' | NL)+ statement)* semis?)?
     ;
 
 statement
