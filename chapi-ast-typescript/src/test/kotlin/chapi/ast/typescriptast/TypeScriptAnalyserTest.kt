@@ -61,7 +61,6 @@ class TypeScriptAnalyserTest {
     }
 
     @Test
-    @Disabled
      fun chai_define() {
         val content = this::class.java.getResource("/dts/index.d.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "/dts/index.d.ts")

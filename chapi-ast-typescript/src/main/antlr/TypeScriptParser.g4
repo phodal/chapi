@@ -840,7 +840,7 @@ singleExpression
     | singleExpression '?'? '!'? '.'? '[' expressionSequence ']'             # MemberIndexExpression
     // for: `onHotUpdateSuccess?.();`
     // onChange?.(userName || password || null)
-    | singleExpression  ('?' | '!')* '.' '#'? identifierName? typeArguments? ('?' | '!')?  # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? identifierName typeArguments? ('?' | '!')?  # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
     | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'        ('?' | '!')?  # MemberDotExpression
     // request('/api/system-info', { method: 'GET' });
