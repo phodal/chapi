@@ -183,7 +183,7 @@ parenthesizedTypeRef
     ;
 
 parameterizedTypeRef
-    : typeName typeArguments?
+    : typeName ('?' | '!')? typeArguments?
     ;
 
 typeName
