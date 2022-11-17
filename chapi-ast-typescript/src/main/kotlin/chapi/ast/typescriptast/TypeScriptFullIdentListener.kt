@@ -3,6 +3,7 @@ package chapi.ast.typescriptast
 import chapi.ast.antlr.TypeScriptParser
 import chapi.ast.antlr.TypeScriptParser.IdentifierExpressionContext
 import chapi.ast.antlr.TypeScriptParser.ParenthesizedExpressionContext
+import chapi.ast.antlr.TypeScriptParser.VariableStatementContext
 import chapi.domain.core.*
 import chapi.infra.Stack
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
@@ -39,7 +40,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         this.namespaceName = ""
     }
 
-    override fun enterVariableStatement(ctx: TypeScriptParser.VariableStatementContext?) {
+    override fun enterVariableStatement(ctx: VariableStatementContext?) {
         val isExport = ctx!!.parent.parent.getChild(0).text == "export"
 
         if (!isExport && ctx.variableDeclarationList() != null) {
@@ -940,6 +941,19 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
             CodeProperty(TypeValue = typeValue, TypeType = "")
         }?.toTypedArray() ?: arrayOf()
+
+
+    override fun enterExportElementDirectly(ctx: TypeScriptParser.ExportElementDirectlyContext?) {
+        when (val stmt = ctx?.declarationStatement()?.getChild(0)) {
+            is VariableStatementContext -> {
+                stmt.variableDeclarationList().variableDeclaration().forEach {
+                    val text = it.identifierName().text
+                    currentNode.Exports += CodeExport(text)
+                    defaultNode.Exports += CodeExport(text)
+                }
+            }
+        }
+    }
 
     override fun enterExportDefaultDeclaration(ctx: TypeScriptParser.ExportDefaultDeclarationContext?) {
         val name = ctx!!.identifierName()
