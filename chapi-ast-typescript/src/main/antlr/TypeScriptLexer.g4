@@ -186,7 +186,7 @@ Import:                         'import';
 
 Implements:                     'implements' ;
 Let:                            'let' ;
-Private:                        'private' ;
+Private:                        'private';
 Public:                         'public' ;
 Interface:                      'interface' ;
 Package:                        'package' ;

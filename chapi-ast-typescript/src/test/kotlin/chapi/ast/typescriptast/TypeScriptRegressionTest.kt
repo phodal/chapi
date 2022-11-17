@@ -2,6 +2,7 @@ package chapi.ast.typescriptast
 
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class TypeScriptRegressionTest {
 
@@ -145,5 +146,20 @@ export type CaseQuery = (
   )>>> }
 );"""
         TypeScriptAnalyser().analysis(code, "index.tsx")
+    }
+
+    @Test
+    fun private_issue() {
+        val code = """
+export class PopupDirective {
+  private openPopup(): void {
+   
+  }
+}
+"""
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "openPopup")
     }
 }

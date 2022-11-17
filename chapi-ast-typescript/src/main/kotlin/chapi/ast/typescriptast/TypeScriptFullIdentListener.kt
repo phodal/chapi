@@ -245,7 +245,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     )
                 }
                 else -> {
-                    println("handleClassBodyElements -> childElementType : ${childCtx.javaClass.simpleName}")
+//                    println("handleClassBodyElements -> childElementType : ${childCtx.javaClass.simpleName}")
                 }
             }
         }
