@@ -164,7 +164,7 @@ export class PopupDirective {
     }
 
     @Test
-    fun private_issue2() {
+    fun this_issue() {
         val code = """
 export class PopupDirective {
   get taskTitle(): string {
@@ -176,5 +176,29 @@ export class PopupDirective {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "get")
+    }
+
+    @Test
+    fun enum_with_colon() {
+        val code = """export class StatePipe implements PipeTransform {
+  transform(state: Task): string {
+    switch (state) {
+      case Task.Created: {
+        return '已创建';
+      }
+      case Task.Completed: {
+        return '已完成';
+      }
+      default: {
+        return '';
+      }
+    }
+  }
+}"""
+            
+            val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+            assertEquals(codeFile.DataStructures.size, 1)
+            assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+            assertEquals(codeFile.DataStructures[0].Functions[0].Name, "transform")
     }
 }

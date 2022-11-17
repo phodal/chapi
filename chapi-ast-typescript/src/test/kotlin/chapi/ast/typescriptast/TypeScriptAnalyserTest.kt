@@ -54,15 +54,6 @@ class TypeScriptAnalyserTest {
     }
 
     @Test
-    internal fun shouldIdentReactComponents() {
-        val content = this::class.java.getResource("/realworld/BadSmellThreshold.tsx")!!.readText()
-        val codeFile = TypeScriptAnalyser().analysis(content, "BadSmellThreshold.tsx")
-
-        assertEquals(codeFile.DataStructures.size, 1)
-        assertEquals(codeFile.DataStructures[0].Exports[0].Name, "BadSmellThreshold")
-    }
-
-    @Test
     internal fun shouldIdentifyPackage() {
         val content = this::class.java.getResource("/grammar/AbstractClass.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "/grammar/AbstractClass.ts")
@@ -81,9 +72,9 @@ class TypeScriptAnalyserTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     fun someBug() {
-        val dir = File("/Users/phodal/bug-ui-system")
+        val dir = File("/Users/phodal/bug-ui-system/projects/mobile-ui/src/app/tls/support/work-order/work-order-detail/communication-detail/communication-detail.component.ts\n")
         dir.walkTopDown().forEach {
             if (it.extension == "ts" || it.extension == "js") {
                 val content = it.readText()

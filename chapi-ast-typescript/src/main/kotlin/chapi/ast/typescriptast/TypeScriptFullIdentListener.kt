@@ -731,10 +731,10 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
 
-//                is TypeScriptParser.HtmlElementExpressionContext -> {
-//                    hasHtmlElement = true
+                is TypeScriptParser.HtmlElementExpressionContext -> {
+                    hasHtmlElement = true
 //                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
-//                }
+                }
 
                 is TypeScriptParser.ArgumentsExpressionContext -> {
                     parseArguments(subSingle)
