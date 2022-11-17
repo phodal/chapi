@@ -686,7 +686,7 @@ variableDeclarationList
     ;
 
 variableDeclaration
-    : identifierName typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    : identifierName typeAnnotation? ('=' typeParameters? singleExpression)? ('?' | '!')? // ECMAScript 6: Array & Object Matching
     | arrayLiteral
     | objectLiteral
     ;
@@ -1008,7 +1008,7 @@ keywordAllowedInTypeReferences:
     | Await
     | Break
     | Boolean
-    | Case
+//    | Case
     | Catch
     | Class
     | Const

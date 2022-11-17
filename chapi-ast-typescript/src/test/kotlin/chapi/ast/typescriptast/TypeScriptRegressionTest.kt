@@ -220,7 +220,6 @@ export class PopupDirective {
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        println(Json.encodeToString(codeFile))
 
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
@@ -240,6 +239,62 @@ export class PopupDirective {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 0)
         assertEquals(codeFile.DataStructures[0].Fields.size, 2)
+    }
+
+    @Test
+    fun const() {
+        val code = """async function demo() {
+   const source = edge.source!;
+   const target = edge.target!;
+}"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        val dataStructures = codeFile.DataStructures
+        assertEquals(dataStructures.size, 1)
+        assertEquals(dataStructures[0].Functions.size, 1)
+        assertEquals(dataStructures[0].Functions[0].Name, "demo")
+    }
+
+    @Test
+    fun async() {
+        val code = """test("unpaired wrapper", async () => {
+  let tokens = lexer(`dep_name = '"\`/@`);
+  expect(tokens.length).toBe(7);
+});"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        println(Json.encodeToString(codeFile))
+
+        val dataStructures = codeFile.DataStructures
+        assertEquals(dataStructures.size, 1)
+        assertEquals(dataStructures[0].Functions.size, 1)
+        assertEquals(dataStructures[0].Functions[0].Name, "test")
+    }
+
+    @Test
+    fun enum() {
+        val code = """function valueTypeFromChar(char: string) {
+  switch (char) {
+    case SINGLE_QUOTE:
+    case DOUBLE_QUOTE:
+    case BACKTICK:
+      return "string";
+    case SLASH:
+      return "regex";
+    case AT:
+      return "like";
+    default:
+      return "error";
+  }
+}"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        val dataStructures = codeFile.DataStructures
+        assertEquals(dataStructures.size, 1)
+        assertEquals(dataStructures[0].Functions.size, 1)
+        assertEquals(dataStructures[0].Functions[0].Name, "valueTypeFromChar")
     }
 }
 

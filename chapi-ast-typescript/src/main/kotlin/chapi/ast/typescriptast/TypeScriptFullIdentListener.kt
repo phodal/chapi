@@ -638,7 +638,9 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                 }
             }
             is TypeScriptParser.GenericTypesContext -> {
-                parseExpressionSequence(ctx.expressionSequence())
+                if (ctx.expressionSequence() != null) {
+                    parseExpressionSequence(ctx.expressionSequence())
+                }
             }
             is TypeScriptParser.ArgumentsExpressionContext -> {
                 argumentsExpressionToCall(ctx)
