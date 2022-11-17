@@ -39,6 +39,7 @@ options {
 
 channels { ERROR, JSDOC }
 
+JsxComment:                     '{/*' .*? '*/}'           -> channel(HIDDEN);
 JSDocComment:                   '/**' .*? '*/'             -> channel(JSDOC);
 MultiLineComment:               '/*'  .*? '*/'             -> channel(HIDDEN);
 SingleLineComment:              '//' ~[\r\n\u2028\u2029]*  -> channel(HIDDEN);
@@ -169,7 +170,6 @@ From:                           'from';
 ReadOnly:                       'readonly';
 Async:                          'async';
 Await:                          'await';
-Of:                             'of';
 
 /// Future Reserved Words
 
@@ -325,7 +325,7 @@ fragment HexDigit
 
 fragment DecimalIntegerLiteral
     : '0'
-    | [1-9] [0-9]*
+    | [1-9] [0-9_]*
     ;
 
 fragment ExponentPart

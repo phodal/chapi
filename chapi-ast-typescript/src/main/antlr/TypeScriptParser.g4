@@ -441,10 +441,10 @@ constructorDeclaration
     ;
 
 propertyMemberDeclaration
-    : abstractDeclaration                                                                           # AbstractMemberDeclaration
+    : propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
+    | abstractDeclaration                                                                           # AbstractMemberDeclaration
     | propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer?                       # PropertyDeclarationExpression
-    | propertyMemberBase propertyName callSignature ( ('{' functionBody '}'))                       # MethodDeclarationExpression
-    | propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
+    | propertyMemberBase propertyName callSignature ( ('{' functionBody '}') | eos)                 # MethodDeclarationExpression
     ;
 
 abstractDeclaration
@@ -617,11 +617,11 @@ computedPropertyName
     ;
 
 getAccessor
-    : getter '(' ')' typeAnnotation? block?
+    : getter identifierName? '(' ')' typeAnnotation? block?
     ;
 
 setAccessor
-    : setter '(' (Identifier | bindingPattern) typeAnnotation? ')' block?
+    : setter identifierName? '(' (Identifier | bindingPattern) typeAnnotation? ')' block?
     ;
 
 generatorMethod
@@ -664,8 +664,6 @@ importDefault
 
 aliasName
     : identifierName (As identifierName)?
-    // for import { of } from 'rxjs';
-    | Of
     ;
 
 importNamespace
@@ -806,8 +804,8 @@ breakStatement
 
 
 returnStatement
-    : Return ({this.notLineTerminator()}? expressionSequence)? eos?
-//    | Return '(' htmlElements ')' eos
+    : Return ({this.notLineTerminator()}? expressionSequence)? eos
+    | Return '(' htmlElements ')' eos
     ;
 
 
@@ -878,9 +876,9 @@ singleExpression
     | singleExpression '?'? '!'? '.'? '[' expressionSequence ']'             # MemberIndexExpression
     // for: `onHotUpdateSuccess?.();`
     // onChange?.(userName || password || null)
-    | singleExpression '?'? '!'? '.' '#'? identifierName? typeArguments?     # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? identifierName? typeArguments?  # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression '?'? '!'? '.' '#'? '(' identifierName? ')'            # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'          # MemberDotExpression
     // request('/api/system-info', { method: 'GET' });
 //    | singleExpression arguments                                             # MemberDotExpression
 
@@ -897,7 +895,7 @@ singleExpression
     | Super                                                                  # SuperExpression
     | yieldStatement                                                         # YieldExpression // ECMAScript 6
     | Await singleExpression                                                 # AwaitExpression
-    | typeArguments? identifierName ('?' | '!')? singleExpression?           # IdentifierExpression
+    | typeArguments? identifierName singleExpression?                        # IdentifierExpression
     | typeArguments expressionSequence?                                      # GenericTypes
     | literal                                                                # LiteralExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
@@ -1008,10 +1006,10 @@ identifierOrKeyWord
     ;
 
 identifierName
-    : reservedWord
+    : reservedWord ('?' | '!')?
     | Lodash
     | Dollar
-    | Identifier
+    | Identifier ('?' | '!')?
     ;
 
 reservedWord

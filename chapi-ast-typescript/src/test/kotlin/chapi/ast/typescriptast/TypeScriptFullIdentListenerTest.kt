@@ -43,6 +43,9 @@ export class LedgeStorageService {
         val annotations = codeFile.DataStructures[0].Annotations
         Assertions.assertEquals(annotations.size, 1)
         Assertions.assertEquals(annotations[0].Name, "Injectable")
+
+        val firstFunc = codeFile.DataStructures[0].Functions[0]
+        Assertions.assertEquals(firstFunc.Name, "get")
     }
 
 
@@ -1367,7 +1370,7 @@ interface CytoscapeOptions {
     }
 
     @Test
-    internal fun multipleReturnTypeWithBoolean() {
+    fun multipleReturnTypeWithBoolean() {
         val code = """
 type SearchVisitFunction = (
  v: NodeSingular,

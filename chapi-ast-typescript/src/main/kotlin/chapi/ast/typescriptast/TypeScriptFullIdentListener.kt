@@ -233,8 +233,19 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     codeFunction.FilePath = filePath
                     currentNode.Functions += codeFunction
                 }
+                is TypeScriptParser.GetterSetterDeclarationExpressionContext -> {
+                    val name = if(childCtx.getAccessor() != null) {
+                        childCtx.getAccessor().identifierName()?.text ?: "get"
+                    } else {
+                        childCtx.setAccessor().identifierName()?.text ?: "set"
+                    }
+
+                    currentNode.Functions += CodeFunction(
+                        Name = name, Position = buildPosition(childCtx)
+                    )
+                }
                 else -> {
-//                    println("handleClassBodyElements -> childElementType : $childElementType")
+                    println("handleClassBodyElements -> childElementType : ${childCtx.javaClass.simpleName}")
                 }
             }
         }
