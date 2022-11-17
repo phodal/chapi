@@ -505,39 +505,6 @@ restParameter
     : '...' singleExpression typeAnnotation?
     ;
 
-//parameterBlock:
-//    '(' (This colonSepTypeRef? ',')?  parameterListTrailingComma? ')'
-//    ;
-//
-//parameterListTrailingComma
-//    : parameterList ','?
-//    ;
-//
-//parameterList
-//    : restParameter
-//    | parameter (',' parameter)* (',' restParameter)?
-//    ;
-//
-//restParameter
-//    : '...' identifierOrPattern colonSepTypeRef?
-//    ;
-//
-//parameter
-//    : requiredParameter
-//    | optionalParameter
-//    ;
-//
-//requiredParameter
-//    : decoratorList? accessibilityModifier? identifierOrPattern colonSepTypeRef?
-//    ;
-//
-//optionalParameter
-//    : decoratorList? accessibilityModifier? identifierOrPattern
-//    (   '?' typeAnnotation?
-//        | typeAnnotation? initializer
-//    )
-//    ;
-
 accessibilityModifier
     : Public
     | Private
