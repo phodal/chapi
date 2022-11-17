@@ -96,36 +96,36 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     ): CodeField {
         val key = it.getChild(0).text
         val singleExpression = it.singleExpression()
-        val field = CodeField(TypeKey = key, TypeValue = "", Modifiers = modifiers)
 
-//        val lastExpr = singleExpression.last()
-//        val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
-//
-//        when (lastExpr) {
-//            is TypeScriptParser.LiteralExpressionContext -> {
-//                if (lastExpr.literal().StringLiteral() != null) {
-//                    field.TypeValue = unQuote(lastExpr.text)
-//                    field.TypeType = "String"
-//                }
-//            }
-//
-//            is IdentifierExpressionContext -> {
-//                singleExprToFieldCall(field, lastExpr.singleExpression(), lastExpr.identifierName().text)
-//            }
-//
-//            is TypeScriptParser.YieldExpressionContext -> {
-//                if (lastExpr.yieldStatement().expressionSequence() != null) {
-//                    val singeExprs = lastExpr.yieldStatement().expressionSequence().singleExpression()
-//                    singeExprs.forEach { expr ->
-//                        singleExprToFieldCall(field, expr, expr.text)
-//                    }
-//                }
-//            }
-//
-//            else -> {
-//    //                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
-//            }
-//        }
+        val lastExpr = singleExpression
+        val field = CodeField(TypeKey = key, TypeValue = lastExpr.text, Modifiers = modifiers)
+
+        when (lastExpr) {
+            is TypeScriptParser.LiteralExpressionContext -> {
+                if (lastExpr.literal().StringLiteral() != null) {
+                    field.TypeValue = unQuote(lastExpr.text)
+                    field.TypeType = "String"
+                }
+            }
+
+            is IdentifierExpressionContext -> {
+                singleExprToFieldCall(field, lastExpr.singleExpression(), lastExpr.identifierName().text)
+            }
+
+            is TypeScriptParser.YieldExpressionContext -> {
+                if (lastExpr.yieldStatement().expressionSequence() != null) {
+                    val singeExprs = lastExpr.yieldStatement().expressionSequence().singleExpression()
+                    singeExprs.forEach { expr ->
+                        singleExprToFieldCall(field, expr, expr.text)
+                    }
+                }
+            }
+
+            else -> {
+    //                        println("variableToFields -> ${lastExpr.text} === ${lastExpr.javaClass.simpleName}")
+            }
+        }
+
         return field
     }
 
@@ -941,16 +941,13 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             CodeProperty(TypeValue = typeValue, TypeType = "")
         }?.toTypedArray() ?: arrayOf()
 
-//    override fun enterExportDefaultDeclaration(ctx: TypeScriptParser.ExportDefaultDeclarationContext?) {
-//        val singleExpr = ctx!!.singleExpression()
-//        if (singleExpr != null) {
-//            if (!singleExpr.text.contains("(")) {
-//                currentNode.Exports += CodeExport(singleExpr.text)
-//                defaultNode.Exports += CodeExport(singleExpr.text)
-//            }
-//        }
-//    }
-
+    override fun enterExportDefaultDeclaration(ctx: TypeScriptParser.ExportDefaultDeclarationContext?) {
+        val name = ctx!!.identifierName()
+        if (name != null) {
+            currentNode.Exports += CodeExport(name.text)
+            defaultNode.Exports += CodeExport(name.text)
+        }
+    }
 
     fun getNodeInfo(): CodeContainer {
         for (entry in nodeMap) {

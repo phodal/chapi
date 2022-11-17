@@ -715,7 +715,7 @@ exportStatement
 
 exportStatementTail
     : Default? declarationStatement                     #ExportElementDirectly
-    | Default identifierName                            #ExportElementAsDefault
+    | Default identifierName                            #ExportDefaultDeclaration
     | multipleExportElements (From StringLiteral)?      #ExportElements
     | Multiply (As identifierName)? From StringLiteral  #ExportModule
     | As Namespace identifierName eos                   #ExportAsNamespace
@@ -749,7 +749,7 @@ variableDeclarationList
     ;
 
 variableDeclaration
-    :  identifierName typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    : identifierName typeAnnotation? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
     | arrayLiteral
     | objectLiteral
     ;
@@ -874,9 +874,12 @@ singleExpression
     | arrowFunctionDeclaration                                               # ArrowFunctionExpressionL
     | classExpression                                                        # ClassExpressionL
 
-    | Yield ({this.notLineTerminator()}? expressionSequence)?                # YieldExpression
+    | singleExpression templateStringLiteral                                 # TemplateStringExpression  // ECMAScript 6
+    | iteratorBlock                                                          # IteratorsExpression // ECMAScript 6
+    | generatorBlock                                                         # GeneratorsExpression // ECMAScript 6
+    | generatorFunctionDeclaration                                           # GeneratorsFunctionExpression // ECMAScript 6
+    | yieldStatement                                                         # YieldExpression // ECMAScript 6
     | Await singleExpression                                                 # AwaitExpression
-
 
     // TODO: careful use those
     | singleExpression '(' (argumentList ','?)? ')'                          # ArgumentsExpression
@@ -919,7 +922,7 @@ singleExpression
 
     | This                                                                   # ThisExpression
     | Super                                                                  # SuperExpression
-    | typeArguments? identifierName                                          # IdentifierExpression
+    | typeArguments? identifierName   singleExpression?                      # IdentifierExpression
     | literal                                                                # LiteralExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
     | objectLiteral                                                          # ObjectLiteralExpression
@@ -929,6 +932,9 @@ singleExpression
     | htmlElements                                                           # HtmlElementExpression
     ;
 
+yieldStatement
+    : Yield ({this.notLineTerminator()}? expressionSequence)? eos
+    ;
 
 asExpression
     : singleExpression
@@ -972,6 +978,10 @@ unaryOperator
 
 
 
+
+generatorFunctionDeclaration
+    : Function '*' Identifier? '(' formalParameterList? ')' '{' functionBody '}'
+    ;
 
 generatorBlock
     : '{' generatorDefinition (',' generatorDefinition)* ','? '}'

@@ -1,6 +1,8 @@
 package chapi.ast.typescriptast
 
 import chapi.domain.core.DataStructType
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -45,10 +47,15 @@ class TypeScriptAnalyserTest {
         val content = this::class.java.getResource("/grammar/Function.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "")
 
+        println(Json.encodeToString(codeFile))
+
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "default")
         val functions = codeFile.DataStructures[0].Functions
-        assertEquals(functions.size, 9)
+        assertEquals(functions.size, 3)
+
+        val fields = codeFile.DataStructures[0].Fields
+        assertEquals(fields.size, 6)
     }
 
     @Test
