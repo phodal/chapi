@@ -638,7 +638,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, parameters)
             }
             else -> {
-                println("todo -> need support type: ${ctx::class.java.simpleName} ==== ${ctx.text}")
+//                println("todo -> need support type: ${ctx::class.java.simpleName} ==== ${ctx.text}")
             }
         }
     }
@@ -691,7 +691,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         }
 
                         else -> {
-                            println("MemberDotExpressionContext: -> ${expr.text}")
+//                            println("MemberDotExpressionContext: -> ${expr.text}")
                         }
                     }
 
@@ -701,7 +701,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     params += parseParenthesizedExpression(it)
                 }
                 else -> {
-                    println("singleExpression -> ArgumentsExpressionContext -> ${it.text}")
+//                    println("singleExpression -> ArgumentsExpressionContext -> ${it.text}")
                 }
             }
         }
@@ -835,7 +835,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                 }
 
                 else -> {
-                    println("enterExpressionStatement : ${singleExprCtx.javaClass.simpleName}")
+//                    println("enterExpressionStatement : ${singleExprCtx.javaClass.simpleName}")
                 }
             }
 
@@ -907,7 +907,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         parseSingleExpression(singleExprCtx.singleExpression())
                     }
                     else -> {
-                        println("IdentifierExpressionContext ->  ${singleExprCtx.text}")
+//                        println("IdentifierExpressionContext ->  ${singleExprCtx.text}")
                     }
                 }
             }

@@ -42,7 +42,6 @@ program
     ;
 
 
-
 // Statement
 
 statement
@@ -171,10 +170,6 @@ tupleTypeExpression
 
 tupleTypeArgument
     : '...'? Infer? (Identifier ':')? typeRef '?'?
-    ;
-
-typeVariable
-    : Identifier (Extends typeRef)?
     ;
 
 typeRefWithModifiers
@@ -456,24 +451,8 @@ abstractDeclaration
     : Abstract (identifierName '?'?  typeAnnotation?  callSignature? | variableStatement)
     ;
 
-//propertyMember
-//    : propertyMemberBase
-//    (
-//          getAccessor
-//        | setAccessor
-//        | propertyOrMethod
-//    )
-//    ;
-
 propertyMemberBase
     : Async? accessibilityModifier? Static?
-    ;
-
-propertyOrMethod
-    : ReadOnly? propertyName '?'? (
-          (typeAnnotation? initializer?)
-        | (callSignature block?)
-    )
     ;
 
 initializer
@@ -646,7 +625,7 @@ setAccessor
     ;
 
 generatorMethod
-    : '*'?  Identifier parameterBlock block
+    : '*'?  Identifier parameterBlock typeAnnotation? block
     ;
 
 arguments
@@ -691,10 +670,6 @@ aliasName
 
 importNamespace
     : ('*' | identifierName) (As identifierName)?
-    ;
-
-importFrom
-    : From StringLiteral
     ;
 
 importAliasDeclaration
@@ -922,8 +897,7 @@ singleExpression
     | Super                                                                  # SuperExpression
     | yieldStatement                                                         # YieldExpression // ECMAScript 6
     | Await singleExpression                                                 # AwaitExpression
-    | typeArguments? identifierName singleExpression?                        # IdentifierExpression
-
+    | typeArguments? identifierName ('?' | '!')? singleExpression?           # IdentifierExpression
     | typeArguments expressionSequence?                                      # GenericTypes
     | literal                                                                # LiteralExpression
     | arrayLiteral                                                           # ArrayLiteralExpression

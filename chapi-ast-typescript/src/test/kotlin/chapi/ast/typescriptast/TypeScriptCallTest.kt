@@ -16,7 +16,7 @@ function testNew() {
 }
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "")
-        println(Json.encodeToString(codeFile))
+
         assertEquals(codeFile.DataStructures.size, 1)
         val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
         assertEquals(functionCalls.size, 1)

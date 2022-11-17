@@ -169,6 +169,7 @@ From:                           'from';
 ReadOnly:                       'readonly';
 Async:                          'async';
 Await:                          'await';
+Of:                             'of';
 
 /// Future Reserved Words
 

@@ -422,7 +422,6 @@ interface IEmployee extends IPerson {
 }
 """
         val codeFile = TypeScriptAnalyser().analysis(code, "")
-        println(Json.encodeToString(codeFile))
 
         assertEquals(codeFile.DataStructures[0].Fields.size, 4)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
@@ -605,8 +604,6 @@ export function querySystemInfo() {
         val dataStruct = codeFile.DataStructures[0]
         val calls = dataStruct.Functions[0].FunctionCalls
 
-        println(Json.encodeToString(calls))
-
         assertEquals(1, calls.size)
         assertEquals(1, dataStruct.Fields.size);
         assertEquals("systemInfoApi", dataStruct.Fields[0].TypeKey);
@@ -635,7 +632,6 @@ export function demo() {
         assertEquals(1, codeFile.DataStructures[0].Functions.size)
         val calls = codeFile.DataStructures[0].Functions[0].FunctionCalls
 
-        println(Json.encodeToString(calls))
         assertEquals(3, calls.size)
         assertEquals("request->get->then->catch", calls[0].FunctionName);
     }
@@ -707,8 +703,6 @@ const BadSmellThreshold = () => {
         val defaultStruct = codeFile.DataStructures[0]
 
         assertEquals(1, defaultStruct.Functions.size)
-
-        println(Json.encodeToString(defaultStruct))
 
         val firstFunc = defaultStruct.Functions[0]
         assertEquals("index.tsx", firstFunc.FilePath)
@@ -1411,8 +1405,6 @@ export const querySystemInfo = (data) => {
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
         assertEquals(1, codeFile.DataStructures.size)
 
-        println(Json.encodeToString(codeFile))
-
         val parameters = codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Parameters
         assertEquals(parameters.size, 2)
         assertEquals(parameters[0].TypeValue, "/api/system-info")
@@ -1490,9 +1482,7 @@ export default defineConfig({
         TypeScriptAnalyser().analysis(code, "index.tsx")
     }
 
-    // TODO: fix nestedIssued
     @Test
-    @Disabled
     internal fun multipleGeneric() {
         val code = """
 const createTreeNode = <U = TreeNode, T extends JavaItem<T>>(): U => {};
