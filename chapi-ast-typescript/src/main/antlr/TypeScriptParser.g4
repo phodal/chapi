@@ -396,7 +396,7 @@ enumMember
 // Function Declaration
 
 functionDeclaration
-    : propertyMemberBase? Function '*'? identifierName callSignature '{' functionBody '}' eos?
+    : propertyMemberBase? Function '*'? identifierName callSignature '{' functionBody '}' eos
     ;
 
 functionBody
@@ -516,9 +516,6 @@ identifierOrPattern
     : identifierName
     | bindingPattern
     ;
-
-
-
 
 
 bindingPattern
@@ -671,7 +668,7 @@ multipleExportElements
 // Variable Statement
 
 variableStatement
-    : accessibilityModifier? ReadOnly? varModifier (bindingPatternBlock | variableDeclarationList) eos?
+    : accessibilityModifier? ReadOnly? varModifier (bindingPatternBlock | variableDeclarationList) eos
     ;
 
 varModifier
@@ -843,9 +840,9 @@ singleExpression
     | singleExpression '?'? '!'? '.'? '[' expressionSequence ']'             # MemberIndexExpression
     // for: `onHotUpdateSuccess?.();`
     // onChange?.(userName || password || null)
-    | singleExpression  ('?' | '!')* '.' '#'? identifierName? typeArguments? ('?' | '!')* # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? identifierName? typeArguments? ('?' | '!')?  # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'     ('?' | '!')*     # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'        ('?' | '!')?  # MemberDotExpression
     // request('/api/system-info', { method: 'GET' });
 //    | singleExpression arguments                                             # MemberDotExpression
 
@@ -858,7 +855,7 @@ singleExpression
   //  | iteratorBlock                                                          # IteratorsExpression
   //  | generatorBlock                                                         # GeneratorsExpression
 
-    | This                                                                   # ThisExpression
+    | This ('.' singleExpression)?                                           # ThisExpression
     | Super                                                                  # SuperExpression
     | yieldStatement                                                         # YieldExpression // ECMAScript 6
     | Await singleExpression                                                 # AwaitExpression

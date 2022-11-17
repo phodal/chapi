@@ -168,7 +168,7 @@ export class PopupDirective {
         val code = """
 export class PopupDirective {
   get taskTitle(): string {
-    return this.isSubTask ? this.subTask?.name : this.commonTaskWorkOrder?.title;
+    return this.isSubTask ? this.subTask.name : this.commonTaskWorkOrder.title;
   }
 }"""
 
