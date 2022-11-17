@@ -355,7 +355,7 @@ constructSignature
     ;
 
 callSignature
-    : typeParameters? parameterBlock (':' (typePredicateWithOperatorTypeRef | typeRef))?
+    : typeParameters? '(' parameterList? ','? ')' (':' (typePredicateWithOperatorTypeRef | typeRef))?
     ;
 
 indexSignature
@@ -876,6 +876,12 @@ singleExpression
     | Yield ({this.notLineTerminator()}? expressionSequence)?                # YieldExpression
     | Await singleExpression                                                 # AwaitExpression
 
+
+    // TODO: careful use those
+    | singleExpression '(' (argumentList ','?)? ')'                          # ArgumentsExpression
+    //  RealtionExpression will have conflict
+    | singleExpression '<' typeArgumentList '>' '(' (argumentList ','?)? ')'# ArgumentsExpression
+
     // respect precedence by order of sub-rules
     | singleExpression assignmentOperator singleExpression                   # AssignmentExpression
     | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
@@ -919,8 +925,6 @@ singleExpression
     | templateStringLiteral                                                  # TemplateStringExpression
     | singleExpression As asExpression                                       # CastAsExpression
 
-    // TODO: careful use those
-    | singleExpression typeArguments? '(' (argumentList ','?)? ')'           # ArgumentsExpression
     | htmlElements                                                           # HtmlElementExpression
     ;
 

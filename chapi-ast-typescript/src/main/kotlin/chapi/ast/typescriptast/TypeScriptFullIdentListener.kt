@@ -255,11 +255,11 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         return codeFunction
     }
 
-//    private fun buildImplements(typeList: TypeScriptParser.ClassOrInterfaceTypeListContext?): Array<String> {
-//        return typeList?.typeReference()?.map { typeRefCtx ->
-//            typeRefCtx.typeName().text
-//        }?.toTypedArray() ?: arrayOf()
-//    }
+    private fun buildImplements(typeList: TypeScriptParser.ClassOrInterfaceTypeListContext?): Array<String> {
+        return typeList?.parameterizedTypeRef()?.map { typeRefCtx ->
+            typeRefCtx.typeName().text
+        }?.toTypedArray() ?: arrayOf()
+    }
 
     override fun exitClassDeclaration(ctx: TypeScriptParser.ClassDeclarationContext?) {
         hasEnterClass = false
@@ -278,15 +278,14 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             Position = buildPosition(ctx)
         )
 
-//        if (ctx.interfaceExtendsClause() != null) {
-//            val elements = buildImplements(ctx.interfaceExtendsClause().classOrInterfaceTypeList())
-//            currentNode.Extend = elements[0]
-//        }
-//
-//        val objectTypeCtx = ctx.objectType()
-//        if (objectTypeCtx.typeBody() != null) {
-//            this.buildInterfaceBody(objectTypeCtx.typeBody().typeMemberList())
-//        }
+        if (ctx.interfaceExtendsClause() != null) {
+            val elements = buildImplements(ctx.interfaceExtendsClause().classOrInterfaceTypeList())
+            currentNode.Extend = elements[0]
+        }
+
+        if (ctx.interfaceBody() != null) {
+            this.buildInterfaceBody(ctx.interfaceBody().interfaceMemberList())
+        }
 
         nodeMap[nodeName] = currentNode
     }
@@ -296,7 +295,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
     }
 
     private fun buildInterfaceBody(typeMemberList: TypeScriptParser.InterfaceMemberListContext) {
-        typeMemberList?.interfaceMember()?.forEach { memberContext ->
+        typeMemberList.interfaceMember()?.forEach { memberContext ->
             when (val memberChild = memberContext.getChild(0)) {
                 is TypeScriptParser.PropertySignatureContext -> {
                     buildInterfacePropertySignature(memberChild)
@@ -783,20 +782,25 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         callSignCtx: TypeScriptParser.CallSignatureContext,
         currentFunc: CodeFunction
     ) {
-//        if (callSignCtx.parameterList() != null) {
-//            val parameters = buildMethodParameters(callSignCtx.parameterList())
-//            currentFunc.Parameters = parameters
-//        }
-//
-//        if (callSignCtx.typeAnnotation() != null) {
-//            val returnType = buildReturnTypeByType(callSignCtx.typeAnnotation())
-//            currentFunc.MultipleReturns += returnType
-//        }
+        if (callSignCtx.parameterList() != null) {
+            val parameters = buildMethodParameters(callSignCtx.parameterList())
+            currentFunc.Parameters = parameters
+        }
+
+        if (callSignCtx.typeRef() != null) {
+            val returnType = buildReturnTypeByTypeRef(callSignCtx.typeRef()!!)
+            currentFunc.MultipleReturns += returnType
+        }
     }
 
     private fun buildReturnTypeByType(typeAnnotationContext: TypeScriptParser.TypeAnnotationContext?): CodeProperty =
         CodeProperty(
             TypeType = buildTypeAnnotation(typeAnnotationContext) ?: "", TypeValue = ""
+        )
+
+    private fun buildReturnTypeByTypeRef(typeRefContext: TypeScriptParser.TypeRefContext): CodeProperty =
+        CodeProperty(
+            TypeType = processRef(typeRefContext) ?: "", TypeValue = ""
         )
 
     override fun enterExpressionStatement(ctx: TypeScriptParser.ExpressionStatementContext?) {
