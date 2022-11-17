@@ -72,6 +72,15 @@ class TypeScriptAnalyserTest {
     }
 
     @Test
+     fun chai_define() {
+        val content = this::class.java.getResource("/dts/index.d.ts")!!.readText()
+        val codeFile = TypeScriptAnalyser().analysis(content, "/dts/index.d.ts")
+
+        assertEquals(codeFile.PackageName, "@.dts.index.d")
+        assertEquals(codeFile.DataStructures[0].Package, "@.dts.index.d")
+    }
+
+    @Test
     @Disabled
     fun someBug() {
         val dir = File("/Users/phodal/bug-ui-system")

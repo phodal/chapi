@@ -769,7 +769,7 @@ breakStatement
 
 returnStatement
     : Return ({this.notLineTerminator()}? expressionSequence)? eos
-    | Return '(' htmlElements ')' eos
+//    | Return '(' htmlElements ')' eos
     ;
 
 
@@ -794,7 +794,7 @@ debuggerStatement
 
 
 expressionStatement
-    : {this.notOpenBraceAndNotFunction()}? expressionSequence eos?
+    : {this.notOpenBraceAndNotFunction()}? expressionSequence eos
     ;
 
 
@@ -867,7 +867,7 @@ singleExpression
     | templateStringLiteral                                                  # TemplateStringExpression
     | singleExpression As asExpression                                       # CastAsExpression
 
-    | htmlElements                                                           # HtmlElementExpression
+//    | htmlElements                                                           # HtmlElementExpression
     ;
 
 yieldStatement
