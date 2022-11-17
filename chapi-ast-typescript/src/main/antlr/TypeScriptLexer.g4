@@ -202,6 +202,7 @@ Number: 'number';
 Boolean: 'boolean';
 String: 'string';
 Symbol: 'symbol';
+Of: 'of';
 
 
 TypeAlias : 'type';

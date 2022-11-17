@@ -788,8 +788,8 @@ iterationStatement
     | For '(' expressionSequence? SemiColon expressionSequence? SemiColon expressionSequence? ')' statement     # ForStatement
     | For '(' varModifier variableDeclarationList SemiColon expressionSequence? SemiColon expressionSequence? ')'
           statement                                                                                             # ForVarStatement
-    | For '(' singleExpression (In | Identifier{this.p("of")}?) expressionSequence ')' statement                # ForInStatement
-    | For '(' varModifier variableDeclaration (In | Identifier{this.p("of")}?) expressionSequence ')' statement # ForVarInStatement
+    | For '(' singleExpression (In | Of) expressionSequence ')' statement                # ForInStatement
+    | For '(' varModifier variableDeclaration (In | Of) expressionSequence ')' statement # ForVarInStatement
     ;
 
 
@@ -1088,6 +1088,7 @@ keywordAllowedInTypeReferences:
     | Super
     | Switch
     | Symbol
+    | Of
     | Target
     | This
     | Throw
