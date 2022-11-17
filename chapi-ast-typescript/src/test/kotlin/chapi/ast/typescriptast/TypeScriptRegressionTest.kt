@@ -42,10 +42,13 @@ of(data)
     fun member_dot_issue() {
         val code = """export class DemoComponent implements OnInit, ControlValueAccessor {
     ngOnInit(): void {
-        this.onChange?.(userName || password || null);
+        val data = this.onChange?.(userName || password || null);
     }
 }"""
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val codeContainer = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeContainer.DataStructures.size)
+        assertEquals(1, codeContainer.DataStructures[0].Functions.size)
+
     }
 
     @Test

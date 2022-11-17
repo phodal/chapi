@@ -723,7 +723,7 @@ function tryApplyUpdates(onHotUpdateSuccess: Function) {
     }
 
     @Test
-    internal fun variableCallInNumber() {
+    fun variableCallInNumber() {
         val code = """
 function reload() {
   const currentSystemId = Number(storage.getSystemId());

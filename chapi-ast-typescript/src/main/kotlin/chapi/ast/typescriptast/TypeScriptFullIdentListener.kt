@@ -686,7 +686,8 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         argument.children.forEach {
             when (it) {
                 is TypeScriptParser.MemberDotExpressionContext -> {
-                    when (val expr = it.singleExpression()) {
+                    val singleExpression = it.singleExpression()
+                    when (val expr = singleExpression.first()) {
                         is TypeScriptParser.ParenthesizedExpressionContext -> {
                             params += parseParenthesizedExpression(expr)
                         }
@@ -711,7 +712,7 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                     params += parseParenthesizedExpression(it)
                 }
                 else -> {
-//                    println("singleExpression -> ArgumentsExpressionContext -> ${it.text}")
+//                    println("singleExpression -> ${it.javaClass.simpleName} -> ${it.text}")
                 }
             }
         }
@@ -730,11 +731,6 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                         CodeProperty(TypeValue = subSingle.text, TypeType = "object", ObjectValue = objectLiteral)
                 }
 
-//                is TypeScriptParser.HtmlElementExpressionContext -> {
-//                    hasHtmlElement = true
-//                    println("todo -> HtmlElementExpressionContext: $simpleName, text: ${subSingle.text}")
-//                }
-
                 is TypeScriptParser.ArgumentsExpressionContext -> {
                     parseArguments(subSingle)
                 }
@@ -752,7 +748,7 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                 }
 
                 else -> {
-//                    println("todo -> ParenthesizedExpressionContext: $simpleName, text: ${subSingle.text}")
+                    println("todo -> ParenthesizedExpressionContext: ${subSingle.javaClass.simpleName}, text: ${subSingle.text}")
                 }
             }
 

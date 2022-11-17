@@ -396,11 +396,11 @@ enumMember
 // Function Declaration
 
 functionDeclaration
-    : propertyMemberBase? Function '*'? identifierName callSignature '{' functionBody '}' eos
+    : propertyMemberBase Function '*'? identifierName callSignature '{' functionBody? '}' eos
     ;
 
 functionBody
-    : statementList?
+    : statementList
     ;
 
 
@@ -443,7 +443,7 @@ constructorDeclaration
 propertyMemberDeclaration
     : propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
     | abstractDeclaration                                                                           # AbstractMemberDeclaration
-    | propertyMemberBase propertyName callSignature ( ('{' functionBody '}') | eos)                 # MethodDeclarationExpression
+    | propertyMemberBase propertyName callSignature ( ('{' functionBody? '}') | eos)                 # MethodDeclarationExpression
     | propertyMemberBase propertyName '!'? '?'? typeAnnotation? initializer?                       # PropertyDeclarationExpression
     ;
 
@@ -838,11 +838,16 @@ singleExpression
 
     // this.form.value?.id?.[0]
     | singleExpression '?'? '!'? '.'? '[' expressionSequence ']'             # MemberIndexExpression
+
+    // todo: rename #MemberDotExpression to #CallExpression
     // for: `onHotUpdateSuccess?.();`
     // onChange?.(userName || password || null)
     | singleExpression  ('?' | '!')* '.' '#'? identifierName typeArguments? ('?' | '!')?  # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
     | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'        ('?' | '!')?  # MemberDotExpression
+
+    // onChange?.(userName || password || null)
+    | singleExpression  '?''.' '(' singleExpression ')' typeArguments? ('?' | '!')?  # MemberDotExpression
     // request('/api/system-info', { method: 'GET' });
 //    | singleExpression arguments                                             # MemberDotExpression
 
@@ -878,7 +883,7 @@ asExpression
     ;
 
 functionExpression
-    : Function '*'? Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
+    : Function '*'? Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody? '}'
     ;
 
 arrowFunctionDeclaration
