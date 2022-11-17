@@ -189,7 +189,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         currentAnnotations = arrayOf()
         hasAnnotation = false
 
-        if (ctx.classBody() != null) {
+        if (ctx.classBody()?.classMemberList() != null) {
             this.handleClassBodyElements(ctx.classBody())
         }
 
