@@ -922,7 +922,7 @@ singleExpression
 
     | This                                                                   # ThisExpression
     | Super                                                                  # SuperExpression
-    | typeArguments? identifierName   singleExpression?                      # IdentifierExpression
+    | typeArguments? identifierName singleExpression?                        # IdentifierExpression
     | literal                                                                # LiteralExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
     | objectLiteral                                                          # ObjectLiteralExpression

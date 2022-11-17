@@ -840,7 +840,6 @@ function reload() {
         val defaultStruct = codeFile.DataStructures[0]
         assertEquals(1, defaultStruct.Functions.size)
 
-        println(Json.encodeToString(defaultStruct.Functions[0]))
 
         assertEquals(1, defaultStruct.Functions[0].FunctionCalls.size)
         assertEquals("storage->getSystemId", defaultStruct.Functions[0].FunctionCalls[0].FunctionName)

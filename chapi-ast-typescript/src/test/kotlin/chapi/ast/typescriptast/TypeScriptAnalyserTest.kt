@@ -47,8 +47,6 @@ class TypeScriptAnalyserTest {
         val content = this::class.java.getResource("/grammar/Function.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "")
 
-        println(Json.encodeToString(codeFile))
-
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].NodeName, "default")
         val functions = codeFile.DataStructures[0].Functions

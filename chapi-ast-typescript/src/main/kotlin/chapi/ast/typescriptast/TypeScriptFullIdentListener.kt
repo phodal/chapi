@@ -882,33 +882,37 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         localVars[varName] = newSingleExpr.singleExpression().text
                     }
 
-
-                    is IdentifierExpressionContext -> {
-                        when (newSingleExpr.identifierName().text) {
-//                        "await" -> {
-//                            parseSingleExpression(singleExprCtx.singleExpression())
-//                        }
-//                        "Number" -> {
-//                            parseSingleExpression(singleExprCtx.singleExpression())
-//                        }
-                            else -> {
-                                println("IdentifierExpressionContext ->  ${newSingleExpr.text}")
-                            }
-                        }
-                    }
-
-                    is TypeScriptParser.AwaitExpressionContext -> {
-                        parseSingleExpression(newSingleExpr.singleExpression())
-                    }
-
-                    is ParenthesizedExpressionContext -> {
-                        parseParenthesizedExpression(newSingleExpr)
-                    }
-
                     else -> {
 //                    println("enterVariableDeclaration : $singleCtxType === ${ctx.text}")
                     }
                 }
+            }
+
+            is IdentifierExpressionContext -> {
+                when (singleExprCtx.identifierName().text) {
+                    "await" -> {
+                        parseSingleExpression(singleExprCtx.singleExpression())
+                    }
+                    "Number" -> {
+                        parseSingleExpression(singleExprCtx.singleExpression())
+                    }
+                    else -> {
+                        println("IdentifierExpressionContext ->  ${singleExprCtx.text}")
+                    }
+                }
+            }
+
+            is TypeScriptParser.AwaitExpressionContext -> {
+                parseSingleExpression(singleExprCtx.singleExpression())
+            }
+            is TypeScriptParser.ArrowFunctionExpressionLContext -> {
+                // will recall by ArrowFunctionDeclaration
+            }
+            is TypeScriptParser.ArgumentsExpressionContext -> {
+                argumentsExpressionToCall(singleExprCtx, varName)
+            }
+            is ParenthesizedExpressionContext -> {
+                parseParenthesizedExpression(singleExprCtx)
             }
         }
     }
