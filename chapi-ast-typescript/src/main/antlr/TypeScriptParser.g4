@@ -622,6 +622,8 @@ propertyAssignment
     | setAccessor                                                 # PropertySetter
     | generatorMethod                                             # MethodProperty
     | restParameter                                               # RestParameterInObject
+    // for es6 { baseUrl , }
+    | identifierName                                              # PropertyShorthand
     ;
 
 propertyName
@@ -921,7 +923,7 @@ singleExpression
     | singleExpression As asExpression                                       # CastAsExpression
 
     // TODO: careful use those
-    | singleExpression typeArguments? arguments                              # ArgumentsExpression
+    | singleExpression typeArguments? '(' (argumentList ','?)? ')'           # ArgumentsExpression
     | htmlElements                                                           # HtmlElementExpression
     ;
 

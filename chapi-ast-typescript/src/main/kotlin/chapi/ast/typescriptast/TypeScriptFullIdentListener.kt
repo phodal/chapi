@@ -806,7 +806,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             when (singleExprCtx) {
                 is TypeScriptParser.ArgumentsExpressionContext -> {
                     currentFunc.FunctionCalls += CodeCall(
-                        Parameters = buildArguments(singleExprCtx.arguments()),
+                        Parameters = processArgumentList(singleExprCtx.argumentList()),
                         FunctionName = buildFunctionName(singleExprCtx),
                         NodeName = wrapTargetType(singleExprCtx),
                         Position = buildPosition(ctx)
@@ -911,7 +911,12 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
             return arrayOf()
         }
 
-        return arguments?.argumentList()?.argument()?.map {
+        val argumentList = arguments?.argumentList()
+        return processArgumentList(argumentList)
+    }
+
+    private fun processArgumentList(argumentList: TypeScriptParser.ArgumentListContext?) =
+        argumentList?.argument()?.map {
             parseSingleExpression(it.singleExpression())
             val typeValue: String = when (val expr = it.singleExpression()) {
                 is TypeScriptParser.LiteralExpressionContext -> {
@@ -921,6 +926,7 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                         it.text
                     }
                 }
+
                 else -> {
                     it.text;
                 }
@@ -928,7 +934,6 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
 
             CodeProperty(TypeValue = typeValue, TypeType = "")
         }?.toTypedArray() ?: arrayOf()
-    }
 
 //    override fun enterExportDefaultDeclaration(ctx: TypeScriptParser.ExportDefaultDeclarationContext?) {
 //        val singleExpr = ctx!!.singleExpression()
