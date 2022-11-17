@@ -3,6 +3,10 @@ package chapi.ast.typescriptast
 import java.io.File
 
 open class TSIdentify(var filePath: String = "") {
+    fun isJsxFile(): Boolean {
+        return filePath.endsWith(".tsx") || filePath.endsWith(".jsx")
+    }
+
     fun resolvePackage(): String {
         val split = filePath.split("/").toMutableList()
         if(split.size == 1) {

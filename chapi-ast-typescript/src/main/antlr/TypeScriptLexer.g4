@@ -39,7 +39,7 @@ options {
 
 channels { ERROR, JSDOC }
 
-JsxComment:                     '{/*' .*? '*/}'           -> channel(HIDDEN);
+JsxComment:                     '{/*' .*? '*/}'            -> channel(HIDDEN);
 JSDocComment:                   '/**' .*? '*/'             -> channel(JSDOC);
 MultiLineComment:               '/*'  .*? '*/'             -> channel(HIDDEN);
 SingleLineComment:              '//' ~[\r\n\u2028\u2029]*  -> channel(HIDDEN);

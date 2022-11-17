@@ -1,8 +1,6 @@
 package chapi.ast.typescriptast
 
 import chapi.domain.core.DataStructType
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -63,6 +61,7 @@ class TypeScriptAnalyserTest {
     }
 
     @Test
+    @Disabled
      fun chai_define() {
         val content = this::class.java.getResource("/dts/index.d.ts")!!.readText()
         val codeFile = TypeScriptAnalyser().analysis(content, "/dts/index.d.ts")

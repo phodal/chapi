@@ -13,6 +13,17 @@ import java.util.Stack;
  */
 public abstract class TypeScriptParserBase extends Parser
 {
+
+    boolean jsx = false;
+
+    public boolean isJsx() {
+        return jsx;
+    }
+
+    public void setJsx(boolean value) {
+        jsx = value;
+    }
+
     private Stack<String> _tagNames = new Stack<String>();
 
     public TypeScriptParserBase(TokenStream input) {

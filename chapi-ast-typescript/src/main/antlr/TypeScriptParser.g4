@@ -769,7 +769,7 @@ breakStatement
 
 returnStatement
     : Return ({this.notLineTerminator()}? expressionSequence)? eos
-    | Return '(' htmlElements ')' eos
+    | {isJsx()}? Return '(' htmlElements ')' eos
     ;
 
 
@@ -866,8 +866,7 @@ singleExpression
     | objectLiteral                                                          # ObjectLiteralExpression
     | templateStringLiteral                                                  # TemplateStringExpression
     | singleExpression As asExpression                                       # CastAsExpression
-
-    | htmlElements                                                           # HtmlElementExpression
+    | {isJsx()}? htmlElements                                                # HtmlElementExpression
     ;
 
 yieldStatement
