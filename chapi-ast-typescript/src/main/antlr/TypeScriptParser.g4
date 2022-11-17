@@ -493,10 +493,10 @@ formalParameterArg
     : decoratorList? accessibilityModifier? ReadOnly? identifierName '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
     | lastFormalParameterArg
     // ([key, value]: [string, string[]])
-//    | arrayLiteral (':' formalParameterList)?                                                                // ECMAScript 6: Parameter Context Matching
-//    | objectLiteral (':' formalParameterList)?                                                               // ECMAScript 6: Parameter Context Matching
-    // `addThing({ payload }, { call }){}`
-//    | objectLiteral (',' objectLiteral)*                                                                     // ECMAScript 6: Parameter Context Matching
+    | arrayLiteral (':' formalParameterList)?                                                                // ECMAScript 6: Parameter Context Matching
+    | objectLiteral (':' formalParameterList)?                                                               // ECMAScript 6: Parameter Context Matching
+//     `addThing({ payload }, { call }){}`
+    | objectLiteral (',' objectLiteral)*                                                                     // ECMAScript 6: Parameter Context Matching
     ;
 
 lastFormalParameterArg                        // ECMAScript 6: Rest Parameter
