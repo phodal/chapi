@@ -71,9 +71,9 @@ class TypeScriptAnalyserTest {
     }
 
     @Test
-//    @Disabled
+    @Disabled
     fun someBug() {
-        val dir = File("/Users/phodal/bug-ui-system/projects/mobile-ui/src/app/tls/support/work-order/work-order-detail/communication-detail/communication-detail.component.ts\n")
+        val dir = File("/Users/phodal/bug-ui-system")
         dir.walkTopDown().forEach {
             if (it.extension == "ts" || it.extension == "js") {
                 val content = it.readText()
