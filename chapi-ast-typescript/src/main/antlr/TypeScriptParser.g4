@@ -355,7 +355,7 @@ constructSignature
     ;
 
 callSignature
-    : typeParameters? parameterBlock ( ':' typePredicateWithOperatorTypeRef | typeAnnotation)?
+    : typeParameters? parameterBlock (':' (typePredicateWithOperatorTypeRef | typeRef))?
     ;
 
 indexSignature
@@ -437,7 +437,7 @@ classMemberList
 classMember
     : constructorDeclaration
     | indexSignature
-    | decoratorList? propertyMemberDeclaration
+    | decoratorList? propertyMemberDeclaration eos
     ;
 
 constructorDeclaration
@@ -450,14 +450,14 @@ constructorDeclaration
 //    ;
 
 propertyMemberDeclaration
-    : propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer? SemiColon             # PropertyDeclarationExpression
-    | propertyMemberBase propertyName callSignature ( ('{' functionBody '}') | SemiColon)           # MethodDeclarationExpression
+    : propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer?                      # PropertyDeclarationExpression
+    | propertyMemberBase propertyName callSignature ( ('{' functionBody '}'))                       # MethodDeclarationExpression
     | propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
     | abstractDeclaration                                                                           # AbstractMemberDeclaration
     ;
 
 abstractDeclaration
-    : Abstract (Identifier callSignature | variableStatement) eos
+    : Abstract (Identifier '?'? callSignature | variableStatement)
     ;
 
 //propertyMember

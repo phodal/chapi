@@ -5,7 +5,6 @@ import chapi.ast.antlr.TypeScriptParser.IdentifierExpressionContext
 import chapi.ast.antlr.TypeScriptParser.ParenthesizedExpressionContext
 import chapi.domain.core.*
 import chapi.infra.Stack
-import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
@@ -226,8 +225,8 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
                     )
                     val callSignCtx = childCtx.callSignature()
 
-                    if (callSignCtx.typeAnnotation() != null) {
-                        codeFunction.ReturnType = buildTypeAnnotation(callSignCtx.typeAnnotation())!!
+                    if (callSignCtx.typeRef() != null) {
+                        codeFunction.ReturnType = processRef(callSignCtx.typeRef())
                     }
 
                     codeFunction.FilePath = filePath
