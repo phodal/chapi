@@ -622,14 +622,14 @@ class TypeScriptFullIdentListener(node: TSIdentify) : TypeScriptAstListener() {
         when (ctx) {
             is IdentifierExpressionContext -> {
                 currentExprIdent = ctx.identifierName().text
-//
-//                if (ctx.singleExpression() != null) {
-//                    parseSingleExpression(ctx.singleExpression())
-//                }
+
+                if (ctx.singleExpression() != null) {
+                    parseSingleExpression(ctx.singleExpression())
+                }
             }
-//            is TypeScriptParser.GenericTypesContext -> {
-//                parseExpressionSequence(ctx.expressionSequence())
-//            }
+            is TypeScriptParser.GenericTypesContext -> {
+                parseExpressionSequence(ctx.expressionSequence())
+            }
             is TypeScriptParser.ArgumentsExpressionContext -> {
                 argumentsExpressionToCall(ctx)
             }
