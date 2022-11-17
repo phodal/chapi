@@ -748,7 +748,7 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                 }
 
                 else -> {
-                    println("todo -> ParenthesizedExpressionContext: ${subSingle.javaClass.simpleName}, text: ${subSingle.text}")
+//                    println("todo -> ParenthesizedExpressionContext: ${subSingle.javaClass.simpleName}, text: ${subSingle.text}")
                 }
             }
 

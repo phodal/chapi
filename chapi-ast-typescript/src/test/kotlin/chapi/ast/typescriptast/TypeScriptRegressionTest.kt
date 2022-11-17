@@ -200,11 +200,11 @@ export class PopupDirective {
     }
   }
 }"""
-            
-            val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-            assertEquals(codeFile.DataStructures.size, 1)
-            assertEquals(codeFile.DataStructures[0].Functions.size, 1)
-            assertEquals(codeFile.DataStructures[0].Functions[0].Name, "transform")
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "transform")
     }
 
     @Test
@@ -225,6 +225,21 @@ export class PopupDirective {
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "get")
+    }
+
+    @Test
+    fun multiple_acc_modifier() {
+        val code = """export class DataSource  {
+    private readonly _subscription;           
+    private readonly _dataStream = new BehaviorSubject<(string | undefined)[]>(this._cachedData);
+}"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        println(Json.encodeToString(codeFile))
+
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 0)
+        assertEquals(codeFile.DataStructures[0].Fields.size, 2)
     }
 }
 

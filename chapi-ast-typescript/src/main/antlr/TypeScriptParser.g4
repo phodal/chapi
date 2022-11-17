@@ -452,7 +452,7 @@ abstractDeclaration
     ;
 
 propertyMemberBase
-    : Async? accessibilityModifier? Static?
+    : Async? accessibilityModifier* Static?
     ;
 
 initializer
