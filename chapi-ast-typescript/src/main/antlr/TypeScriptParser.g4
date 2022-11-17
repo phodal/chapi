@@ -401,7 +401,7 @@ enumMember
 // Function Declaration
 
 functionDeclaration
-    : propertyMemberBase Function '*'? identifierName callSignature functionBody? SemiColon?
+    : propertyMemberBase? Function '*'? identifierName callSignature functionBody? SemiColon?
     ;
 
 functionBody
