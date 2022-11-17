@@ -905,7 +905,6 @@ singleExpression
     | singleExpression ('.' | '?''.') identifierName                         # PropertyAccessExpression
     |  New (Dot Target| singleExpression )                                   # NewExpression
     // find arguments first, then found the call expression
-//    | singleExpression typeArguments? arguments                              # ArgumentsExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
 
   // TODO:
@@ -914,17 +913,22 @@ singleExpression
 
     | This                                                                   # ThisExpression
     | Super                                                                  # SuperExpression
-    | identifierName                                                         # IdentifierExpression
+    | typeArguments? identifierName                                          # IdentifierExpression
     | literal                                                                # LiteralExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
     | objectLiteral                                                          # ObjectLiteralExpression
     | templateStringLiteral                                                  # TemplateStringExpression
+    | singleExpression As asExpression                                       # CastAsExpression
 
+    // TODO: careful use those
+    | singleExpression typeArguments? arguments                              # ArgumentsExpression
     | htmlElements                                                           # HtmlElementExpression
     ;
 
 
-
+asExpression
+    : singleExpression
+    ;
 
 functionExpression
     : Function '*'? Identifier? '(' formalParameterList? ')' typeAnnotation? '{' functionBody '}'
