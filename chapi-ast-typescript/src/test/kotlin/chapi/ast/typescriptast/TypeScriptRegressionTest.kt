@@ -162,4 +162,19 @@ export class PopupDirective {
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "openPopup")
     }
+
+    @Test
+    fun private_issue2() {
+        val code = """
+export class PopupDirective {
+  get taskTitle(): string {
+    return this.isSubTask ? this.subTask?.name : this.commonTaskWorkOrder?.title;
+  }
+}"""
+
+        val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "get")
+    }
 }

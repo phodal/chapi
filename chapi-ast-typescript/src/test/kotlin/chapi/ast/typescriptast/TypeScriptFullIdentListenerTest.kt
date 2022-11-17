@@ -902,7 +902,7 @@ function hello2() {
     }
 
     @Test
-    internal fun optionCheckAfterData() {
+    fun optionCheckAfterData() {
         val code = """
 const QualityGateProfile = () => {
   updateQualityGateProfile(profile.id!, profile).then(() => {
@@ -914,7 +914,12 @@ const QualityGateProfile = () => {
 """
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        assertEquals(1, codeFile.DataStructures.size)
+        val defaultStruct = codeFile.DataStructures[0]
+        assertEquals(1, defaultStruct.Functions.size)
+        assertEquals(3, defaultStruct.Functions[0].FunctionCalls.size)
+        assertEquals("updateQualityGateProfile", defaultStruct.Functions[0].FunctionCalls[0].FunctionName)
+        assertEquals("", defaultStruct.Functions[0].FunctionCalls[1].FunctionName)
+        assertEquals("success", defaultStruct.Functions[0].FunctionCalls[2].FunctionName)
     }
 
     @Test

@@ -58,8 +58,8 @@ public abstract class TypeScriptLexerBase extends Lexer
     }
 
     /**
-     * @return {@code true} iff the cursor is inside a template string
-     * @implNote method name starts with upper case latter: see {@link #TypeScriptLexerBase}
+     * {@code true} iff the cursor is inside a template string
+     *  method name starts with upper case latter: see {@link #TypeScriptLexerBase}
      */
     public boolean IsInTemplateString() {
         return this.templateDepth > 0;

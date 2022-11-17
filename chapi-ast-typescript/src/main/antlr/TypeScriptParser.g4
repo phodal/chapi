@@ -876,9 +876,9 @@ singleExpression
     | singleExpression '?'? '!'? '.'? '[' expressionSequence ']'             # MemberIndexExpression
     // for: `onHotUpdateSuccess?.();`
     // onChange?.(userName || password || null)
-    | singleExpression  ('?' | '!')* '.' '#'? identifierName? typeArguments?  # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? identifierName? typeArguments? ('?' | '!')* # MemberDotExpression
     // for: `onHotUpdateSuccess?.();`
-    | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'          # MemberDotExpression
+    | singleExpression  ('?' | '!')* '.' '#'? '(' identifierName? ')'     ('?' | '!')*     # MemberDotExpression
     // request('/api/system-info', { method: 'GET' });
 //    | singleExpression arguments                                             # MemberDotExpression
 
@@ -1006,10 +1006,10 @@ identifierOrKeyWord
     ;
 
 identifierName
-    : reservedWord ('?' | '!')?
+    : reservedWord
     | Lodash
     | Dollar
-    | Identifier ('?' | '!')?
+    | Identifier
     ;
 
 reservedWord
