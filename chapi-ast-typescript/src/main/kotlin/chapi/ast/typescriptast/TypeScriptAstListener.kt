@@ -15,11 +15,11 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         for (argCtx in formalParameterListContext!!.formalParameterArg()) {
             val typeType = this.buildTypeAnnotation(argCtx.typeAnnotation())
             var typeValue = argCtx.text
-            if (argCtx.identifierOrKeyWord() != null) {
-                typeValue = argCtx.identifierOrKeyWord().text
+            if (argCtx.identifierName() != null) {
+                typeValue = argCtx.identifierName().text
             }
 
-            val parameter = CodeProperty(TypeValue = typeValue, TypeType = typeType!!)
+            val parameter = CodeProperty(TypeValue = typeValue, TypeType = typeType)
 
             if (argCtx.accessibilityModifier() != null) {
                 parameter.Modifiers += argCtx.accessibilityModifier().text

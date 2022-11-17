@@ -444,11 +444,6 @@ constructorDeclaration
     : accessibilityModifier? Constructor '(' formalParameterList? ')' block?
     ;
 
-//propertyMemberDeclaration
-//    : abstractDeclaration
-//    | propertyMember
-//    ;
-
 propertyMemberDeclaration
     : propertyMemberBase propertyName  '!'? '?'? typeAnnotation? initializer?                      # PropertyDeclarationExpression
     | propertyMemberBase propertyName callSignature ( ('{' functionBody '}'))                       # MethodDeclarationExpression
@@ -457,7 +452,7 @@ propertyMemberDeclaration
     ;
 
 abstractDeclaration
-    : Abstract (Identifier '?'? callSignature | variableStatement)
+    : Abstract (identifierName '?'? callSignature | variableStatement)
     ;
 
 //propertyMember
@@ -495,7 +490,7 @@ formalParameterList
     ;
 
 formalParameterArg
-    : decoratorList? accessibilityModifier? ReadOnly? identifierOrKeyWord '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
+    : decoratorList? accessibilityModifier? ReadOnly? identifierName '?'? typeAnnotation? ('=' singleExpression)?      // ECMAScript 6: Initialization
     | lastFormalParameterArg
     // ([key, value]: [string, string[]])
 //    | arrayLiteral (':' formalParameterList)?                                                                // ECMAScript 6: Parameter Context Matching
