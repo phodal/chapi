@@ -13,14 +13,13 @@ Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in refs: [Tea if by sea, c
 
 Languages Stages (Welcome to PR your usage languages)
 
-| Features/Languages  | Java | Python | Go  | Kotlin | TypeScript | C   | C#  | Scala | C++ | Rust |
-|---------------------|------|--------|-----|--------|------------|-----|-----|-------|-----|------|
-| http api decl       | ✅    | 🆕     | 🆕  | ✅      | ✅          | 🆕  | 🆕  |       |     |      |
-| syntax parse        | ✅    | ✅      | ✅   | ✅      | ✅          | 🆕  | 🆕  | ✅     | 🆕  |      |
-| function call       | ✅    | 🆕     | 🆕  | 🆕     | ✅          |     |     |       |     |      |
-| arch/package        | ✅    |        |     | ✅      | ✅          |     |     | ✅     |     |      |
-| real world validate | ✅    |        |     | 🆕     | ✅          |     |     |       |     |      |
-| expression  (TBD)   |      |        |     |        |            |     |     |       |     |
+| Features      | Java | Python | Go  | Kotlin | TypeScript | C   | C#  | Scala | C++ | Rust |
+|---------------|------|--------|-----|--------|------------|-----|-----|-------|-----|------|
+| http api decl | ✅    | 🆕     | 🆕  | ✅      | ✅          | 🆕  | 🆕  |       |     |      |
+| syntax parse  | ✅    | ✅      | ✅   | ✅      | ✅          | 🆕  | 🆕  | ✅     | 🆕  |      |
+| function call | ✅    | 🆕     | 🆕  | 🆕     | ✅          |     |     |       |     |      |
+| arch/package  | ✅    |        |     | ✅      | ✅          |     |     | ✅     |     |      |
+| real world    | ✅    |        |     | 🆕     | ✅          |     |     |       |     |      |
 
 language versions（tested）: 
 
