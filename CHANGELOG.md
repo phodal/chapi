@@ -1,14 +1,69 @@
-# [](https://github.com/modernizing/chapi/compare/v2.0.0-alpha.5...v) (2022-08-20)
+# [](https://github.com/modernizing/chapi/compare/v2.0.0-beta.7...v) (2022-11-18)
+
+
+
+# [2.0.0-beta.7](https://github.com/modernizing/chapi/compare/v2.0.0-alpha.5...v2.0.0-beta.7) (2022-11-18)
 
 
 ### Bug Fixes
 
+* <java> [#20](https://github.com/modernizing/chapi/issues/20),incorrect TypeValue and TypeKey ([#21](https://github.com/modernizing/chapi/issues/21)) ([51eaa28](https://github.com/modernizing/chapi/commit/51eaa2862f0707fbc28c45452394543039b12d40))
 * fix identifier issues for archguard/archguard[#108](https://github.com/modernizing/chapi/issues/108) ([28cc9a8](https://github.com/modernizing/chapi/commit/28cc9a84971adeb1be8ab000352376aff560f6d5))
+* fix type alias error issues ([c218d81](https://github.com/modernizing/chapi/commit/c218d81fd2179f8cb612db24133afba6670d61d2))
+* fix type error issue ([e064477](https://github.com/modernizing/chapi/commit/e064477ad3eef343d84d81e89217bd4ef10251f4))
+* **kotlin:** fix syntax not match master issues ([7bea9c7](https://github.com/modernizing/chapi/commit/7bea9c7627a0228e54c27d68655f55f5a04686df))
+* **ts:** add numberic support ([33a35b0](https://github.com/modernizing/chapi/commit/33a35b04569a8e16fb73d24829b12ce5b4542e4f))
+* **ts:** align erros ([9a8d927](https://github.com/modernizing/chapi/commit/9a8d927b216c682819b0d5e8c4a6e2794e531f78))
+* **ts:** fix abstract error issue ([1d6feaa](https://github.com/modernizing/chapi/commit/1d6feaac879bc1e1a2c79a8b9f1569126eed77d5))
+* **ts:** fix all tests ([e089ac6](https://github.com/modernizing/chapi/commit/e089ac60917cd0b0e4a23381a074aa98053ca7c7))
+* **ts:** fix array type error issues ([c133707](https://github.com/modernizing/chapi/commit/c1337074cc69bda0405bcf876e9ada1fed95864e))
+* **ts:** fix arrow functions ([9f721bd](https://github.com/modernizing/chapi/commit/9f721bd099e9f511d2f3090d3e273dd1b36e843e))
+* **ts:** fix await issue ([db90510](https://github.com/modernizing/chapi/commit/db90510f06b71ce2961d5de6250934f5f6411e61))
+* **ts:** fix axios<Info>(){} call issue ([41e62e7](https://github.com/modernizing/chapi/commit/41e62e7347e191a656e35ac28db1cae75276f177))
+* **ts:** fix call issues ([1dd814b](https://github.com/modernizing/chapi/commit/1dd814b73627c238c9aefa915d5811a01b2db7fb))
+* **ts:** fix class abstract error issue ([d54c1f0](https://github.com/modernizing/chapi/commit/d54c1f06a4bd0c8588eba287918a87961e3c0417))
+* **ts:** fix decorator list ([9d8bfe5](https://github.com/modernizing/chapi/commit/9d8bfe53504626582c3f0fdcf70f1b2f1e9ec952))
+* **ts:** fix element in query ([e87a90c](https://github.com/modernizing/chapi/commit/e87a90cc8ea4461573e72c2f91f24bfb363f1872))
+* **ts:** fix empty classBody issue ([2782a01](https://github.com/modernizing/chapi/commit/2782a017d4380879228294cf2f202362cf0f45c0))
+* **ts:** fix empty type error ([8f0b8c4](https://github.com/modernizing/chapi/commit/8f0b8c48f4e83bc71adf8cdceb89da15bba6d9c3))
+* **ts:** fix end comma in constructor ([ddd139e](https://github.com/modernizing/chapi/commit/ddd139e930436345ae678085d5b005ff4b26cb53))
+* **ts:** fix export issues ([7474189](https://github.com/modernizing/chapi/commit/7474189f2c6292f032f544c1b605117d6aae1e95))
+* **ts:** fix function decl error issues ([ec26282](https://github.com/modernizing/chapi/commit/ec2628295c7e7abf6d4b56ccc03d8c28f20a165e))
+* **ts:** fix function decl error issues ([19bd271](https://github.com/modernizing/chapi/commit/19bd271cb49e2f9dd5a4227d8e40d3d270d287ee))
+* **ts:** fix function error issues ([4640f34](https://github.com/modernizing/chapi/commit/4640f34874ec34cd3fe322e60201c51301cabb77))
+* **ts:** fix import of conflict ([e57af30](https://github.com/modernizing/chapi/commit/e57af30b96d3e3ea5f9a8239fde43046281979d4))
+* **ts:** fix imports ([72ad42a](https://github.com/modernizing/chapi/commit/72ad42a07d91cd5a3b5d5fdac7e53145e328a1f7))
+* **ts:** fix interface cases ([991d3ef](https://github.com/modernizing/chapi/commit/991d3ef5c76a932eb82e24f441ba1951ff6ccbd6))
+* **ts:** fix lost question issues ([8718727](https://github.com/modernizing/chapi/commit/8718727b988d3175b2358f96f23bb5e9ee387567))
+* **ts:** fix more tests ([2c47f65](https://github.com/modernizing/chapi/commit/2c47f655a7fe8b2ea8aa2e2d783e6a67417e88f8))
+* **ts:** fix nested error issues ([6df62c4](https://github.com/modernizing/chapi/commit/6df62c494295e554ba212f3992a9017ee2b7ce16))
+* **ts:** fix of keywordS ([04bf39b](https://github.com/modernizing/chapi/commit/04bf39b2e23878a8cf058c3695cfc38afe8acc41))
+* **ts:** fix prop issues ([f3f5e9f](https://github.com/modernizing/chapi/commit/f3f5e9f63a4f9f36a1183e0b1690e2e70ed5214e))
+* **ts:** fix query array literal ([6e1890b](https://github.com/modernizing/chapi/commit/6e1890b9ceb039ed40efa51979b8334f9ab5e638))
+* **ts:** fix some order issues ([ded0de5](https://github.com/modernizing/chapi/commit/ded0de592e55f289fc865094bbf8040e7fe530fe))
+* **ts:** fix some type error issues ([2916b13](https://github.com/modernizing/chapi/commit/2916b135f18fa57952351c903cf0e5b24fceb416))
+* **ts:** fix string as parameter issue ([0eea7d2](https://github.com/modernizing/chapi/commit/0eea7d270b5b5887319930e514b1e008fc3a32e6))
+* **ts:** fix type abstract ? issues ([d704aae](https://github.com/modernizing/chapi/commit/d704aae667fbb6bd6d00eb1612fb11ede1289df7))
+* **ts:** fix typed error ([77399ac](https://github.com/modernizing/chapi/commit/77399acaaa28d8455d9f715113f17d9be3e2eda1))
+* **ts:** merge type issues ([38ed025](https://github.com/modernizing/chapi/commit/38ed025309b4aaf9c689b40b4cb4798b6cf208ca))
+* **ts:** resolve all imports ([fa9e70a](https://github.com/modernizing/chapi/commit/fa9e70a6c3065b7f474539ba4306b74211a3824f))
 
 
 ### Features
 
 * <java> add enum support ([3fa19ef](https://github.com/modernizing/chapi/commit/3fa19efbcf6966e9ca03b5b453c6cea8620fa483))
+* add assign op [#22](https://github.com/modernizing/chapi/issues/22) ([df144dc](https://github.com/modernizing/chapi/commit/df144dc422e852dac4e17ee8f757a4b8932127cf))
+* add comprison [#22](https://github.com/modernizing/chapi/issues/22) ([ddc0416](https://github.com/modernizing/chapi/commit/ddc0416e8309f5a5580ab163f8e1cb844e4f95bf))
+* add first add sample [#22](https://github.com/modernizing/chapi/issues/22) ([d7389cb](https://github.com/modernizing/chapi/commit/d7389cb9479f148c9af5e7eb1c87683478266503))
+* add function call op [#22](https://github.com/modernizing/chapi/issues/22) ([29a195f](https://github.com/modernizing/chapi/commit/29a195fb6f5600bd6653dac4f1c4592e05064840))
+* add jumpop [#22](https://github.com/modernizing/chapi/issues/22) ([86e948e](https://github.com/modernizing/chapi/commit/86e948ed06b9f318db0745d927e2a2ecb76f8da4))
+* add switchOp and caseOp [#22](https://github.com/modernizing/chapi/issues/22) ([88f42e4](https://github.com/modernizing/chapi/commit/88f42e49137e499b10e5da2bf54c24b08377fa77))
+* **go:** add parse for parimaryexpr ([3962805](https://github.com/modernizing/chapi/commit/39628053b7c303e6b84aae174bf0a640ae73acc7))
+* **go:** enable for check function name ([61d7701](https://github.com/modernizing/chapi/commit/61d770178870df5dd7cb56a7cf34e4c66470c4a0))
+* **go:** fix null issues ([de13d9d](https://github.com/modernizing/chapi/commit/de13d9d1d727d92c148a1b1186806d8bf9a814a8))
+* init basic pratter for [#22](https://github.com/modernizing/chapi/issues/22) ([34755a3](https://github.com/modernizing/chapi/commit/34755a31a4299279a5b03b407cd0d8ba802c3331))
+* try if else packages ([33ee8b9](https://github.com/modernizing/chapi/commit/33ee8b99a0081fb2d83936b568f109b043f9d0e4))
+* **ts:** add readonly issue ([b548af9](https://github.com/modernizing/chapi/commit/b548af9b20d90cbb8c9d07b307be1842ae136851))
 
 
 
@@ -25,6 +80,14 @@
 
 
 # [2.0.0-alpha.1](https://github.com/modernizing/chapi/compare/v2.0.0-beta.4...v2.0.0-alpha.1) (2022-05-30)
+
+
+
+# [2.0.0-beta.4](https://github.com/modernizing/chapi/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2022-05-30)
+
+
+
+# [2.0.0-beta.3](https://github.com/modernizing/chapi/compare/v2.0.0-beta...v2.0.0-beta.3) (2022-05-30)
 
 
 ### Bug Fixes
