@@ -450,8 +450,8 @@ constructorDeclaration
 propertyMemberDeclaration
     : propertyMemberBase (getAccessor | setAccessor)                                                # GetterSetterDeclarationExpression
     | abstractDeclaration                                                                           # AbstractMemberDeclaration
-    | propertyMemberBase propertyName callSignature ( ('{' functionBody? '}') | eos)                 # MethodDeclarationExpression
-    | propertyMemberBase propertyName '!'? '?'? typeAnnotation? initializer?                       # PropertyDeclarationExpression
+    | propertyMemberBase propertyName callSignature ( ('{' functionBody? '}') | eos)                # MethodDeclarationExpression
+    | propertyMemberBase propertyName '!'? '?'? typeAnnotation? initializer?                        # PropertyDeclarationExpression
     ;
 
 abstractDeclaration

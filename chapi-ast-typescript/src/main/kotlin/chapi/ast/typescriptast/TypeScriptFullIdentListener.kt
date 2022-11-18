@@ -244,6 +244,20 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                         Name = name, Position = buildPosition(childCtx)
                     )
                 }
+                is TypeScriptParser.AbstractMemberDeclarationContext -> {
+                    childCtx.abstractDeclaration().let {
+                        val name = it.identifierName().text
+                        val type = if (it.typeAnnotation() != null) {
+                            buildTypeAnnotation(it.typeAnnotation())
+                        } else {
+                            "void"
+                        }
+
+                        currentNode.Functions += CodeFunction(
+                            Name = name, Position = buildPosition(childCtx), ReturnType = type
+                        )
+                    }
+                }
                 else -> {
 //                    println("handleClassBodyElements -> childElementType : ${childCtx.javaClass.simpleName}")
                 }

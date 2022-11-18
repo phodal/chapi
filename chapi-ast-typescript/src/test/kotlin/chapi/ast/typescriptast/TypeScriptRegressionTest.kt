@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class TypeScriptRegressionTest {
 
     @Test
-    internal fun backend_arrow_function() {
+    internal fun reggrestion1() {
         val code = """
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -20,7 +20,11 @@ function test() {
 exports.test = test;
 """
 
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val container = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        assertEquals(1, container.DataStructures.size)
+        assertEquals(1, container.DataStructures[0].Functions.size)
+        assertEquals(container.DataStructures[0].Functions[0].Name, "test")
     }
 
     @Test
@@ -28,6 +32,7 @@ exports.test = test;
         val code = """
 import {EMPTY, Observable, of} from 'rxjs';
 
+function demo() {
 if (node in graph) {
   for (const n of graph[node]) {
 
@@ -35,9 +40,16 @@ if (node in graph) {
 }
 
 of(data)
+}
+
 """
 
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val codeContainer = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, codeContainer.DataStructures.size)
+        assertEquals(1, codeContainer.DataStructures[0].Functions.size)
+
+        assertEquals(codeContainer.DataStructures[0].Functions[0].Name, "demo")
+
     }
 
     @Test
@@ -51,6 +63,7 @@ of(data)
         assertEquals(1, codeContainer.DataStructures.size)
         assertEquals(1, codeContainer.DataStructures[0].Functions.size)
 
+        assertEquals(codeContainer.DataStructures[0].Functions[0].Name, "ngOnInit")
     }
 
     @Test
@@ -60,25 +73,40 @@ of(data)
     private fb: FormBuilder,
   ) { }
 } """
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val container = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        assertEquals(1, container.DataStructures.size)
+        assertEquals(1, container.DataStructures[0].Functions.size)
+        assertEquals(container.DataStructures[0].Functions[0].Name, "constructor")
     }
 
     @Test
     fun nested_type_type_error() {
-        val code = """Object.entries(values).forEach(([key, value]: [string, string[]]) => {
+        val code = """function demo() { Object.entries(values).forEach(([key, value]: [string, string[]]) => {
      
-});
+});}
 """
         TypeScriptAnalyser().analysis(code, "index.tsx")
+        val container = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        assertEquals(1, container.DataStructures.size)
+        assertEquals(1, container.DataStructures[0].Functions.size)
+        assertEquals(container.DataStructures[0].Functions[0].Name, "demo")
     }
 
     @Test
     fun array_in_for_loop() {
-        val code = """this.names.forEach((it, index) => {
-  multiSelect('', this.accessor[index])
-})
+        val code = """function demo() {
+    this.names.forEach((it, index) => {
+      multiSelect('', this.accessor[index])
+    })
+}
 """
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val container = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        assertEquals(1, container.DataStructures.size)
+        assertEquals(1, container.DataStructures[0].Functions.size)
+        assertEquals(container.DataStructures[0].Functions[0].Name, "demo")
     }
 
     @Test
@@ -89,7 +117,11 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
       return this.form.value?.id?.[0] || null
   }
 }"""
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val container = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        assertEquals(1, container.DataStructures.size)
+        assertEquals(1, container.DataStructures[0].Functions.size)
+        assertEquals(container.DataStructures[0].Functions[0].Name, "confirm")
     }
 
     @Test
@@ -102,7 +134,10 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
   }
 }"""
 
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val container = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, container.DataStructures.size)
+        assertEquals(1, container.DataStructures[0].Functions.size)
+        assertEquals(container.DataStructures[0].Functions[0].Name, "constructor")
     }
 
     @Test
@@ -121,15 +156,25 @@ export class DemoComponent implements OnInit, ControlValueAccessor {
   abstract create?(name: string): Observable<T>;
 }"""
 
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val container = TypeScriptAnalyser().analysis(code, "index.tsx")
+        assertEquals(1, container.DataStructures.size)
+        assertEquals(1, container.DataStructures[0].Functions.size)
+        assertEquals(container.DataStructures[0].Functions[0].Name, "create")
     }
 
     @Test
     fun numeric_separators() {
-        val code = """if (+value > 1_000_000_000) {
-    }"""
+        val code = """function demo() {
+   if (+value > 1_000_000_000) {
+   }
+}
+        """.trimMargin()
 
-        TypeScriptAnalyser().analysis(code, "index.tsx")
+        val container = TypeScriptAnalyser().analysis(code, "index.tsx")
+
+        assertEquals(1, container.DataStructures.size)
+        assertEquals(1, container.DataStructures[0].Functions.size)
+        assertEquals(container.DataStructures[0].Functions[0].Name, "demo")
     }
 
     @Test
@@ -234,7 +279,6 @@ export class PopupDirective {
 }"""
 
         val codeFile = TypeScriptAnalyser().analysis(code, "index.tsx")
-        println(Json.encodeToString(codeFile))
 
         assertEquals(codeFile.DataStructures.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions.size, 0)
