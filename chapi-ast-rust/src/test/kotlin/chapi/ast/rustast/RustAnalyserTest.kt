@@ -1,6 +1,7 @@
 package chapi.ast.rustast
 
 import org.junit.jupiter.api.Test
+import java.io.File
 
 internal class RustAnalyserTest {
 
@@ -13,5 +14,15 @@ internal class RustAnalyserTest {
         """.trimIndent()
 
         val codeContainer = RustAnalyser().analysis(str, "test.rs")
+    }
+
+    @Test
+    fun allGrammarUnderResources() {
+        val content = this::class.java.getResource("/grammar")!!
+        File(content.toURI()).walkTopDown().forEach {
+            if (it.isFile && it.extension == "rs") {
+                RustAnalyser().analysis(it.readText(), it.name)
+            }
+        }
     }
 }
