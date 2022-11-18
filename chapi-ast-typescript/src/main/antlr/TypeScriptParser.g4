@@ -899,13 +899,13 @@ arrowFunctionDeclaration
 
 arrowFunctionParameters
     : typeRef? '(' formalParameterList? ','? ')'
-    | typeRef? identifierName
+    |  identifierName
     ;
 
 arrowFunctionBody
-    : htmlAssign
-    | '{' statementList? '}'
+    : '{' statementList? '}'
     | singleExpression
+    | htmlAssign
     ;
 
 classExpression

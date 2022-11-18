@@ -300,7 +300,12 @@ export class PopupDirective {
 
     @Test
     fun arrow_in_arrow() {
-        val code = """export const axiosWithBaseURL = (baseURL: string) => (
+        val code = """
+export default function axiosAgent<T>(config: AxiosRequestConfig) {
+  return (axiosInstance(config) as unknown) as Promise<T>;
+}
+
+export const axiosWithBaseURL = (baseURL: string) => <T>(
   config: Omit<AxiosRequestConfig, "baseURL">,
 ) => (axiosAgent({ ...config, baseURL }) as unknown) as Promise<T>;
 """
@@ -310,7 +315,8 @@ export class PopupDirective {
         val dataStructures = codeFile.DataStructures
         assertEquals(dataStructures.size, 1)
         assertEquals(dataStructures[0].Functions.size, 2)
-        assertEquals(dataStructures[0].Functions[0].Name, "axiosWithBaseURL")
+        assertEquals(dataStructures[0].Functions[0].Name, "axiosAgent")
+        assertEquals(dataStructures[0].Functions[1].Name, "axiosWithBaseURL")
     }
 
     @Test
