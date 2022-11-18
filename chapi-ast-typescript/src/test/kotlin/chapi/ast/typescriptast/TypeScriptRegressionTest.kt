@@ -301,7 +301,7 @@ export class PopupDirective {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     fun async() {
         val code = """test("unpaired wrapper", async () => {
   let tokens = lexer(`dep_name = '"\`/@`);
@@ -314,7 +314,7 @@ export class PopupDirective {
         val dataStructures = codeFile.DataStructures
         assertEquals(dataStructures.size, 1)
         assertEquals(dataStructures[0].Functions.size, 1)
-        assertEquals(dataStructures[0].Functions[0].Name, "test")
+        assertEquals(dataStructures[0].Functions[0].FunctionCalls.size, 2)
     }
 
     @Test

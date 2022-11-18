@@ -261,9 +261,13 @@ mode TEMPLATE;
 
 BackTickInside:                 '`' {this.DecreaseTemplateDepth();} -> type(BackTick), popMode;
 TemplateStringStartExpression:  '${' -> pushMode(DEFAULT_MODE);
-TemplateStringAtom:             ~[`];
+TemplateStringAtom:             EscapeTick | ~[`];
 
 // Fragment rules
+
+fragment EscapeTick
+    : '\u005C\u0060'
+    ;
 
 fragment DoubleStringCharacter
     : ~["\\\r\n]
