@@ -61,7 +61,6 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterMethodDecl(ctx: GoParser.MethodDeclContext?) {
-
         currentFunction = CodeFunction(
             Name = ctx!!.IDENTIFIER().text,
             MultipleReturns = buildReturnTypeFromSignature(ctx.signature()),
@@ -125,25 +124,40 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         when (val firstChild = ctx!!.getChild(0)) {
             is GoParser.PrimaryExprContext -> {
                 firstChild.getChild(1)?.let {
-                    this.buildPrimaryExprCtx(firstChild)
+                    this.parsePrimaryExprCtx(firstChild)
                 }
             }
         }
     }
 
-    private fun buildPrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext) {
+    private fun parsePrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext) {
         when (val child = primaryExprCtx.getChild(1)) {
             is GoParser.ArgumentsContext -> {
                 val codeCall = codeCallFromExprList(primaryExprCtx)
                 codeCall.Parameters = parseArguments(child)
+                codeCall.Package = wrapTarget(codeCall.NodeName)
 
                 currentFunction.FunctionCalls += codeCall
             }
 
             else -> {
-                println("${child.javaClass} not implemented")
+                println("${child.javaClass} not implemented ${child.text}")
             }
         }
+    }
+
+    /**
+     * 1. lookup local vars
+     * 2. lookup imports
+     */
+    private fun wrapTarget(nodeName: String): String {
+        codeContainer.Imports.forEach {
+            if (it.Source.endsWith("/${nodeName}")) {
+                return it.Source
+            }
+        }
+
+        return ""
     }
 
     private fun parseArguments(child: GoParser.ArgumentsContext): Array<CodeProperty> {
@@ -194,7 +208,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             }
 
             else -> {
-                println("${child.javaClass} not implemented")
+                println("${child.javaClass} not implemented -> ${child.text}")
                 CodeCall(NodeName = child.text)
             }
         }
