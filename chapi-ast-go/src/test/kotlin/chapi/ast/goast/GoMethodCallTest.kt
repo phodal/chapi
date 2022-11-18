@@ -28,14 +28,31 @@ func main() {
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
         assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls.size, 4)
 
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].NodeName, "gin")
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].FunctionName, "Default")
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[0].Package, "github.com/gin-gonic/gin")
+        val rInitCall = codeFile.DataStructures[0].Functions[0].FunctionCalls[0]
+        assertEquals(rInitCall.NodeName, "gin")
+        assertEquals(rInitCall.FunctionName, "Default")
+        assertEquals(rInitCall.Package, "github.com/gin-gonic/gin")
 
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[1].NodeName, "gin.Default()")
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[2].NodeName, "c")
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[2].Parameters.size, 2)
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[3].NodeName, "gin.Default()")
-        assertEquals(codeFile.DataStructures[0].Functions[0].FunctionCalls[3].FunctionName, "Run")
+        val rGetCall = codeFile.DataStructures[0].Functions[0].FunctionCalls[1]
+        assertEquals(rGetCall.NodeName, "gin")
+        assertEquals(rGetCall.FunctionName, "GET")
+        assertEquals(rGetCall.Parameters.size, 2)
+        assertEquals(rGetCall.Parameters[0].TypeValue, "\"/\"")
+        assertEquals(rGetCall.Parameters[1].TypeValue, "func(c*gin.Context){c.String(http.StatusOK,\"hello world\")\n" +
+            "}")
+
+        assertEquals(rGetCall.Package, "github.com/gin-gonic/gin")
+
+        val callback = codeFile.DataStructures[0].Functions[0].FunctionCalls[2]
+        assertEquals(callback.NodeName, "c")
+        assertEquals(callback.FunctionName, "String")
+        assertEquals(callback.Parameters.size, 2)
+        assertEquals(callback.Parameters[0].TypeValue, "http.StatusOK")
+        assertEquals(callback.Parameters[1].TypeValue, "\"hello world\"")
+
+        val rRun = codeFile.DataStructures[0].Functions[0].FunctionCalls[3]
+        assertEquals(rRun.NodeName, "gin")
+        assertEquals(rRun.FunctionName, "Run")
+        assertEquals(rRun.Package, "github.com/gin-gonic/gin")
     }
 }
