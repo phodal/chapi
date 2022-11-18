@@ -13,20 +13,37 @@ Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in refs: [Tea if by sea, c
 
 Languages Stages (Welcome to PR your usage languages)
 
-| Features/Languages  | Java | Python | Go  | Kotlin | TypeScript | C   | C#  | Scala | C++ |
-|---------------------|------|--------|-----|--------|------------|-----|-----|-------|-----|
-| http api decl       | ✅    | 🆕     | 🆕  | ✅      | ✅          | 🆕  | 🆕  |       |     |
-| syntax parse        | ✅    | ✅      | ✅   | ✅      | ✅          | 🆕  | 🆕  | ✅     | 🆕  |
-| function call       | ✅    | 🆕     | 🆕  | 🆕     | ✅          |     |     |       |     |
-| arch/package        | ✅    |        |     | ✅      | ✅          |     |     | ✅     |     |
-| real world validate | ✅    |        |     | 🆕     | ✅          |     |     |       |     |
+| Features/Languages  | Java | Python | Go  | Kotlin | TypeScript | C   | C#  | Scala | C++ | Rust |
+|---------------------|------|--------|-----|--------|------------|-----|-----|-------|-----|------|
+| http api decl       | ✅    | 🆕     | 🆕  | ✅      | ✅          | 🆕  | 🆕  |       |     |      |
+| syntax parse        | ✅    | ✅      | ✅   | ✅      | ✅          | 🆕  | 🆕  | ✅     | 🆕  |      |
+| function call       | ✅    | 🆕     | 🆕  | 🆕     | ✅          |     |     |       |     |      |
+| arch/package        | ✅    |        |     | ✅      | ✅          |     |     | ✅     |     |      |
+| real world validate | ✅    |        |     | 🆕     | ✅          |     |     |       |     |      |
 | expression  (TBD)   |      |        |     |        |            |     |     |       |     |
 
 language versions（tested）: 
 
 - Java: 8, 11, 17
-- C#: .NET 6.0
+- TypeScript
+- Kotlin
 - Python: 2, 3
+
+// tier 1 languages
+":chapi-ast-java",
+":chapi-ast-typescript",
+
+// tier 2 languages
+":chapi-ast-kotlin",
+":chapi-ast-go",
+":chapi-ast-python",
+":chapi-ast-scala",
+
+// tier 3 languages
+":chapi-ast-rust",
+":chapi-ast-csharp",
+":chapi-ast-c",
+":chapi-ast-cpp",
 
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 

@@ -2,14 +2,20 @@ rootProject.name = "chapi"
 
 include(
     ":chapi-domain",
+// tier 1 languages
     ":chapi-ast-java",
     ":chapi-ast-typescript",
+
+// tier 2 languages
+    ":chapi-ast-kotlin",
     ":chapi-ast-go",
     ":chapi-ast-python",
-    ":chapi-ast-c",
-    ":chapi-ast-csharp",
-    ":chapi-ast-kotlin",
     ":chapi-ast-scala",
-    ":chapi-ast-cpp"
+
+// tier 3 languages
+    ":chapi-ast-rust",
+    ":chapi-ast-csharp",
+    ":chapi-ast-c",
+    ":chapi-ast-cpp",
 )
 
