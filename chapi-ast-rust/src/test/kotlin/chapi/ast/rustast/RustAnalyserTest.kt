@@ -1,5 +1,6 @@
 package chapi.ast.rustast
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File
 
@@ -17,6 +18,7 @@ internal class RustAnalyserTest {
     }
 
     @Test
+    @Disabled
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!
         File(content.toURI()).walkTopDown().forEach {
