@@ -1,4 +1,28 @@
-# [](https://github.com/modernizing/chapi/compare/v2.0.0-beta.7...v) (2022-11-18)
+# [](https://github.com/modernizing/chapi/compare/v2.0.0-beta.9...v) (2022-11-25)
+
+
+
+# [2.0.0-beta.9](https://github.com/modernizing/chapi/compare/v2.0.0-beta.7...v2.0.0-beta.9) (2022-11-25)
+
+
+### Bug Fixes
+
+* fix crash issues ([e103097](https://github.com/modernizing/chapi/commit/e1030971a7735adbbe6a34fecd358028ac699985))
+* fix crash issues for golang ([1c6a410](https://github.com/modernizing/chapi/commit/1c6a4100cbb7f455044d3c10431cb277d7f9d4ae))
+* fix test ([488a8ca](https://github.com/modernizing/chapi/commit/488a8ca1e9060c3acbc91d608ed653b8cf7f1223))
+* fix tests ([1b511ee](https://github.com/modernizing/chapi/commit/1b511ee58fed5d18dc67d91a14919fcb41b85dce))
+
+
+### Features
+
+* add support to wrap target ([ac664f6](https://github.com/modernizing/chapi/commit/ac664f600a192049c2e79ce045acf7baac61778e))
+* add treeviewer for output ([b8fcee9](https://github.com/modernizing/chapi/commit/b8fcee9975f60c6c0e1967fd7bf07bd937c47974))
+* **go:** add handle for string type ([a715336](https://github.com/modernizing/chapi/commit/a715336808b36c5dc8f590248a80f0b81510ebc7))
+* **go:** add support for go block call ([e672a5e](https://github.com/modernizing/chapi/commit/e672a5eee63d6e2ebc9f4f9b24231d1bb56ba5fb))
+* **go:** fix target error issues ([08caebb](https://github.com/modernizing/chapi/commit/08caebb8cf11465e11eb81e91aa915909f1b373e))
+* **go:** make go better for parsing API ([82373a2](https://github.com/modernizing/chapi/commit/82373a2fec0fca26a456f47447828a5e1616a95a))
+* **rs:** init struct ([1d357e1](https://github.com/modernizing/chapi/commit/1d357e10d2f2dcc315ece27e55ffa4f43a012187))
+* **rust:** init modules ([a68bf2e](https://github.com/modernizing/chapi/commit/a68bf2e49ee014b1fac793afe86295a4fa4beae2))
 
 
 
