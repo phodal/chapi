@@ -42,19 +42,17 @@ func main() {
     @Test
     @Disabled
     fun analysisByDir() {
-        val dir = "/iam"
+        val dir = "/Users/phodal/test/iam"
         val codeContainer = GoAnalyser().analysisByDir(dir)
-        println(codeContainer)
+        // write to file
+        val json = Json.encodeToString(codeContainer)
+        File("iam.json").writeText(json)
     }
 }
 
 private fun GoAnalyser.analysisByDir(dir: String): List<CodeContainer> {
-    val codeContainers = mutableListOf<CodeContainer>()
     val files = File(dir).walkTopDown().filter { it.isFile && it.extension == "go" }.toList()
-    files.forEach {
-        println(it.absolutePath)
-        val codeContainer = analysis(it.readText(), it.name)
-        codeContainers.add(codeContainer)
-    }
-    return codeContainers
+    return files.map {
+        analysis(it.readText(), it.name)
+    }.toList()
 }
