@@ -2,6 +2,7 @@ rootProject.name = "chapi"
 
 include(
     ":chapi-domain",
+    ":chapi-helper",
 // tier 1 languages
     ":chapi-ast-java",
     ":chapi-ast-typescript",

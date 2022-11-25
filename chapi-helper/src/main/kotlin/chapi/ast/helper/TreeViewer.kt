@@ -1,4 +1,4 @@
-package chapi.ast.javaast
+package chapi.ast.helper
 
 import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.runtime.tree.Tree;
