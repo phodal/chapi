@@ -2,6 +2,7 @@ package chapi.ast.kotlinast.spring
 
 import chapi.ast.kotlinast.AnalysisMode
 import chapi.ast.kotlinast.KotlinAnalyser
+import chapi.ast.kotlinast.analysis
 import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
