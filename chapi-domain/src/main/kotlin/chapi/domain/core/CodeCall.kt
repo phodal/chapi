@@ -29,7 +29,10 @@ open class CodeCall(
     var NodeName: String = "",
     var FunctionName: String = "",
     var Parameters: Array<CodeProperty> = arrayOf(),
-    var Position: CodePosition = CodePosition()
+    var Position: CodePosition = CodePosition(),
+    // like "v1.Group", the v1 will be the Receiver
+    // since 2.0.0-Beta.9
+     var OriginNodeName: String = "",
 ) {
 
     open fun buildClassFullName(): String {

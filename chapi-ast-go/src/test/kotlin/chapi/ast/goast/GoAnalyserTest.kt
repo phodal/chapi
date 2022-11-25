@@ -110,6 +110,8 @@ func installController(g *gin.Engine) *gin.Engine {
         assertEquals(thirdCall.FunctionName, "Group")
         assertEquals(thirdCall.NodeName, "*gin.Engine")
         assertEquals(thirdCall.Parameters[0].TypeValue, "/users")
+
+        println(Json.encodeToString(value))
     }
 
     @Test
