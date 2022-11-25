@@ -99,19 +99,28 @@ func installController(g *gin.Engine) *gin.Engine {
 }"""
 
         val codeContainer = GoAnalyser().analysis(code, "")
-        val value = codeContainer.DataStructures[0]
-        val secondCall = value.Functions[0].FunctionCalls[1]
+        val container = codeContainer.DataStructures[0]
 
-        assertEquals(secondCall.FunctionName, "Group")
-        assertEquals(secondCall.Parameters[0].TypeValue, "/v1")
+        val mainCall = container.Functions[0].FunctionCalls[1]
 
-        val thirdCall = value.Functions[0].FunctionCalls[2]
+        assertEquals(container.Functions.size, 1)
+        assertEquals(mainCall.FunctionName, "Group")
+        assertEquals(mainCall.Parameters[0].TypeValue, "/v1")
 
-        assertEquals(thirdCall.FunctionName, "Group")
-        assertEquals(thirdCall.NodeName, "*gin.Engine")
-        assertEquals(thirdCall.Parameters[0].TypeValue, "/users")
+        val firstBlock = container.Functions[0].InnerFunctions[0]
+        val innelCall = firstBlock.FunctionCalls[0]
 
-        println(Json.encodeToString(value))
+        assertEquals(innelCall.FunctionName, "Group")
+        assertEquals(innelCall.NodeName, "*gin.Engine")
+        assertEquals(innelCall.Parameters[0].TypeValue, "/users")
+
+        val secondBlock = container.Functions[0].InnerFunctions[0].InnerFunctions[0]
+        val innerInnerCall = secondBlock.FunctionCalls[0]
+
+        assertEquals(innerInnerCall.FunctionName, "NewUserController")
+
+        val innerInnerSecondCall = secondBlock.FunctionCalls[1]
+        assertEquals(innerInnerSecondCall.FunctionName, "GET")
     }
 
     @Test

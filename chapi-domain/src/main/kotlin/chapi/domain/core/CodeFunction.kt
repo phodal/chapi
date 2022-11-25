@@ -7,6 +7,12 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
 
+enum class FunctionType {
+    Function,
+    // for Golang block
+    Block,
+}
+
 @Serializable
 open class CodeFunction(
     var Name: String = "",
@@ -29,6 +35,7 @@ open class CodeFunction(
     var IsConstructor: Boolean = false, // todo: move to extension
     var IsReturnHtml: Boolean = false,
     var BodyHash: Int = 0,
+    var Type: FunctionType = FunctionType.Function,
     // a experimental api for code analysis, please carefully use it.
 //    @property:ExperimentalStdlibApi val expression: Expression? = null,
 ) {

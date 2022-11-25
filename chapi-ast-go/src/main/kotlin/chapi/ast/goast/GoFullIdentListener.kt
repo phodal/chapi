@@ -2,6 +2,7 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
 import chapi.domain.core.*
+import chapi.infra.Stack
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 /**
@@ -55,6 +56,28 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         currentFunction.addVarsFromMap(localVars)
         defaultNode.Functions += currentFunction
         currentFunction = CodeFunction()
+    }
+
+
+    private var blockStack = Stack<CodeFunction>()
+    private var lastBlock = CodeFunction(Type = FunctionType.Block, Name = "chapi_block")
+
+    override fun enterBlock(ctx: GoParser.BlockContext?) {
+        if (ctx?.parent is GoParser.StatementContext) {
+            lastBlock = CodeFunction(Type = FunctionType.Block, Name = "chapi_block" + "${blockStack.count()}")
+            blockStack.push(lastBlock)
+        }
+    }
+
+    override fun exitBlock(ctx: GoParser.BlockContext?) {
+        if (ctx?.parent is GoParser.StatementContext) {
+            val popBlock = blockStack.pop()!!
+            if (blockStack.count() > 0) {
+                blockStack.peek()!!.InnerFunctions += popBlock
+            } else {
+                currentFunction.InnerFunctions += popBlock
+            }
+        }
     }
 
     override fun enterTypeDecl(ctx: GoParser.TypeDeclContext?) {
@@ -126,7 +149,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun buildTypeSpec(typeSpec: GoParser.TypeSpecContext) {
-        val identifyName = typeSpec.IDENTIFIER().text
+        val identifyName = typeSpec.IDENTIFIER()?.text ?: ""
         typeSpec.type_().typeLit()?.let {
             when (val typeChild = it.getChild(0)) {
                 is GoParser.StructTypeContext -> {
@@ -190,7 +213,11 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 codeCall.Parameters = parseArguments(child)
                 codeCall.Package = wrapTarget(codeCall.NodeName)
 
-                currentFunction.FunctionCalls += codeCall
+                if (blockStack.count() > 0) {
+                    lastBlock.FunctionCalls += codeCall
+                } else {
+                    currentFunction.FunctionCalls += codeCall
+                }
             }
 
             else -> {
