@@ -4,11 +4,20 @@ import chapi.ast.antlr.JavaLexer
 import chapi.ast.antlr.JavaParser
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeContainer
+import chapi.parser.AnalysisMode
+import chapi.parser.TwoStepAnalyser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-open class JavaAnalyser {
+open class JavaAnalyser : TwoStepAnalyser() {
+    override fun analysis(code: String, filePath: String, mode: AnalysisMode): CodeContainer {
+        return when (mode) {
+            AnalysisMode.Basic -> identFullInfo(code, filePath)
+            AnalysisMode.Full -> identBasicInfo(code, filePath)
+        }
+    }
+
     open fun identFullInfo(
         str: String,
         fileName: String,
@@ -19,7 +28,6 @@ open class JavaAnalyser {
         val listener = JavaFullIdentListener(fileName, classes)
 
         ParseTreeWalker().walk(listener, context)
-
         return listener.getNodeInfo()
     }
 

@@ -3,17 +3,19 @@ package chapi.ast.kotlinast
 import chapi.ast.antlr.KotlinLexer
 import chapi.ast.antlr.KotlinParser
 import chapi.domain.core.CodeContainer
+import chapi.parser.AnalysisMode
+import chapi.parser.TwoStepAnalyser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
-class KotlinAnalyser {
-    fun analysis(code: String, fileName: String, type: AnalysisMode = AnalysisMode.Basic): CodeContainer {
-        val listener = when (type) {
-            AnalysisMode.Basic -> KotlinBasicIdentListener(fileName)
-            AnalysisMode.Full -> KotlinFullIdentListener(fileName)
+class KotlinAnalyser: TwoStepAnalyser() {
+    override fun analysis(code: String, filePath: String, mode: AnalysisMode): CodeContainer {
+        val listener = when (mode) {
+            AnalysisMode.Basic -> KotlinBasicIdentListener(filePath)
+            AnalysisMode.Full -> KotlinFullIdentListener(filePath)
         }
-        val context = when (isKotlinScript(fileName)) {
+        val context = when (isKotlinScript(filePath)) {
             true -> this.parse(code).script()
             false -> this.parse(code).kotlinFile()
         }
@@ -32,6 +34,3 @@ class KotlinAnalyser {
     private fun isKotlinScript(fileName: String): Boolean = fileName.endsWith(".kts")
 }
 
-enum class AnalysisMode {
-    Basic, Full
-}
