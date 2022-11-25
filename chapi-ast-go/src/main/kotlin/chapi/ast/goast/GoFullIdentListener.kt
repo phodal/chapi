@@ -118,8 +118,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         return structTypeCtx.fieldDecl()
             .map { field ->
                 CodeField(
-                    TypeType = field.type_().text,
-                    TypeValue = field.identifierList().text
+                    TypeType = field.type_()?.text ?: "",
+                    TypeValue = field.identifierList()?.text ?: ""
                 )
             }.toTypedArray()
     }
