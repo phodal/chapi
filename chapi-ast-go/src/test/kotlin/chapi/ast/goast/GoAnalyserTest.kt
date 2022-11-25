@@ -71,6 +71,48 @@ func installController(g *gin.Engine) *gin.Engine {
     }
 
     @Test
+    fun shouldIdentifyMethodCall() {
+        val code = """package server
+
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/chapi/server/controller/v1/user"
+	"github.com/chapi/server/store/mysql"
+	_ "github.com/chapi/pkg/validator"
+)
+
+func installController(g *gin.Engine) *gin.Engine {
+	storeIns, _ := mysql.GetMySQLFactoryOr(nil)
+	v1 := g.Group("/v1")
+	{
+		userv1 := v1.Group("/users")
+		{
+			userController := user.NewUserController(storeIns)
+
+			userv1.GET("", userController.List)
+			userv1.POST("", userController.Create)
+			userv1.GET(":name", userController.Get)
+		}
+    }
+
+	return g
+}"""
+
+        val codeContainer = GoAnalyser().analysis(code, "")
+        val value = codeContainer.DataStructures[0]
+        val secondCall = value.Functions[0].FunctionCalls[1]
+
+        assertEquals(secondCall.FunctionName, "Group")
+        assertEquals(secondCall.Parameters[0].TypeValue, "/v1")
+
+        val thirdCall = value.Functions[0].FunctionCalls[2]
+
+        assertEquals(thirdCall.FunctionName, "Group")
+        assertEquals(thirdCall.NodeName, "*gin.Engine")
+        assertEquals(thirdCall.Parameters[0].TypeValue, "/users")
+    }
+
+    @Test
     @Disabled
     fun analysisByDir() {
         val dir = "/Users/phodal/test/iam"
