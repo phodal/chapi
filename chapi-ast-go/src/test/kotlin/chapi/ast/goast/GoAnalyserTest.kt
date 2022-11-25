@@ -30,7 +30,7 @@ func main() {
                         CodeCall(
                             NodeName = "fmt",
                             FunctionName = "Println",
-                            Parameters = arrayOf(CodeProperty(TypeValue = "\"hello world\"", TypeType = ""))
+                            Parameters = arrayOf(CodeProperty(TypeValue = "hello world", TypeType = "string"))
                         )
                     ),
                 )
@@ -59,10 +59,15 @@ func installController(g *gin.Engine) *gin.Engine {
         val codeContainer = GoAnalyser().analysis(helloworld, "")
         val value = codeContainer.DataStructures[0]
         val firstCall = value.Functions[0].FunctionCalls[0]
-        println(Json.encodeToString(value))
 
         assertEquals(firstCall.NodeName, "*gin.Engine")
         assertEquals(firstCall.Package, "github.com/gin-gonic/gin")
+
+        assertEquals(firstCall.FunctionName, "POST")
+        assertEquals(firstCall.Parameters[0].TypeValue, "/login")
+        assertEquals(firstCall.Parameters[0].TypeType, "string")
+        assertEquals(firstCall.Parameters[1].TypeType, "FunctionCall")
+        assertEquals(firstCall.Parameters[1].TypeValue, "jwtStrategy.LoginHandler")
     }
 
     @Test

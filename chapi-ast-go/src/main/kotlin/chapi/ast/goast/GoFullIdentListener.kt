@@ -73,12 +73,43 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     fun buildParameters(parametersCtx: GoParser.ParametersContext?): Array<CodeProperty> {
         return parametersCtx?.parameterDecl()?.map {
-            localVars[it.identifierList().text] = it.type_().text
+            val (ident, typetype) = processingType(it)
+
+            localVars[ident] = typetype
             CodeProperty(
-                TypeValue = it.identifierList().text,
-                TypeType = it.type_().text
+                TypeValue = ident,
+                TypeType = typetype
             )
         }?.toTypedArray() ?: return arrayOf()
+    }
+
+    private fun processingType(it: GoParser.ParameterDeclContext): Pair<String, String> {
+        val typeValue = it.identifierList()?.text ?: ""
+        val typeType = it.type_()?.text ?: ""
+
+        val pair = processingStringType(typeValue, typeType)
+
+        return Pair(pair.first, pair.second)
+    }
+
+    private fun processingStringType(typeValue: String, typeType: String): Pair<String, String> {
+        var value = typeValue
+        var tyType = typeType
+
+        if (value.startsWith("\"") && value.endsWith("\"")) {
+            value = value.substring(1, value.length - 1)
+
+            if (tyType == "") {
+                tyType = "string"
+            }
+        }
+
+        // if match ident "." ident, should have a function call
+        if (value.matches(Regex("[a-zA-Z0-9_]+\\.[a-zA-Z0-9_]+"))) {
+            tyType = "FunctionCall"
+        }
+
+        return Pair(value, tyType)
     }
 
     override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
@@ -174,7 +205,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
      */
     private fun wrapTarget(nodeName: String): String {
         var sourceNode = nodeName
-        if(sourceNode.startsWith("*")) {
+        if (sourceNode.startsWith("*")) {
             sourceNode = sourceNode.substring(1)
         }
 
@@ -194,7 +225,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     private fun parseArguments(child: GoParser.ArgumentsContext): Array<CodeProperty> {
         return child.expressionList()?.expression()?.map {
-            CodeProperty(TypeValue = it.text, TypeType = "")
+            val (value, typetype) = processingStringType(it.text, "")
+            CodeProperty(TypeValue = value, TypeType = typetype)
         }?.toTypedArray() ?: arrayOf()
     }
 
