@@ -119,15 +119,14 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
     }
 
     open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
-        var implements = arrayOf<String>()
-        for (_type in ctx.typeList()) {
+        return ctx.typeList().map { _type ->
             var target = this.warpTargetFullType(_type.text).targetType
             if (target == "") {
                 target = _type.text
             }
-            implements += target
-        }
-        return implements
+
+            target
+        }.toTypedArray()
     }
 
     override fun exitClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
