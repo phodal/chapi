@@ -38,6 +38,32 @@ func main() {
         )
         assertEquals(Json.encodeToString(value), Json.encodeToString(expect))
     }
+    @Test
+    fun analysisForRealword() {
+        val helloworld = """
+package server
+
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/chapi/pkg/middleware/auth"
+)
+            
+func installController(g *gin.Engine) *gin.Engine {
+	jwtStrategy, _ := newJWTAuth().(auth.JWTStrategy)
+	g.POST("/login", jwtStrategy.LoginHandler)
+	g.POST("/logout", jwtStrategy.LogoutHandler)
+
+	return g
+}
+"""
+        val codeContainer = GoAnalyser().analysis(helloworld, "")
+        val value = codeContainer.DataStructures[0]
+        val firstCall = value.Functions[0].FunctionCalls[0]
+        println(Json.encodeToString(value))
+
+        assertEquals(firstCall.NodeName, "*gin.Engine")
+        assertEquals(firstCall.Package, "github.com/gin-gonic/gin")
+    }
 
     @Test
     @Disabled

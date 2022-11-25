@@ -2,7 +2,6 @@ package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
 import chapi.domain.core.*
-import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 /**
@@ -70,6 +69,16 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             MultipleReturns = buildReturnTypeFromSignature(ctx.signature()),
             Parameters = buildParameters(ctx.signature().parameters())
         )
+    }
+
+    fun buildParameters(parametersCtx: GoParser.ParametersContext?): Array<CodeProperty> {
+        return parametersCtx?.parameterDecl()?.map {
+            localVars[it.identifierList().text] = it.type_().text
+            CodeProperty(
+                TypeValue = it.identifierList().text,
+                TypeType = it.type_().text
+            )
+        }?.toTypedArray() ?: return arrayOf()
     }
 
     override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
@@ -164,8 +173,18 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
      * 2. lookup imports by [CodeContainer.Imports]
      */
     private fun wrapTarget(nodeName: String): String {
+        var sourceNode = nodeName
+        if(sourceNode.startsWith("*")) {
+            sourceNode = sourceNode.substring(1)
+        }
+
+        if (sourceNode.contains(".")) {
+            val split = sourceNode.split(".")
+            sourceNode = split.first()
+        }
+
         codeContainer.Imports.forEach {
-            if (it.Source.endsWith("/${nodeName}")) {
+            if (it.Source.endsWith("/${sourceNode}")) {
                 return it.Source
             }
         }

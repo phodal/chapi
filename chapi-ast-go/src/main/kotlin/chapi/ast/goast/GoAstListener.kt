@@ -5,15 +5,6 @@ import chapi.ast.antlr.GoParserBaseListener
 import chapi.domain.core.CodeProperty
 
 open class GoAstListener : GoParserBaseListener() {
-    fun buildParameters(parametersCtx: GoParser.ParametersContext?): Array<CodeProperty> {
-        return parametersCtx?.parameterDecl()?.map {
-            CodeProperty(
-                TypeValue = it.identifierList().text,
-                TypeType = it.type_().text
-            )
-        }?.toTypedArray() ?: return arrayOf()
-    }
-
     fun getStructNameFromReceiver(parameters: GoParser.ParametersContext?): String {
         parameters?.parameterDecl()?.forEach {
             var typeType = it.type_().text
