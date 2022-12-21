@@ -23,6 +23,7 @@ hs_err_pid*
 
 .idea
 !.idea/icon.png
+!.idea/.name
 build
 .gradle
 *.iml
