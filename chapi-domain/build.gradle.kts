@@ -11,8 +11,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     // Kotlin reflection.
-    implementation(kotlin("test"))
-    implementation(kotlin("test-junit"))
+    testImplementation(kotlin("test"))
 
     // JUnit 5
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")

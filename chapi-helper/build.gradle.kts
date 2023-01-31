@@ -14,8 +14,7 @@ dependencies {
     implementation("org.antlr:antlr4:4.11.1")
     implementation("org.antlr:antlr4-runtime:4.11.1")
     // Kotlin reflection.
-    implementation(kotlin("test"))
-    implementation(kotlin("test-junit"))
+    testImplementation(kotlin("test"))
 
     testImplementation(project(":chapi-ast-java"))
     testImplementation(project(":chapi-domain"))
