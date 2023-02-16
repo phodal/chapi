@@ -10,8 +10,8 @@ import org.antlr.v4.runtime.ParserRuleContext
 open class TypeScriptAstListener : TypeScriptParserBaseListener() {
     fun buildParameters(
         formalParameterListContext: TypeScriptParser.FormalParameterListContext?
-    ): Array<CodeProperty> {
-        var parameters: Array<CodeProperty> = arrayOf()
+    ): List<CodeProperty> {
+        var parameters: List<CodeProperty> = listOf()
         for (argCtx in formalParameterListContext!!.formalParameterArg()) {
             val typeType = this.buildTypeAnnotation(argCtx.typeAnnotation())
             var typeValue = argCtx.text
@@ -62,8 +62,8 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         return typeRef.text
     }
 
-    fun buildMethodParameters(paramListCtx: TypeScriptParser.ParameterListContext?): Array<CodeProperty> {
-        var parameters: Array<CodeProperty> = arrayOf()
+    fun buildMethodParameters(paramListCtx: TypeScriptParser.ParameterListContext?): List<CodeProperty> {
+        var parameters: List<CodeProperty> = listOf()
 
         val type = paramListCtx!!.getChild(0)
         when (type.parent) {
