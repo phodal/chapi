@@ -19,7 +19,7 @@ enum class CallType(val calltype: String) {
 }
 
 @Serializable
-open class CodeCall(
+data class CodeCall(
     var Package: String = "",
     // for Java, it can be CreatorClass, lambda
     // for TypeScript, can be anonymous function, arrow function
@@ -35,11 +35,11 @@ open class CodeCall(
      var OriginNodeName: String = "",
 ) {
 
-    open fun buildClassFullName(): String {
+    fun buildClassFullName(): String {
         return "${this.Package}.${this.NodeName}"
     }
 
-    open fun buildFullMethodName(): String {
+    fun buildFullMethodName(): String {
         if (FunctionName == "") {
             return "${this.Package}.${this.NodeName}"
         }
@@ -51,16 +51,16 @@ open class CodeCall(
         "is for Java/Kotlin Only",
         ReplaceWith("this.NodeName == \"System.out\" && (this.FunctionName == \"println\" || this.FunctionName == \"printf\" || this.FunctionName == \"print\")")
     )
-    open fun isSystemOutput(): Boolean {
+    fun isSystemOutput(): Boolean {
         return this.NodeName == "System.out" && (this.FunctionName == "println" || this.FunctionName == "printf" || this.FunctionName == "print")
     }
 
     @Deprecated("is for Java/Kotlin Only", ReplaceWith("this.NodeName == \"Thread\" && this.FunctionName == \"sleep\""))
-    open fun isThreadSleep(): Boolean {
+    fun isThreadSleep(): Boolean {
         return this.NodeName == "Thread" && this.FunctionName == "sleep"
     }
 
-    open fun hasAssertion(): Boolean {
+    fun hasAssertion(): Boolean {
         val methodName = this.FunctionName.lowercase()
         DomainConstants.ASSERTION_LIST.forEach { assertion ->
             if (methodName.startsWith(assertion)) {
