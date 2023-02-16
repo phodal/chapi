@@ -9,8 +9,8 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     var currentFunction: CodeFunction = CodeFunction()
     var localVars = mutableMapOf<String, String>()
 
-    fun buildParameters(listCtx: PythonParser.TypedargslistContext?): Array<CodeProperty> {
-        var parameters: Array<CodeProperty> = arrayOf()
+    fun buildParameters(listCtx: PythonParser.TypedargslistContext?): List<CodeProperty> {
+        var parameters: List<CodeProperty> = listOf()
         for (defParameters in listCtx!!.def_parameters()) {
             for (defParaCtx in defParameters.def_parameter()) {
                 val parameter = CodeProperty(
@@ -44,13 +44,13 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         return 0
     }
 
-    fun buildAnnotationsByIndex(ctx: ParseTree, ctxIndex: Int): Array<CodeAnnotation> {
-        var nodes: Array<PythonParser.DecoratorContext> = arrayOf()
+    fun buildAnnotationsByIndex(ctx: ParseTree, ctxIndex: Int): List<CodeAnnotation> {
+        val nodes: MutableList<PythonParser.DecoratorContext> = mutableListOf()
         for (i in 0 until ctxIndex) {
             nodes += ctx.parent.getChild(i) as PythonParser.DecoratorContext
         }
 
-        var annotations: Array<CodeAnnotation> = arrayOf()
+        var annotations: List<CodeAnnotation> = listOf()
         for (node in nodes) {
             annotations += this.buildAnnotation(node)
         }
@@ -70,8 +70,8 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         return codeAnnotation
     }
 
-    private fun buildArgList(arglistCtx: PythonParser.ArglistContext?): Array<AnnotationKeyValue> {
-        var arguments: Array<AnnotationKeyValue> = arrayOf()
+    private fun buildArgList(arglistCtx: PythonParser.ArglistContext?): List<AnnotationKeyValue> {
+        var arguments: List<AnnotationKeyValue> = listOf()
         for (argCtx in arglistCtx!!.argument()) {
             val key = argCtx.test(0).text
             var value = ""
@@ -149,7 +149,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     }
 
     private fun buildAtomExpr(exprCtx: PythonParser.ExprContext): String {
-        var funcCalls: Array<CodeCall> = arrayOf()
+        var funcCalls: List<CodeCall> = listOf()
         val atomName = exprCtx.atom().text
         for (trailerContext in exprCtx.trailer()) {
             var caller = ""

@@ -17,15 +17,14 @@ import chapi.domain.core.CodeProperty
 open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(fileName) {
 
     private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
+    private var VARIABLE_POOL: MutableMap<String, String> = mutableMapOf()
 
     private fun buildFunctionCall(it: KotlinParser.StatementContext): CodeCall? {
         val result = Regex("(\\w+\\.?)+\\((.*)\\)").find(it.text) ?: return null
 
         val matchedExpression = result.value
         val functionName = result.groupValues[1]
-        val parameters = arrayOf(
-            parseParameter(result.groupValues[2])
-        )
+        val parameters = listOf(parseParameter(result.groupValues[2]))
 
         val matchedStart = result.groups[0]!!.range.first
         val functionStart = result.groups[1]!!.range.first
@@ -40,7 +39,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         ).refineIfExistsCreator()
     }
 
-    private var VARIABLE_POOL: MutableMap<String, String> = mutableMapOf()
     override fun enterPropertyDeclaration(ctx: KotlinParser.PropertyDeclarationContext?) {
         if (ctx!!.variableDeclaration() != null) {
             val varDecl = ctx.variableDeclaration()
@@ -59,7 +57,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                 varType = varDecl.type().text
             }
 
-            currentFunction.LocalVariables += CodeProperty (TypeValue = key, TypeType = varType)
+            currentFunction.LocalVariables += CodeProperty(TypeValue = key, TypeType = varType)
         }
     }
 
@@ -92,7 +90,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                         val pool = VARIABLE_POOL[withoutVariable]
                         if (pool != null) {
                             var poolText = pool
-                            if(poolText.startsWith("\"") && poolText.endsWith("\"")) {
+                            if (poolText.startsWith("\"") && poolText.endsWith("\"")) {
                                 poolText = poolText.removePrefix("\"").removeSuffix("\"")
                             }
                             value = value.replace(variable, poolText)
@@ -173,7 +171,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
 
     override fun enterPostfixUnaryExpression(ctx: KotlinParser.PostfixUnaryExpressionContext?) {
         // one or more call, maybe call map
-        var calls: Array<CodeCall> = arrayOf()
+        var calls: MutableList<CodeCall> = mutableListOf()
         var lastIdentifier = ""
         var lastPackage = ""
         var lastFunctionName = ""
@@ -186,21 +184,22 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
                 is KotlinParser.PrimaryExpressionContext -> {
                     lastIdentifier = textFromPrimaryExpr(child)
                 }
+
                 is KotlinParser.PostfixUnarySuffixContext -> {
                     when (val postfix = child.children[0]) {
                         is KotlinParser.CallSuffixContext -> {
                             val valueArguments = postfix.valueArguments()
 
-                            var parameters: Array<CodeProperty> = arrayOf()
+                            var parameters: List<CodeProperty> = listOf()
                             if (valueArguments != null) {
                                 parameters = valueArguments.valueArgument().map {
                                     // todo: handle for has sub expression
                                     parseParameter(it.text)
-                                }.toTypedArray()
+                                }
                             }
 
                             if (lastPostfixChildType == "NavigationSuffixContext") {
-                                calls = calls.dropLast(1).toTypedArray()
+                                calls = calls.dropLast(1).toMutableList()
                                 lastIdentifier = lastFunctionName
                             }
 
@@ -214,10 +213,11 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
 
                             lastPostfixChildType = "CallSuffixContext"
                         }
+
                         is KotlinParser.NavigationSuffixContext -> {
                             if (postfix.simpleIdentifier() != null) {
                                 val navigationName = postfix.simpleIdentifier().text
-                                var parameters: Array<CodeProperty> = arrayOf()
+                                var parameters: List<CodeProperty> = listOf()
                                 if (postfix.parenthesizedExpression() != null) {
                                     val param = postfix.parenthesizedExpression().expression().text
                                     parameters += parseParameter(param)
@@ -239,6 +239,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
 
                             lastPostfixChildType = "NavigationSuffixContext"
                         }
+
                         else -> {
                             lastPostfixChildType = child.children[0].javaClass.simpleName
                         }
@@ -263,9 +264,11 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
             child.simpleIdentifier() != null -> {
                 child.simpleIdentifier().text
             }
+
             child.stringLiteral() != null -> {
                 child.stringLiteral().text
             }
+
             else -> {
                 child.text
             }

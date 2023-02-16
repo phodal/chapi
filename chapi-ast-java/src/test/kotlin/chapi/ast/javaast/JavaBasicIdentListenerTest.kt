@@ -115,7 +115,7 @@ internal class JavaBasicIdentListenerTest {
         val newGetItemFunction = newCodeAnalysisFile.DataStructures[0].Functions
         assertEquals(1, newGetItemFunction.size)
         assertEquals("getItem", newGetItemFunction.get(0).Name)
-        assertTrue { originalGetItemFunction.contentEquals(newGetItemFunction) }
+        assertTrue { originalGetItemFunction == newGetItemFunction }
     }
     
     @Test
@@ -152,7 +152,7 @@ internal class JavaBasicIdentListenerTest {
         val newGetItemFunction = newCodeAnalysisFile.DataStructures[0].Functions
         assertEquals(1, newGetItemFunction.size)
         assertEquals("getItem", newGetItemFunction.get(0).Name)
-        assertFalse { originalGetItemFunction.contentEquals(newGetItemFunction) }
+        assertFalse { originalGetItemFunction == newGetItemFunction }
     }
 
     @Test

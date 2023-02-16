@@ -23,14 +23,14 @@ func main() {
         val codeContainer = GoAnalyser().analysis(helloworld, "")
         val value = codeContainer.DataStructures[0]
         val expect = CodeDataStruct(
-            Functions = arrayOf(
+            Functions = listOf(
                 CodeFunction(
                     Name = "main", Package = "main",
-                    FunctionCalls = arrayOf(
+                    FunctionCalls = listOf(
                         CodeCall(
                             NodeName = "fmt",
                             FunctionName = "Println",
-                            Parameters = arrayOf(CodeProperty(TypeValue = "hello world", TypeType = "string"))
+                            Parameters = listOf(CodeProperty(TypeValue = "hello world", TypeType = "string"))
                         )
                     ),
                 )

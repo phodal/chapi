@@ -46,8 +46,8 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     /** outer interfaces */
 
     override fun getNodeInfo(): CodeContainer = codeContainer.apply {
-        DataStructures = (buildDedicatedClasses() + classes).toTypedArray()
-        Imports = imports.toTypedArray()
+        DataStructures = (buildDedicatedClasses() + classes)
+        Imports = imports
     }
 
     private fun buildDedicatedClasses(): List<CodeDataStruct> {
@@ -59,9 +59,9 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
                 Type = DataStructType.OBJECT
                 Package = codeContainer.PackageName
                 FilePath = codeContainer.FullName
-                Imports = imports.toTypedArray()
-                Functions = individualFunctions.toTypedArray()
-                Fields = individualFields.toTypedArray()
+                Imports = imports
+                Functions = individualFunctions
+                Fields = individualFields
             }
         )
     }
@@ -117,9 +117,9 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             Type = DataStructType.CLASS
             Package = codeContainer.PackageName
             FilePath = codeContainer.FullName
-            Implements = implements.toTypedArray()
-            Annotations = annotations.toTypedArray()
-            Imports = imports.toTypedArray()
+            Implements = implements
+            Annotations = annotations
+            Imports = imports
             Position = buildPosition(ctx)
         }
     }
@@ -151,8 +151,8 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             Position = ctx.getPosition(),
             IsConstructor = true,
             Package = codeContainer.PackageName,
-            Parameters = parameters.toTypedArray(),
-            Annotations = annotations.toTypedArray(),
+            Parameters = parameters,
+            Annotations = annotations,
         )
         currentNode.Fields += fields
     }
@@ -181,8 +181,8 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             Position = ctx.getPosition(),
             IsConstructor = false,
             Package = codeContainer.PackageName,
-            Parameters = parameters.toTypedArray(),
-            Annotations = annotations.toTypedArray()
+            Parameters = parameters,
+            Annotations = annotations
         )
     }
 
@@ -205,9 +205,9 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     private fun buildField(it: KotlinParser.ClassParameterContext): CodeField? {
         if (it.VAL() == null && it.VAR() == null) return null
 
-        val annotations: Array<CodeAnnotation> = it.modifiers()?.annotation()?.map {
+        val annotations: List<CodeAnnotation> = it.modifiers()?.annotation()?.map {
             buildAnnotation(it)
-        }?.toTypedArray() ?: arrayOf()
+        } ?: listOf()
 
         return CodeField(
             TypeType = getTypeFullName(it.type().text),
@@ -219,9 +219,9 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     }
 
     private fun buildField(it: KotlinParser.PropertyDeclarationContext): CodeField {
-        val annotations: Array<CodeAnnotation> = it.variableDeclaration().annotation()?.map {
+        val annotations: List<CodeAnnotation> = it.variableDeclaration().annotation()?.map {
             buildAnnotation(it)
-        }?.toTypedArray() ?: arrayOf()
+        } ?: listOf()
 
         return CodeField(
             TypeType = it.variableDeclaration().type()?.run { getTypeFullName(text) } ?: UNKNOWN_PLACEHOLDER,
@@ -232,8 +232,8 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         )
     }
 
-    private fun KotlinParser.ModifiersContext?.getModifiers(): Array<String> =
-        this?.modifier()?.map { it.text }?.toTypedArray() ?: emptyArray()
+    private fun KotlinParser.ModifiersContext?.getModifiers(): List<String> =
+        this?.modifier()?.map { it.text }?.toList() ?: emptyList()
 
     private fun buildProperty(it: KotlinParser.ClassParameterContext): CodeProperty =
         CodeProperty(TypeValue = it.simpleIdentifier().text, TypeType = getTypeFullName(it.type().text))
@@ -242,7 +242,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         CodeProperty(
             TypeValue = it.parameter().simpleIdentifier().text,
             TypeType = getTypeFullName(it.parameter().type().text),
-            Annotations = it.parameterModifiers().getAnnotations().toTypedArray(),
+            Annotations = it.parameterModifiers().getAnnotations(),
         )
 
     private fun KotlinParser.ParameterModifiersContext?.getAnnotations(): List<CodeAnnotation> =
@@ -263,8 +263,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             KeyValues = it.singleAnnotation().unescapedAnnotation()
                 .constructorInvocation()
                 ?.run { valueArguments().valueArgument().map(::buildAnnotationKeyValue) }
-                ?.toTypedArray()
-                ?: emptyArray()
+                ?: emptyList()
         )
     }
 
@@ -278,7 +277,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
 
     protected fun getTypeFullName(name: String): String {
         var resolveByImport = imports.firstOrNull { it.AsName == name }?.Source ?: "kotlin.$name"
-        if(resolveByImport.contains("?\n")) {
+        if (resolveByImport.contains("?\n")) {
             // in KotlinPaser.g4 QUEST_WS, NL is after quest
             resolveByImport = resolveByImport.replace("\n", "")
         }

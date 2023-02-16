@@ -5,8 +5,8 @@ import chapi.ast.antlr.ScalaParser
 import chapi.domain.core.CodeProperty
 
 open class ScalaAstBaseListener : ScalaBaseListener() {
-    fun buildParameters(classParamClauses: ScalaParser.ClassParamClausesContext?): Array<CodeProperty> {
-        var parameters : Array<CodeProperty> = arrayOf()
+    fun buildParameters(classParamClauses: ScalaParser.ClassParamClausesContext?): List<CodeProperty> {
+        var parameters : List<CodeProperty> = listOf()
         if (classParamClauses != null) {
             for (paramClauseContext in classParamClauses.classParamClause()) {
                 for (classParamContext in paramClauseContext.classParams().classParam()) {

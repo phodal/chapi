@@ -78,7 +78,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     }
 
     private fun handleParamDirectDeclCtx(ctx: CParser.DirectDeclaratorContext) {
-        currentFunction.Parameters = arrayOf<CodeProperty>()
+        currentFunction.Parameters = listOf()
         val directDeclarator = ctx as CParser.ParameterDirectDeclaratorContext
         parseDirectDeclarator(ctx.directDeclarator())
         val parameterTypeList = directDeclarator.parameterTypeList().parameterList()
@@ -107,7 +107,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     }
 
     private fun handleFuncPointerDirectDeclCtx(ctx: CParser.DirectDeclaratorContext) {
-        currentFunction.Parameters = arrayOf<CodeProperty>()
+        currentFunction.Parameters = listOf()
         var name: String? = null
         var type: String? = null
         val directDeclarator = ctx as CParser.FunctionPointerDirectDeclaratorContext

@@ -21,8 +21,8 @@ open class JavaAnalyser : TwoStepAnalyser() {
     open fun identFullInfo(
         str: String,
         fileName: String,
-        classes: Array<String> = arrayOf(),
-        basicNodes: Array<CodeDataStruct> = arrayOf()
+        classes: List<String> = listOf(),
+        basicNodes: List<CodeDataStruct> = listOf()
     ): CodeContainer {
         val context = this.parse(str).compilationUnit()
         val listener = JavaFullIdentListener(fileName, classes)

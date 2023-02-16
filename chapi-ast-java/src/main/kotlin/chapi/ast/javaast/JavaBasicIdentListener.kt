@@ -8,8 +8,8 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var hasEnterClass: Boolean = false
     private var codeContainer: CodeContainer =
         CodeContainer(FullName = fileName)
-    private var classNodes: Array<CodeDataStruct> = arrayOf()
-    private var imports: Array<CodeImport> = arrayOf()
+    private var classNodes: List<CodeDataStruct> = listOf()
+    private var imports: List<CodeImport> = listOf()
 
     private var currentNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
@@ -19,7 +19,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
 
         if (ctx.STATIC() != null) {
             val sourceSplit = codeImport.Source.split(".")
-            codeImport.UsageName = arrayOf(sourceSplit.last())
+            codeImport.UsageName = listOf(sourceSplit.last())
 
             val split = sourceSplit.dropLast(1)
             codeImport.Source = split.joinToString(".")
@@ -55,22 +55,21 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         currentNode = CodeDataStruct()
     }
 
-    open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
+    open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): List<String> {
         return ctx.typeList()
             .map { it.text }
             .filter { imports.containsType(it) }
-            .toTypedArray()
     }
 
-    private fun <T> Array<T>.containsType(it: String?): Boolean {
+    private fun <T> List<T>.containsType(it: String?): Boolean {
         return imports.filter { imp -> imp.Source.endsWith(".$it") }.toTypedArray().isNotEmpty()
     }
 
-    open fun buildImplements(ctx: JavaParser.EnumDeclarationContext): Array<String> {
+    open fun buildImplements(ctx: JavaParser.EnumDeclarationContext): List<String> {
         val typeText = ctx.typeList().text
         return when {
-            imports.containsType(typeText) -> arrayOf(typeText)
-            else -> arrayOf()
+            imports.containsType(typeText) -> listOf(typeText)
+            else -> listOf()
         }
     }
 
@@ -115,7 +114,6 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
                 currentFunction.Modifiers = child.modifier()
                     .map { it.text }
                     .filter { "@" in it }
-                    .toTypedArray()
             }
         }
 

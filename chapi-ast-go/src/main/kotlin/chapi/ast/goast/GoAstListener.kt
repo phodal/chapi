@@ -18,8 +18,8 @@ open class GoAstListener : GoParserBaseListener() {
         return ""
     }
 
-    protected fun buildReturnTypeFromSignature(signatureContext: GoParser.SignatureContext?): Array<CodeProperty> {
-        var returns: Array<CodeProperty> = arrayOf()
+    protected fun buildReturnTypeFromSignature(signatureContext: GoParser.SignatureContext?): List<CodeProperty> {
+        var returns: List<CodeProperty> = listOf()
 
         signatureContext?.result()?.let { result ->
             result.parameters()?.parameterDecl()?.forEach {

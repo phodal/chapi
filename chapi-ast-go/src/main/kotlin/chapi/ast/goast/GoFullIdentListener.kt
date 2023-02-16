@@ -32,7 +32,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         val codeImport = CodeImport(
             Source = sourceName,
             AsName = ctx.DOT()?.text ?: "",
-            UsageName = arrayOf(ctx.IDENTIFIER()?.text ?: "")
+            UsageName = listOf(ctx.IDENTIFIER()?.text ?: "")
         )
 
         codeContainer.Imports += codeImport
@@ -94,7 +94,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         )
     }
 
-    fun buildParameters(parametersCtx: GoParser.ParametersContext?): Array<CodeProperty> {
+    fun buildParameters(parametersCtx: GoParser.ParametersContext?): List<CodeProperty> {
         return parametersCtx?.parameterDecl()?.map {
             val (ident, typetype) = processingType(it)
 
@@ -103,7 +103,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 TypeValue = ident,
                 TypeType = typetype
             )
-        }?.toTypedArray() ?: return arrayOf()
+        }?: listOf()
     }
 
     private fun processingType(it: GoParser.ParameterDeclContext): Pair<String, String> {
@@ -177,14 +177,14 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         )
     }
 
-    private fun buildStructFields(structTypeCtx: GoParser.StructTypeContext): Array<CodeField> {
+    private fun buildStructFields(structTypeCtx: GoParser.StructTypeContext): List<CodeField> {
         return structTypeCtx.fieldDecl()
             .map { field ->
                 CodeField(
                     TypeType = field.type_()?.text ?: "",
                     TypeValue = field.identifierList()?.text ?: ""
                 )
-            }.toTypedArray()
+            }
     }
 
     /**
@@ -250,11 +250,11 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         return ""
     }
 
-    private fun parseArguments(child: GoParser.ArgumentsContext): Array<CodeProperty> {
+    private fun parseArguments(child: GoParser.ArgumentsContext): List<CodeProperty> {
         return child.expressionList()?.expression()?.map {
             val (value, typetype) = processingStringType(it.text, "")
             CodeProperty(TypeValue = value, TypeType = typetype)
-        }?.toTypedArray() ?: arrayOf()
+        }?: listOf()
     }
 
     private fun codeCallFromExprList(primaryExprCtx: GoParser.PrimaryExprContext): CodeCall {

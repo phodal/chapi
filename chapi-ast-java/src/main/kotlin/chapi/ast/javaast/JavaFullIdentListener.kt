@@ -10,14 +10,14 @@ import kotlin.reflect.typeOf
 data class TargetTypePackage(val targetType: String, val packageName: String)
 data class JavaTargetType(var targetType: String = "", var callType: CallType = CallType.FUNCTION)
 
-open class JavaFullIdentListener(fileName: String, val classes: Array<String>) : JavaAstListener() {
+open class JavaFullIdentListener(fileName: String, val classes: List<String>) : JavaAstListener() {
     private var isEnterFunction: Boolean = false
-    private var currentAnnotations: Array<CodeAnnotation> = arrayOf()
+    private var currentAnnotations: List<CodeAnnotation> = listOf()
 
     private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
     private var isOverrideMethod: Boolean = false
-    private var fields = arrayOf<CodeField>()
-    private var methodCalls = arrayOf<CodeCall>()
+    private var fields = listOf<CodeField>()
+    private var methodCalls = listOf<CodeCall>()
     private var methodMap = mutableMapOf<String, CodeFunction>()
     private var creatorMethodMap = mutableMapOf<String, CodeFunction>()
     private var localVars = mutableMapOf<String, String>()
@@ -28,14 +28,14 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
 
     private var currentClzExtend: String = ""
     private var hasEnterClass: Boolean = false
-    private var classNodes: Array<CodeDataStruct> = arrayOf()
+    private var classNodes: List<CodeDataStruct> = listOf()
 
     private var innerNode: CodeDataStruct = CodeDataStruct()
     private var classNodeStack = Stack<CodeDataStruct>()
 
-    private var methodQueue: Array<CodeFunction> = arrayOf()
+    private var methodQueue: List<CodeFunction> = listOf()
 
-    private var imports: Array<CodeImport> = arrayOf()
+    private var imports: List<CodeImport> = listOf()
 
     private var lastNode = CodeDataStruct()
     private var currentNode = CodeDataStruct()
@@ -54,7 +54,7 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
 
         if (ctx.STATIC() != null) {
             val sourceSplit = codeImport.Source.split(".")
-            codeImport.UsageName = arrayOf(sourceSplit.last())
+            codeImport.UsageName = listOf(sourceSplit.last())
 
             val split = sourceSplit.dropLast(1)
             codeImport.Source = split.joinToString(".")
@@ -118,15 +118,15 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
         }
     }
 
-    open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): Array<String> {
-        return ctx.typeList().map { _type ->
-            var target = this.warpTargetFullType(_type.text).targetType
+    open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): List<String> {
+        return ctx.typeList().map {
+            var target = this.warpTargetFullType(it.text).targetType
             if (target == "") {
-                target = _type.text
+                target = it.text
             }
 
             target
-        }.toTypedArray()
+        }
     }
 
     override fun exitClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
@@ -152,8 +152,8 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
         currentFunction = CodeFunction(IsConstructor = false)
 
         methodMap = mutableMapOf()
-        methodCalls = arrayOf()
-        fields = arrayOf()
+        methodCalls = listOf()
+        fields = listOf()
         isOverrideMethod = false
     }
 
@@ -213,8 +213,8 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
         this.updateCodeFunction(codeFunction)
     }
 
-    private fun buildMethodParameters(params: JavaParser.FormalParametersContext?): Array<CodeProperty> {
-        var methodParams = arrayOf<CodeProperty>()
+    private fun buildMethodParameters(params: JavaParser.FormalParametersContext?): List<CodeProperty> {
+        var methodParams = listOf<CodeProperty>()
         if (params!!.getChild(1)::class.simpleName != "FormalParameterListContext") {
             return methodParams
         }
@@ -237,7 +237,7 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
 
     override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
         this.isEnterFunction = false
-        this.currentAnnotations = arrayOf()
+        this.currentAnnotations = listOf()
         if (localVars.isNotEmpty()) {
             addLocalVarsToFunction()
         }
@@ -279,7 +279,7 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
     private fun buildMethodCallParameters(codeCall: CodeCall, ctx: JavaParser.MethodCallContext) {
         codeCall.Parameters = ctx.expressionList()?.expression()?.map {
             CodeProperty(TypeType = "", TypeValue = it.text)
-        }?.toTypedArray() ?: arrayOf()
+        } ?: listOf()
     }
 
     private fun buildMethodCallLocation(codeCall: CodeCall, ctx: JavaParser.MethodCallContext) {
@@ -537,7 +537,7 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
                 typeTypeText,
                 typeValue,
                 typeKey,
-                Modifiers = arrayOf(),
+                Modifiers = listOf(),
                 Annotations = this.currentAnnotations
             )
             fields += field
@@ -545,7 +545,7 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
             buildFieldCall(typeTypeText, ctx)
         }
 
-        this.currentAnnotations = arrayOf()
+        this.currentAnnotations = listOf()
     }
 
     private fun buildFieldCall(typeType: String, ctx: JavaParser.FieldDeclarationContext) {
@@ -813,8 +813,8 @@ open class JavaFullIdentListener(fileName: String, val classes: Array<String>) :
         }
     }
 
-    open fun buildEnumImplements(ctx: JavaParser.EnumDeclarationContext): Array<String> {
-        var implements = arrayOf<String>()
+    open fun buildEnumImplements(ctx: JavaParser.EnumDeclarationContext): List<String> {
+        var implements = listOf<String>()
         val type = ctx.typeList()
         var target = this.warpTargetFullType(type.text).targetType
         if (target == "") {

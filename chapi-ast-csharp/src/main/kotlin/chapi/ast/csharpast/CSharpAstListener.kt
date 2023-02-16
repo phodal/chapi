@@ -118,8 +118,8 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         currentContainer.DataStructures += currentStruct
     }
 
-    protected fun parseAnnotations(attributes: CSharpParser.AttributesContext?): Array<CodeAnnotation> {
-        var annotations = arrayOf<CodeAnnotation>();
+    protected fun parseAnnotations(attributes: CSharpParser.AttributesContext?): List<CodeAnnotation> {
+        var annotations = listOf<CodeAnnotation>();
 
         attributes?.attribute_section()?.forEach { it ->
             it.attribute_list().attribute().forEach { attr ->
@@ -151,9 +151,9 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
 
     protected fun createFunction(
         returnType: String,
-        annotations: Array<CodeAnnotation>,
+        annotations: List<CodeAnnotation>,
         packageName: String,
-        modifiers: Array<String>,
+        modifiers: List<String>,
         methodName: String,
         formalParameterListcontext: CSharpParser.Formal_parameter_listContext?
     ): CodeFunction {
@@ -172,8 +172,8 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         return codeFunction
     }
 
-    private fun buildFunctionParameters(formalParameterList: CSharpParser.Formal_parameter_listContext?): Array<CodeProperty> {
-        var parameters: Array<CodeProperty> = arrayOf()
+    private fun buildFunctionParameters(formalParameterList: CSharpParser.Formal_parameter_listContext?): List<CodeProperty> {
+        var parameters: List<CodeProperty> = listOf()
         if (formalParameterList!!.fixed_parameters() != null) {
             for (fixedParamCtx in formalParameterList.fixed_parameters().fixed_parameter()) {
                 val argDeclCtx = fixedParamCtx.arg_declaration()
@@ -191,8 +191,8 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         return parameters
     }
 
-    protected fun buildFunctionModifiers(memberCtx: CSharpParser.Class_member_declarationContext): Array<String> {
-        var modifiers: Array<String> = arrayOf()
+    protected fun buildFunctionModifiers(memberCtx: CSharpParser.Class_member_declarationContext): List<String> {
+        var modifiers: List<String> = listOf()
         val allMemberModifiers = memberCtx.all_member_modifiers()
         if (allMemberModifiers != null) {
             for (memberModifier in allMemberModifiers.all_member_modifier()) {

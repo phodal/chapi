@@ -23,7 +23,7 @@ open class JavaAstListener : JavaParserBaseListener() {
                 codeAnnotation.KeyValues = ctx.elementValuePairs()?.elementValuePair()
                     ?.map {
                         AnnotationKeyValue(it.identifier().text, it.elementValue().text)
-                    }?.toTypedArray() ?: arrayOf()
+                    } ?: listOf()
             }
 
             ctx.elementValue() != null -> {
@@ -48,14 +48,14 @@ open class JavaAstListener : JavaParserBaseListener() {
         return targetTypeStr!!.contains("(") && targetTypeStr.contains(")") && targetTypeStr.contains(".")
     }
 
-    fun buildAnnotationForMethod(modifierCtx: JavaParser.ModifierContext): Array<CodeAnnotation> {
+    fun buildAnnotationForMethod(modifierCtx: JavaParser.ModifierContext): List<CodeAnnotation> {
         return when (val child = modifierCtx.classOrInterfaceModifier()?.getChild(0)) {
             is JavaParser.AnnotationContext -> {
-                arrayOf(buildAnnotation(child))
+                listOf(buildAnnotation(child))
             }
 
             else -> {
-                arrayOf()
+                listOf()
             }
         }
     }

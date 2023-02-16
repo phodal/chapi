@@ -160,7 +160,7 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
                 val clazzType = child as Class_typeContext
                 val nsOrType = clazzType.namespace_or_type_name()
                 if (nsOrType != null) {
-                    field.Modifiers = arrayOf(nsOrType.identifier()[0].text)
+                    field.Modifiers = listOf(nsOrType.identifier()[0].text)
                     if (nsOrType.type_argument_list() != null) {
                         nsOrType.type_argument_list()
                             .asSequence()
@@ -187,7 +187,7 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
 
         var ident = ""
         var member = ""
-        var params: Array<CodeProperty> = arrayOf()
+        var params: List<CodeProperty> = listOf()
         primaryExpr.children.forEach {
             when (it.javaClass.simpleName) {
                 // todo: merge to primary expression
@@ -214,13 +214,13 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
         currentFunction.FunctionCalls += codeCall
     }
 
-    private fun parseParameters(argumentList: CSharpParser.Argument_listContext): Array<CodeProperty> {
+    private fun parseParameters(argumentList: CSharpParser.Argument_listContext): List<CodeProperty> {
         return argumentList.argument().map {
             CodeProperty(
                 TypeType = it.refout?.text ?: "",
                 TypeValue = it.expression().text
             )
-        }.toTypedArray()
+        }
     }
 
 //    //for debug only
