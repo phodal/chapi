@@ -1,5 +1,6 @@
 package chapi.domain.core
 
+import chapi.domain.core.CodeCall
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -30,23 +31,23 @@ data class CodeDataStruct(
     var Package: String = "",
     var FilePath: String = "",
     // todo: thinking in change to property
-    var Fields: Array<CodeField> = arrayOf(),
-    var MultipleExtend: Array<String> = arrayOf(),
-    var Implements: Array<String> = arrayOf(),
+    var Fields: List<CodeField> = listOf(),
+    var MultipleExtend: List<String> = listOf(),
+    var Implements: List<String> = listOf(),
     var Extend: String = "",
-    var Functions: Array<CodeFunction> = arrayOf(),
-    var InnerStructures: Array<CodeDataStruct> = arrayOf(),
-    var Annotations: Array<CodeAnnotation> = arrayOf(),
-    var FunctionCalls: Array<CodeCall> = arrayOf(),
+    var Functions: List<CodeFunction> = listOf(),
+    var InnerStructures: List<CodeDataStruct> = listOf(),
+    var Annotations: List<CodeAnnotation> = listOf(),
+    var FunctionCalls: List<CodeCall> = listOf(),
 
     @Deprecated(message = "looking for constructor method for SCALA")
-    var Parameters: Array<CodeProperty> = arrayOf(), // for Scala
+    var Parameters: List<CodeProperty> = listOf(), // for Scala
 
-    var Imports: Array<CodeImport> = arrayOf(),
+    var Imports: List<CodeImport> = listOf(),
 
     // in TypeScript, a files can export Function, Variable, Class, Interface
     // `export const baseURL = '/api'`
-    var Exports: Array<CodeExport> = arrayOf(),
+    var Exports: List<CodeExport> = listOf(),
 
     // todo: select node useonly imports
     var Extension: JsonElement = JsonObject(HashMap()),
@@ -59,7 +60,7 @@ data class CodeDataStruct(
     }
 
     fun setMethodsFromMap(methodMap: MutableMap<String, CodeFunction>) {
-        this.Functions = methodMap.values.toTypedArray()
+        this.Functions = methodMap.values.toList()
     }
 
     fun filterAnnotations(vararg keys: String): List<CodeAnnotation> {
@@ -79,56 +80,6 @@ data class CodeDataStruct(
     // src/main.ts -> src/main
     fun fileWithoutSuffix(): String {
         return FilePath.substringBeforeLast('.', "")
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as CodeDataStruct
-
-        if (NodeName != other.NodeName) return false
-        if (Module != other.Module) return false
-        if (Type != other.Type) return false
-        if (Package != other.Package) return false
-        if (FilePath != other.FilePath) return false
-        if (!Fields.contentEquals(other.Fields)) return false
-        if (!MultipleExtend.contentEquals(other.MultipleExtend)) return false
-        if (!Implements.contentEquals(other.Implements)) return false
-        if (Extend != other.Extend) return false
-        if (!Functions.contentEquals(other.Functions)) return false
-        if (!InnerStructures.contentEquals(other.InnerStructures)) return false
-        if (!Annotations.contentEquals(other.Annotations)) return false
-        if (!FunctionCalls.contentEquals(other.FunctionCalls)) return false
-        if (!Parameters.contentEquals(other.Parameters)) return false
-        if (!Imports.contentEquals(other.Imports)) return false
-        if (!Exports.contentEquals(other.Exports)) return false
-        if (Extension != other.Extension) return false
-        if (Position != other.Position) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = NodeName.hashCode()
-        result = 31 * result + Module.hashCode()
-        result = 31 * result + Type.hashCode()
-        result = 31 * result + Package.hashCode()
-        result = 31 * result + FilePath.hashCode()
-        result = 31 * result + Fields.contentHashCode()
-        result = 31 * result + MultipleExtend.contentHashCode()
-        result = 31 * result + Implements.contentHashCode()
-        result = 31 * result + Extend.hashCode()
-        result = 31 * result + Functions.contentHashCode()
-        result = 31 * result + InnerStructures.contentHashCode()
-        result = 31 * result + Annotations.contentHashCode()
-        result = 31 * result + FunctionCalls.contentHashCode()
-        result = 31 * result + Parameters.contentHashCode()
-        result = 31 * result + Imports.contentHashCode()
-        result = 31 * result + Exports.contentHashCode()
-        result = 31 * result + Extension.hashCode()
-        result = 31 * result + Position.hashCode()
-        return result
     }
 }
 

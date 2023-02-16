@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 internal class CodeMemberTest {
     @Test
     internal fun shouldBuildMemberId_WhenDefaultNode() {
-        var nodes: Array<CodeFunction> = arrayOf()
+        var nodes: List<CodeFunction> = listOf()
         val codeFunction = CodeFunction(Name = "Builder", IsConstructor = false)
         nodes += codeFunction
         val codeMember = CodeMember(
@@ -22,7 +22,7 @@ internal class CodeMemberTest {
 
     @Test
     internal fun shouldBuildMemberId_WhenNormalNode() {
-        var nodes: Array<CodeFunction> = arrayOf()
+        var nodes: List<CodeFunction> = listOf()
         val codeFunction = CodeFunction(Name = "Builder", IsConstructor = false)
         nodes += codeFunction
         val codeMember = CodeMember(
@@ -39,7 +39,7 @@ internal class CodeMemberTest {
 
     @Test
     internal fun shouldBuildMemberId_WhenSameFileIdPackageName() {
-        var nodes: Array<CodeFunction> = arrayOf()
+        var nodes: List<CodeFunction> = listOf()
         val codeFunction = CodeFunction(Name = "Builder", IsConstructor = false)
         nodes += codeFunction
         val codeMember = CodeMember(

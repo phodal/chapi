@@ -28,11 +28,11 @@ data class CodeCall(
     // for Function, it's empty
     var NodeName: String = "",
     var FunctionName: String = "",
-    var Parameters: Array<CodeProperty> = arrayOf(),
+    var Parameters: List<CodeProperty> = listOf(),
     var Position: CodePosition = CodePosition(),
     // like "v1.Group", the v1 will be the Receiver
     // since 2.0.0-Beta.9
-     var OriginNodeName: String = "",
+    var OriginNodeName: String = "",
 ) {
 
     fun buildClassFullName(): String {
@@ -69,34 +69,6 @@ data class CodeCall(
         }
 
         return false
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as CodeCall
-
-        if (Package != other.Package) return false
-        if (Type != other.Type) return false
-        if (NodeName != other.NodeName) return false
-        if (FunctionName != other.FunctionName) return false
-        if (!Parameters.contentEquals(other.Parameters)) return false
-        if (Position != other.Position) return false
-        if (OriginNodeName != other.OriginNodeName) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = Package.hashCode()
-        result = 31 * result + Type.hashCode()
-        result = 31 * result + NodeName.hashCode()
-        result = 31 * result + FunctionName.hashCode()
-        result = 31 * result + Parameters.contentHashCode()
-        result = 31 * result + Position.hashCode()
-        result = 31 * result + OriginNodeName.hashCode()
-        return result
     }
 
 }

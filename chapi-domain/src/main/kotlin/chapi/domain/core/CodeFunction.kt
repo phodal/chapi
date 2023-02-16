@@ -1,6 +1,6 @@
 package chapi.domain.core
 
-import chapi.domain.expr.Expression
+import chapi.domain.core.CodeCall
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -19,19 +19,19 @@ data class CodeFunction(
     var FilePath: String = "",
     var Package: String = "",
     var ReturnType: String = "",
-    var MultipleReturns: Array<CodeProperty> = arrayOf(),
-    var Parameters: Array<CodeProperty> = arrayOf(),
-    var FunctionCalls: Array<CodeCall> = arrayOf(),
-    var Annotations: Array<CodeAnnotation> = arrayOf(),
+    var MultipleReturns: List<CodeProperty> = listOf(),
+    var Parameters: List<CodeProperty> = listOf(),
+    var FunctionCalls: List<CodeCall> = listOf(),
+    var Annotations: List<CodeAnnotation> = listOf(),
     var Override: Boolean = false,
-    var Modifiers: Array<String> = arrayOf(),
+    var Modifiers: List<String> = listOf(),
     // for example, Java can have Inner Class
-    var InnerStructures: Array<CodeDataStruct> = arrayOf(),
+    var InnerStructures: List<CodeDataStruct> = listOf(),
     // for lambda or anonymous function inside function.
-    var InnerFunctions: Array<CodeFunction> = arrayOf(),
+    var InnerFunctions: List<CodeFunction> = listOf(),
     var Position: CodePosition = CodePosition(),
     var Extension: JsonElement = JsonObject(HashMap()),
-    var LocalVariables: Array<CodeProperty> = arrayOf(),
+    var LocalVariables: List<CodeProperty> = listOf(),
     var IsConstructor: Boolean = false, // todo: move to extension
     var IsReturnHtml: Boolean = false,
     var BodyHash: Int = 0,
@@ -66,11 +66,10 @@ data class CodeFunction(
         return "${node.Package}.${node.NodeName}.${this.Name}"
     }
 
-    fun getAllCallString(): Array<String> {
+    fun getAllCallString(): List<String> {
         return FunctionCalls
             .filter { it.NodeName != "" }
             .map { it.buildClassFullName() }
-            .toTypedArray()
     }
 
     fun isJUnitTest(): Boolean {
@@ -100,7 +99,7 @@ data class CodeFunction(
     fun addVarsFromMap(localVars: MutableMap<String, String>) {
         this.LocalVariables = localVars.map { entry ->
             CodeProperty(TypeValue = entry.key, TypeType = entry.value)
-        }.toTypedArray()
+        }
     }
 
     fun fileExt(): String {
@@ -109,59 +108,5 @@ data class CodeFunction(
 
     fun fileName(): String {
         return this.FilePath.substringBeforeLast('.', "")
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as CodeFunction
-
-        if (Name != other.Name) return false
-        if (FilePath != other.FilePath) return false
-        if (Package != other.Package) return false
-        if (ReturnType != other.ReturnType) return false
-        if (!MultipleReturns.contentEquals(other.MultipleReturns)) return false
-        if (!Parameters.contentEquals(other.Parameters)) return false
-        if (!FunctionCalls.contentEquals(other.FunctionCalls)) return false
-        if (!Annotations.contentEquals(other.Annotations)) return false
-        if (Override != other.Override) return false
-        if (!Modifiers.contentEquals(other.Modifiers)) return false
-        if (!InnerStructures.contentEquals(other.InnerStructures)) return false
-        if (!InnerFunctions.contentEquals(other.InnerFunctions)) return false
-        if (Position != other.Position) return false
-        if (Extension != other.Extension) return false
-        if (!LocalVariables.contentEquals(other.LocalVariables)) return false
-        if (IsConstructor != other.IsConstructor) return false
-        if (IsReturnHtml != other.IsReturnHtml) return false
-        if (BodyHash != other.BodyHash) return false
-        if (Type != other.Type) return false
-        if (extensionMap != other.extensionMap) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = Name.hashCode()
-        result = 31 * result + FilePath.hashCode()
-        result = 31 * result + Package.hashCode()
-        result = 31 * result + ReturnType.hashCode()
-        result = 31 * result + MultipleReturns.contentHashCode()
-        result = 31 * result + Parameters.contentHashCode()
-        result = 31 * result + FunctionCalls.contentHashCode()
-        result = 31 * result + Annotations.contentHashCode()
-        result = 31 * result + Override.hashCode()
-        result = 31 * result + Modifiers.contentHashCode()
-        result = 31 * result + InnerStructures.contentHashCode()
-        result = 31 * result + InnerFunctions.contentHashCode()
-        result = 31 * result + Position.hashCode()
-        result = 31 * result + Extension.hashCode()
-        result = 31 * result + LocalVariables.contentHashCode()
-        result = 31 * result + IsConstructor.hashCode()
-        result = 31 * result + IsReturnHtml.hashCode()
-        result = 31 * result + BodyHash
-        result = 31 * result + Type.hashCode()
-        result = 31 * result + extensionMap.hashCode()
-        return result
     }
 }

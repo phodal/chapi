@@ -13,7 +13,7 @@ internal class CodeFunctionTest {
 
     @Test
     internal fun shouldHandleStaticModifiers() {
-        var modifiers: Array<String> = arrayOf()
+        var modifiers: List<String> = listOf()
         modifiers += "static"
 
         assertEquals(CodeFunction(Modifiers = modifiers, IsConstructor = false).isStatic(), true)
@@ -36,7 +36,7 @@ internal class CodeFunctionTest {
 
     @Test
     internal fun shouldGetAllCallStrings() {
-        var calls = arrayOf<CodeCall>()
+        var calls = listOf<CodeCall>()
         calls += CodeCall(Package = "package", NodeName = "nodeName")
 
         val allCallString = CodeFunction(
@@ -51,7 +51,7 @@ internal class CodeFunctionTest {
 
     @Test
     internal fun shouldHandleJunitTest() {
-        var annotations = arrayOf<CodeAnnotation>()
+        var annotations = listOf<CodeAnnotation>()
         annotations += CodeAnnotation(Name = "Test")
 
         val isTest = CodeFunction(
