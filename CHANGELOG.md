@@ -1,4 +1,32 @@
-# [](https://github.com/modernizing/chapi/compare/v2.0.0-beta.9...v) (2022-11-25)
+# [](https://github.com/modernizing/chapi/compare/v2.1.1...v) (2023-02-16)
+
+
+### chore
+
+* release to 2.1.2 ([424035a](https://github.com/modernizing/chapi/commit/424035a924eb152575550ba7e219b6aeb383f7cd))
+
+
+### BREAKING CHANGES
+
+* use List to replace arrya in domain
+
+
+
+## [2.1.1](https://github.com/modernizing/chapi/compare/v2.0.0...v2.1.1) (2023-02-16)
+
+
+### Bug Fixes
+
+* regenerate equals of Property with 'Array' type in a 'data' class: it is recommended to override 'equals()' and 'hashCode()' ([63a2822](https://github.com/modernizing/chapi/commit/63a2822b8489f152af767ea6ef5c59c0414f16b5))
+
+
+
+# [2.0.0](https://github.com/modernizing/chapi/compare/v2.0.0-beta.9...v2.0.0) (2023-02-16)
+
+
+### Bug Fixes
+
+* fix deps error of kotlin junit ([ccf66a6](https://github.com/modernizing/chapi/commit/ccf66a6448f21c997eb154147aaf76a06b13e9c3))
 
 
 
