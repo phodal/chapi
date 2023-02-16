@@ -36,4 +36,38 @@ data class CodeMember(
             }
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CodeMember
+
+        if (ID != other.ID) return false
+        if (FileID != other.FileID) return false
+        if (DataStructID != other.DataStructID) return false
+        if (AliasPackage != other.AliasPackage) return false
+        if (Name != other.Name) return false
+        if (Type != other.Type) return false
+        if (!StructureNodes.contentEquals(other.StructureNodes)) return false
+        if (!FunctionNodes.contentEquals(other.FunctionNodes)) return false
+        if (!Namespace.contentEquals(other.Namespace)) return false
+        if (Position != other.Position) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = ID.hashCode()
+        result = 31 * result + FileID.hashCode()
+        result = 31 * result + DataStructID.hashCode()
+        result = 31 * result + AliasPackage.hashCode()
+        result = 31 * result + Name.hashCode()
+        result = 31 * result + Type.hashCode()
+        result = 31 * result + StructureNodes.contentHashCode()
+        result = 31 * result + FunctionNodes.contentHashCode()
+        result = 31 * result + Namespace.contentHashCode()
+        result = 31 * result + Position.hashCode()
+        return result
+    }
 }

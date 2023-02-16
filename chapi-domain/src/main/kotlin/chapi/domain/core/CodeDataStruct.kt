@@ -80,5 +80,55 @@ data class CodeDataStruct(
     fun fileWithoutSuffix(): String {
         return FilePath.substringBeforeLast('.', "")
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CodeDataStruct
+
+        if (NodeName != other.NodeName) return false
+        if (Module != other.Module) return false
+        if (Type != other.Type) return false
+        if (Package != other.Package) return false
+        if (FilePath != other.FilePath) return false
+        if (!Fields.contentEquals(other.Fields)) return false
+        if (!MultipleExtend.contentEquals(other.MultipleExtend)) return false
+        if (!Implements.contentEquals(other.Implements)) return false
+        if (Extend != other.Extend) return false
+        if (!Functions.contentEquals(other.Functions)) return false
+        if (!InnerStructures.contentEquals(other.InnerStructures)) return false
+        if (!Annotations.contentEquals(other.Annotations)) return false
+        if (!FunctionCalls.contentEquals(other.FunctionCalls)) return false
+        if (!Parameters.contentEquals(other.Parameters)) return false
+        if (!Imports.contentEquals(other.Imports)) return false
+        if (!Exports.contentEquals(other.Exports)) return false
+        if (Extension != other.Extension) return false
+        if (Position != other.Position) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = NodeName.hashCode()
+        result = 31 * result + Module.hashCode()
+        result = 31 * result + Type.hashCode()
+        result = 31 * result + Package.hashCode()
+        result = 31 * result + FilePath.hashCode()
+        result = 31 * result + Fields.contentHashCode()
+        result = 31 * result + MultipleExtend.contentHashCode()
+        result = 31 * result + Implements.contentHashCode()
+        result = 31 * result + Extend.hashCode()
+        result = 31 * result + Functions.contentHashCode()
+        result = 31 * result + InnerStructures.contentHashCode()
+        result = 31 * result + Annotations.contentHashCode()
+        result = 31 * result + FunctionCalls.contentHashCode()
+        result = 31 * result + Parameters.contentHashCode()
+        result = 31 * result + Imports.contentHashCode()
+        result = 31 * result + Exports.contentHashCode()
+        result = 31 * result + Extension.hashCode()
+        result = 31 * result + Position.hashCode()
+        return result
+    }
 }
 

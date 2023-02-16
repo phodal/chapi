@@ -71,16 +71,19 @@ data class CodeCall(
         return false
     }
 
-    // position was removed, if one function change, others position will also change
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is CodeCall) return false
+        if (javaClass != other?.javaClass) return false
+
+        other as CodeCall
 
         if (Package != other.Package) return false
         if (Type != other.Type) return false
         if (NodeName != other.NodeName) return false
         if (FunctionName != other.FunctionName) return false
         if (!Parameters.contentEquals(other.Parameters)) return false
+        if (Position != other.Position) return false
+        if (OriginNodeName != other.OriginNodeName) return false
 
         return true
     }
@@ -91,6 +94,9 @@ data class CodeCall(
         result = 31 * result + NodeName.hashCode()
         result = 31 * result + FunctionName.hashCode()
         result = 31 * result + Parameters.contentHashCode()
+        result = 31 * result + Position.hashCode()
+        result = 31 * result + OriginNodeName.hashCode()
         return result
     }
+
 }
