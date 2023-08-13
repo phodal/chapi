@@ -1,11 +1,10 @@
 package chapi.domain.core
 
-import chapi.domain.core.CodeCall
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
-enum class DataStructType (val structType: String) {
+enum class DataStructType(val structType: String) {
     EMPTY(""),
     DEFAULT("default"),
     CLASS("Class"),
@@ -39,24 +38,24 @@ data class CodeDataStruct(
     var InnerStructures: List<CodeDataStruct> = listOf(),
     var Annotations: List<CodeAnnotation> = listOf(),
     var FunctionCalls: List<CodeCall> = listOf(),
-
     @Deprecated(message = "looking for constructor method for SCALA")
     var Parameters: List<CodeProperty> = listOf(), // for Scala
 
     var Imports: List<CodeImport> = listOf(),
 
-    // in TypeScript, a files can export Function, Variable, Class, Interface
-    // `export const baseURL = '/api'`
+    /**
+     * in TypeScript, a files can export Function, Variable, Class, Interface
+     * `export const baseURL = '/api'`
+     */
     var Exports: List<CodeExport> = listOf(),
-
     // todo: select node useonly imports
     var Extension: JsonElement = JsonObject(HashMap()),
-
-    var Position: CodePosition = CodePosition()
+    var Position: CodePosition = CodePosition(),
+    var Content: String = "",
 ) {
     fun isUtilClass(): Boolean {
         return this.NodeName.lowercase().contains("util") ||
-                this.NodeName.lowercase().contains("utils")
+            this.NodeName.lowercase().contains("utils")
     }
 
     fun setMethodsFromMap(methodMap: MutableMap<String, CodeFunction>) {
@@ -77,7 +76,9 @@ data class CodeDataStruct(
         return FilePath.substringAfterLast('.', "")
     }
 
-    // src/main.ts -> src/main
+    /**
+     * src/main.ts -> src/main
+     */
     fun fileWithoutSuffix(): String {
         return FilePath.substringBeforeLast('.', "")
     }

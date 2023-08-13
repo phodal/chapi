@@ -9,6 +9,7 @@ import kotlinx.serialization.json.jsonObject
 
 enum class FunctionType {
     Function,
+
     // for Golang block
     Block,
 }
@@ -32,10 +33,13 @@ data class CodeFunction(
     var Position: CodePosition = CodePosition(),
     var Extension: JsonElement = JsonObject(HashMap()),
     var LocalVariables: List<CodeProperty> = listOf(),
+    @Deprecated("is for Java/Kotlin Only", ReplaceWith("this.Modifiers.contains(\"static\")"))
     var IsConstructor: Boolean = false, // todo: move to extension
+    @Deprecated("for React")
     var IsReturnHtml: Boolean = false,
     var BodyHash: Int = 0,
     var Type: FunctionType = FunctionType.Function,
+    var Content: String = "",
     // a experimental api for code analysis, please carefully use it.
 //    @property:ExperimentalStdlibApi val expression: Expression? = null,
 ) {
