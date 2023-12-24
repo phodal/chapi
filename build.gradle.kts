@@ -25,7 +25,7 @@ allprojects {
     apply(plugin = "java")
 
     group = "com.phodal.chapi"
-    version = "2.1.3"
+    version = "2.1.4"
     description =
         "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
 
@@ -60,11 +60,11 @@ subprojects {
                 pom {
                     name.set("Chapi")
                     description.set("Chapi is A common language meta information convertor, convert different languages to same meta-data model")
-                    url.set("https://github.com/modernizing/chapi")
+                    url.set("https://github.com/phodal/chapi")
                     licenses {
                         license {
                             name.set("MPL 2.0")
-                            url.set("https://github.com/modernizing/chapi/blob/master/LICENSE")
+                            url.set("https://github.com/phodal/chapi/blob/master/LICENSE")
                         }
                     }
                     developers {
@@ -75,9 +75,9 @@ subprojects {
                         }
                     }
                     scm {
-                        connection.set("scm:git:git://github.com/modernizing/chapi.git")
-                        developerConnection.set("scm:git:ssh://github.com/modernizing/chapi.git")
-                        url.set("https://github.com/modernizing/chapi/")
+                        connection.set("scm:git:git://github.com/phodal/chapi.git")
+                        developerConnection.set("scm:git:ssh://github.com/phodal/chapi.git")
+                        url.set("https://github.com/phodal/chapi/")
                     }
                 }
             }
