@@ -124,6 +124,7 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         attributes?.attribute_section()?.forEach { it ->
             it.attribute_list().attribute().forEach { attr ->
                 val annotation = CodeAnnotation(Name = attr.namespace_or_type_name().text)
+                annotation.Position = buildPosition(attr)
                 attr.attribute_argument().forEach {
                     if (it.string_literal() != null) {
                         annotation.KeyValues += AnnotationKeyValue(Value = parseString(it.string_literal()))

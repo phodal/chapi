@@ -133,6 +133,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
 
     fun buildAnnotation(decorator: TypeScriptParser.DecoratorContext): CodeAnnotation {
         val annotation = CodeAnnotation()
+        annotation.Position = buildPosition(decorator)
         val memberExpression = decorator.decoratorMemberExpression()
         val callExpression = decorator.decoratorCallExpression()
 

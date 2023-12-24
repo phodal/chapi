@@ -228,9 +228,12 @@ public interface BlogRepository extends Repository {
 
         val codeFile = JavaAnalyser().identFullInfo(code, "")
 
-        assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].Name, "ServiceMethod")
-        assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].KeyValues[0].Key, "value")
-        assertEquals(codeFile.DataStructures[0].Functions[0].Annotations[0].KeyValues[0].Value, "\"/hello\"")
+        val codeAnnotation = codeFile.DataStructures[0].Functions[0].Annotations[0]
+        assertEquals(codeAnnotation.Name, "ServiceMethod")
+        assertEquals(codeAnnotation.KeyValues[0].Key, "value")
+        assertEquals(codeAnnotation.KeyValues[0].Value, "\"/hello\"")
+        assertEquals(codeAnnotation.Position.StartLine, 3)
+        assertEquals(codeAnnotation.Position.StartLinePosition, 4)
     }
 
     @Test

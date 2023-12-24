@@ -255,7 +255,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         fun buildAnnotationKeyValue(argument: KotlinParser.ValueArgumentContext) =
             AnnotationKeyValue(Key = argument.simpleIdentifier()?.text ?: "value", Value = argument.expression().text)
 
-        return CodeAnnotation(
+        val codeAnnotation = CodeAnnotation(
             Name = it.singleAnnotation().unescapedAnnotation()
                 .run { constructorInvocation()?.userType() ?: userType() }
                 ?.run { simpleUserType().first().simpleIdentifier().Identifier().text }
@@ -265,6 +265,9 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
                 ?.run { valueArguments().valueArgument().map(::buildAnnotationKeyValue) }
                 ?: emptyList()
         )
+
+        codeAnnotation.Position = it.getPosition()
+        return codeAnnotation
     }
 
     protected fun ParserRuleContext.getPosition(): CodePosition =

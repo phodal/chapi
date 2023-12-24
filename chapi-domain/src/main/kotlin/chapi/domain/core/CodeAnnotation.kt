@@ -8,7 +8,8 @@ data class AnnotationKeyValue(var Key: String = "", var Value: String = "")
 @Serializable
 data class CodeAnnotation(
     var Name: String = "",
-    var KeyValues: List<AnnotationKeyValue> = listOf()
+    var KeyValues: List<AnnotationKeyValue> = listOf(),
+    var Position: CodePosition = CodePosition(),
 ) {
     @Deprecated("is for Java/Kotlin Only", ReplaceWith("this.Name == \"Component\" || this.Name == \"Repository\""))
     fun isComponentOrRepository(): Boolean {

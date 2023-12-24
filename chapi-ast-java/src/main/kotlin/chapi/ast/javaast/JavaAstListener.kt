@@ -51,7 +51,9 @@ open class JavaAstListener : JavaParserBaseListener() {
     fun buildAnnotationForMethod(modifierCtx: JavaParser.ModifierContext): List<CodeAnnotation> {
         return when (val child = modifierCtx.classOrInterfaceModifier()?.getChild(0)) {
             is JavaParser.AnnotationContext -> {
-                listOf(buildAnnotation(child))
+                val annotation = buildAnnotation(child)
+                annotation.Position = buildPosition(modifierCtx)
+                listOf(annotation)
             }
 
             else -> {
