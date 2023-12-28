@@ -7,10 +7,10 @@ import org.antlr.v4.runtime.tree.Trees;
 class TreeViewer {
 
     /** Platform dependent end-of-line marker  */
-    val Eol = System.lineSeparator()
+    val endOfLine = System.lineSeparator()
 
     /** The literal indent char(s) used for pretty-printing  */
-    val Indents = "  "
+    val indents = "  "
     private var level = 0
 
     /**
@@ -19,7 +19,7 @@ class TreeViewer {
      */
     fun toPrettyTree(t: Tree, ruleNames: List<String>): String {
         level = 0
-        return process(t, ruleNames).replace("(?m)^\\s+$".toRegex(), "").replace("\\r?\\n\\r?\\n".toRegex(), Eol)
+        return process(t, ruleNames).replace("(?m)^\\s+$".toRegex(), "").replace("\\r?\\n\\r?\\n".toRegex(), endOfLine)
     }
 
     private fun process(t: Tree, ruleNames: List<String>): String {
@@ -29,7 +29,7 @@ class TreeViewer {
         level++
         val s: String = Utils.escapeWhitespace(Trees.getNodeText(t, ruleNames), false)
         sb.append("$s ")
-        for (i in 0 until t.getChildCount()) {
+        for (i in 0 until t.childCount) {
             sb.append(process(t.getChild(i), ruleNames))
         }
         level--
@@ -40,9 +40,9 @@ class TreeViewer {
     private fun lead(level: Int): String {
         val sb = StringBuilder()
         if (level > 0) {
-            sb.append(Eol)
+            sb.append(endOfLine)
             for (cnt in 0 until level) {
-                sb.append(Indents)
+                sb.append(indents)
             }
         }
 
