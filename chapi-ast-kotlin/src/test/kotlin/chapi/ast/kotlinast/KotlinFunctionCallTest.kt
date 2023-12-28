@@ -23,4 +23,36 @@ class KotlinFunctionCallTest {
         assert(functionCall.FunctionName == "PrimaryConstructor")
         assert(functionCall.NodeName == "A")
     }
+
+    @Test
+    fun should_success_parse_test_usecase() {
+        val code = """
+        package cc.unitmesh.pick
+
+        class SingleProjectCodePickerTest {
+            @Test
+            fun shouldCheckoutTestCode() {
+                val picker = SingleProjectCodePicker(
+                    InsPickerOption(
+                        url = "https://github.com/unit-mesh/unit-eval-testing",
+                        completionTypeSize = 10,
+                        maxCharInCode = 100,
+                    )
+                )
+        
+                val outputFile = File("test.jsonl")
+                runBlocking {
+                    val output: MutableList<Instruction> = picker.execute()
+                    outputFile.writeText(output.joinToString("\n") {
+                        Json.encodeToString(it)
+                    })
+                }
+            }
+        }""".trimIndent()
+
+        val codeContainer = KotlinAnalyser().analysis(code, "Test.kt", ParseMode.Full)
+        val dataStructures = codeContainer.DataStructures.filter { it.NodeName == "SingleProjectCodePickerTest" }
+        val functionCall = dataStructures[0].Functions[0].FunctionCalls[0]
+        println(functionCall)
+    }
 }
