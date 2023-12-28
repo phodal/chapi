@@ -36,20 +36,28 @@ object EcmaImportHelper {
      * This method takes an import statement in TypeScript and converts it to the equivalent import statement in the target language. It handles the conversion of file paths and package names.
      *
      * @param importSource The import statement to be converted. It should be in the format of a TypeScript import statement.
-     * @param filePath The file path of the current file. This is used to resolve relative file paths in the import statement.
+     * @param sourceFile The file path of the current file. This is used to resolve relative file paths in the import statement.
      *
      * @return The converted import statement in the target language.
      *
      * Usage:
      * ```kotlin
+     * // case 1
      * val output = EcmaImportHelper.convertTypeScriptImport("../component", "src/main.tsx")
-     * println(output) // "@.src.component"
+     * println(output) // "component"
+     * // case 2
+     * val output = EcmaImportHelper.convertTypeScriptImport("src/component", "src/main.tsx")
+     * println(output) // "@.component"
+     * // case 3
+     * val output = EcmaImportHelper.convertTypeScriptImport("@/page/component", "src/main.tsx")
+     * println(output) // "@.page.component"
      * ```
+     *
      */
-    fun convertTypeScriptImport(importSource: String, filePath: String): String {
+    fun convertTypeScriptImport(importSource: String, sourceFile: String): String {
         var imp = importSource
         if (!imp.startsWith("@")) {
-            imp = importConvert(filePath, imp)
+            imp = importConvert(sourceFile, imp)
             if (imp.startsWith("src/")) {
                 imp = imp.replaceFirst("src/", "@/")
             }
