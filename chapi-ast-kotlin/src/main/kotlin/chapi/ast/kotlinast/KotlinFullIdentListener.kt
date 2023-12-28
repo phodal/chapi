@@ -113,7 +113,7 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
             Type = CallType.CREATOR
             Package = it.Package
             NodeName = it.NodeName
-            this.FunctionName = "constructor"
+            this.FunctionName = "PrimaryConstructor"
             return null
         }
 
