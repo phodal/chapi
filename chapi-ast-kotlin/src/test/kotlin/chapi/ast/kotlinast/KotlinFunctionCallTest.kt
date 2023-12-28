@@ -2,6 +2,7 @@ package chapi.ast.kotlinast
 
 import chapi.parser.ParseMode
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class KotlinFunctionCallTest {
     @Test
@@ -91,5 +92,36 @@ class KotlinFunctionCallTest {
         val dataStructures = codeContainer.DataStructures.filter { it.NodeName == "SingleProjectCodePickerTest" }
         val functionCall = dataStructures[0].Functions[0].FunctionCalls[0]
         println(functionCall)
+    }
+
+
+    @Test
+    fun should_handle_multiple_datastruct() {
+        val code = """
+package cc.unitmesh.pick.project
+
+fun CodeContainer.buildSourceCode(codeLines: List<String>) {
+
+}
+
+enum class NamingStyle(val value: String) {
+    CAMEL_CASE("CamelCase"),
+    SNAKE_CASE("snake_case"),
+    KEBAB_CASE("kebab-case"),
+    ;
+}
+
+object CodeDataStructUtil {
+    fun contentByPosition(lines: List<String>, position: CodePosition): String {
+        return lines.subList(position.StartLine - 1, position.EndLine).joinToString("\n")
+    }
+}
+        """.trimIndent()
+
+        val codeContainer = KotlinAnalyser().analysis(code, "Test.kt", ParseMode.Full)
+        assertEquals(codeContainer.DataStructures.size, 3)
+        val utilObj = codeContainer.DataStructures[2]
+        assertEquals(utilObj.NodeName, "CodeDataStructUtil")
+        assertEquals(utilObj.Functions[0].Name, "contentByPosition")
     }
 }
