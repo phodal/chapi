@@ -19,27 +19,6 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
     private val postClassHandler = mutableListOf<(CodeDataStruct) -> Unit>()
     private var VARIABLE_POOL: MutableMap<String, String> = mutableMapOf()
 
-    private fun buildFunctionCall(it: KotlinParser.StatementContext): CodeCall? {
-        val result = Regex("(\\w+\\.?)+\\((.*)\\)").find(it.text) ?: return null
-
-        val matchedExpression = result.value
-        val functionName = result.groupValues[1]
-        val parameters = listOf(parseParameter(result.groupValues[2]))
-
-        val matchedStart = result.groups[0]!!.range.first
-        val functionStart = result.groups[1]!!.range.first
-        val nodeName = matchedExpression.substring(0, maxOf(functionStart - matchedStart - 1, 0))
-
-        val callType = if (functionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
-        return CodeCall(
-            Type = callType,
-            NodeName = nodeName,
-            FunctionName = functionName,
-            Parameters = parameters,
-            Position = it.getPosition(),
-        ).refineIfExistsCreator()
-    }
-
     override fun enterPropertyDeclaration(ctx: KotlinParser.PropertyDeclarationContext?) {
         if (ctx!!.variableDeclaration() != null) {
             val varDecl = ctx.variableDeclaration()
@@ -133,8 +112,10 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         if (it.NodeName == FunctionName) {
             Type = CallType.CREATOR
             Package = it.Package
+            NodeName = it.NodeName
             return null
         }
+
         return this
     }
 

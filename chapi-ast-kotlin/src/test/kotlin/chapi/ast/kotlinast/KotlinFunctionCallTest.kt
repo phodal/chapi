@@ -21,5 +21,6 @@ class KotlinFunctionCallTest {
         val functionCall = dataStructures[0].Functions[0].FunctionCalls[0]
 
         assert(functionCall.FunctionName == "A")
+        assert(functionCall.NodeName == "A")
     }
 }
