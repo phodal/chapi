@@ -109,6 +109,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         currentNode = buildClass(ctx)
     }
 
+
     open fun buildClass(ctx: KotlinParser.ClassDeclarationContext): CodeDataStruct {
         val implements = ctx.delegationSpecifiers()?.text?.let(::getTypeFullName)?.let(::listOf) ?: emptyList()
         val annotations = ctx.modifiers().getAnnotations()
@@ -136,6 +137,29 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     override fun exitClassDeclaration(ctx: KotlinParser.ClassDeclarationContext) {
         classes.add(currentNode)
 
+        isEnteredClass.decrementAndGet()
+    }
+
+    override fun enterObjectDeclaration(ctx: KotlinParser.ObjectDeclarationContext?) {
+        isEnteredClass.incrementAndGet()
+        currentNode = buildObject(ctx!!)
+    }
+
+    private fun buildObject(ctx: KotlinParser.ObjectDeclarationContext): CodeDataStruct {
+        val annotations = ctx.modifiers().getAnnotations()
+        return CodeDataStruct().apply {
+            NodeName = ctx.simpleIdentifier().Identifier().text
+            Type = DataStructType.OBJECT
+            Package = codeContainer.PackageName
+            FilePath = codeContainer.FullName
+            Annotations = annotations
+            Imports = imports
+            Position = buildPosition(ctx)
+        }
+    }
+
+    override fun exitObjectDeclaration(ctx: KotlinParser.ObjectDeclarationContext?) {
+        classes.add(currentNode)
         isEnteredClass.decrementAndGet()
     }
 
