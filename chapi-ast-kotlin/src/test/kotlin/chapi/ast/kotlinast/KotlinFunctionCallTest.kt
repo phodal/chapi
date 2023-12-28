@@ -104,6 +104,10 @@ fun CodeContainer.buildSourceCode(codeLines: List<String>) {
 
 }
 
+fun CodeDataStruct.toUml(): String {
+   
+}
+
 enum class NamingStyle(val value: String) {
     CAMEL_CASE("CamelCase"),
     SNAKE_CASE("snake_case"),
@@ -120,6 +124,11 @@ object CodeDataStructUtil {
 
         val codeContainer = KotlinAnalyser().analysis(code, "Test.kt", ParseMode.Full)
         assertEquals(codeContainer.DataStructures.size, 3)
+
+        val buildSourceCode = codeContainer.DataStructures[0]
+        assertEquals(buildSourceCode.Functions.size, 2)
+        assertEquals(buildSourceCode.Functions[0].Name, "buildSourceCode")
+
         val utilObj = codeContainer.DataStructures[2]
         assertEquals(utilObj.NodeName, "CodeDataStructUtil")
         assertEquals(utilObj.Functions[0].Name, "contentByPosition")
