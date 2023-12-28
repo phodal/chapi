@@ -163,6 +163,17 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         isEnteredClass.decrementAndGet()
     }
 
+    override fun enterCompanionObject(ctx: KotlinParser.CompanionObjectContext?) {
+        val classBody = ctx?.classBody() ?: return
+        classBody.classMemberDeclarations().classMemberDeclaration().forEach {
+            val propertyDeclaration = it.declaration()?.propertyDeclaration()
+            val functionDeclaration = it.declaration()?.functionDeclaration()
+
+            if (propertyDeclaration != null) currentNode.Fields += buildField(propertyDeclaration)
+            if (functionDeclaration != null) currentNode.Functions += buildFunction(functionDeclaration)
+        }
+    }
+
     override fun enterPrimaryConstructor(ctx: KotlinParser.PrimaryConstructorContext) {
         val parameters = ctx.classParameters().classParameter().map(::buildProperty)
         val fields = ctx.classParameters().classParameter().mapNotNull(::buildField)

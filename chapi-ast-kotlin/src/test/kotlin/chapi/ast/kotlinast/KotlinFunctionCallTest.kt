@@ -42,6 +42,26 @@ class KotlinFunctionCallTest {
     }
 
     @Test
+    fun should_support_for_companion_object() {
+        val code = """
+            class A {
+                companion object {
+                    fun foo() {
+                        println("Hello, world!")
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val codeContainer = KotlinAnalyser().analysis(code, "Test.kt", ParseMode.Full)
+        val dataStructures = codeContainer.DataStructures.filter { it.NodeName == "A" }
+        val codeFunction = dataStructures[0].Functions[0]
+
+        assert(codeFunction.Name == "foo")
+    }
+
+
+    @Test
     fun should_success_parse_test_usecase() {
         val code = """
         package cc.unitmesh.pick
