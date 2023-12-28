@@ -7,6 +7,7 @@ enum class CallType(val calltype: String) {
     FIELD("field"),
     LAMBDA("lambda"),
     ARROW("arrow"),
+    // for Kotlin,
     CREATOR("creator"),
     FUNCTION("function"),
 

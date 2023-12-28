@@ -109,10 +109,11 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
 
     // return null to quick exit
     private fun CodeCall.refineWithClass(it: CodeDataStruct): CodeCall? {
-        if (it.NodeName == FunctionName) {
+        if (FunctionName.isNotEmpty() && it.NodeName == FunctionName && FunctionName.first().isUpperCase()) {
             Type = CallType.CREATOR
             Package = it.Package
             NodeName = it.NodeName
+            this.FunctionName = "constructor"
             return null
         }
 

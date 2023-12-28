@@ -47,7 +47,8 @@ fun main() {
             val calls = container.DataStructures[0].Functions[0].FunctionCalls
 
             assertEquals(calls[0].Package, "chapi.ast.kotlinast")
-            assertEquals(calls[0].FunctionName, "Person")
+            assertEquals(calls[0].NodeName, "Person")
+            assertEquals(calls[0].FunctionName, "constructor")
             assertEquals(calls[0].Type, CallType.CREATOR)
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
             assertEquals(calls[0].Parameters[0].TypeValue, "John")
@@ -76,7 +77,8 @@ class Person(val name: String)
             val calls = container.DataStructures[0].Functions[0].FunctionCalls
 
             assertEquals(calls[0].Package, "chapi.ast.kotlinast")
-            assertEquals(calls[0].FunctionName, "Person")
+            assertEquals(calls[0].NodeName, "Person")
+            assertEquals(calls[0].FunctionName, "constructor")
             assertEquals(calls[0].Type, CallType.CREATOR)
             assertEquals(calls[0].Parameters[0].TypeType, "kotlin.String")
             assertEquals(calls[0].Parameters[0].TypeValue, "John")

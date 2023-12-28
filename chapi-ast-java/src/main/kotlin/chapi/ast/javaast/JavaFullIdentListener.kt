@@ -754,23 +754,6 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         }
     }
 
-    private fun buildCreatedCall(createdName: String?, ctx: JavaParser.CreatorContext) {
-        val codeFunction = methodMap[getMethodMapName(currentFunction)] ?: return
-
-        val fullType = warpTargetFullType(createdName)
-        val codePosition = buildPosition(ctx)
-
-        val codeCall = CodeCall(
-            Package = removeTarget(fullType = fullType.targetType),
-            Type = CallType.CREATOR,
-            NodeName = createdName!!,
-            Position = codePosition
-        )
-
-        codeFunction.FunctionCalls += codeCall
-        methodMap[getMethodMapName(currentFunction)] = codeFunction
-    }
-
     fun getNodeInfo(): CodeContainer {
         codeContainer.DataStructures = classNodes
         return codeContainer
