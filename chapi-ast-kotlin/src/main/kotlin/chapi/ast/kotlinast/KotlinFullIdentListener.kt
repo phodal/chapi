@@ -30,8 +30,9 @@ open class KotlinFullIdentListener(fileName: String) : KotlinBasicIdentListener(
         val functionStart = result.groups[1]!!.range.first
         val nodeName = matchedExpression.substring(0, maxOf(functionStart - matchedStart - 1, 0))
 
+        val callType = if (functionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION
         return CodeCall(
-            Type = if (functionName[0].isUpperCase()) CallType.CREATOR else CallType.FUNCTION,
+            Type = callType,
             NodeName = nodeName,
             FunctionName = functionName,
             Parameters = parameters,

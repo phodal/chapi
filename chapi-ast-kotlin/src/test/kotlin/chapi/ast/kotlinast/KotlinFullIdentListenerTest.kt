@@ -10,7 +10,7 @@ internal class KotlinFullIdentListenerTest {
         KotlinAnalyser().analysis(code, fileName, AnalysisMode.Full)
 
     @Nested
-    inner class Calls {
+    inner class should_analysis_hello_world {
         @Test
         internal fun `should identify function call of individual function`() {
             val code = """
