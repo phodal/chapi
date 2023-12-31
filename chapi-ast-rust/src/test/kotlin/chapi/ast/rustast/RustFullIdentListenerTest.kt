@@ -185,6 +185,7 @@ class RustFullIdentListenerTest {
         assertEquals(4, codeDataStruct.Fields.size)
         assertEquals("score", codeDataStruct.Fields[0].TypeValue)
         assertEquals("f32", codeDataStruct.Fields[0].TypeType)
-//        assertEquals("crate::Embedding", codeDataStruct.Fields[2].TypeType)
+        assertEquals("crate::Embedding", codeDataStruct.Fields[2].TypeType)
+        assertEquals("crate::Document", codeDataStruct.Fields[3].TypeType)
     }
 }

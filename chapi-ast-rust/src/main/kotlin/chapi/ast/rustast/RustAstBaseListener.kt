@@ -82,7 +82,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 CodeImport(
                     Source = path.joinToString("::"),
                     UsageName = path,
-                    Scope = ""
+                    Scope = if (path.first() == "crate") "crate" else "cargo",
+                    AsName = path.last()
                 )
             )
         }
@@ -154,7 +155,12 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     }
 
     private fun lookupType(type_: Type_Context?): String {
-        return type_?.text ?: ""
+        val typeText = type_?.text
+        imports.filter { it.AsName == typeText }.forEach {
+            return it.Source
+        }
+
+        return typeText ?: ""
     }
 
     private fun buildAttribute(outerAttribute: List<RustParser.OuterAttributeContext>): MutableList<CodeAnnotation> {
