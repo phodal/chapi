@@ -188,4 +188,23 @@ class RustFullIdentListenerTest {
         assertEquals("crate::Embedding", codeDataStruct.Fields[2].TypeType)
         assertEquals("crate::Document", codeDataStruct.Fields[3].TypeType)
     }
+
+    @Test
+    fun should_analysis_first_function_call() {
+        val code = """
+            use crate::Point;
+            
+            fn main() {
+                let p = Point::new(1, 2);
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "test.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        assertEquals(1, codeDataStruct.Functions.size)
+        val functionCalls = codeDataStruct.Functions[0].FunctionCalls
+        assertEquals(1, functionCalls.size)
+        assertEquals("Point", functionCalls[0].NodeName)
+        assertEquals("new", functionCalls[0].FunctionName)
+    }
 }
