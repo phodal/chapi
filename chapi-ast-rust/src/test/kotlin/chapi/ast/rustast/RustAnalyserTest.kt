@@ -15,10 +15,11 @@ internal class RustAnalyserTest {
         """.trimIndent()
 
         val codeContainer = RustAnalyser().analysis(str, "test.rs")
+        println(codeContainer)
     }
 
     @Test
-//    @Disabled
+    @Disabled
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!
         File(content.toURI()).walkTopDown().forEach {

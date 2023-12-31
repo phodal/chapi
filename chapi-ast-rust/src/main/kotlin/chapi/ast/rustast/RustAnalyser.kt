@@ -9,8 +9,8 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class RustAnalyser : Analyser {
-    override fun analysis(str: String, filePath: String): CodeContainer {
-        val context = this.parse(str).crate()
+    override fun analysis(code: String, filePath: String): CodeContainer {
+        val context = this.parse(code).crate()
         val listener = RustFullIdentListener(filePath)
         ParseTreeWalker().walk(listener, context)
         return listener.getNodeInfo()
