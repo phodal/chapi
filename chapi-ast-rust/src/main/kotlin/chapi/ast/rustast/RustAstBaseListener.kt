@@ -8,24 +8,25 @@ import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
 
-
 open class RustAstBaseListener(private val fileName: String) : RustParserBaseListener() {
     private val LIB_RS = "lib.rs"
     private val MAIN_RS = "main.rs"
 
     protected val codeContainer: CodeContainer = CodeContainer(FullName = fileName, PackageName = packageName)
-    protected val classes: MutableList<CodeDataStruct> = mutableListOf()
     protected val imports: MutableList<CodeImport> = mutableListOf()
     protected var currentNode: CodeDataStruct = CodeDataStruct()
     protected open var currentFunction: CodeFunction = CodeFunction()
-    protected val isEnteredClass = AtomicInteger(0)
+    protected var isEnteredImplementation: Boolean = false
     protected var isEnteredIndividualFunction: Boolean = false
-    private var isEnteredClassFunction: Boolean = false
+    private var isEnteredImplementationFunction: Boolean = false
 
     protected lateinit var currentIndividualFunction: CodeFunction
 
     private val individualFunctions = mutableListOf<CodeFunction>()
     private val individualFields = mutableListOf<CodeField>()
+
+    var structMap = mutableMapOf<String, CodeDataStruct>()
+
 
     /**
      * packageName will parse from fileName, like:
@@ -67,7 +68,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         }
 
     open fun getNodeInfo(): CodeContainer = codeContainer.apply {
-        DataStructures = (buildDedicatedStructs() + classes)
+        val allStruct = structMap.values
+        DataStructures = (buildDedicatedStructs() + allStruct)
         Imports = imports
     }
 
@@ -80,21 +82,71 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         return position
     }
 
-    override fun enterFunction_(ctx: RustParser.Function_Context?) {
-        val functionName = ctx!!.identifier().text
-        val function = CodeFunction(
-            Name = functionName,
-            Package = codeContainer.PackageName,
-            Position = buildPosition(ctx)
+    override fun enterStructStruct(ctx: RustParser.StructStructContext?) {
+        val structName = ctx!!.identifier().text
+
+        val codeStruct = CodeDataStruct(
+            NodeName = structName,
+            Package = codeContainer.PackageName
         )
 
-        currentIndividualFunction = function
-        isEnteredIndividualFunction = true
+        structMap[structName] = codeStruct
+    }
+
+    override fun exitStructStruct(ctx: RustParser.StructStructContext?) {
+
+    }
+
+    override fun enterFunction_(ctx: RustParser.Function_Context?) {
+        if (isEnteredImplementation == false) {
+            val functionName = ctx!!.identifier().text
+            val function = CodeFunction(
+                Name = functionName,
+                Package = codeContainer.PackageName,
+                Position = buildPosition(ctx)
+            )
+
+            currentIndividualFunction = function
+            isEnteredIndividualFunction = true
+        } else {
+            val functionName = ctx!!.identifier().text
+            val function = CodeFunction(
+                Name = functionName,
+                Package = codeContainer.PackageName,
+                Position = buildPosition(ctx)
+            )
+
+            currentFunction = function
+        }
     }
 
     override fun exitFunction_(ctx: RustParser.Function_Context?) {
-        individualFunctions.add(currentIndividualFunction)
-        isEnteredIndividualFunction = false
+        if (isEnteredImplementation == false) {
+            isEnteredIndividualFunction = false
+            individualFunctions.add(currentIndividualFunction)
+        } else {
+            currentNode.Functions += currentFunction
+        }
+    }
+
+    override fun enterImplementation(ctx: RustParser.ImplementationContext?) {
+        val nodeName = ctx?.inherentImpl()?.type_()?.text ?: return
+        if (structMap.containsKey(nodeName)) {
+            currentNode = structMap[nodeName]!!
+        } else {
+            currentNode = CodeDataStruct(
+                NodeName = nodeName,
+                Package = codeContainer.PackageName,
+                Position = buildPosition(ctx ?: return)
+            )
+        }
+
+        isEnteredImplementation = true
+    }
+
+    override fun exitImplementation(ctx: RustParser.ImplementationContext?) {
+        isEnteredImplementation = false
+        structMap[currentNode.NodeName] = currentNode
     }
 
     private fun buildDedicatedStructs(): List<CodeDataStruct> {
