@@ -2,7 +2,7 @@ package chapi.ast.rustast
 
 import chapi.ast.antlr.RustParser
 import chapi.ast.antlr.RustParser.ItemContext
-import chapi.ast.antlr.RustParser.MacroIdentifierLikeTokenContext
+import chapi.ast.antlr.RustParser.SimplePathContext
 import chapi.ast.antlr.RustParser.TypePathSegmentContext
 import chapi.ast.antlr.RustParser.Type_Context
 import chapi.ast.antlr.RustParserBaseListener
@@ -74,8 +74,54 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         Imports = imports
     }
 
-    override fun enterOuterAttribute(ctx: RustParser.OuterAttributeContext?) {
+    override fun enterUseDeclaration(ctx: RustParser.UseDeclarationContext?) {
+        val importString: List<List<String>> = buildToPath(ctx)
 
+        importString.forEach { path ->
+            imports.add(
+                CodeImport(
+                    Source = path.joinToString("::"),
+                    UsageName = path,
+                    Scope = ""
+                )
+            )
+        }
+    }
+
+    private fun buildToPath(ctx: RustParser.UseDeclarationContext?): List<List<String>> {
+        val simplePath = ctx?.useTree()?.simplePath()
+        val useTree = ctx?.useTree()?.useTree() ?: emptyList()
+
+        if (simplePath != null && useTree.isEmpty()) {
+            return listOf(buildSinglePath(simplePath).flatten())
+        }
+
+        if (simplePath != null) {
+            val basePath = buildSinglePath(simplePath)
+            val lists = useTree.mapNotNull { treeContext ->
+                treeContext.simplePath()?.let {
+                    buildSinglePath(it)
+                }
+            }.flatten()
+
+            return lists.map { list ->
+                basePath.map { base ->
+                    base + list
+                }
+            }.flatten()
+        }
+
+        return listOf()
+    }
+
+    private fun buildSinglePath(simplePath: SimplePathContext): List<List<String>> {
+        return simplePath.simplePathSegment().mapNotNull {
+            if (it.identifier() != null) {
+                it.identifier().text
+            } else {
+                it.text
+            }
+        }.map { listOf(it) }
     }
 
     override fun enterStructStruct(ctx: RustParser.StructStructContext?) {

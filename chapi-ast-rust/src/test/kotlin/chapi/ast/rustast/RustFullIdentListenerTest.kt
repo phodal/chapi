@@ -1,6 +1,5 @@
 package chapi.ast.rustast
 
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -165,6 +164,7 @@ class RustFullIdentListenerTest {
     @Test
     fun should_analysis_struct_type() {
         val code = """
+            use std::cmp::Ordering;
             use crate::{Document, Embedding};
 
             #[derive(Debug, Clone)]
@@ -178,7 +178,13 @@ class RustFullIdentListenerTest {
 
         val codeContainer = RustAnalyser().analysis(code, "test.rs")
         val codeDataStruct = codeContainer.DataStructures[0]
+        assertEquals(3, codeContainer.Imports.size)
+        assertEquals("std::cmp::Ordering", codeContainer.Imports[0].Source)
+        assertEquals("crate::Document", codeContainer.Imports[1].Source)
+
         assertEquals(4, codeDataStruct.Fields.size)
+        assertEquals("score", codeDataStruct.Fields[0].TypeValue)
+        assertEquals("f32", codeDataStruct.Fields[0].TypeType)
 //        assertEquals("crate::Embedding", codeDataStruct.Fields[2].TypeType)
     }
 }
