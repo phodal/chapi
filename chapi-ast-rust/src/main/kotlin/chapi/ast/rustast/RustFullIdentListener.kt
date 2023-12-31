@@ -5,7 +5,6 @@ import chapi.domain.core.*
 import java.io.File
 
 open class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName) {
-    private var defaultNode = CodeDataStruct()
     private var structMap = mutableMapOf<String, CodeDataStruct>()
     private var localVars = mutableMapOf<String, String>()
 
@@ -17,7 +16,11 @@ open class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fil
             Package = codeContainer.PackageName
         )
 
+        classes.add(codeStruct)
         structMap[structName] = codeStruct
-        defaultNode = codeStruct
+    }
+
+    override fun exitStructStruct(ctx: RustParser.StructStructContext?) {
+
     }
 }
