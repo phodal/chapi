@@ -1,5 +1,7 @@
 package chapi.ast.rustast
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -30,8 +32,11 @@ internal class RustAnalyserTest {
             }
         """.trimIndent()
 
-        val codeContainer = rustAnalyser.analysis(str, "test.rs")
-        println(codeContainer)
+        val codeContainer = rustAnalyser.analysis(str, "main.rs")
+        val dataStructures = codeContainer.DataStructures
+        assertEquals(dataStructures.size, 1)
+        assertEquals(dataStructures[0].NodeName, "main")
+        assertEquals(dataStructures[0].Functions[0].Name, "main")
     }
 
     @Test

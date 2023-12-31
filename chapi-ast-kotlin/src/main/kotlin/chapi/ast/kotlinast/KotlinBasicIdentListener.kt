@@ -44,8 +44,6 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     private val individualFunctions = mutableListOf<CodeFunction>()
     private val individualFields = mutableListOf<CodeField>()
 
-    /** outer interfaces */
-
     override fun getNodeInfo(): CodeContainer = codeContainer.apply {
         DataStructures = (buildDedicatedClasses() + classes)
         Imports = imports
@@ -94,7 +92,6 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             currentIndividualFunction = buildFunction(functionDeclaration)
         }
         // TODO replace enterClassDeclaration
-        // TODO support object declaration
     }
 
     override fun exitTopLevelObject(ctx: KotlinParser.TopLevelObjectContext) {

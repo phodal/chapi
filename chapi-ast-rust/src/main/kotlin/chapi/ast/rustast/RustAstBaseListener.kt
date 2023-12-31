@@ -1,5 +1,6 @@
 package chapi.ast.rustast
 
+import chapi.ast.antlr.RustParser
 import chapi.ast.antlr.RustParserBaseListener
 import chapi.domain.core.*
 import org.antlr.v4.runtime.ParserRuleContext
@@ -18,6 +19,9 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     protected var currentNode: CodeDataStruct = CodeDataStruct()
     protected open var currentFunction: CodeFunction = CodeFunction()
     protected val isEnteredClass = AtomicInteger(0)
+    protected var isEnteredIndividualFunction: Boolean = false
+    private var isEnteredClassFunction: Boolean = false
+
     protected lateinit var currentIndividualFunction: CodeFunction
 
     private val individualFunctions = mutableListOf<CodeFunction>()
@@ -76,12 +80,29 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         return position
     }
 
+    override fun enterFunction_(ctx: RustParser.Function_Context?) {
+        val functionName = ctx!!.identifier().text
+        val function = CodeFunction(
+            Name = functionName,
+            Package = codeContainer.PackageName,
+            Position = buildPosition(ctx)
+        )
+
+        currentIndividualFunction = function
+        isEnteredIndividualFunction = true
+    }
+
+    override fun exitFunction_(ctx: RustParser.Function_Context?) {
+        individualFunctions.add(currentIndividualFunction)
+        isEnteredIndividualFunction = false
+    }
+
     private fun buildDedicatedStructs(): List<CodeDataStruct> {
         if (individualFunctions.isEmpty() && individualFields.isEmpty()) return emptyList()
 
         return listOf(
             CodeDataStruct().apply {
-                NodeName = fileName.substringBeforeLast('.') + "rs"
+                NodeName = fileName.substringBeforeLast('.')
                 Type = DataStructType.OBJECT
                 Package = codeContainer.PackageName
                 FilePath = codeContainer.FullName
