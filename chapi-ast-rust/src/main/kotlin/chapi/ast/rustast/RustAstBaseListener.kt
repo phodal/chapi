@@ -127,7 +127,15 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     }
 
     open fun buildParameters(functionParameters: RustParser.FunctionParametersContext?): List<CodeProperty> {
-        return listOf()
+        if (functionParameters == null) return listOf()
+
+        return functionParameters.functionParam().map {
+            val functionParamPattern = it.functionParamPattern()
+            CodeProperty(
+                TypeValue = functionParamPattern.pattern()?.text ?: "",
+                TypeType = functionParamPattern.type_()?.text ?: "",
+            )
+        }
     }
 
     override fun exitFunction_(ctx: RustParser.Function_Context?) {
