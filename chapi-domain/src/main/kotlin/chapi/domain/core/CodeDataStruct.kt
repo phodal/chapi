@@ -22,8 +22,10 @@ enum class DataStructType(val structType: String) {
 
 @Serializable
 data class CodeDataStruct(
-    // class and DataStruct Name
-    // for TypeScript/JavaScript, if is a variable, function, it will be naming to `default`
+    /**
+     * for TypeScript/JavaScript, if is a variable, function, it will be naming to `default`
+     * for Rust, if is a variable, function, it will be naming to `default`
+     */
     var NodeName: String = "",
     var Module: String = "",
     var Type: DataStructType = DataStructType.EMPTY,

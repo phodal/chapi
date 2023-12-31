@@ -1,5 +1,6 @@
 package chapi.ast.rustast
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -85,5 +86,58 @@ class RustFullIdentListenerTest {
         assertEquals(1, functions[0].Parameters.size)
         assertEquals("name", functions[0].Parameters[0].TypeValue)
         assertEquals("&str", functions[0].Parameters[0].TypeType)
+    }
+
+    @Test
+    fun should_handle_return_type() {
+        val str = """
+            fn add(a: i32, b: i32) -> i32 {
+                a + b
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(str, "test.rs")
+        val functions = codeContainer.DataStructures[0].Functions
+        assertEquals("add", functions[0].Name)
+        assertEquals("i32", functions[0].ReturnType)
+    }
+
+    @Test
+    @Disabled
+    fun should_pass_for_multiple_impl() {
+        val str = """
+            use std::cmp::Ordering;
+            use crate::embedding::Embedding;
+
+            #[derive(Debug, Clone)]
+            pub struct EmbeddingMatch<Embedded: Clone + Ord> {
+                score: f32,
+                embedding_id: String,
+                embedding: Embedding,
+                embedded: Embedded,
+            }
+
+            impl<Embedded: Clone + Ord> EmbeddingMatch<Embedded> {
+                pub fn new(score: f32, embedding_id: String, embedding: Embedding, embedded: Embedded) -> Self {
+                    EmbeddingMatch {
+                        score,
+                        embedding_id,
+                        embedding,
+                        embedded,
+                    }
+                }
+            }
+
+            impl<Embedded: Clone + Ord> PartialOrd for EmbeddingMatch<Embedded> {
+                fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+                    self.score.partial_cmp(&other.score)
+                }
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(str, "test.rs")
+        assertEquals(1, codeContainer.DataStructures.size)
+        val functions = codeContainer.DataStructures[1].Functions
+        assertEquals(3, functions.size)
     }
 }

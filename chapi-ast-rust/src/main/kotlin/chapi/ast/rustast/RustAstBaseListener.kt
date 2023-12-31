@@ -104,7 +104,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 Name = functionName,
                 Package = codeContainer.PackageName,
                 Position = buildPosition(ctx),
-                Parameters = buildParameters(ctx.functionParameters())
+                Parameters = buildParameters(ctx.functionParameters()),
+                ReturnType = buildReturnType(ctx.functionReturnType())
             )
 
             currentIndividualFunction = function
@@ -120,6 +121,10 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
             currentFunction = function
         }
+    }
+
+    open fun buildReturnType(functionReturnType: RustParser.FunctionReturnTypeContext?): String {
+        return functionReturnType?.type_()?.text ?: ""
     }
 
     open fun buildParameters(functionParameters: RustParser.FunctionParametersContext?): List<CodeProperty> {
