@@ -13,14 +13,26 @@ internal class RustAnalyserTest {
 
     @Test
     internal fun should_identify_package_by_path() {
-        val moduleCc = rustAnalyser.analysis("pub mod document;", "enfer_core/src/lib.rs")
-        assertEquals(moduleCc.PackageName, "enfer_core")
+        // check os
+        if (System.getProperty("os.name").lowercase().contains("windows")) {
+            val moduleCc = rustAnalyser.analysis("pub mod document;", "enfer_core\\src\\lib.rs")
+            assertEquals(moduleCc.PackageName, "enfer_core")
 
-        val rootCc = rustAnalyser.analysis("pub mod document;", "src/lib.rs")
-        assertEquals(rootCc.PackageName, "")
+            val rootCc = rustAnalyser.analysis("pub mod document;", "src\\lib.rs")
+            assertEquals(rootCc.PackageName, "")
 
-        val subModuleCc = rustAnalyser.analysis("pub mod document;", "enfer_core/src/document.rs")
-        assertEquals(subModuleCc.PackageName, "enfer_core::document")
+            val subModuleCc = rustAnalyser.analysis("pub mod document;", "enfer_core\\src\\document.rs")
+            assertEquals(subModuleCc.PackageName, "enfer_core::document")
+        } else {
+            val moduleCc = rustAnalyser.analysis("pub mod document;", "enfer_core/src/lib.rs")
+            assertEquals(moduleCc.PackageName, "enfer_core")
+
+            val rootCc = rustAnalyser.analysis("pub mod document;", "src/lib.rs")
+            assertEquals(rootCc.PackageName, "")
+
+            val subModuleCc = rustAnalyser.analysis("pub mod document;", "enfer_core/src/document.rs")
+            assertEquals(subModuleCc.PackageName, "enfer_core::document")
+        }
     }
 
 
