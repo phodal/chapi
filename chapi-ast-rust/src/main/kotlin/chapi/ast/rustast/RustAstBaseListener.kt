@@ -90,10 +90,25 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         val codeStruct = CodeDataStruct(
             NodeName = structName,
             Package = codeContainer.PackageName,
-            Annotations = annotation
+            Annotations = annotation,
+            Fields = buildFields(ctx.structFields())
         )
 
         structMap[structName] = codeStruct
+    }
+
+    private fun buildFields(structFields: RustParser.StructFieldsContext?): List<CodeField> {
+        return structFields?.structField()?.map {
+            CodeField(
+                TypeType = lookupType(it.type_()),
+                Annotations = buildAttribute(it.outerAttribute()),
+                TypeValue = it.identifier()?.text ?: ""
+            )
+        } ?: emptyList()
+    }
+
+    private fun lookupType(type_: Type_Context?): String {
+        return type_?.text ?: ""
     }
 
     private fun buildAttribute(outerAttribute: List<RustParser.OuterAttributeContext>): MutableList<CodeAnnotation> {

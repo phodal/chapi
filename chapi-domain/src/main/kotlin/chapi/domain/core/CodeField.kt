@@ -1,6 +1,5 @@
 package chapi.domain.core
 
-import chapi.domain.core.CodeCall
 import kotlinx.serialization.Serializable
 
 @Serializable

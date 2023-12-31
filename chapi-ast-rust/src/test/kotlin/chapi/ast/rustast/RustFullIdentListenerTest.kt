@@ -161,4 +161,24 @@ class RustFullIdentListenerTest {
         assertEquals("Debug", codeAnnotation.KeyValues[0].Value)
         assertEquals("Clone", codeAnnotation.KeyValues[1].Value)
     }
+
+    @Test
+    fun should_analysis_struct_type() {
+        val code = """
+            use crate::{Document, Embedding};
+
+            #[derive(Debug, Clone)]
+            pub struct DocumentMatch {
+                pub score: f32,
+                pub embedding_id: String,
+                pub embedding: Embedding,
+                pub embedded: Document,
+            }
+            """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "test.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        assertEquals(4, codeDataStruct.Fields.size)
+//        assertEquals("crate::Embedding", codeDataStruct.Fields[2].TypeType)
+    }
 }
