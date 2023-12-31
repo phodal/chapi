@@ -1,11 +1,12 @@
 package chapi.ast.rustast
 
 import chapi.ast.antlr.RustParser
+import chapi.ast.antlr.RustParser.TypePathSegmentContext
+import chapi.ast.antlr.RustParser.Type_Context
 import chapi.ast.antlr.RustParserBaseListener
 import chapi.domain.core.*
 import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 
 
 open class RustAstBaseListener(private val fileName: String) : RustParserBaseListener() {
@@ -18,15 +19,13 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     protected open var currentFunction: CodeFunction = CodeFunction()
     protected var isEnteredImplementation: Boolean = false
     protected var isEnteredIndividualFunction: Boolean = false
-    private var isEnteredImplementationFunction: Boolean = false
 
     protected lateinit var currentIndividualFunction: CodeFunction
 
     private val individualFunctions = mutableListOf<CodeFunction>()
     private val individualFields = mutableListOf<CodeField>()
 
-    var structMap = mutableMapOf<String, CodeDataStruct>()
-
+    private var structMap = mutableMapOf<String, CodeDataStruct>()
 
     /**
      * packageName will parse from fileName, like:
@@ -98,7 +97,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     }
 
     override fun enterFunction_(ctx: RustParser.Function_Context?) {
-        if (isEnteredImplementation == false) {
+        if (!isEnteredImplementation) {
             val functionName = ctx!!.identifier().text
             val function = CodeFunction(
                 Name = functionName,
@@ -141,7 +140,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     }
 
     override fun enterImplementation(ctx: RustParser.ImplementationContext?) {
-        val nodeName = ctx?.inherentImpl()?.type_()?.text ?: return
+        val nodeName = buildNodeName(ctx)
         if (structMap.containsKey(nodeName)) {
             currentNode = structMap[nodeName]!!
         } else {
@@ -153,6 +152,28 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         }
 
         isEnteredImplementation = true
+    }
+
+    private fun buildNodeName(ctx: RustParser.ImplementationContext?): String {
+        // keep this for better to debug
+        val types = when {
+            ctx?.inherentImpl()?.type_() != null -> listOf(ctx.inherentImpl().type_())
+            ctx?.traitImpl()?.type_() != null -> listOf(ctx.traitImpl().type_())
+            else -> emptyList()
+        }
+
+        val typePathSegment: List<TypePathSegmentContext>? = types.firstOrNull()
+            ?.typeNoBounds()
+            ?.traitObjectTypeOneBound()
+            ?.traitBound()
+            ?.typePath()
+            ?.typePathSegment()
+
+        val pathIdentSegmentContext = typePathSegment?.map {
+            it.pathIdentSegment()
+        }?.firstOrNull()
+
+        return pathIdentSegmentContext?.identifier()?.text ?: return ""
     }
 
     override fun exitImplementation(ctx: RustParser.ImplementationContext?) {

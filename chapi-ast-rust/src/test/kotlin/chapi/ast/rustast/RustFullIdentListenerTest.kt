@@ -103,7 +103,6 @@ class RustFullIdentListenerTest {
     }
 
     @Test
-    @Disabled
     fun should_pass_for_multiple_impl() {
         val str = """
             use std::cmp::Ordering;
@@ -137,7 +136,7 @@ class RustFullIdentListenerTest {
 
         val codeContainer = RustAnalyser().analysis(str, "test.rs")
         assertEquals(1, codeContainer.DataStructures.size)
-        val functions = codeContainer.DataStructures[1].Functions
-        assertEquals(3, functions.size)
+        val functions = codeContainer.DataStructures[0].Functions
+        assertEquals(2, functions.size)
     }
 }
