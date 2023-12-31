@@ -207,4 +207,22 @@ class RustFullIdentListenerTest {
         assertEquals("Point", functionCalls[0].NodeName)
         assertEquals("new", functionCalls[0].FunctionName)
     }
+
+    @Test
+    fun should_identify_function_call_with_method() {
+        val code = """
+            use crate::Point;
+            
+            fn main() {
+                let p = Point::new(1, 2);
+                p.print();
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "test.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        assertEquals(1, codeDataStruct.Functions.size)
+        val functionCalls = codeDataStruct.Functions[0].FunctionCalls
+//        assertEquals(2, functionCalls.size)
+    }
 }
