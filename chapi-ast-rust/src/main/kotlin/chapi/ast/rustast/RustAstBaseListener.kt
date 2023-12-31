@@ -1,6 +1,8 @@
 package chapi.ast.rustast
 
 import chapi.ast.antlr.RustParser
+import chapi.ast.antlr.RustParser.ItemContext
+import chapi.ast.antlr.RustParser.MacroIdentifierLikeTokenContext
 import chapi.ast.antlr.RustParser.TypePathSegmentContext
 import chapi.ast.antlr.RustParser.Type_Context
 import chapi.ast.antlr.RustParserBaseListener
@@ -72,24 +74,51 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         Imports = imports
     }
 
-    fun buildPosition(ctx: ParserRuleContext): CodePosition {
-        val position = CodePosition()
-        position.StartLine = ctx.start.line
-        position.StartLinePosition = ctx.start.charPositionInLine
-        position.StopLine = ctx.stop.line
-        position.StopLinePosition = ctx.stop.charPositionInLine
-        return position
+    override fun enterOuterAttribute(ctx: RustParser.OuterAttributeContext?) {
+
     }
 
     override fun enterStructStruct(ctx: RustParser.StructStructContext?) {
-        val structName = ctx!!.identifier().text
+        val structName = ctx?.identifier()?.text ?: return
+
+        val item = ctx.parent?.parent?.parent
+        var annotation: MutableList<CodeAnnotation> = mutableListOf()
+        if (item is ItemContext) {
+            annotation = buildAttribute(item.outerAttribute())
+        }
 
         val codeStruct = CodeDataStruct(
             NodeName = structName,
-            Package = codeContainer.PackageName
+            Package = codeContainer.PackageName,
+            Annotations = annotation
         )
 
         structMap[structName] = codeStruct
+    }
+
+    private fun buildAttribute(outerAttribute: List<RustParser.OuterAttributeContext>): MutableList<CodeAnnotation> {
+        return outerAttribute.map { attributeContext ->
+            val annotationName = attributeContext.attr()?.simplePath()?.simplePathSegment()?.filter { it.identifier() != null }?.map {
+                it.identifier().text
+            }?.joinToString(".") ?: ""
+
+            val keyValues = attributeContext.attr().attrInput().delimTokenTree().tokenTree()
+                .mapNotNull {
+                    it.tokenTreeToken()
+                        .mapNotNull { token -> token.macroIdentifierLikeToken() }
+                        .map { tokenContext ->
+                            AnnotationKeyValue(
+                                Key = tokenContext.identifier().text,
+                                Value = tokenContext.identifier().text
+                            )
+                        }
+                }.flatten()
+
+            CodeAnnotation(
+                Name = annotationName,
+                KeyValues = keyValues
+            )
+        }.toMutableList()
     }
 
     override fun exitStructStruct(ctx: RustParser.StructStructContext?) {
@@ -187,6 +216,15 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     override fun exitImplementation(ctx: RustParser.ImplementationContext?) {
         isEnteredImplementation = false
         structMap[currentNode.NodeName] = currentNode
+    }
+
+    private fun buildPosition(ctx: ParserRuleContext): CodePosition {
+        val position = CodePosition()
+        position.StartLine = ctx.start.line
+        position.StartLinePosition = ctx.start.charPositionInLine
+        position.StopLine = ctx.stop.line
+        position.StopLinePosition = ctx.stop.charPositionInLine
+        return position
     }
 
     private fun buildDedicatedStructs(): List<CodeDataStruct> {

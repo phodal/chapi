@@ -139,4 +139,26 @@ class RustFullIdentListenerTest {
         val functions = codeContainer.DataStructures[0].Functions
         assertEquals(2, functions.size)
     }
+
+    @Test
+    fun should_handle_for_attribute_as_annotation() {
+        val str = """
+            #[derive(Debug, Clone)]
+            pub struct EmbeddingMatch<Embedded: Clone + Ord> {
+                score: f32,
+                embedding_id: String,
+                embedding: Embedding,
+                embedded: Embedded,
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(str, "test.rs")
+        assertEquals(1, codeContainer.DataStructures[0].Annotations.size)
+
+        val codeAnnotation = codeContainer.DataStructures[0].Annotations[0]
+        assertEquals("derive", codeAnnotation.Name)
+        assertEquals(2, codeAnnotation.KeyValues.size)
+        assertEquals("Debug", codeAnnotation.KeyValues[0].Value)
+        assertEquals("Clone", codeAnnotation.KeyValues[1].Value)
+    }
 }
