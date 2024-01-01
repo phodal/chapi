@@ -177,8 +177,10 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 it.identifier().text
             }?.joinToString(".") ?: ""
 
-            val keyValues = attributeContext.attr().attrInput().delimTokenTree().tokenTree()
-                .mapNotNull {
+            val keyValues = attributeContext.attr()
+                ?.attrInput()
+                ?.delimTokenTree()?.tokenTree()
+                ?.mapNotNull {
                     it.tokenTreeToken()
                         .mapNotNull { token -> token.macroIdentifierLikeToken() }
                         .map { tokenContext ->
@@ -187,7 +189,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                                 Value = tokenContext.identifier().text
                             )
                         }
-                }.flatten()
+                }?.flatten() ?: listOf()
 
             CodeAnnotation(
                 Name = annotationName,
@@ -227,9 +229,9 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         }
 
         localVars += ctx.functionParameters()?.functionParam()?.map {
-            val functionParamPattern = it.functionParamPattern()
-            val varName = functionParamPattern.pattern()?.text ?: ""
-            val varType = functionParamPattern.type_()?.text ?: ""
+            val pattern = it.functionParamPattern()
+            val varName = pattern?.pattern()?.text ?: ""
+            val varType = pattern?.type_()?.text ?: ""
             varName to varType
         }?.toMap() ?: mapOf()
     }
@@ -244,8 +246,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         return functionParameters.functionParam().map {
             val functionParamPattern = it.functionParamPattern()
             CodeProperty(
-                TypeValue = functionParamPattern.pattern()?.text ?: "",
-                TypeType = functionParamPattern.type_()?.text ?: "",
+                TypeValue = functionParamPattern?.pattern()?.text ?: "",
+                TypeType = functionParamPattern?.type_()?.text ?: "",
             )
         }
     }

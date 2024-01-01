@@ -52,7 +52,6 @@ internal class RustAnalyserTest {
     }
 
     @Test
-    @Disabled
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!
         File(content.toURI()).walkTopDown().forEach {
