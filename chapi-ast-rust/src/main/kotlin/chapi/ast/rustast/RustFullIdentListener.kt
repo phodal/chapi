@@ -29,10 +29,12 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
     override fun enterCallExpression(ctx: RustParser.CallExpressionContext?) {
         val functionName = ctx?.expression()?.text
         val split = functionName?.split("::")
+        val nodeName = split?.dropLast(1)?.joinToString("::") ?: ""
         functionInstance.FunctionCalls += CodeCall(
             Package = split?.dropLast(1)?.joinToString("::") ?: "",
-            NodeName = split?.dropLast(1)?.joinToString("::") ?: "",
+            NodeName = lookupByType(nodeName),
             FunctionName = split?.last() ?: "",
+            OriginNodeName = nodeName,
             Parameters = buildParameters(ctx?.callParams()),
             Position = buildPosition(ctx ?: return)
         )
@@ -50,9 +52,9 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
 
         // todo: handle method call
         functionInstance.FunctionCalls += CodeCall(
-            Package = nodeName ?: "",
-            NodeName = nodeName ?: "",
-            OriginNodeName = instanceVar ?: "",
+            Package = nodeName,
+            NodeName = lookupByType(nodeName),
+            OriginNodeName = instanceVar.ifEmpty { nodeName },
             FunctionName = functionName,
             Parameters = buildParameters(ctx?.callParams()),
             Position = buildPosition(ctx ?: return)

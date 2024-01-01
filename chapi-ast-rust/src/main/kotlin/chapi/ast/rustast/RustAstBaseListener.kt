@@ -175,11 +175,23 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     }
 
     open fun lookupByType(typeText: String?): String {
-        imports.filter { it.AsName == typeText }.forEach {
+        if (typeText == null) return ""
+        val text = if (typeText.contains("::")) {
+            val crateName = typeText.split("::").first()
+            if (crateName == "std" || crateName == "crate") {
+                typeText
+            } else {
+                crateName
+            }
+        } else {
+            typeText
+        }
+
+        imports.filter { it.AsName == text }.forEach {
             return it.Source
         }
 
-        return typeText ?: ""
+        return text
     }
 
     private fun buildAttribute(outerAttribute: List<RustParser.OuterAttributeContext>): MutableList<CodeAnnotation> {
@@ -204,6 +216,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     private fun processAnnotationKeyValues(it: RustParser.TokenTreeContext): List<AnnotationKeyValue> {
         val tokenTreeToken = it.tokenTreeToken()
+        val skipedIndex: MutableList<Int> = mutableListOf()
+
         return tokenTreeToken.mapIndexedNotNull { index, context ->
             when (val child = context.children.firstOrNull()) {
                 is RustParser.MacroIdentifierLikeTokenContext -> {
@@ -212,6 +226,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                     val hasNext = tokenTreeToken.getOrNull(index + 1)?.children?.firstOrNull()
                     if (hasNext is RustParser.MacroPunctuationTokenContext) {
                         if (hasNext.text == "=") {
+                            skipedIndex.add(index + 2)
                             value = tokenTreeToken.getOrNull(index + 2)?.text ?: ""
                         }
                     }
@@ -221,7 +236,12 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                         Value = value
                     )
                 }
+
                 is RustParser.MacroLiteralTokenContext -> {
+                    if (skipedIndex.contains(index)) {
+                        return@mapIndexedNotNull null
+                    }
+
                     AnnotationKeyValue(
                         Key = child.text,
                         Value = child.text

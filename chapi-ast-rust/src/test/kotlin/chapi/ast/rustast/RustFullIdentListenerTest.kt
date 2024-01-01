@@ -1,6 +1,8 @@
 package chapi.ast.rustast
 
 import chapi.domain.core.DataStructType
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -205,7 +207,7 @@ class RustFullIdentListenerTest {
         val functionCalls = codeDataStruct.Functions[0].FunctionCalls
 
         assertEquals(1, functionCalls.size)
-        assertEquals("Point", functionCalls[0].NodeName)
+        assertEquals("crate::Point", functionCalls[0].NodeName)
         assertEquals("new", functionCalls[0].FunctionName)
     }
 
@@ -283,7 +285,7 @@ class RustFullIdentListenerTest {
 
         assertEquals("std::fs", functionCalls[1].NodeName)
         assertEquals("read", functionCalls[1].FunctionName)
-        assertEquals("", functionCalls[1].OriginNodeName)
+        assertEquals("std::fs", functionCalls[1].OriginNodeName)
     }
 
     @Test
@@ -305,6 +307,7 @@ class RustFullIdentListenerTest {
 
         assertEquals("cfg_attr", annotations[1].Name)
         assertEquals(2, annotations[1].KeyValues.size)
+
         assertEquals("feature", annotations[1].KeyValues[0].Key)
         assertEquals("\"ci\"", annotations[1].KeyValues[0].Value)
 
@@ -370,6 +373,52 @@ class RustFullIdentListenerTest {
         assertEquals("rocket", secondFunction.Name)
         assertEquals("_", secondFunction.ReturnType)
         assertEquals(2, secondFunction.FunctionCalls.size)
-        assertEquals("rocket::build", secondFunction.FunctionCalls[0].NodeName)
+        assertEquals("rocket", secondFunction.FunctionCalls[0].NodeName)
+    }
+
+    @Test
+    fun should_handle_actix_web_framework() {
+        val code = """
+            use actix_web::{get, web, App, HttpServer, Responder};
+            
+            #[get("/")]
+            async fn hello() -> impl Responder {
+                "Hello world!"
+            }
+            
+            #[actix_web::main]
+            async fn main() -> std::io::Result<()> {
+                HttpServer::new(|| {
+                    App::new()
+                        .service(hello)
+                        .service(echo)
+                        .route("/hey", web::get().to(manual_hello))
+                })
+                .bind(("127.0.0.1", 8080))?
+                .run()
+                .await
+            }
+            """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        val firstFunction = codeDataStruct.Functions[0]
+        // annotation
+        assertEquals(1, firstFunction.Annotations.size)
+        assertEquals("get", firstFunction.Annotations[0].Name)
+
+        assertEquals(1, firstFunction.Annotations[0].KeyValues.size)
+        assertEquals("\"/\"", firstFunction.Annotations[0].KeyValues[0].Value)
+
+        val secondFunction = codeDataStruct.Functions[1]
+        assertEquals("main", secondFunction.Name)
+//        assertEquals("std::io::Result", secondFunction.ReturnType)
+        assertEquals(9, secondFunction.FunctionCalls.size)
+        secondFunction.FunctionCalls.map {
+            println("${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}")
+        }
+
+        assertEquals("actix_web::HttpServer", secondFunction.FunctionCalls[0].NodeName)
+        assertEquals("run", secondFunction.FunctionCalls[0].FunctionName)
     }
 }
