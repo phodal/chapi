@@ -6,11 +6,15 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/2af5f5168a9ceb2ebe9b/maintainability)](https://codeclimate.com/github/phodal/chapi/maintainability)
 ![Maven Central](https://img.shields.io/maven-central/v/com.phodal.chapi/chapi-domain)
 
-> Chapi is a common language data structure parser, which will parse different language to same JSON object.
+> CHAPI (Common Hierarchical Abstract Parser and Information Converter) streamlines code analysis by converting diverse
+> language source code into a unified abstract model, simplifying cross-language development. Chapi
+> 是一个通用通用层次抽象解析器与信息转换器，它可以将不同编程语言的源代码转换为统一的层次抽象模型。一个通用语言元信息转换器，能将不同语言转换为相同的模型。
 
-Chapi means [common hierarchical abstract parser implementation]
+Chapi means [Common Hierarchical Abstract Parser && Information]
 
-Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/). Chapi (pronoounce /paɪ/) also pronounce XP in Chinese, if you always call X in 叉.
+Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in
+refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/).
+Chapi (pronoounce /paɪ/) also pronounce XP in Chinese, if you always call X in 叉.
 
 Languages Stages (Welcome to PR your usage languages)
 
@@ -22,12 +26,14 @@ Languages Stages (Welcome to PR your usage languages)
 | arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     |     | 🆕   |
 | real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
 
-language versions（tested）: 
+language versions（tested）:
 
 - Java: 8, 11, 17
-- TypeScript
+- TypeScript/JavaScript
 - Kotlin
 - Python: 2, 3
+- Rust
+- C#
 
 // tier 1 languages
 ":chapi-ast-java",
@@ -59,7 +65,8 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 ## Specify Rule
 
 **scan by twice**. In order to success get:
-   - find data struct in same package 
+
+- find data struct in same package
 
 ### TypeScript
 
@@ -69,9 +76,11 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 ### C# issues
 
-- interpolated_string parse issue：[official grammar](https://github.com/dotnet/roslyn/blob/main/src/Compilers/CSharp/Portable/Generated/CSharp.Generated.g4)，Antlr issues: [https://github.com/antlr/grammars-v4/issues/1146](https://github.com/antlr/grammars-v4/issues/1146)
+- interpolated_string parse
+  issue：[official grammar](https://github.com/dotnet/roslyn/blob/main/src/Compilers/CSharp/Portable/Generated/CSharp.Generated.g4)
+  ，Antlr issues: [https://github.com/antlr/grammars-v4/issues/1146](https://github.com/antlr/grammars-v4/issues/1146)
 - import analysis support
-  - in C#, import `namespace` can use call in namespace
+    - in C#, import `namespace` can use call in namespace
 
 ### Kotlin
 
@@ -87,7 +96,8 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 PS: welcome to PR to send your projects
 
 - [Chapi-TBS](https://github.com/phodal/chapi-tbs) a simple example with Chapi to Analysis Java project's bad smell.
-- [ArchGuard Scanner](https://github.com/archguard/scanner) -  ArchGuard 内嵌的各类扫描器，如 Jacoco, Git, Java 源码、Java bytecode, TypeScript 扫描器。 
+- [ArchGuard Scanner](https://github.com/archguard/scanner) - ArchGuard 内嵌的各类扫描器，如 Jacoco, Git, Java 源码、Java
+  bytecode, TypeScript 扫描器。
 
 ## Usage
 
@@ -111,30 +121,31 @@ import org.archguard.scanner.core.sourcecode.LanguageSourceCodeAnalyser
 import org.archguard.scanner.core.sourcecode.SourceCodeContext
 import java.io.File
 
-class CSharpAnalyser(override val context: SourceCodeContext) 
-    private val client = context.client
-    private val impl = chapi.ast.csharpast.CSharpAnalyser()
+class CSharpAnalyser(override val context: SourceCodeContext)
 
-    fun analyse(): List<CodeDataStruct> = runBlocking {
-        getFilesByPath(context.path) {
-            it.absolutePath.endsWith(".cs")
-        }
-            .map { async { analysisByFile(it) } }.awaitAll()
-            .flatten()
-            .also { client.saveDataStructure(it) }
+private val client = context.client
+private val impl = chapi.ast.csharpast.CSharpAnalyser()
+
+fun analyse(): List<CodeDataStruct> = runBlocking {
+    getFilesByPath(context.path) {
+        it.absolutePath.endsWith(".cs")
     }
+        .map { async { analysisByFile(it) } }.awaitAll()
+        .flatten()
+        .also { client.saveDataStructure(it) }
+}
 
-    fun analysisByFile(file: File): List<CodeDataStruct> {
-        val codeContainer = impl.analysis(file.readContent(), file.name)
-        return codeContainer.Containers.flatMap { container ->
-            container.DataStructures.map {
-                it.apply {
-                    it.Imports = codeContainer.Imports
-                    it.FilePath = file.absolutePath
-                }
+fun analysisByFile(file: File): List<CodeDataStruct> {
+    val codeContainer = impl.analysis(file.readContent(), file.name)
+    return codeContainer.Containers.flatMap { container ->
+        container.DataStructures.map {
+            it.apply {
+                it.Imports = codeContainer.Imports
+                it.FilePath = file.absolutePath
             }
         }
     }
+}
 }
 
 ```
@@ -307,7 +318,8 @@ code_call        // 函数调用，如 fmt.Println
 
 1. 寻找感兴趣的语言 / 添加新的语言 AST
 
-通过 TDD 的方式一点点实现下面的功能（可以考虑按顺序），参照示例见 [JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
+通过 TDD
+的方式一点点实现下面的功能（可以考虑按顺序），参照示例见 [JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
 
 1. package name
 2. import name
