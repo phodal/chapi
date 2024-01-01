@@ -4,7 +4,6 @@ import chapi.ast.antlr.RustParser
 import chapi.ast.antlr.RustParser.ItemContext
 import chapi.ast.antlr.RustParser.SimplePathContext
 import chapi.ast.antlr.RustParser.TypePathSegmentContext
-import chapi.ast.antlr.RustParser.Type_Context
 import chapi.ast.antlr.RustParserBaseListener
 import chapi.domain.core.*
 import org.antlr.v4.runtime.ParserRuleContext
@@ -162,16 +161,11 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     private fun buildFields(structFields: RustParser.StructFieldsContext?): List<CodeField> {
         return structFields?.structField()?.map {
             CodeField(
-                TypeType = lookupType(it.type_()),
+                TypeType = lookupByType(it.type_()?.text),
                 Annotations = buildAttribute(it.outerAttribute()),
                 TypeValue = it.identifier()?.text ?: "",
             )
         } ?: emptyList()
-    }
-
-    private fun lookupType(type_: Type_Context?): String {
-        val typeText = type_?.text
-        return lookupByType(typeText)
     }
 
     open fun lookupByType(typeText: String?): String {
