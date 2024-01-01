@@ -156,6 +156,10 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     private fun lookupType(type_: Type_Context?): String {
         val typeText = type_?.text
+        return lookupByType(typeText)
+    }
+
+    open fun lookupByType(typeText: String?): String {
         imports.filter { it.AsName == typeText }.forEach {
             return it.Source
         }
@@ -194,6 +198,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     override fun enterFunction_(ctx: RustParser.Function_Context?) {
         if (!isEnteredImplementation) {
+            isEnteredIndividualFunction = true
+
             val functionName = ctx!!.identifier().text
             val function = CodeFunction(
                 Name = functionName,
@@ -204,7 +210,6 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             )
 
             currentIndividualFunction = function
-            isEnteredIndividualFunction = true
         } else {
             val functionName = ctx!!.identifier().text
             val function = CodeFunction(

@@ -6,17 +6,29 @@ import chapi.domain.core.CodeProperty
 
 
 class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName) {
-    val functionInstance = if (isEnteredIndividualFunction) {
-        currentIndividualFunction
-    } else {
-        currentFunction
-    }
+    private val functionInstance
+        get() = if (isEnteredIndividualFunction) {
+            currentIndividualFunction
+        } else {
+            currentFunction
+        }
 
+    /// like: let a = 1;
     var localVars: MutableMap<String, String> = mutableMapOf()
 
     override fun enterLetStatement(ctx: RustParser.LetStatementContext?) {
         val varName = ctx?.patternNoTopAlt()?.patternWithoutRange()?.identifierPattern()?.identifier()?.text ?: ""
-        // TODO: handle type
+        when (ctx?.expression()) {
+            is RustParser.CallExpressionContext -> {
+                val functionName = ctx.expression().text
+                val split = functionName.split("::")
+                split.firstOrNull()?.let {
+                    localVars[varName] = lookupByType(it)
+                }
+            }
+        }
+
+        println("localVars: $localVars")
     }
 
     override fun enterCallExpression(ctx: RustParser.CallExpressionContext?) {

@@ -223,6 +223,6 @@ class RustFullIdentListenerTest {
         val codeDataStruct = codeContainer.DataStructures[0]
         assertEquals(1, codeDataStruct.Functions.size)
         val functionCalls = codeDataStruct.Functions[0].FunctionCalls
-//        assertEquals(2, functionCalls.size)
+        assertEquals(2, functionCalls.size)
     }
 }
