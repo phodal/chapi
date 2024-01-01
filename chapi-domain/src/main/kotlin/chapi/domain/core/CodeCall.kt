@@ -7,6 +7,7 @@ enum class CallType(val calltype: String) {
     FIELD("field"),
     LAMBDA("lambda"),
     ARROW("arrow"),
+
     // for Kotlin,
     CREATOR("creator"),
     FUNCTION("function"),
@@ -22,17 +23,24 @@ enum class CallType(val calltype: String) {
 @Serializable
 data class CodeCall(
     var Package: String = "",
-    // for Java, it can be CreatorClass, lambda
-    // for TypeScript, can be anonymous function, arrow function
+    /**
+     * for Java, it can be CreatorClass, lambda
+     * for TypeScript, can be anonymous function, arrow function
+     */
     var Type: CallType = CallType.FUNCTION,
-    // for Class/DataStruct, it's ClassName
-    // for Function, it's empty
+    /**
+     * for Class/DataStruct, it's ClassName
+     * for Function, it's empty
+     */
     var NodeName: String = "",
     var FunctionName: String = "",
     var Parameters: List<CodeProperty> = listOf(),
     var Position: CodePosition = CodePosition(),
-    // like "v1.Group", the v1 will be the Receiver
-    // since 2.0.0-Beta.9
+    /**
+     * like "v1.Group", the v1 will be the OriginNodeName
+     *
+     * @since 2.0.0-Beta.9
+    */
     var OriginNodeName: String = "",
 ) {
 

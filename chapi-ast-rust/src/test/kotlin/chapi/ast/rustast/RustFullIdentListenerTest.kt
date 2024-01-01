@@ -201,8 +201,8 @@ class RustFullIdentListenerTest {
 
         val codeContainer = RustAnalyser().analysis(code, "test.rs")
         val codeDataStruct = codeContainer.DataStructures[0]
-        assertEquals(1, codeDataStruct.Functions.size)
         val functionCalls = codeDataStruct.Functions[0].FunctionCalls
+
         assertEquals(1, functionCalls.size)
         assertEquals("Point", functionCalls[0].NodeName)
         assertEquals("new", functionCalls[0].FunctionName)
@@ -221,8 +221,11 @@ class RustFullIdentListenerTest {
 
         val codeContainer = RustAnalyser().analysis(code, "test.rs")
         val codeDataStruct = codeContainer.DataStructures[0]
-        assertEquals(1, codeDataStruct.Functions.size)
         val functionCalls = codeDataStruct.Functions[0].FunctionCalls
         assertEquals(2, functionCalls.size)
+
+        assertEquals("crate::Point", functionCalls[1].NodeName)
+        assertEquals("print", functionCalls[1].FunctionName)
+        assertEquals("p", functionCalls[1].OriginNodeName)
     }
 }

@@ -27,8 +27,6 @@ class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName
                 }
             }
         }
-
-        println("localVars: $localVars")
     }
 
     override fun enterCallExpression(ctx: RustParser.CallExpressionContext?) {
@@ -43,15 +41,23 @@ class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName
     }
 
     override fun enterMethodCallExpression(ctx: RustParser.MethodCallExpressionContext?) {
-        val functionName = ctx?.expression()?.text
-        val split = functionName?.split("::")
+        val instanceVar = ctx?.expression()?.text
+        val nodeName = localVars.getOrDefault(instanceVar ?: "", instanceVar)
+
+        val functionName = lookupFunctionName(ctx?.pathExprSegment())
+
         // todo: handle method call
         functionInstance.FunctionCalls += CodeCall(
-            Package = split?.dropLast(1)?.joinToString("::") ?: "",
-            NodeName = split?.dropLast(1)?.joinToString("::") ?: "",
-            FunctionName = split?.last() ?: "",
+            Package = nodeName ?: "",
+            NodeName = nodeName ?: "",
+            OriginNodeName = instanceVar ?: "",
+            FunctionName = functionName,
             Parameters = buildParameters(ctx?.callParams()),
         )
+    }
+
+    private fun lookupFunctionName(pathExprSegmentContext: RustParser.PathExprSegmentContext?): String {
+        return pathExprSegmentContext?.pathIdentSegment()?.identifier()?.text ?: ""
     }
 
     private fun buildParameters(callParamsContext: RustParser.CallParamsContext?) = callParamsContext?.expression()?.map {
