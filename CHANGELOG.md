@@ -1,4 +1,42 @@
-# [](https://github.com/phodal/chapi/compare/v2.1.5...v) (2023-12-28)
+# [](https://github.com/phodal/chapi/compare/v2.2.0...v) (2024-01-01)
+
+
+
+# [2.2.0](https://github.com/phodal/chapi/compare/v2.1.5...v2.2.0) (2024-01-01)
+
+
+### Features
+
+* add test support for mod ([da588ce](https://github.com/phodal/chapi/commit/da588ce43fb26cf480f78c6742fbc880148d3af2))
+* **rust:** add annotation support ([8f85256](https://github.com/phodal/chapi/commit/8f852565fec4d13641791901736131ccd58bc012))
+* **rust:** add basic validate for rocket rs framewrok ([33f52e3](https://github.com/phodal/chapi/commit/33f52e3085126e3cba1f98945f7d118676447bec))
+* **rust:** add field support ([f877803](https://github.com/phodal/chapi/commit/f87780345235249cd11be7f255f09f349ca1d82d))
+* **rust:** add for item child check ([f25a36e](https://github.com/phodal/chapi/commit/f25a36e5c5dedc892ecd0779874cb4043ff1f9e7))
+* **rust:** add function parameter support ([e9f38e3](https://github.com/phodal/chapi/commit/e9f38e3a8071806b820c8555d661110aa2aa7624))
+* **rust:** add lookup type support ([37b6c42](https://github.com/phodal/chapi/commit/37b6c425d22383900031d202b781dfd76acfe8fe))
+* **rust:** add process for function call ([ca96312](https://github.com/phodal/chapi/commit/ca9631287b2fbe8fa143631d7861182eff5db4d7))
+* **rust:** add process for function parameter ([c34b9bf](https://github.com/phodal/chapi/commit/c34b9bf523095dbfb520134c2c5d8d3ecdd35ce2))
+* **rust:** add return type support ([abdeca1](https://github.com/phodal/chapi/commit/abdeca11cdc73ae86716ff6bff8c61db30ca1db0))
+* **rust:** add support for better type in impl ([870f28f](https://github.com/phodal/chapi/commit/870f28f66c93d9300a2eb48d63c7b01519982dba))
+* **rust:** add support for function in impl ([df935cd](https://github.com/phodal/chapi/commit/df935cd180ce1edde3243c3e6d1b85cdcf06dd61))
+* **rust:** add use decl support ([5641a8f](https://github.com/phodal/chapi/commit/5641a8fa47e8c3af59391b04ed2df7b2c6cfaff5))
+* **rust:** align for lookup by type logic ([ce12c63](https://github.com/phodal/chapi/commit/ce12c63214d2de02e5b46c54aa83715dae42f4f4))
+* **rust:** align to latest syntax ([363f7b7](https://github.com/phodal/chapi/commit/363f7b755beba25a391a7b9d7df965b93a2643f8))
+* **rust:** align to same logic to Kotlin for struct, so that we can make with default structure ([4593dd1](https://github.com/phodal/chapi/commit/4593dd120dbca7dd914c5396654b6d5edf6b4018))
+* **rust:** fix for crash ([28d0078](https://github.com/phodal/chapi/commit/28d00786ecdb7a1e47e290f427c7a3e6345dd0d5))
+* **rust:** fix for lost structures ([114d93b](https://github.com/phodal/chapi/commit/114d93b75d02957fb050bf4b0924154bd8c9facc))
+* **rust:** fix individual function lost function calls issue ([2503fc9](https://github.com/phodal/chapi/commit/2503fc9ef33f87863fe4b5d03315e6081d165985))
+* **rust:** init for enum class support ([76eab2e](https://github.com/phodal/chapi/commit/76eab2eb0df0b711d661c5228b3177b82e188c2a))
+* **rust:** make default structure works ([1b046c7](https://github.com/phodal/chapi/commit/1b046c7c653ccd865fb01d4f1a3da65675aa3222))
+* **rust:** make package name works ([a367a0d](https://github.com/phodal/chapi/commit/a367a0d80e31b22d3c76ec24fd8ef46e1bbcbdef))
+* **rust:** make parse first function call works ([495e860](https://github.com/phodal/chapi/commit/495e8609acbcaec9c55ee8bc8ff09ac40ba0e6cb))
+* **rust:** make pass for first function calls ([6e70eac](https://github.com/phodal/chapi/commit/6e70eac4c069126f328e656b8d45acd05c8d29d0))
+* **rust:** make return type works ([8132dc7](https://github.com/phodal/chapi/commit/8132dc78ab1bafc9a5dc2ffcc897a87be8476dac))
+
+
+### Reverts
+
+* Revert "refactor(rust): simplify logic" ([ebeb903](https://github.com/phodal/chapi/commit/ebeb90365350ce9aa6021b2105f6d615bd70e7a7))
 
 
 
