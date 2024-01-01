@@ -188,17 +188,36 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 it.identifier().text
             }?.joinToString(".") ?: ""
 
-            val keyValues = attributeContext.attr()
+            val keyValues: List<AnnotationKeyValue> = attributeContext.attr()
                 ?.attrInput()
                 ?.delimTokenTree()?.tokenTree()
                 ?.mapNotNull {
-                    it.tokenTreeToken()
-                        .mapNotNull { token -> token.macroIdentifierLikeToken() }
-                        .map { tokenContext ->
-                            AnnotationKeyValue(
-                                Key = tokenContext.identifier().text,
-                                Value = tokenContext.identifier().text
-                            )
+                    val tokenTreeToken = it.tokenTreeToken()
+                    tokenTreeToken
+                        .mapIndexedNotNull { index, context ->
+                            val child = context.children.firstOrNull()
+                            when (child) {
+                                is RustParser.MacroIdentifierLikeTokenContext -> {
+                                    /// if next is equal, it means it's a key-value pair
+                                    var value = child.identifier()?.text ?: ""
+                                    val hasNext = tokenTreeToken.getOrNull(index + 1)?.children?.firstOrNull()
+                                    if (hasNext is RustParser.MacroPunctuationTokenContext) {
+                                        if (hasNext.text == "=") {
+                                            value = tokenTreeToken.getOrNull(index + 2)?.text ?: ""
+                                        }
+                                    }
+
+                                    AnnotationKeyValue(
+                                        Key = child.identifier().text,
+                                        Value = value
+                                    )
+                                }
+
+                                else -> {
+                                    println("child: ${context.javaClass}")
+                                    null
+                                }
+                            }
                         }
                 }?.flatten() ?: listOf()
 
@@ -214,6 +233,12 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     }
 
     override fun enterFunction_(ctx: RustParser.Function_Context?) {
+        val item = ctx?.parent?.parent
+        var annotations: MutableList<CodeAnnotation> = mutableListOf()
+        if (item is ItemContext) {
+            annotations = buildAttribute(item.outerAttribute())
+        }
+
         if (!isEnteredImplementation) {
             isEnteredIndividualFunction = true
 
@@ -224,6 +249,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 Position = buildPosition(ctx),
                 Parameters = buildParameters(ctx.functionParameters()),
                 ReturnType = buildReturnType(ctx.functionReturnType()),
+                Annotations = annotations
             )
 
             currentIndividualFunction = function
@@ -233,7 +259,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 Name = functionName,
                 Package = codeContainer.PackageName,
                 Position = buildPosition(ctx),
-                Parameters = buildParameters(ctx.functionParameters())
+                Parameters = buildParameters(ctx.functionParameters()),
+                Annotations = annotations
             )
 
             currentFunction = function

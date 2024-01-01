@@ -1,7 +1,5 @@
 package chapi.ast.rustast
 
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -286,4 +284,32 @@ class RustFullIdentListenerTest {
         assertEquals("read", functionCalls[1].FunctionName)
         assertEquals("", functionCalls[1].OriginNodeName)
     }
+
+    @Test
+    fun should_process_function_outer_attribute() {
+        val code = """
+            #[test]
+            #[cfg_attr(feature = "ci", ignore)]
+            fn test_init_semantic() {
+
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        val annotations = codeDataStruct.Functions[0].Annotations
+
+        assertEquals(2, annotations.size)
+        assertEquals("test", annotations[0].Name)
+
+        assertEquals("cfg_attr", annotations[1].Name)
+        assertEquals(2, annotations[1].KeyValues.size)
+        assertEquals("feature", annotations[1].KeyValues[0].Key)
+        assertEquals("\"ci\"", annotations[1].KeyValues[0].Value)
+
+        assertEquals("ignore", annotations[1].KeyValues[1].Value)
+    }
+
+
+    // Enum type
 }
