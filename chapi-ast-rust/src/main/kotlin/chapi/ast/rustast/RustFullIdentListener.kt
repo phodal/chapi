@@ -38,8 +38,12 @@ class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName
     }
 
     override fun enterMethodCallExpression(ctx: RustParser.MethodCallExpressionContext?) {
-        val instanceVar = ctx?.expression()?.text
-        val nodeName = localVars.getOrDefault(instanceVar ?: "", instanceVar)
+        var instanceVar = ctx?.expression()?.text ?: ""
+        if (instanceVar.contains("(") && instanceVar.contains(")")) {
+            instanceVar = instanceVar.substringBefore("(")
+        }
+
+        val nodeName = localVars.getOrDefault(instanceVar, instanceVar)
 
         val functionName = lookupFunctionName(ctx?.pathExprSegment())
 

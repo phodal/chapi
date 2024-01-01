@@ -1,5 +1,7 @@
 package chapi.ast.rustast
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -229,7 +231,6 @@ class RustFullIdentListenerTest {
         assertEquals("p", functionCalls[1].OriginNodeName)
     }
 
-    // self function call, like self.print();
     @Test
     fun should_identify_self_function_call() {
         val code = """
@@ -249,5 +250,40 @@ class RustFullIdentListenerTest {
         assertEquals("String", functionCalls[1].NodeName)
         assertEquals("clone", functionCalls[1].FunctionName)
         assertEquals("id", functionCalls[1].OriginNodeName)
+    }
+
+    @Test
+    fun should_handle_system_func() {
+        val code = """
+            use std::sync::Arc;
+
+            pub use embedding::Semantic;
+            pub use embedding::semantic::SemanticError;
+
+            pub fn init_semantic_with_path(model_path: &str, tokenizer_path: &str) -> Result<Arc<Semantic>, SemanticError> {
+                let model = std::fs::read(model_path).map_err(|_| SemanticError::InitModelReadError)?;
+                let tokenizer_data = std::fs::read(tokenizer_path).map_err(|_| SemanticError::InitTokenizerReadError)?;
+            
+                let result = Semantic::init_semantic(model, tokenizer_data)?;
+                Ok(Arc::new(result))
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        val functionCalls = codeDataStruct.Functions[0].FunctionCalls
+        assertEquals(7, functionCalls.size)
+
+        functionCalls.map {
+            println("${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}")
+        }
+
+        assertEquals("std::fs::read", functionCalls[0].NodeName)
+        assertEquals("map_err", functionCalls[0].FunctionName)
+        assertEquals("std::fs::read", functionCalls[0].OriginNodeName)
+
+        assertEquals("std::fs", functionCalls[1].NodeName)
+        assertEquals("read", functionCalls[1].FunctionName)
+        assertEquals("", functionCalls[1].OriginNodeName)
     }
 }
