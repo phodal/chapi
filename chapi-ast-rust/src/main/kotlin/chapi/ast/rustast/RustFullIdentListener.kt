@@ -13,9 +13,6 @@ class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName
             currentFunction
         }
 
-    /// like: let a = 1;
-    var localVars: MutableMap<String, String> = mutableMapOf()
-
     override fun enterLetStatement(ctx: RustParser.LetStatementContext?) {
         val varName = ctx?.patternNoTopAlt()?.patternWithoutRange()?.identifierPattern()?.identifier()?.text ?: ""
         when (ctx?.expression()) {

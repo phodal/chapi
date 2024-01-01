@@ -228,4 +228,26 @@ class RustFullIdentListenerTest {
         assertEquals("print", functionCalls[1].FunctionName)
         assertEquals("p", functionCalls[1].OriginNodeName)
     }
+
+    // self function call, like self.print();
+    @Test
+    fun should_identify_self_function_call() {
+        val code = """
+            use crate::{Document, Embedding};
+            
+            pub fn add(id: String, embedding: Embedding, document: Document) -> String {
+                let entry = Entry::new(id.clone(), embedding, document);
+                id
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "test.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        val functionCalls = codeDataStruct.Functions[0].FunctionCalls
+        assertEquals(2, functionCalls.size)
+
+        assertEquals("String", functionCalls[1].NodeName)
+        assertEquals("clone", functionCalls[1].FunctionName)
+        assertEquals("id", functionCalls[1].OriginNodeName)
+    }
 }

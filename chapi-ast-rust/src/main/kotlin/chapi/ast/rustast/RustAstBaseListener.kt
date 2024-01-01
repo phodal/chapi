@@ -29,6 +29,10 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     private var structMap = mutableMapOf<String, CodeDataStruct>()
 
+
+    /// like: let a = 1;
+    var localVars: MutableMap<String, String> = mutableMapOf()
+
     /**
      * packageName will parse from fileName, like:
      * - "src/main.rs" -> "main"
@@ -221,6 +225,13 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
             currentFunction = function
         }
+
+        localVars += ctx.functionParameters()?.functionParam()?.map {
+            val functionParamPattern = it.functionParamPattern()
+            val varName = functionParamPattern.pattern()?.text ?: ""
+            val varType = functionParamPattern.type_()?.text ?: ""
+            varName to varType
+        }?.toMap() ?: mapOf()
     }
 
     open fun buildReturnType(functionReturnType: RustParser.FunctionReturnTypeContext?): String {
@@ -246,6 +257,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         } else {
             currentNode.Functions += currentFunction
         }
+
+        localVars.clear()
     }
 
     override fun enterImplementation(ctx: RustParser.ImplementationContext?) {
