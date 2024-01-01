@@ -10,13 +10,11 @@
 > language source code into a unified abstract model, simplifying cross-language development. Chapi
 > 是一个通用通用层次抽象解析器与信息转换器，它可以将不同编程语言的源代码转换为统一的层次抽象模型。一个通用语言元信息转换器，能将不同语言转换为相同的模型。
 
-Chapi means [Common Hierarchical Abstract Parser && Information]
-
 Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in
 refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/).
 Chapi (pronoounce /paɪ/) also pronounce XP in Chinese, if you always call X in 叉.
 
-Languages Stages (Welcome to PR your usage languages)
+Language Stages
 
 | Features      | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
 |---------------|------|--------|----|--------|-------|----|----|-------|-----|------|
@@ -62,6 +60,16 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript      |
 | Other      | Fortran, Swift, Matlab, ...                   | Swift?, Fortran?        |
 
+## Usecases
+
+PS: welcome to PR to send your projects
+
+- [Chapi-TBS](https://github.com/phodal/chapi-tbs) a simple example with Chapi to Analysis Java project's bad smell.
+- [ArchGuard Scanner](https://github.com/archguard/scanner) - ArchGuard 内嵌的各类扫描器，如 Jacoco, Git, Java 源码、Java
+  bytecode, TypeScript 扫描器。
+- [Unit Eval](https://github.com/unit-mesh/unit-eval) is a code fine-tuning data framework that generates data from your
+  existing codebase.
+
 ## Specify Rule
 
 **scan by twice**. In order to success get:
@@ -85,19 +93,6 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 ### Kotlin
 
 - need to implementation `warpTargetFullType` to got Class in same package.
-
-## Todo
-
-- [x] split Chapi CLI application
-- [ ] .gitignore support with [klob](https://github.com/shyiko/klob) in CLI
-
-## Chapi-base projects
-
-PS: welcome to PR to send your projects
-
-- [Chapi-TBS](https://github.com/phodal/chapi-tbs) a simple example with Chapi to Analysis Java project's bad smell.
-- [ArchGuard Scanner](https://github.com/archguard/scanner) - ArchGuard 内嵌的各类扫描器，如 Jacoco, Git, Java 源码、Java
-  bytecode, TypeScript 扫描器。
 
 ## Usage
 
