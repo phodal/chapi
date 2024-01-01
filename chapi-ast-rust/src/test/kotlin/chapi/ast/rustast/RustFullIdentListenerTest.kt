@@ -412,7 +412,7 @@ class RustFullIdentListenerTest {
 
         val secondFunction = codeDataStruct.Functions[1]
         assertEquals("main", secondFunction.Name)
-//        assertEquals("std::io::Result", secondFunction.ReturnType)
+        assertEquals("std::io::Result", secondFunction.ReturnType)
         assertEquals(9, secondFunction.FunctionCalls.size)
         secondFunction.FunctionCalls.map {
             println("${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}")

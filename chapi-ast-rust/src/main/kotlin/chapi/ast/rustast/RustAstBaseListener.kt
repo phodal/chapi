@@ -333,7 +333,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     }
 
     open fun buildReturnType(functionReturnType: RustParser.FunctionReturnTypeContext?): String {
-        return functionReturnType?.type_()?.text ?: ""
+        val typeContext: Type_Context? = functionReturnType?.type_()
+        return lookupType(typeContext)
     }
 
     open fun buildParameters(functionParameters: RustParser.FunctionParametersContext?): List<CodeProperty> {
