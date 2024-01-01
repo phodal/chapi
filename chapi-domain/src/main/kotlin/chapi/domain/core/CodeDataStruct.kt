@@ -27,6 +27,7 @@ data class CodeDataStruct(
      * for Rust, if is a variable, function, it will be naming to `default`
      */
     var NodeName: String = "",
+    //
     var Module: String = "",
     var Type: DataStructType = DataStructType.EMPTY,
     var Package: String = "",

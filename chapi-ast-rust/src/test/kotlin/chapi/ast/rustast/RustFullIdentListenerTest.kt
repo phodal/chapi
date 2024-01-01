@@ -421,4 +421,23 @@ class RustFullIdentListenerTest {
         assertEquals("actix_web::HttpServer", secondFunction.FunctionCalls[0].NodeName)
         assertEquals("run", secondFunction.FunctionCalls[0].FunctionName)
     }
+
+    @Test
+    fun should_handle_test_mod() {
+        val code = """
+            #[cfg(test)]
+            mod tests {
+                use super::*;
+            
+                #[test]
+                fn test_add() {
+                    assert_eq!(add(1, 2), 3);
+                }
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        assertEquals("tests", codeDataStruct.Module)
+    }
 }

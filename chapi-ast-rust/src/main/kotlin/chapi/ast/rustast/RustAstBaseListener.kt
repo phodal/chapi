@@ -29,6 +29,10 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     private var structMap = mutableMapOf<String, CodeDataStruct>()
 
+    private var currentModule: String = ""
+    /// for testing
+    private var lastModule: String = ""
+
 
     /**
      * localVars will store all local variables in the current scope
@@ -80,6 +84,15 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         val allStruct = structMap.values
         DataStructures = (buildDedicatedStructs() + allStruct)
         Imports = imports
+    }
+
+    override fun enterModule(ctx: RustParser.ModuleContext?) {
+        currentModule = (ctx?.identifier()?.text ?: return)
+    }
+
+    override fun exitModule(ctx: RustParser.ModuleContext?) {
+        lastModule = currentModule
+        currentModule = ""
     }
 
     override fun enterUseDeclaration(ctx: RustParser.UseDeclarationContext?) {
@@ -150,6 +163,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
         val codeStruct = CodeDataStruct(
             NodeName = structName,
+            Module = currentModule,
             Package = codeContainer.PackageName,
             Annotations = annotation,
             Fields = buildFields(ctx.structFields()),
@@ -270,6 +284,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
         val codeStruct = CodeDataStruct(
             NodeName = enumName,
+            Module = currentModule,
             Package = codeContainer.PackageName,
             Annotations = annotation,
             Fields = buildEnumFields(ctx.enumItems()),
@@ -367,6 +382,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         } else {
             currentNode = CodeDataStruct(
                 NodeName = nodeName,
+                Module = currentModule,
                 Package = codeContainer.PackageName,
                 Position = buildPosition(ctx ?: return)
             )
@@ -417,6 +433,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         return listOf(
             CodeDataStruct().apply {
                 NodeName = fileName.substringBeforeLast('.')
+                Module = if (lastModule == "tests") lastModule else ""
                 Type = DataStructType.OBJECT
                 Package = codeContainer.PackageName
                 FilePath = codeContainer.FullName
