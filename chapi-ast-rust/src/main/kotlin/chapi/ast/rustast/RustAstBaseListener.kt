@@ -30,6 +30,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     private var structMap = mutableMapOf<String, CodeDataStruct>()
 
     private var currentModule: String = ""
+
     /// for testing
     private var lastModule: String = ""
 
@@ -184,8 +185,11 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     }
 
     private fun lookupType(type_: Type_Context?): String {
-        val typeText = type_?.text
-        return lookupByType(typeText)
+        val typePath = pathSegmentContexts(type_)?.mapNotNull {
+            it.pathIdentSegment()?.identifier()?.text
+        }?.joinToString("::") ?: type_?.text
+
+        return lookupByType(typePath)
     }
 
     open fun lookupByType(typeText: String?): String {
@@ -399,19 +403,21 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             else -> emptyList()
         }
 
-        val typePathSegment: List<TypePathSegmentContext>? = types.firstOrNull()
-            ?.typeNoBounds()
-            ?.traitObjectTypeOneBound()
-            ?.traitBound()
-            ?.typePath()
-            ?.typePathSegment()
+        val typeContext = types.firstOrNull()
 
-        val pathIdentSegmentContext = typePathSegment?.map {
+        val pathIdentSegmentContext = pathSegmentContexts(typeContext)?.map {
             it.pathIdentSegment()
         }?.firstOrNull()
 
         return pathIdentSegmentContext?.identifier()?.text ?: return ""
     }
+
+    private fun pathSegmentContexts(typeContext: Type_Context?): MutableList<TypePathSegmentContext>? = typeContext
+        ?.typeNoBounds()
+        ?.traitObjectTypeOneBound()
+        ?.traitBound()
+        ?.typePath()
+        ?.typePathSegment()
 
     override fun exitImplementation(ctx: RustParser.ImplementationContext?) {
         isEnteredImplementation = false
