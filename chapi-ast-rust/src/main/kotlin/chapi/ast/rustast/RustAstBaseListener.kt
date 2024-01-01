@@ -221,6 +221,12 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                         Value = value
                     )
                 }
+                is RustParser.MacroLiteralTokenContext -> {
+                    AnnotationKeyValue(
+                        Key = child.text,
+                        Value = child.text
+                    )
+                }
 
                 else -> {
                     null

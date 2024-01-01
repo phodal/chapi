@@ -339,4 +339,37 @@ class RustFullIdentListenerTest {
 
         assertEquals("CmykColor", codeDataStruct.Fields[4].TypeValue)
     }
+
+    @Test
+    fun should_identify_rocket_rs_url() {
+        val code = """
+            #[macro_use] extern crate rocket;
+
+            #[get("/hello/<name>/<age>")]
+            fn hello(name: &str, age: u8) -> String {
+                format!("Hello, {} year old named {}!", age, name)
+            }
+            
+            #[launch]
+            fn rocket() -> _ {
+                rocket::build().mount("/", routes![hello])
+            }
+            """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        val firstFunction = codeDataStruct.Functions[0]
+        // annotation
+        assertEquals(1, firstFunction.Annotations.size)
+        assertEquals("get", firstFunction.Annotations[0].Name)
+
+        assertEquals(1, firstFunction.Annotations[0].KeyValues.size)
+        assertEquals("\"/hello/<name>/<age>\"", firstFunction.Annotations[0].KeyValues[0].Value)
+
+        val secondFunction = codeDataStruct.Functions[1]
+        assertEquals("rocket", secondFunction.Name)
+        assertEquals("_", secondFunction.ReturnType)
+        assertEquals(2, secondFunction.FunctionCalls.size)
+        assertEquals("rocket::build", secondFunction.FunctionCalls[0].NodeName)
+    }
 }

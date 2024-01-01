@@ -19,7 +19,7 @@ Languages Stages (Welcome to PR your usage languages)
 | http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       |     |      |
 | syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | 🆕 | 🆕 | ✅     | 🆕  | 🆕   |
 | function call | ✅    | 🆕     | 🆕 | 🆕     | ✅     |    |    |       |     | 🆕   |
-| arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     |     |      |
+| arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     |     | 🆕   |
 | real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
 
 language versions（tested）: 
