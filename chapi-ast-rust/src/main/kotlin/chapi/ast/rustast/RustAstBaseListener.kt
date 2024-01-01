@@ -192,33 +192,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 ?.attrInput()
                 ?.delimTokenTree()?.tokenTree()
                 ?.mapNotNull {
-                    val tokenTreeToken = it.tokenTreeToken()
-                    tokenTreeToken
-                        .mapIndexedNotNull { index, context ->
-                            val child = context.children.firstOrNull()
-                            when (child) {
-                                is RustParser.MacroIdentifierLikeTokenContext -> {
-                                    /// if next is equal, it means it's a key-value pair
-                                    var value = child.identifier()?.text ?: ""
-                                    val hasNext = tokenTreeToken.getOrNull(index + 1)?.children?.firstOrNull()
-                                    if (hasNext is RustParser.MacroPunctuationTokenContext) {
-                                        if (hasNext.text == "=") {
-                                            value = tokenTreeToken.getOrNull(index + 2)?.text ?: ""
-                                        }
-                                    }
-
-                                    AnnotationKeyValue(
-                                        Key = child.identifier().text,
-                                        Value = value
-                                    )
-                                }
-
-                                else -> {
-                                    println("child: ${context.javaClass}")
-                                    null
-                                }
-                            }
-                        }
+                    processAnnotationKeyValues(it)
                 }?.flatten() ?: listOf()
 
             CodeAnnotation(
@@ -226,6 +200,33 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 KeyValues = keyValues
             )
         }.toMutableList()
+    }
+
+    private fun processAnnotationKeyValues(it: RustParser.TokenTreeContext): List<AnnotationKeyValue> {
+        val tokenTreeToken = it.tokenTreeToken()
+        return tokenTreeToken.mapIndexedNotNull { index, context ->
+            when (val child = context.children.firstOrNull()) {
+                is RustParser.MacroIdentifierLikeTokenContext -> {
+                    /// if next is equal, it means it's a key-value pair
+                    var value = child.identifier()?.text ?: ""
+                    val hasNext = tokenTreeToken.getOrNull(index + 1)?.children?.firstOrNull()
+                    if (hasNext is RustParser.MacroPunctuationTokenContext) {
+                        if (hasNext.text == "=") {
+                            value = tokenTreeToken.getOrNull(index + 2)?.text ?: ""
+                        }
+                    }
+
+                    AnnotationKeyValue(
+                        Key = child.identifier().text,
+                        Value = value
+                    )
+                }
+
+                else -> {
+                    null
+                }
+            }
+        }
     }
 
     override fun exitStructStruct(ctx: RustParser.StructStructContext?) {
