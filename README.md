@@ -8,19 +8,19 @@
 
 > CHAPI (Common Hierarchical Abstract Parser and Information Converter) streamlines code analysis by converting diverse
 > language source code into a unified abstract model, simplifying cross-language development. Chapi
-> 是一个通用通用层次抽象解析器与信息转换器，它可以将不同编程语言的源代码转换为统一的层次抽象模型。一个通用语言元信息转换器，能将不同语言转换为相同的模型。
+> 是一个通用层次抽象解析器与信息转换器，它可以将不同编程语言的源代码转换为统一的层次抽象模型。一个通用语言元信息转换器，能将不同语言转换为相同的模型。
 
 Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in
 refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/).
 Chapi (pronoounce /paɪ/) also pronounce XP in Chinese, if you always call X in 叉.
 
-Language Stages
+language stages:
 
 | Features      | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
 |---------------|------|--------|----|--------|-------|----|----|-------|-----|------|
-| http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       |     |      |
-| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | 🆕 | 🆕 | ✅     | 🆕  | 🆕   |
-| function call | ✅    | 🆕     | 🆕 | 🆕     | ✅     |    |    |       |     | 🆕   |
+| http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       |     | 🆕   |
+| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | 🆕 | 🆕 | ✅     | 🆕  | ✅    |
+| function call | ✅    | 🆕     | 🆕 | ✅      | ✅     |    |    |       |     | ✅    |
 | arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     |     | 🆕   |
 | real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
 
