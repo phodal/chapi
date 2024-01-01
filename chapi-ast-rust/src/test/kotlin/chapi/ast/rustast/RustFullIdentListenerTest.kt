@@ -1,5 +1,6 @@
 package chapi.ast.rustast
 
+import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -312,4 +313,30 @@ class RustFullIdentListenerTest {
 
 
     // Enum type
+    @Test
+    fun should_process_enum_type() {
+        val code = """
+            enum Color {
+                Red,
+                Green,
+                Blue,
+                RgbColor(u8, u8, u8), // tuple
+                CmykColor { cyan: u8, magenta: u8, yellow: u8, black: u8 }, // struct
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+
+        assertEquals(DataStructType.ENUM, codeDataStruct.Type)
+        assertEquals(5, codeDataStruct.Fields.size)
+
+        assertEquals("Red", codeDataStruct.Fields[0].TypeValue)
+        assertEquals("Green", codeDataStruct.Fields[1].TypeValue)
+        assertEquals("Blue", codeDataStruct.Fields[2].TypeValue)
+        assertEquals("RgbColor", codeDataStruct.Fields[3].TypeValue)
+        assertEquals("", codeDataStruct.Fields[4].TypeType)
+
+        assertEquals("CmykColor", codeDataStruct.Fields[4].TypeValue)
+    }
 }

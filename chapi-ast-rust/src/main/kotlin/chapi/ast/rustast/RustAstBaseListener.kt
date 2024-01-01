@@ -233,6 +233,37 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     }
 
+    override fun enterEnumeration(ctx: RustParser.EnumerationContext?) {
+        val enumName = ctx?.identifier()?.text ?: return
+
+        val item = ctx.parent?.parent?.parent
+        var annotation: MutableList<CodeAnnotation> = mutableListOf()
+        if (item is ItemContext) {
+            annotation = buildAttribute(item.outerAttribute())
+        }
+
+        val codeStruct = CodeDataStruct(
+            NodeName = enumName,
+            Package = codeContainer.PackageName,
+            Annotations = annotation,
+            Fields = buildEnumFields(ctx.enumItems()),
+            Position = buildPosition(ctx ?: return),
+            Type = DataStructType.ENUM
+        )
+
+        structMap[enumName] = codeStruct
+    }
+
+    private fun buildEnumFields(enumItems: RustParser.EnumItemsContext?): List<CodeField> {
+        return enumItems?.enumItem()?.map {
+            CodeField(
+                TypeType = it.enumItemTuple()?.text ?: "",
+                Annotations = buildAttribute(it.outerAttribute()),
+                TypeValue = it.identifier()?.text ?: "",
+            )
+        } ?: emptyList()
+    }
+
     override fun enterFunction_(ctx: RustParser.Function_Context?) {
         val item = ctx?.parent?.parent
         var annotations: MutableList<CodeAnnotation> = mutableListOf()

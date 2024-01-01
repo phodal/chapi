@@ -17,7 +17,7 @@ enum class DataStructType(val structType: String) {
     ABSTRACT_CLASS("AbstractClass"),
     // for scala, Rust
     TRAIT("Trait"),
-    ENUM("enum")
+    ENUM("Enum")
 }
 
 @Serializable
