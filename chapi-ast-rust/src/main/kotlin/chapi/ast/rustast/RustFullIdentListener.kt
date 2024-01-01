@@ -5,7 +5,7 @@ import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeProperty
 
 
-class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName) {
+class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
     private val functionInstance
         get() = if (isEnteredIndividualFunction) {
             currentIndividualFunction
@@ -34,6 +34,7 @@ class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName
             NodeName = split?.dropLast(1)?.joinToString("::") ?: "",
             FunctionName = split?.last() ?: "",
             Parameters = buildParameters(ctx?.callParams()),
+            Position = buildPosition(ctx ?: return)
         )
     }
 
@@ -54,6 +55,7 @@ class RustFullIdentListener(val fileName: String) : RustAstBaseListener(fileName
             OriginNodeName = instanceVar ?: "",
             FunctionName = functionName,
             Parameters = buildParameters(ctx?.callParams()),
+            Position = buildPosition(ctx ?: return)
         )
     }
 

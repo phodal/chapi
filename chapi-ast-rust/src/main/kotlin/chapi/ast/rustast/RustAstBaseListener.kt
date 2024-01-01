@@ -15,11 +15,11 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     private val LIB_RS = "lib.rs"
     private val MAIN_RS = "main.rs"
 
-    protected val codeContainer: CodeContainer = CodeContainer(FullName = fileName, PackageName = packageName)
-    protected val imports: MutableList<CodeImport> = mutableListOf()
-    protected var currentNode: CodeDataStruct = CodeDataStruct()
+    private val codeContainer: CodeContainer = CodeContainer(FullName = fileName, PackageName = packageName)
+    private val imports: MutableList<CodeImport> = mutableListOf()
+    private var currentNode: CodeDataStruct = CodeDataStruct()
     protected open var currentFunction: CodeFunction = CodeFunction()
-    protected var isEnteredImplementation: Boolean = false
+    private var isEnteredImplementation: Boolean = false
     protected var isEnteredIndividualFunction: Boolean = false
 
     protected lateinit var currentIndividualFunction: CodeFunction
@@ -30,7 +30,11 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     private var structMap = mutableMapOf<String, CodeDataStruct>()
 
 
-    /// like: let a = 1;
+    /**
+     * localVars will store all local variables in the current scope
+     * - let statements: let a = 1;
+     * - function parameters: fn test(a: i32) {}
+     */
     var localVars: MutableMap<String, String> = mutableMapOf()
 
     /**
@@ -93,6 +97,12 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         }
     }
 
+    /**
+     * Builds a list of paths based on the given `UseDeclarationContext`.
+     *
+     * @param ctx The `UseDeclarationContext` representing the use declaration.
+     * @return A list of paths, where each path is represented as a list of strings.
+     */
     private fun buildToPath(ctx: RustParser.UseDeclarationContext?): List<List<String>> {
         val simplePath = ctx?.useTree()?.simplePath()
         val useTree = ctx?.useTree()?.useTree() ?: emptyList()
@@ -142,7 +152,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             NodeName = structName,
             Package = codeContainer.PackageName,
             Annotations = annotation,
-            Fields = buildFields(ctx.structFields())
+            Fields = buildFields(ctx.structFields()),
+            Position = buildPosition(ctx ?: return)
         )
 
         structMap[structName] = codeStruct
@@ -153,7 +164,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             CodeField(
                 TypeType = lookupType(it.type_()),
                 Annotations = buildAttribute(it.outerAttribute()),
-                TypeValue = it.identifier()?.text ?: ""
+                TypeValue = it.identifier()?.text ?: "",
             )
         } ?: emptyList()
     }
@@ -212,7 +223,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 Package = codeContainer.PackageName,
                 Position = buildPosition(ctx),
                 Parameters = buildParameters(ctx.functionParameters()),
-                ReturnType = buildReturnType(ctx.functionReturnType())
+                ReturnType = buildReturnType(ctx.functionReturnType()),
             )
 
             currentIndividualFunction = function
@@ -305,13 +316,13 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         structMap[currentNode.NodeName] = currentNode
     }
 
-    private fun buildPosition(ctx: ParserRuleContext): CodePosition {
-        val position = CodePosition()
-        position.StartLine = ctx.start.line
-        position.StartLinePosition = ctx.start.charPositionInLine
-        position.StopLine = ctx.stop.line
-        position.StopLinePosition = ctx.stop.charPositionInLine
-        return position
+    fun buildPosition(ctx: ParserRuleContext): CodePosition {
+        return CodePosition(
+            StartLine = ctx.start.line,
+            StartLinePosition = ctx.start.charPositionInLine,
+            StopLine = ctx.stop.line,
+            StopLinePosition = ctx.stop.charPositionInLine
+        )
     }
 
     private fun buildDedicatedStructs(): List<CodeDataStruct> {
