@@ -35,9 +35,8 @@ internal class RustAnalyserTest {
         }
     }
 
-
     @Test
-    fun analysis() {
+    fun should_success_build_main_position() {
         val str = """
             fn main() {
                 println!("Hello, world!");
@@ -48,7 +47,29 @@ internal class RustAnalyserTest {
         val dataStructures = codeContainer.DataStructures
         assertEquals(dataStructures.size, 1)
         assertEquals(dataStructures[0].NodeName, "main")
-        assertEquals(dataStructures[0].Functions[0].Name, "main")
+        val position = dataStructures[0].Functions[0].Position
+
+        assertEquals(position.StartLine, 1)
+        assertEquals(position.StopLine, 3)
+    }
+
+    @Test
+    fun should_build_structure_position() {
+        val str = """
+            pub struct Point {
+                x: i32,
+                y: i32,
+            }
+        """.trimIndent()
+
+        val codeContainer = rustAnalyser.analysis(str, "main.rs")
+        val dataStructures = codeContainer.DataStructures
+        assertEquals(dataStructures.size, 1)
+        assertEquals(dataStructures[0].NodeName, "Point")
+        val position = dataStructures[0].Position
+
+        assertEquals(position.StartLine, 1)
+        assertEquals(position.StopLine, 4)
     }
 
     @Test

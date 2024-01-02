@@ -168,7 +168,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             Package = codeContainer.PackageName,
             Annotations = annotation,
             Fields = buildFields(ctx.structFields()),
-            Position = buildPosition(ctx ?: return)
+            Position = buildPosition(ctx)
         )
 
         structMap[structName] = codeStruct
@@ -184,10 +184,10 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         } ?: emptyList()
     }
 
-    private fun lookupType(type_: Type_Context?): String {
-        val typePath = pathSegmentContexts(type_)?.mapNotNull {
+    private fun lookupType(context: Type_Context?): String {
+        val typePath = pathSegmentContexts(context)?.mapNotNull {
             it.pathIdentSegment()?.identifier()?.text
-        }?.joinToString("::") ?: type_?.text
+        }?.joinToString("::") ?: context?.text
 
         return lookupByType(typePath)
     }
@@ -214,9 +214,9 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     private fun buildAttribute(outerAttribute: List<RustParser.OuterAttributeContext>): MutableList<CodeAnnotation> {
         return outerAttribute.map { attributeContext ->
-            val annotationName = attributeContext.attr()?.simplePath()?.simplePathSegment()?.filter { it.identifier() != null }?.map {
+            val annotationName = attributeContext.attr()?.simplePath()?.simplePathSegment()?.filter { it.identifier() != null }?.joinToString(".") {
                 it.identifier().text
-            }?.joinToString(".") ?: ""
+            } ?: ""
 
             val keyValues: List<AnnotationKeyValue> = attributeContext.attr()
                 ?.attrInput()
@@ -234,7 +234,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     private fun processAnnotationKeyValues(it: RustParser.TokenTreeContext): List<AnnotationKeyValue> {
         val tokenTreeToken = it.tokenTreeToken()
-        val skipedIndex: MutableList<Int> = mutableListOf()
+        val skippedIndex: MutableList<Int> = mutableListOf()
 
         return tokenTreeToken.mapIndexedNotNull { index, context ->
             when (val child = context.children.firstOrNull()) {
@@ -244,7 +244,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                     val hasNext = tokenTreeToken.getOrNull(index + 1)?.children?.firstOrNull()
                     if (hasNext is RustParser.MacroPunctuationTokenContext) {
                         if (hasNext.text == "=") {
-                            skipedIndex.add(index + 2)
+                            skippedIndex.add(index + 2)
                             value = tokenTreeToken.getOrNull(index + 2)?.text ?: ""
                         }
                     }
@@ -256,7 +256,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 }
 
                 is RustParser.MacroLiteralTokenContext -> {
-                    if (skipedIndex.contains(index)) {
+                    if (skippedIndex.contains(index)) {
                         return@mapIndexedNotNull null
                     }
 
@@ -292,7 +292,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             Package = codeContainer.PackageName,
             Annotations = annotation,
             Fields = buildEnumFields(ctx.enumItems()),
-            Position = buildPosition(ctx ?: return),
+            Position = buildPosition(ctx),
             Type = DataStructType.ENUM
         )
 
@@ -343,12 +343,12 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             currentFunction = function
         }
 
-        localVars += ctx.functionParameters()?.functionParam()?.map {
+        localVars += ctx.functionParameters()?.functionParam()?.associate {
             val pattern = it.functionParamPattern()
             val varName = pattern?.pattern()?.text ?: ""
             val varType = pattern?.type_()?.text ?: ""
             varName to varType
-        }?.toMap() ?: mapOf()
+        } ?: mapOf()
     }
 
     open fun buildReturnType(functionReturnType: RustParser.FunctionReturnTypeContext?): String {
@@ -381,10 +381,10 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     override fun enterImplementation(ctx: RustParser.ImplementationContext?) {
         val nodeName = buildNodeName(ctx)
-        if (structMap.containsKey(nodeName)) {
-            currentNode = structMap[nodeName]!!
+        currentNode = if (structMap.containsKey(nodeName)) {
+            structMap[nodeName]!!
         } else {
-            currentNode = CodeDataStruct(
+            CodeDataStruct(
                 NodeName = nodeName,
                 Module = currentModule,
                 Package = codeContainer.PackageName,
