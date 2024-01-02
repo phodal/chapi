@@ -278,7 +278,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
                     AnnotationKeyValue(
                         Key = child.identifier().text,
-                        Value = value
+                        Value = lookupByType(value)
                     )
                 }
 
@@ -289,7 +289,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
                     AnnotationKeyValue(
                         Key = child.text,
-                        Value = child.text
+                        Value = lookupByType(child.text)
                     )
                 }
 

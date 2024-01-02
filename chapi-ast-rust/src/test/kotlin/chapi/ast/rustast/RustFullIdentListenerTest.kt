@@ -1,8 +1,6 @@
 package chapi.ast.rustast
 
 import chapi.domain.core.DataStructType
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -310,8 +308,28 @@ class RustFullIdentListenerTest {
         assertEquals("ignore", annotations[1].KeyValues[1].Value)
     }
 
+    @Test
+    fun should_inference_attribute_type() {
+        val code = """
+            use serde::{Serialize, Deserialize};
 
-    // Enum type
+            #[derive(Serialize, Deserialize, Debug)]
+            struct Point {
+                x: i32,
+                y: i32,
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures[0]
+        val annotations = codeDataStruct.Annotations
+
+        assertEquals(1, annotations.size)
+        assertEquals("derive", annotations[0].Name)
+        assertEquals("serde::Serialize", annotations[0].KeyValues[0].Value)
+    }
+
+
     @Test
     fun should_process_enum_type() {
         val code = """
