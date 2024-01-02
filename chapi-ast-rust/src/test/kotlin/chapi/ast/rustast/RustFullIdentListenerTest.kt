@@ -480,8 +480,9 @@ fn main() {
 
         val firstFunction = codeDataStruct[0].Functions[0]
         assertEquals("Result", firstFunction.ReturnType)
-        assertEquals(2, firstFunction.MultipleReturns.size)
-        assertEquals("std::sync::Arc", firstFunction.MultipleReturns[0].TypeType)
-        assertEquals("embedding::semantic::SemanticError", firstFunction.MultipleReturns[1].TypeType)
+        assertEquals(3, firstFunction.MultipleReturns.size)
+        assertEquals("embedding::Semantic", firstFunction.MultipleReturns[0].TypeType)
+        assertEquals("std::sync::Arc", firstFunction.MultipleReturns[1].TypeType)
+        assertEquals("embedding::semantic::SemanticError", firstFunction.MultipleReturns[2].TypeType)
     }
 }

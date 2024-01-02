@@ -368,15 +368,24 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         return lookupType(typeContext)
     }
 
-    private fun buildMultipleReturns(functionReturnType: RustParser.FunctionReturnTypeContext?) : List<CodeProperty> {
-        val typePathSegment = functionReturnType?.type_()?.typeNoBounds()?.traitObjectTypeOneBound()?.traitBound()?.typePath()?.typePathSegment()
+    private fun buildMultipleReturns(functionReturnType: RustParser.FunctionReturnTypeContext?): List<CodeProperty> {
+        val typeContext = functionReturnType?.type_()
+        return typeToProperties(typeContext).distinct()
+    }
+
+    private fun typeToProperties(typeContext: Type_Context?): List<CodeProperty> {
+        val typePathSegment = typeContext?.typeNoBounds()?.traitObjectTypeOneBound()?.traitBound()?.typePath()?.typePathSegment()
         val genericArgs: List<GenericArgsContext> = typePathSegment?.mapNotNull {
             it.genericArgs()
         } ?: listOf()
 
         return genericArgs.map { genericArgsContext ->
             val typeList = genericArgsContext.genericArgsTypes().type_()
-            typeList.map {
+            val generics = typeList.map {
+                typeToProperties(it)
+            }.flatten()
+
+            generics + typeList.map {
                 CodeProperty(
                     TypeType = lookupType(it),
                     TypeValue = lookupType(it)
