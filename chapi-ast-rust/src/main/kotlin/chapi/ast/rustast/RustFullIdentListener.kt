@@ -3,6 +3,7 @@ package chapi.ast.rustast
 import chapi.ast.antlr.RustParser
 import chapi.ast.antlr.RustParser.LetStatementContext
 import chapi.domain.core.CodeCall
+import chapi.domain.core.CodeImport
 import chapi.domain.core.CodeProperty
 
 
@@ -76,6 +77,26 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
             Parameters = buildParameters(ctx?.callParams()),
             Position = buildPosition(ctx ?: return)
         )
+    }
+
+    override fun enterMacroInvocationSemi(ctx: RustParser.MacroInvocationSemiContext?) {
+        ctx?.simplePath()?.simplePathSegment()?.map {
+            it.identifier()?.text
+        }?.joinToString("::")?.let { id ->
+            functionInstance.FunctionCalls += CodeCall(
+                Package = packageName,
+                NodeName = lookupByType(id),
+                FunctionName = id,
+                OriginNodeName = ctx.simplePath()?.text ?: "",
+                Parameters = ctx.tokenTree().map {
+                    CodeProperty(
+                        TypeValue = it.text,
+                        TypeType = it.text
+                    )
+                },
+                Position = buildPosition(ctx)
+            )
+        }
     }
 
     private fun lookupFunctionName(pathExprSegmentContext: RustParser.PathExprSegmentContext?): String {

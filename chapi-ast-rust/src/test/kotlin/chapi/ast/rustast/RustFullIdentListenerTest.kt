@@ -535,4 +535,40 @@ fn main() {
             embedding::Semantic -> embed -> semantic
         """.trimIndent())
     }
+
+    @Test
+    fun should_handle_for_marco_call () {
+        val code = """
+            fn test_init_semantic() {
+                let model = std::fs::read("../model/model.onnx").unwrap();
+                let tokenizer_data = std::fs::read("../model/tokenizer.json").unwrap();
+
+                let semantic = init_semantic(model, tokenizer_data).unwrap();
+                let embedding = semantic.embed("hello world").unwrap();
+                assert_eq!(embedding.len(), 128);
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures
+        val testFunc = codeDataStruct[0].Functions[0]
+
+        val functionCalls = testFunc.FunctionCalls
+        val outputs = functionCalls.joinToString("\n") {
+            "${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}"
+        }
+
+        assertEquals(9, functionCalls.size)
+        assertEquals(outputs, """
+            std::fs::read -> unwrap -> std::fs::read
+            std::fs -> read -> std::fs
+            std::fs::read -> unwrap -> std::fs::read
+            std::fs -> read -> std::fs
+            init_semantic -> unwrap -> init_semantic
+            init_semantic -> init_semantic -> init_semantic
+            semantic.embed -> unwrap -> semantic.embed
+            init_semantic -> embed -> semantic
+            assert_eq -> assert_eq -> assert_eq
+        """.trimIndent())
+    }
 }
