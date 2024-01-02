@@ -459,4 +459,24 @@ fn main() {
         val codeDataStruct = codeContainer.DataStructures
         assertEquals(1, codeDataStruct.size)
     }
+
+    @Test
+    fun should_handle_for_result() {
+        val code = """
+            use std::sync::Arc;
+
+            pub use embedding::Semantic;
+            pub use embedding::semantic::SemanticError;
+
+            pub fn init_semantic(model: Vec<u8>, tokenizer_data: Vec<u8>) -> Result<Arc<Semantic>, SemanticError> {
+                let result = Semantic::init_semantic(model, tokenizer_data)?;
+                Ok(Arc::new(result))
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures
+        assertEquals(1, codeDataStruct.size)
+        assertEquals("Result", codeDataStruct[0].Functions[0].ReturnType)
+    }
 }

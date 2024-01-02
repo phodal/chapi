@@ -316,27 +316,29 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             annotations = buildAttribute(item.outerAttribute())
         }
 
+        val possibleReturnType = buildReturnType(ctx!!.functionReturnType())
         if (!isEnteredImplementation) {
             isEnteredIndividualFunction = true
 
-            val functionName = ctx!!.identifier().text
+            val functionName = ctx.identifier().text
             val function = CodeFunction(
                 Name = functionName,
                 Package = codeContainer.PackageName,
                 Position = buildPosition(ctx),
                 Parameters = buildParameters(ctx.functionParameters()),
-                ReturnType = buildReturnType(ctx.functionReturnType()),
+                ReturnType = possibleReturnType,
                 Annotations = annotations
             )
 
             currentIndividualFunction = function
         } else {
-            val functionName = ctx!!.identifier().text
+            val functionName = ctx.identifier().text
             val function = CodeFunction(
                 Name = functionName,
                 Package = codeContainer.PackageName,
                 Position = buildPosition(ctx),
                 Parameters = buildParameters(ctx.functionParameters()),
+                ReturnType = possibleReturnType,
                 Annotations = annotations
             )
 

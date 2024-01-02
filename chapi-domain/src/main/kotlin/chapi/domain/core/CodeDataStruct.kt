@@ -27,7 +27,9 @@ data class CodeDataStruct(
      * for Rust, if is a variable, function, it will be naming to `default`
      */
     var NodeName: String = "",
-    //
+    /**
+     * for Rust, if `mod tests`, the Module will be `tests`
+     */
     var Module: String = "",
     var Type: DataStructType = DataStructType.EMPTY,
     var Package: String = "",
@@ -53,6 +55,9 @@ data class CodeDataStruct(
     var Exports: List<CodeExport> = listOf(),
     // todo: select node useonly imports
     var Extension: JsonElement = JsonObject(HashMap()),
+    /**
+     * If [NodeName] is default, [CodePosition] may be empty
+     */
     var Position: CodePosition = CodePosition(),
     var Content: String = "",
 ) {
