@@ -438,6 +438,25 @@ class RustFullIdentListenerTest {
 
         val codeContainer = RustAnalyser().analysis(code, "lib.rs")
         val codeDataStruct = codeContainer.DataStructures[0]
+
         assertEquals("tests", codeDataStruct.Module)
+    }
+
+    @Test
+    fun should_handle_for_comments() {
+        val code = """
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+fn main() {
+    uniffi::generate_scaffolding("src/inference.udl").unwrap();
+}
+
+""".trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures
+        assertEquals(1, codeDataStruct.size)
     }
 }

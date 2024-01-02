@@ -114,6 +114,7 @@ LINE_COMMENT: ('//' (~[/!] | '//') ~[\r\n]* | '//') -> channel (HIDDEN);
 BLOCK_COMMENT:
     (
         '/*' (~[*!] | '**' | BLOCK_COMMENT_OR_DOC) (BLOCK_COMMENT_OR_DOC | ~[*])*? '*/'
+        | '/*' .*? '*/'
         | '/**/'
         | '/***/'
     ) -> channel (HIDDEN)
@@ -268,4 +269,3 @@ LSQUAREBRACKET : '[';
 RSQUAREBRACKET : ']';
 LPAREN         : '(';
 RPAREN         : ')';
-

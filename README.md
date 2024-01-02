@@ -31,7 +31,7 @@ language versions（tested）:
 - TypeScript/JavaScript
 - Kotlin
 - Python: 2, 3
-- Rust
+- Rust: v1.60.0
 - C#
 
 // tier 1 languages
