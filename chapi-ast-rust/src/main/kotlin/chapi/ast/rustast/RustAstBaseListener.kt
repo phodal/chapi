@@ -1,6 +1,7 @@
 package chapi.ast.rustast
 
 import chapi.ast.antlr.RustParser
+import chapi.ast.antlr.RustParser.GenericArgsContext
 import chapi.ast.antlr.RustParser.ItemContext
 import chapi.ast.antlr.RustParser.SimplePathContext
 import chapi.ast.antlr.RustParser.TypePathSegmentContext
@@ -317,6 +318,13 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         }
 
         val possibleReturnType = buildReturnType(ctx!!.functionReturnType())
+
+        val multipleReturns = if (possibleReturnType == "Result") {
+            buildMultipleReturns(ctx.functionReturnType())
+        } else {
+            listOf()
+        }
+
         if (!isEnteredImplementation) {
             isEnteredIndividualFunction = true
 
@@ -327,7 +335,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 Position = buildPosition(ctx),
                 Parameters = buildParameters(ctx.functionParameters()),
                 ReturnType = possibleReturnType,
-                Annotations = annotations
+                Annotations = annotations,
+                MultipleReturns = multipleReturns
             )
 
             currentIndividualFunction = function
@@ -339,7 +348,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 Position = buildPosition(ctx),
                 Parameters = buildParameters(ctx.functionParameters()),
                 ReturnType = possibleReturnType,
-                Annotations = annotations
+                Annotations = annotations,
+                MultipleReturns = multipleReturns
             )
 
             currentFunction = function
@@ -356,6 +366,23 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     open fun buildReturnType(functionReturnType: RustParser.FunctionReturnTypeContext?): String {
         val typeContext: Type_Context? = functionReturnType?.type_()
         return lookupType(typeContext)
+    }
+
+    private fun buildMultipleReturns(functionReturnType: RustParser.FunctionReturnTypeContext?) : List<CodeProperty> {
+        val typePathSegment = functionReturnType?.type_()?.typeNoBounds()?.traitObjectTypeOneBound()?.traitBound()?.typePath()?.typePathSegment()
+        val genericArgs: List<GenericArgsContext> = typePathSegment?.mapNotNull {
+            it.genericArgs()
+        } ?: listOf()
+
+        return genericArgs.map { genericArgsContext ->
+            val typeList = genericArgsContext.genericArgsTypes().type_()
+            typeList.map {
+                CodeProperty(
+                    TypeType = lookupType(it),
+                    TypeValue = lookupType(it)
+                )
+            }
+        }.flatten()
     }
 
     open fun buildParameters(functionParameters: RustParser.FunctionParametersContext?): List<CodeProperty> {

@@ -20,6 +20,9 @@ data class CodeFunction(
     var FilePath: String = "",
     var Package: String = "",
     var ReturnType: String = "",
+    /**
+     * In Rust, if the Return Type is `Result<T, E>`, the MultipleReturns will be `T, E`
+     */
     var MultipleReturns: List<CodeProperty> = listOf(),
     var Parameters: List<CodeProperty> = listOf(),
     var FunctionCalls: List<CodeCall> = listOf(),

@@ -477,6 +477,11 @@ fn main() {
         val codeContainer = RustAnalyser().analysis(code, "lib.rs")
         val codeDataStruct = codeContainer.DataStructures
         assertEquals(1, codeDataStruct.size)
-        assertEquals("Result", codeDataStruct[0].Functions[0].ReturnType)
+
+        val firstFunction = codeDataStruct[0].Functions[0]
+        assertEquals("Result", firstFunction.ReturnType)
+        assertEquals(2, firstFunction.MultipleReturns.size)
+        assertEquals("std::sync::Arc", firstFunction.MultipleReturns[0].TypeType)
+        assertEquals("embedding::semantic::SemanticError", firstFunction.MultipleReturns[1].TypeType)
     }
 }
