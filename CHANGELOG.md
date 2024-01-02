@@ -1,4 +1,23 @@
-# [](https://github.com/phodal/chapi/compare/v2.2.0...v) (2024-01-01)
+# [](https://github.com/phodal/chapi/compare/v2.2.1...v) (2024-01-02)
+
+
+
+## [2.2.1](https://github.com/phodal/chapi/compare/v2.2.0...v2.2.1) (2024-01-02)
+
+
+### Bug Fixes
+
+* **rust:** fix block comment issue ([bde7d48](https://github.com/phodal/chapi/commit/bde7d48905ca74c311f3b41a4ade3cc24f75f75e))
+
+
+### Features
+
+* **rust:** add basic rust marco support ([35ac560](https://github.com/phodal/chapi/commit/35ac560500cbe7177c141784d6dfc15aa9dfd0c2))
+* **rust:** add handle for function calling in type ([7585551](https://github.com/phodal/chapi/commit/75855514e0423b6ad9323d83e9e651ece163e320))
+* **rust:** add inference for derive type ([8e017f5](https://github.com/phodal/chapi/commit/8e017f51279be06c8476aa098380c8f8b12a98e9))
+* **rust:** display for http server ([3bd3112](https://github.com/phodal/chapi/commit/3bd3112c79daebe01b6141538947def91a444237))
+* **rust:** handle for generics support ([9708673](https://github.com/phodal/chapi/commit/97086732777b8c6b53860bab26b348dbb9b26df4))
+* **rust:** set basic MultipleReturns for Result ([cac8ff9](https://github.com/phodal/chapi/commit/cac8ff9ac13ae9be34ce4c907cc0e594c5cfa2f8))
 
 
 

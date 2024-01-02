@@ -3,7 +3,6 @@ package chapi.ast.rustast
 import chapi.ast.antlr.RustParser
 import chapi.ast.antlr.RustParser.LetStatementContext
 import chapi.domain.core.CodeCall
-import chapi.domain.core.CodeImport
 import chapi.domain.core.CodeProperty
 
 
