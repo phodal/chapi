@@ -485,4 +485,48 @@ fn main() {
         assertEquals("std::sync::Arc", firstFunction.MultipleReturns[1].TypeType)
         assertEquals("embedding::semantic::SemanticError", firstFunction.MultipleReturns[2].TypeType)
     }
+
+    @Test
+    fun should_handle_for_node_type_in_function_call() {
+        val code = """
+            use std::sync::Arc;
+
+            pub use embedding::Semantic;
+            pub use embedding::semantic::SemanticError;
+
+            pub fn init_semantic(model: Vec<u8>, tokenizer_data: Vec<u8>) -> Result<Arc<Semantic>, SemanticError> {
+                let result = Semantic::init_semantic(model, tokenizer_data)?;
+                Ok(Arc::new(result))
+            }
+            
+            pub fn embed() -> Embedding {
+                let model = std::fs::read("../model/model.onnx").unwrap();
+                let tokenizer_data = std::fs::read("../model/tokenizer.json").unwrap();
+
+                let semantic = init_semantic(model, tokenizer_data).unwrap();
+                semantic.embed("hello world").unwrap()
+            }
+        """.trimIndent()
+
+        val codeContainer = RustAnalyser().analysis(code, "lib.rs")
+        val codeDataStruct = codeContainer.DataStructures
+        val embedFunc = codeDataStruct[0].Functions[1]
+
+        val functionCalls = embedFunc.FunctionCalls
+        val outputs = functionCalls.map {
+            "${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}"
+        }.joinToString("\n")
+
+        assertEquals(8, functionCalls.size)
+        assertEquals(outputs, """
+            std::fs::read -> unwrap -> std::fs::read
+            std::fs -> read -> std::fs
+            std::fs::read -> unwrap -> std::fs::read
+            std::fs -> read -> std::fs
+            embedding::Semantic -> unwrap -> init_semantic
+            embedding::Semantic -> init_semantic -> init_semantic
+            semantic.embed -> unwrap -> semantic.embed
+            semantic -> embed -> semantic
+        """.trimIndent())
+    }
 }

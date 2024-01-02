@@ -44,12 +44,21 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
     var localVars: MutableMap<String, String> = mutableMapOf()
 
     /**
+     * localFunctions will store all local functions in the current scope
+     *
+     * for individual function: currentFunction.Name
+     * for Implementation: currentNode.NodeName + "::" + currentFunction.Name
+     *
+     */
+    var localFunctions: MutableMap<String, CodeFunction> = mutableMapOf()
+
+    /**
      * packageName will parse from fileName, like:
      * - "src/main.rs" -> "main"
      * - "enfer_core/src/lib.rs" -> "enfer_core"
      * - "enfer_core/src/document.rs" -> "enfer_core::document"
      */
-    private val packageName: String
+    val packageName: String
         get() {
             val modulePath = fileName.substringBeforeLast("src")
                 .substringBeforeLast(File.separator)
@@ -195,7 +204,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     open fun lookupByType(typeText: String?): String {
         if (typeText == null) return ""
-        val text = if (typeText.contains("::")) {
+        var text = if (typeText.contains("::")) {
             val crateName = typeText.split("::").first()
             if (crateName == "std" || crateName == "crate") {
                 typeText
@@ -204,6 +213,19 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             }
         } else {
             typeText
+        }
+
+        if (localVars.containsKey(text)) {
+            return localVars[text] ?: ""
+        }
+
+        if (localFunctions.containsKey(text)) {
+            val function = localFunctions[text]!!
+            text = if (function.MultipleReturns.isNotEmpty()) {
+                function.MultipleReturns.first().TypeType
+            } else {
+                function.ReturnType
+            }
         }
 
         imports.filter { it.AsName == text }.forEach {
@@ -388,7 +410,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             generics + typeList.map {
                 CodeProperty(
                     TypeType = lookupType(it),
-                    TypeValue = lookupType(it)
+                    TypeValue = it.text,
                 )
             }
         }.flatten()
@@ -410,8 +432,10 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         if (isEnteredImplementation == false) {
             isEnteredIndividualFunction = false
             individualFunctions.add(currentIndividualFunction)
+            localFunctions[currentIndividualFunction.Name] = currentIndividualFunction
         } else {
             currentNode.Functions += currentFunction
+            localFunctions[currentNode.NodeName + "::" + currentFunction.Name] = currentFunction
         }
 
         localVars.clear()
