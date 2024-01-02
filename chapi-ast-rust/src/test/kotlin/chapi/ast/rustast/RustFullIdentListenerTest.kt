@@ -275,10 +275,6 @@ class RustFullIdentListenerTest {
         val functionCalls = codeDataStruct.Functions[0].FunctionCalls
         assertEquals(7, functionCalls.size)
 
-        functionCalls.map {
-            println("${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}")
-        }
-
         assertEquals("std::fs::read", functionCalls[0].NodeName)
         assertEquals("map_err", functionCalls[0].FunctionName)
         assertEquals("std::fs::read", functionCalls[0].OriginNodeName)
@@ -414,12 +410,22 @@ class RustFullIdentListenerTest {
         assertEquals("main", secondFunction.Name)
         assertEquals("std::io::Result", secondFunction.ReturnType)
         assertEquals(9, secondFunction.FunctionCalls.size)
-        secondFunction.FunctionCalls.map {
-            println("${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}")
-        }
 
-        assertEquals("actix_web::HttpServer", secondFunction.FunctionCalls[0].NodeName)
-        assertEquals("run", secondFunction.FunctionCalls[0].FunctionName)
+        val calls = secondFunction.FunctionCalls.map {
+            "${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}"
+        }.joinToString("\n")
+
+        assertEquals(calls, """
+            actix_web::HttpServer -> run -> HttpServer::new
+            actix_web::HttpServer -> bind -> HttpServer::new
+            actix_web::HttpServer -> new -> HttpServer
+            actix_web::App -> route -> App::new
+            actix_web::App -> service -> App::new
+            actix_web::App -> service -> App::new
+            actix_web::App -> new -> App
+            actix_web::web -> to -> web::get
+            actix_web::web -> get -> web
+            """.trimIndent())
     }
 
     @Test
@@ -513,9 +519,9 @@ fn main() {
         val embedFunc = codeDataStruct[0].Functions[1]
 
         val functionCalls = embedFunc.FunctionCalls
-        val outputs = functionCalls.map {
+        val outputs = functionCalls.joinToString("\n") {
             "${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}"
-        }.joinToString("\n")
+        }
 
         assertEquals(8, functionCalls.size)
         assertEquals(outputs, """
@@ -526,7 +532,7 @@ fn main() {
             embedding::Semantic -> unwrap -> init_semantic
             embedding::Semantic -> init_semantic -> init_semantic
             semantic.embed -> unwrap -> semantic.embed
-            semantic -> embed -> semantic
+            embedding::Semantic -> embed -> semantic
         """.trimIndent())
     }
 }

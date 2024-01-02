@@ -1,6 +1,7 @@
 package chapi.ast.rustast
 
 import chapi.ast.antlr.RustParser
+import chapi.ast.antlr.RustParser.LetStatementContext
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeProperty
 
@@ -14,7 +15,7 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
         }
 
     override fun enterLetStatement(ctx: RustParser.LetStatementContext?) {
-        val varName = ctx?.patternNoTopAlt()?.patternWithoutRange()?.identifierPattern()?.identifier()?.text ?: ""
+        val varName = getVarName(ctx)
         when (ctx?.expression()) {
             is RustParser.CallExpressionContext -> {
                 val functionName = ctx.expression().text
@@ -25,6 +26,8 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
             }
         }
     }
+
+    private fun getVarName(ctx: LetStatementContext?) = ctx?.patternNoTopAlt()?.patternWithoutRange()?.identifierPattern()?.identifier()?.text ?: ""
 
     override fun enterCallExpression(ctx: RustParser.CallExpressionContext?) {
         val functionName = ctx?.expression()?.text
@@ -57,9 +60,17 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
         val functionName = lookupFunctionName(ctx?.pathExprSegment())
 
         // todo: handle method call
+        val lookedType = lookupByType(nodeName)
+
+        // check parent
+        if (ctx?.parent is LetStatementContext) {
+            val varName = getVarName(ctx.parent as LetStatementContext)
+            localVars[varName] = lookedType
+        }
+
         functionInstance.FunctionCalls += CodeCall(
             Package = packageName,
-            NodeName = lookupByType(nodeName),
+            NodeName = lookedType,
             OriginNodeName = instanceVar.ifEmpty { nodeName },
             FunctionName = functionName,
             Parameters = buildParameters(ctx?.callParams()),

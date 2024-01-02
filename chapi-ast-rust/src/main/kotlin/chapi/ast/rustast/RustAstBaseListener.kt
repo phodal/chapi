@@ -209,7 +209,11 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             if (crateName == "std" || crateName == "crate") {
                 typeText
             } else {
-                crateName
+                if (imports.any { it.Source == typeText }) {
+                    typeText
+                } else {
+                    crateName
+                }
             }
         } else {
             typeText
@@ -377,12 +381,14 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             currentFunction = function
         }
 
-        localVars += ctx.functionParameters()?.functionParam()?.associate {
+        val vars = ctx.functionParameters()?.functionParam()?.associate {
             val pattern = it.functionParamPattern()
             val varName = pattern?.pattern()?.text ?: ""
             val varType = pattern?.type_()?.text ?: ""
             varName to varType
         } ?: mapOf()
+
+        localVars += vars
     }
 
     open fun buildReturnType(functionReturnType: RustParser.FunctionReturnTypeContext?): String {
