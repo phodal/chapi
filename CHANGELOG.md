@@ -1,4 +1,15 @@
-# [](https://github.com/phodal/chapi/compare/v2.2.1...v) (2024-01-02)
+# [](https://github.com/phodal/chapi/compare/v2.2.3...v) (2024-01-04)
+
+
+
+## [2.2.3](https://github.com/phodal/chapi/compare/v2.2.1...v2.2.3) (2024-01-04)
+
+
+### Bug Fixes
+
+* add lost code annotation for Java & Python ([67fa016](https://github.com/phodal/chapi/commit/67fa0167d248d7830a2bc55bba6a226f963d7879))
+* **Rust:** fix annotation position error issue ([1f9ea6b](https://github.com/phodal/chapi/commit/1f9ea6bb004578e41dd47f6cfd76f766492382cb))
+* **test:** fix package name error issue ([c7679b8](https://github.com/phodal/chapi/commit/c7679b8dc83d95d7a517d7f4d5ef4613e0fcf829))
 
 
 
