@@ -32,6 +32,7 @@ open class JavaAstListener : JavaParserBaseListener() {
             }
         }
 
+        codeAnnotation.Position = buildPosition(ctx)
         return codeAnnotation
     }
 

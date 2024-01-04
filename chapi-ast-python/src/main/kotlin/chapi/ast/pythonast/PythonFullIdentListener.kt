@@ -14,9 +14,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         val dotNames = ctx!!.dotted_as_names().dotted_as_name()
         val firstNameCtx = dotNames[0]
 
-        var codeImport = CodeImport(
-            Source = firstNameCtx.dotted_name().text
-        )
+        val codeImport = CodeImport(Source = firstNameCtx.dotted_name().text)
         if (firstNameCtx.name() != null) {
             codeImport.UsageName += firstNameCtx.name().text
         }
@@ -30,25 +28,23 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
 
     override fun enterFrom_stmt(ctx: PythonParser.From_stmtContext?) {
         var sourceName = ""
-        if (ctx!!.dotted_name() != null) {
+        if (ctx?.dotted_name() != null) {
             if (ctx.import_dot_ellipsis().size > 0) {
                 sourceName = ctx.getChild(1).text
             }
             sourceName += ctx.dotted_name().text
         } else {
-            sourceName = ctx.getChild(1).text
+            sourceName = ctx?.getChild(1)?.text ?: ""
         }
 
-        val codeImport = CodeImport(
-            Source = sourceName
-        )
+        val codeImport = CodeImport(Source = sourceName)
 
-        for (importAsNameCtx in ctx.import_as_names().import_as_name()) {
-            val usageName = importAsNameCtx.name()[0].text
+        ctx?.import_as_names()?.import_as_name()?.forEach { importAsNamecontext ->
+            val usageName = importAsNamecontext.name()[0].text
             codeImport.UsageName += usageName
 
-            if (importAsNameCtx.AS() != null) {
-                codeImport.AsName = importAsNameCtx.name()[1].text
+            importAsNamecontext.AS()?.let {
+                codeImport.AsName = importAsNamecontext.name()[1].text
             }
         }
 
@@ -60,7 +56,8 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         currentNode = CodeDataStruct(
             NodeName = ctx!!.name().text,
             Type = DataStructType.CLASS,
-            FilePath = codeContainer.FullName
+            FilePath = codeContainer.FullName,
+            Position = buildPosition(ctx)
         )
 
         if (ctx.arglist() != null) {
@@ -84,7 +81,8 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     override fun enterFuncdef(ctx: PythonParser.FuncdefContext?) {
         val funcName = ctx!!.name().text
         currentFunction = CodeFunction(
-            Name = funcName
+            Name = funcName,
+            Position = buildPosition(ctx)
         )
 
         if (ctx.ASYNC() != null) {
@@ -113,13 +111,12 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
 
     override fun enterSimple_stmt(ctx: PythonParser.Simple_stmtContext?) {
         for (smallStmtCtx in ctx!!.small_stmt()) {
-            val stmtType = smallStmtCtx::class.java.simpleName
-            when (stmtType) {
-                "Expr_stmtContext" -> {
-                    this.buildExprStmt(smallStmtCtx as PythonParser.Expr_stmtContext)
+            when(smallStmtCtx) {
+                is PythonParser.Expr_stmtContext -> {
+                    this.buildExprStmt(smallStmtCtx)
                 }
                 else -> {
-                    println("enterSimple_stmt ->$stmtType")
+                    println("enterSimple_stmt ->${smallStmtCtx::class.java.simpleName}")
                 }
             }
         }

@@ -144,6 +144,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
             val member = callExpression.decoratorMemberExpression()
             annotation.Name = member.Identifier().text
         }
+
         return annotation
     }
 }

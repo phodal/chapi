@@ -3,6 +3,7 @@ package chapi.ast.pythonast
 import chapi.ast.antlr.PythonParser
 import chapi.ast.antlr.PythonParserBaseListener
 import chapi.domain.core.*
+import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 
 open class PythonAstBaseListener : PythonParserBaseListener() {
@@ -67,7 +68,17 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
             codeAnnotation.KeyValues = this.buildArgList(node.arglist())
         }
 
+        codeAnnotation.Position = buildPosition(node)
         return codeAnnotation
+    }
+
+    fun buildPosition(ctx: ParserRuleContext): CodePosition {
+        return CodePosition(
+            StartLine = ctx.start.line,
+            StartLinePosition = ctx.start.charPositionInLine,
+            StopLine = ctx.stop.line,
+            StopLinePosition = ctx.stop.charPositionInLine
+        )
     }
 
     private fun buildArgList(arglistCtx: PythonParser.ArglistContext?): List<AnnotationKeyValue> {
@@ -165,7 +176,8 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
 
             funcCalls += CodeCall(
                 NodeName = nodeName,
-                FunctionName = caller
+                FunctionName = caller,
+                Position = buildPosition(trailerContext)
             )
         }
 
