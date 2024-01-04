@@ -357,7 +357,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             val functionName = ctx.identifier().text
             val function = CodeFunction(
                 Name = functionName,
-                Package = codeContainer.PackageName,
+                Package = packageName,
                 Position = buildPosition(ctx),
                 Parameters = buildParameters(ctx.functionParameters()),
                 ReturnType = possibleReturnType,
@@ -370,7 +370,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             val functionName = ctx.identifier().text
             val function = CodeFunction(
                 Name = functionName,
-                Package = codeContainer.PackageName,
+                Package = packageName,
                 Position = buildPosition(ctx),
                 Parameters = buildParameters(ctx.functionParameters()),
                 ReturnType = possibleReturnType,
@@ -507,7 +507,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         return listOf(
             CodeDataStruct().apply {
                 NodeName = fileName.substringBeforeLast('.')
-                Module = if (lastModule == "tests") lastModule else ""
+                Module = lastModule
                 Type = DataStructType.OBJECT
                 Package = codeContainer.PackageName
                 FilePath = codeContainer.FullName

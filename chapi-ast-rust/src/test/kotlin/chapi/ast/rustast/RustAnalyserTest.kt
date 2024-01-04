@@ -1,8 +1,5 @@
 package chapi.ast.rustast
 
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -70,6 +67,48 @@ internal class RustAnalyserTest {
 
         assertEquals(position.StartLine, 1)
         assertEquals(position.StopLine, 4)
+    }
+
+    @Test
+    fun should_success_build_position_for_testing() {
+        val testCode = """
+           use std::sync::Arc;
+
+           pub use embedding::Embedding;
+           pub use embedding::Semantic;
+           pub use embedding::semantic::SemanticError;
+
+           pub fn init_semantic(model: Vec<u8>, tokenizer_data: Vec<u8>) -> Result<Arc<Semantic>, SemanticError> {
+                let result = Semantic::init_semantic(model, tokenizer_data)?;
+                Ok(Arc::new(result))
+           }
+           
+           #[cfg(test)]
+           mod tests {
+               use super::*;
+           
+               #[test]
+               #[cfg_attr(feature = "ci", ignore)]
+               fn test_init_semantic() {
+                   let model = std::fs::read("../model/model.onnx").unwrap();
+                   let tokenizer_data = std::fs::read("../model/tokenizer.json").unwrap();
+           
+                   let semantic = init_semantic(model, tokenizer_data).unwrap();
+                   let embedding = semantic.embed("hello world").unwrap();
+                   assert_eq!(embedding.len(), 128);
+               }
+           }
+       """.trimIndent()
+
+
+        val container = rustAnalyser.analysis(testCode, "lib.rs")
+        val functions = container.DataStructures.map { dataStruct ->
+            dataStruct.Functions.filter { function -> function.Annotations.any { it.Name == "test" } }
+        }.flatten()
+
+        assertEquals(functions.size, 1)
+        val firstFunction = functions[0]
+        assertEquals(firstFunction.Position.StartLine, 18)
     }
 
     @Test
