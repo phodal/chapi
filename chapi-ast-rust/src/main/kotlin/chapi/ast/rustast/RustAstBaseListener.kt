@@ -254,7 +254,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
             CodeAnnotation(
                 Name = annotationName,
-                KeyValues = keyValues
+                KeyValues = keyValues,
+                Position = buildPosition(attributeContext)
             )
         }.toMutableList()
     }
