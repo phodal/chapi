@@ -127,16 +127,13 @@ func installController(g *gin.Engine) *gin.Engine {
     @Disabled
     fun analysisByDir() {
         val dir = "/Users/phodal/test/iam"
-        val codeContainer = GoAnalyser().analysisByDir(dir)
+        val files = File(dir).walkTopDown().filter { it.isFile && it.extension == "go" }.toList()
+        val codeContainer = files.map {
+            GoAnalyser().analysis(it.readText(), it.name)
+        }.toList()
         // write to file
         val json = Json.encodeToString(codeContainer)
         File("iam.json").writeText(json)
     }
 }
 
-private fun GoAnalyser.analysisByDir(dir: String): List<CodeContainer> {
-    val files = File(dir).walkTopDown().filter { it.isFile && it.extension == "go" }.toList()
-    return files.map {
-        analysis(it.readText(), it.name)
-    }.toList()
-}

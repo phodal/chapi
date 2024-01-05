@@ -5,7 +5,6 @@ import chapi.domain.core.*
 import chapi.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
-import kotlin.reflect.typeOf
 
 data class TargetTypePackage(val targetType: String, val packageName: String)
 data class JavaTargetType(var targetType: String = "", var callType: CallType = CallType.FUNCTION)
@@ -307,9 +306,9 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         var methodName = callee
 
         var targetTypeStr = targetType
-        val targetType = this.warpTargetFullType(targetTypeStr)
-        var callType = targetType.callType
-        val fullType = targetType.targetType
+        val wrapTargetType = this.warpTargetFullType(targetTypeStr)
+        var callType = wrapTargetType.callType
+        val fullType = wrapTargetType.targetType
 
         if (targetTypeStr == "super" || callee == "super") {
             callType = CallType.SUPER

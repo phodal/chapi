@@ -10,7 +10,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
-    // Kotlin reflection.
+
     testImplementation(kotlin("test"))
 
     // JUnit 5
