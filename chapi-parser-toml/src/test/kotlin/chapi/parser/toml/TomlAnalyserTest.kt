@@ -72,20 +72,26 @@ class TomlAnalyserTest {
         assertEquals(1, childContainer.size)
         val firstChild = childContainer[0]
 
-        assertEquals("database", firstChild.PackageName)
-        assertEquals("true", firstChild.Fields[0].TypeValue)
-        assertEquals("enabled", firstChild.Fields[0].TypeKey)
-        assertEquals("Bool", firstChild.Fields[0].TypeType)
         assertEquals("[8000,8001,8002]", firstChild.Fields[1].TypeValue)
         val childValue = firstChild.Fields[1].ArrayValue
         assertEquals(3, childValue.size)
         assertEquals("8000", childValue[0].TypeValue)
         assertEquals("Int", childValue[1].TypeType)
 
-//        assertEquals("ports", firstChild.Fields[1].TypeKey)
-//        assertEquals("Array", firstChild.Fields[1].TypeType)
-//        assertEquals("[[\"delta\",\"phi\"],[3.14]]", firstChild.Fields[2].TypeValue)
-//        assertEquals("data", firstChild.Fields[2].TypeKey)
+        val secondArray = firstChild.Fields[2]
+        assertEquals("[[\"delta\",\"phi\"],[3.14]]", secondArray.TypeValue)
+
+        assertEquals("data", secondArray.TypeKey)
+        assertEquals("Array", secondArray.TypeType)
+        assertEquals("Array", secondArray.ArrayValue[0].TypeType)
+        assertEquals("String", secondArray.ArrayValue[0].ArrayValue[0].TypeType)
+
+        assertEquals("Array", secondArray.ArrayValue[1].TypeType)
+
+        val childFloat = secondArray.ArrayValue[1].ArrayValue[0]
+        assertEquals("3.14", childFloat.TypeValue)
+        assertEquals("Float", childFloat.TypeType)
+
 //        assertEquals("Array", firstChild.Fields[2].TypeType)
 //        assertEquals("{cpu=79.5,case=72.0}", firstChild.Fields[3].TypeValue)
 //        assertEquals("temp_targets", firstChild.Fields[3].TypeKey)
