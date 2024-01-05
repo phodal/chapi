@@ -16,7 +16,9 @@ dependencies {
     antlr("org.antlr:antlr4:4.13.1")
     // project deps
     implementation(project(":chapi-domain"))
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
