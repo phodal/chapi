@@ -15,16 +15,13 @@ publishing {
     }
 
     publications {
-//        gpr(MavenPublication) {
-//            from(components.java)
-//        }
         mavenJava(MavenPublication) {
             from components.java
             version project.version
             pom {
                 afterEvaluate {
                     name = project.description
-                    description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
+                    description = "Chapi (Common Hierarchical Abstract Parser and Information Converter) streamlines code analysis by converting diverse language source code into a unified abstract model, simplifying cross-language development."
                 }
                 url.set("https://github.com/phodal/chapi.git")
                 organization {
@@ -73,7 +70,7 @@ bintray {
         githubReleaseNotesFile = 'README.md'
         licenses = ['MPL-2.0']
         vcsUrl = "https://github.com/phodal/chapi"
-        description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
+        description = "Chapi (Common Hierarchical Abstract Parser and Information Converter) streamlines code analysis by converting diverse language source code into a unified abstract model, simplifying cross-language development."
         desc = description
         publicDownloadNumbers = true
         version {

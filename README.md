@@ -13,7 +13,8 @@
 
 Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in
 refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/).
-Chapi (pronoounce /paɪ/) also pronounce XP in Chinese, if you always call X in 叉.
+
+Chapi (pronoounce /tʃɑpi/) also pronounce XP in Chinese if you always call X in 叉.
 
 language stages:
 
@@ -25,14 +26,27 @@ language stages:
 | arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     |     | 🆕   |
 | real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
 
+- [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is a architecture workbench, also for architecture
+  governance, which can analysis architecture in container, component, code level, create architecure fitness functions,
+  and anaysis system dependencies..
+- [UnitGen](https://github.com/unit-mesh/unit-gen) is a code fine-tuning data framework that generates data from your
+  existing codebase.
+- [ChocolateFactory](https://github.com/unit-mesh/chocolate-factory) is a cutting-edge LLM toolkit designed to empower
+  you in creating your very own AI assistant.
+
+PS: welcome to PR to send your projects
+
+## Language Information
+
+
 language versions（tested）:
 
 - Java: 8, 11, 17
 - TypeScript/JavaScript
 - Kotlin
-- Python: 2, 3
 - Rust: v1.60.0
-- C#
+- Python: 2, 3
+
 
 // tier 1 languages
 ":chapi-ast-java",
@@ -60,16 +74,6 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 | Functional | Scheme, Lisp, Clojure, Scala, ...             | Scala                   |
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript      |
 | Other      | Fortran, Swift, Matlab, ...                   | Swift?, Fortran?        |
-
-## Usecases
-
-PS: welcome to PR to send your projects
-
-- [Chapi-TBS](https://github.com/phodal/chapi-tbs) a simple example with Chapi to Analysis Java project's bad smell.
-- [ArchGuard Scanner](https://github.com/archguard/scanner) - ArchGuard 内嵌的各类扫描器，如 Jacoco, Git, Java 源码、Java
-  bytecode, TypeScript 扫描器。
-- [Unit Eval](https://github.com/unit-mesh/unit-eval) is a code fine-tuning data framework that generates data from your
-  existing codebase.
 
 ## Specify Rule
 
