@@ -91,10 +91,36 @@ class TomlAnalyserTest {
         val childFloat = secondArray.ArrayValue[1].ArrayValue[0]
         assertEquals("3.14", childFloat.TypeValue)
         assertEquals("Float", childFloat.TypeType)
+    }
 
-//        assertEquals("Array", firstChild.Fields[2].TypeType)
-//        assertEquals("{cpu=79.5,case=72.0}", firstChild.Fields[3].TypeValue)
-//        assertEquals("temp_targets", firstChild.Fields[3].TypeKey)
-//        assertEquals("InlineTable", firstChild.Fields[3].TypeType)
+    @Test
+    fun `analysis should return CodeContainer with correct field count 4`() {
+        // given
+        val tomlCode = """
+            [database]
+            enabled = true
+            ports = [ 8000, 8001, 8002 ]
+            data = [ ["delta", "phi"], [3.14] ]
+            temp_targets = { cpu = 79.5, case = 72.0 }
+        """.trimIndent()
+
+        val analyser = TomlAnalyser()
+
+        val container = analyser.analysis(tomlCode, "path/to/file.toml")
+
+        assertEquals(0, container.Fields.size)
+        val childContainer = container.Containers
+        assertEquals(1, childContainer.size)
+
+        val firstChild = childContainer[0]
+        val thirdField = firstChild.Fields[3]
+        assertEquals("{cpu=79.5,case=72.0}", thirdField.TypeValue)
+        assertEquals("temp_targets", thirdField.TypeKey)
+        assertEquals("InlineTable", thirdField.TypeType)
+
+        val childField = thirdField.ArrayValue[0]
+        assertEquals("cpu", childField.TypeKey)
+        assertEquals("79.5", childField.TypeValue)
+        assertEquals("Float", childField.TypeType)
     }
 }

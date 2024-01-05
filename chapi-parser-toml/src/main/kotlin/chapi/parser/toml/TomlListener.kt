@@ -37,10 +37,8 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
     private fun buildField(ctx: TomlParser.Key_valueContext?): CodeField {
         val key = ctx?.key()?.text ?: ""
         val valueContext = ctx?.value()
-        val value = valueContext?.text ?: ""
 
         val field = codeField(key, valueContext)
-
         return field
     }
 
@@ -67,12 +65,23 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
             field.ArrayValue = buildArrayValue(valueContext)
         }
 
+        if (type == TomlType.InlineTable) {
+            field.ArrayValue = buildInlineTableValue(valueContext)
+        }
+
         return field
     }
 
     private fun buildArrayValue(valueContext: TomlParser.ValueContext?): List<CodeField> {
         return valueContext?.array_()?.value()?.map {
             codeField("", it)
+        } ?: listOf()
+    }
+
+
+    private fun buildInlineTableValue(valueContext: TomlParser.ValueContext?): List<CodeField> {
+        return valueContext?.inline_table()?.inline_table_keyvals()?.map {
+            codeField(it.key().text, it.value())
         } ?: listOf()
     }
 

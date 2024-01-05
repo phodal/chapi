@@ -130,15 +130,11 @@ standard_table
     ;
 
 inline_table
-    : L_BRACE inline_table_keyvals R_BRACE
+    : L_BRACE inline_table_keyvals (COMMA inline_table_keyvals)* R_BRACE
     ;
 
 inline_table_keyvals
-    : inline_table_keyvals_non_empty?
-    ;
-
-inline_table_keyvals_non_empty
-    : key EQUALS value (COMMA inline_table_keyvals_non_empty)?
+    : key EQUALS value
     ;
 
 array_table
