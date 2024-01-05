@@ -512,10 +512,18 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
             // if pathSize == 1, it means the file is in the root directory
             if (paths.size == 1) {
-                return if (fileName.endsWith(LIB_RS) || fileName.endsWith(MAIN_RS)) {
-                    ""
-                } else {
-                    fileName.substringBeforeLast(".")
+                return when {
+                    fileName.endsWith(LIB_RS) -> {
+                        "lib"
+                    }
+
+                    fileName.endsWith(MAIN_RS) -> {
+                        "main"
+                    }
+
+                    else -> {
+                        fileName.substringBeforeLast(".")
+                    }
                 }
             }
 

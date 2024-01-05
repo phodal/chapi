@@ -433,7 +433,8 @@ class RustFullIdentListenerTest {
             "${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}"
         }.joinToString("\n")
 
-        assertEquals(calls, """
+        assertEquals(
+            calls, """
             actix_web::HttpServer -> run -> HttpServer::new
             actix_web::HttpServer -> bind -> HttpServer::new
             actix_web::HttpServer -> new -> HttpServer
@@ -443,7 +444,8 @@ class RustFullIdentListenerTest {
             actix_web::App -> new -> App
             actix_web::web -> to -> web::get
             actix_web::web -> get -> web
-            """.trimIndent())
+            """.trimIndent()
+        )
     }
 
     @Test
@@ -555,7 +557,7 @@ fn main() {
     }
 
     @Test
-    fun should_handle_for_marco_call () {
+    fun should_handle_for_marco_call() {
         val code = """
             fn test_init_semantic() {
                 let model = std::fs::read("../model/model.onnx").unwrap();
@@ -577,7 +579,8 @@ fn main() {
         }
 
         assertEquals(9, functionCalls.size)
-        assertEquals(outputs, """
+        assertEquals(
+            outputs, """
             std::fs::read -> unwrap -> std::fs::read
             std::fs -> read -> std::fs
             std::fs::read -> unwrap -> std::fs::read
@@ -587,6 +590,7 @@ fn main() {
             semantic.embed -> unwrap -> semantic.embed
             init_semantic -> embed -> semantic
             assert_eq -> assert_eq -> assert_eq
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 }

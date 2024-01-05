@@ -39,10 +39,12 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
             lastType
         }
 
+        val pureFuncName = split?.last() ?: ""
+
         functionInstance.FunctionCalls += CodeCall(
-            Package = lastType ?: packageName,
+            Package = "",
             NodeName = lookupByType(nodeName),
-            FunctionName = split?.last() ?: "",
+            FunctionName = pureFuncName,
             OriginNodeName = nodeName,
             Parameters = buildParameters(ctx?.callParams()),
             Position = buildPosition(ctx ?: return)
@@ -69,7 +71,7 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
         }
 
         functionInstance.FunctionCalls += CodeCall(
-            Package = packageName,
+            Package = "",
             NodeName = lookedType,
             OriginNodeName = instanceVar.ifEmpty { nodeName },
             FunctionName = functionName,
@@ -83,7 +85,7 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
             it.identifier()?.text
         }?.joinToString("::")?.let { id ->
             functionInstance.FunctionCalls += CodeCall(
-                Package = packageName,
+                Package = "",
                 NodeName = lookupByType(id),
                 FunctionName = id,
                 OriginNodeName = ctx.simplePath()?.text ?: "",
