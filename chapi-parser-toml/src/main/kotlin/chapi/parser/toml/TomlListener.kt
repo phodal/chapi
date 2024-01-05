@@ -4,17 +4,6 @@ import chapi.domain.core.CodeContainer
 import chapi.domain.core.CodeField
 import kotlin.io.path.Path
 
-enum class TomlType {
-    String,
-    Int,
-    Float,
-    Bool,
-    Date,
-    Array,
-    InlineTable,
-    None
-}
-
 class TomlListener(val filePath: String) : TomlParserBaseListener() {
     private val fileName = Path(filePath).fileName.toString()
     private val rootContainer = CodeContainer(FullName = fileName)
@@ -45,7 +34,7 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
     private fun codeField(key: String, valueContext: TomlParser.ValueContext?): CodeField {
         val firstOrNull = valueContext?.children?.first()
         val type = when (firstOrNull) {
-            is TomlParser.StringContext -> TomlType.String
+            is TomlParser.StringContext -> TomlType.String_
             is TomlParser.IntegerContext -> TomlType.Int
             is TomlParser.Floating_pointContext -> TomlType.Float
             is TomlParser.Bool_Context -> TomlType.Bool
@@ -92,7 +81,7 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
 
     private fun parseValue(value: String, type: TomlType): String {
         return when (type) {
-            TomlType.String -> value.removeSurrounding("\"")
+            TomlType.String_ -> value.removeSurrounding("\"")
             TomlType.Int -> value
             TomlType.Float -> value
             TomlType.Bool -> value
