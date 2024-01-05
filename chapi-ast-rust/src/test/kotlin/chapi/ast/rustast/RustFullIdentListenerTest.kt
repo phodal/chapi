@@ -543,6 +543,10 @@ fn main() {
             "${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}"
         }
 
+        functionCalls.forEach {
+            println("${it.Package} -> ${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}")
+        }
+
         assertEquals(8, functionCalls.size)
         assertEquals(outputs, """
             std::fs::read -> unwrap -> std::fs::read

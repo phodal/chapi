@@ -13,7 +13,7 @@ import java.io.File
 
 
 open class RustAstBaseListener(private val fileName: String) : RustParserBaseListener() {
-    val packageName: String = calculatePackageName(fileName)
+    private val packageName: String = calculatePackageName(fileName)
     private val codeContainer: CodeContainer = CodeContainer(FullName = fileName, PackageName = packageName)
     private val imports: MutableList<CodeImport> = mutableListOf()
     private var currentNode: CodeDataStruct = CodeDataStruct()
@@ -23,10 +23,9 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     protected lateinit var currentIndividualFunction: CodeFunction
 
-    private val individualFunctions = mutableListOf<CodeFunction>()
     private val individualFields = mutableListOf<CodeField>()
-
-    private var structMap = mutableMapOf<String, CodeDataStruct>()
+    protected val individualFunctions = mutableListOf<CodeFunction>()
+    protected var structMap = mutableMapOf<String, CodeDataStruct>()
 
     private var currentModule: String = ""
 

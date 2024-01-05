@@ -42,13 +42,24 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
         val pureFuncName = split?.last() ?: ""
 
         functionInstance.FunctionCalls += CodeCall(
-            Package = "",
+            Package = lookupPackage(pureFuncName, nodeName),
             NodeName = lookupByType(nodeName),
             FunctionName = pureFuncName,
             OriginNodeName = nodeName,
             Parameters = buildParameters(ctx?.callParams()),
             Position = buildPosition(ctx ?: return)
         )
+    }
+
+    /**
+     * first try lookup [individualFunctions], then lookup [structMap]
+     */
+    private fun lookupPackage(typeText: String, nodeName: String): String {
+        individualFunctions.firstOrNull { it.Name == typeText }?.let {
+            return it.Package
+        }
+
+        return ""
     }
 
     override fun enterMethodCallExpression(ctx: RustParser.MethodCallExpressionContext?) {
@@ -71,7 +82,7 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
         }
 
         functionInstance.FunctionCalls += CodeCall(
-            Package = "",
+            Package = lookupPackage(functionName, nodeName),
             NodeName = lookedType,
             OriginNodeName = instanceVar.ifEmpty { nodeName },
             FunctionName = functionName,
@@ -84,9 +95,11 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
         ctx?.simplePath()?.simplePathSegment()?.map {
             it.identifier()?.text
         }?.joinToString("::")?.let { id ->
+            val nodeName = lookupByType(id)
+
             functionInstance.FunctionCalls += CodeCall(
-                Package = "",
-                NodeName = lookupByType(id),
+                Package = lookupPackage(id, nodeName),
+                NodeName = nodeName,
                 FunctionName = id,
                 OriginNodeName = ctx.simplePath()?.text ?: "",
                 Parameters = ctx.tokenTree().map {
