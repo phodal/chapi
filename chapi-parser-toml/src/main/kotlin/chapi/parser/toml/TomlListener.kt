@@ -36,8 +36,16 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
 
     private fun buildField(ctx: TomlParser.Key_valueContext?): CodeField {
         val key = ctx?.key()?.text ?: ""
-        val value = ctx?.value()?.text ?: ""
-        val firstOrNull = ctx?.value()?.children?.first()
+        val valueContext = ctx?.value()
+        val value = valueContext?.text ?: ""
+
+        val field = codeField(key, valueContext)
+
+        return field
+    }
+
+    private fun codeField(key: String, valueContext: TomlParser.ValueContext?): CodeField {
+        val firstOrNull = valueContext?.children?.first()
         val type = when (firstOrNull) {
             is TomlParser.StringContext -> TomlType.String
             is TomlParser.IntegerContext -> TomlType.Int
@@ -51,13 +59,22 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
 
         val field = CodeField(
             TypeKey = key,
-            TypeValue = parseValue(value, type),
+            TypeValue = parseValue(valueContext?.text ?: "", type),
             TypeType = type.toString()
         )
+
+        if (type == TomlType.Array) {
+            field.ArrayValue = buildArrayValue(valueContext)
+        }
 
         return field
     }
 
+    private fun buildArrayValue(valueContext: TomlParser.ValueContext?): List<CodeField> {
+        return valueContext?.array_()?.value()?.map {
+            codeField("", it)
+        } ?: listOf()
+    }
 
     override fun enterTable(ctx: TomlParser.TableContext?) {
         val tableName = ctx?.standard_table()?.key()?.text ?: ""

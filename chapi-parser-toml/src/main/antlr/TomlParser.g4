@@ -109,12 +109,7 @@ date_time
     ;
 
 array_
-    : L_BRACKET array_values? comment_or_nl R_BRACKET
-    ;
-
-array_values
-    : (comment_or_nl value nl_or_comment COMMA array_values comment_or_nl)
-    | comment_or_nl value nl_or_comment COMMA?
+    : L_BRACKET (comment_or_nl value nl_or_comment (COMMA value comment_or_nl)*) comment_or_nl R_BRACKET
     ;
 
 comment_or_nl
