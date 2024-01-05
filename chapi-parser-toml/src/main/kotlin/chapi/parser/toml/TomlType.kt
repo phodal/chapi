@@ -23,16 +23,18 @@ enum class TomlType {
         }
     }
 
-    fun fromString(type: String): TomlType {
-        return when (type) {
-            "String" -> String_
-            "Int" -> Int
-            "Float" -> Float
-            "Bool" -> Bool
-            "Date" -> Date
-            "Array" -> Array
-            "InlineTable" -> InlineTable
-            else -> None
+    companion object {
+        fun fromString(type: String): TomlType? {
+            return when (type) {
+                "String" -> String_
+                "Int" -> Int
+                "Float" -> Float
+                "Bool" -> Bool
+                "Date" -> Date
+                "Array" -> Array
+                "InlineTable" -> InlineTable
+                else -> null
+            }
         }
     }
 }
