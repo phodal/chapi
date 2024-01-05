@@ -13,9 +13,7 @@ import java.io.File
 
 
 open class RustAstBaseListener(private val fileName: String) : RustParserBaseListener() {
-    private val LIB_RS = "lib.rs"
-    private val MAIN_RS = "main.rs"
-
+    val packageName: String = calculatePackageName(fileName)
     private val codeContainer: CodeContainer = CodeContainer(FullName = fileName, PackageName = packageName)
     private val imports: MutableList<CodeImport> = mutableListOf()
     private var currentNode: CodeDataStruct = CodeDataStruct()
@@ -51,45 +49,6 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
      *
      */
     var localFunctions: MutableMap<String, CodeFunction> = mutableMapOf()
-
-    /**
-     * packageName will parse from fileName, like:
-     * - "src/main.rs" -> "main"
-     * - "enfer_core/src/lib.rs" -> "enfer_core"
-     * - "enfer_core/src/document.rs" -> "enfer_core::document"
-     */
-    val packageName: String
-        get() {
-            val modulePath = fileName.substringBeforeLast("src")
-                .substringBeforeLast(File.separator)
-
-            val paths = fileName.substringAfterLast("src").split(File.separator)
-
-            // if pathSize == 1, it means the file is in the root directory
-            if (paths.size == 1) {
-                return if (fileName.endsWith(LIB_RS) || fileName.endsWith(MAIN_RS)) {
-                    ""
-                } else {
-                    fileName.substringBeforeLast(".")
-                }
-            }
-
-            // if modulePath is empty, use paths as package names
-            val packageName = paths
-                .filter { it.isNotEmpty() && it != MAIN_RS && it != LIB_RS }
-                .joinToString("::") { it.substringBeforeLast(".") }
-
-            if (modulePath.isEmpty()) {
-                return packageName
-            }
-
-            // if modulePath is not empty, use modulePath as package name
-            if (packageName.isEmpty()) {
-                return modulePath
-            }
-
-            return "$modulePath::$packageName"
-        }
 
     open fun getNodeInfo(): CodeContainer = codeContainer.apply {
         val allStruct = structMap.values
@@ -517,5 +476,64 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 Fields = individualFields
             }
         )
+    }
+
+    companion object {
+        val LIB_RS = "lib.rs"
+        val MAIN_RS = "main.rs"
+
+        /**
+         * Calculates the package name for a given file name in the Kotlin language.
+         *
+         * @param fileName the name of the file for which the package name needs to be calculated
+         * @return the calculated package name as a string
+         *
+         * The `calculatePackageName` method is used to determine the package name based on the given file name in the Kotlin language. The package name is an essential part of organizing code in Kotlin and is used to group related classes and files together.
+         *
+         * The package name is derived from the file name using the following rules:
+         * - If the file name is "src/main.rs", the package name will be "main".
+         * - If the file name is "enfer_core/src/lib.rs", the package name will be "enfer_core".
+         * - If the file name is "enfer_core/src/document.rs", the package name will be "enfer_core::document".
+         *
+         * It is important to note that the package name is calculated based on the file path and may differ from the actual package declaration in the file.
+         *
+         * Example usage:
+         * ```kotlin
+         * val fileName = "enfer_core/src/document.rs"
+         * val packageName = calculatePackageName(fileName)
+         * println(packageName) // Output: enfer_core::document
+         * ```
+         */
+        fun calculatePackageName(fileName: String): String {
+            val modulePath = fileName.substringBeforeLast("src")
+                .substringBeforeLast(File.separator)
+
+            val paths = fileName.substringAfterLast("src").split(File.separator)
+
+            // if pathSize == 1, it means the file is in the root directory
+            if (paths.size == 1) {
+                return if (fileName.endsWith(LIB_RS) || fileName.endsWith(MAIN_RS)) {
+                    ""
+                } else {
+                    fileName.substringBeforeLast(".")
+                }
+            }
+
+            // if modulePath is empty, use paths as package names
+            val packageName = paths
+                .filter { it.isNotEmpty() && it != MAIN_RS && it != LIB_RS }
+                .joinToString("::") { it.substringBeforeLast(".") }
+
+            if (modulePath.isEmpty()) {
+                return packageName
+            }
+
+            // if modulePath is not empty, use modulePath as package name
+            if (packageName.isEmpty()) {
+                return modulePath
+            }
+
+            return "$modulePath::$packageName"
+        }
     }
 }
