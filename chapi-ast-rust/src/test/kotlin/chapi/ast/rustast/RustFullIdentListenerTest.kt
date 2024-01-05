@@ -2,6 +2,7 @@ package chapi.ast.rustast
 
 import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Test
+import java.io.File
 import kotlin.test.assertEquals
 
 
@@ -548,7 +549,8 @@ fn main() {
         }
 
         assertEquals(8, functionCalls.size)
-        assertEquals(outputs, """
+        assertEquals(
+            outputs, """
             std::fs::read -> unwrap -> std::fs::read
             std::fs -> read -> std::fs
             std::fs::read -> unwrap -> std::fs::read
@@ -557,7 +559,8 @@ fn main() {
             embedding::Semantic -> init_semantic -> init_semantic
             semantic.embed -> unwrap -> semantic.embed
             embedding::Semantic -> embed -> semantic
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 
     @Test
@@ -596,5 +599,57 @@ fn main() {
             assert_eq -> assert_eq -> assert_eq
         """.trimIndent()
         )
+    }
+
+    @Test
+    fun should_handle_for_function_call() {
+        val code = """
+            use crate::domain::git::coco_tag::CocoTag;
+
+            pub struct GitTagParser {
+                tags: Vec<CocoTag>
+            }
+            
+            impl Default for GitTagParser {
+                fn default() -> Self {
+                    GitTagParser { tags: vec![] }
+                }
+            }
+            
+            impl GitTagParser {
+                pub fn parse(str: &str) -> Vec<CocoTag> {
+                    vec![]
+                }
+            }
+            
+            #[cfg(test)]
+            mod test {
+                use crate::infrastructure::git::git_tag_parser::GitTagParser;
+            
+                #[test]
+                pub fn should_parse_commit_id() {
+                    let input = "92fffa9b 1571521692  (tag: v0.21.0)
+            1fec6a3c 1570655888
+            71db1ab2 1541570931";
+            
+                    let tags = GitTagParser::parse(input);
+                    assert_eq!(1, tags.len());
+                }
+            }
+        """.trimIndent()
+
+        val filePath = listOf("src", "infrastructure", "git", "git_tag_parser.rs").joinToString(File.separator)
+
+        val codeContainer = RustAnalyser().analysis(code, filePath)
+        val codeDataStruct = codeContainer.DataStructures
+
+        assertEquals(2, codeDataStruct.size)
+        val testFunc = codeDataStruct[0].Functions[0]
+        testFunc.FunctionCalls.map {
+            println("${it.Package} -> ${it.NodeName} -> ${it.FunctionName} -> ${it.OriginNodeName}")
+        }
+
+        assertEquals(2, testFunc.FunctionCalls.size)
+        assertEquals("infrastructure::git::git_tag_parser", testFunc.FunctionCalls[0].Package)
     }
 }

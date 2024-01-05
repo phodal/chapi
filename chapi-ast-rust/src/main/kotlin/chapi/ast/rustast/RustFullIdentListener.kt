@@ -41,9 +41,11 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
 
         val pureFuncName = split?.last() ?: ""
 
+        val lookedType = lookupByType(nodeName)
+
         functionInstance.FunctionCalls += CodeCall(
-            Package = lookupPackage(pureFuncName, nodeName),
-            NodeName = lookupByType(nodeName),
+            Package = lookupPackage(pureFuncName, lookedType),
+            NodeName = lookedType,
             FunctionName = pureFuncName,
             OriginNodeName = nodeName,
             Parameters = buildParameters(ctx?.callParams()),
@@ -57,6 +59,19 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
     private fun lookupPackage(typeText: String, nodeName: String): String {
         individualFunctions.firstOrNull { it.Name == typeText }?.let {
             return it.Package
+        }
+
+        if (currentModule == "test") {
+            // crate::infrastructure::git::git_tag_parser::GitTagParser
+            val split = nodeName.split("::")
+            val structName = split.last()
+            val structPkg = split.dropLast(1).joinToString("::").removePrefix("crate::")
+
+            structMap.values.firstOrNull { ds ->
+                ds.NodeName == structName && ds.Package == structPkg && ds.Functions.any { it.Name == typeText }
+            }?.let {
+                return it.Package
+            }
         }
 
         return ""

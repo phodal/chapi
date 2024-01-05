@@ -25,9 +25,8 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     private val individualFields = mutableListOf<CodeField>()
     protected val individualFunctions = mutableListOf<CodeFunction>()
-    protected var structMap = mutableMapOf<String, CodeDataStruct>()
-
-    private var currentModule: String = ""
+    var structMap = mutableMapOf<String, CodeDataStruct>()
+    protected var currentModule: String = ""
 
     /// for testing
     private var lastModule: String = ""
