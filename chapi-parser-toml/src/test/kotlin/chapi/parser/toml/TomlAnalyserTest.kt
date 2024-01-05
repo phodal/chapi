@@ -123,4 +123,29 @@ class TomlAnalyserTest {
         assertEquals("79.5", childField.TypeValue)
         assertEquals("Float", childField.TypeType)
     }
+
+    @Test
+    fun should_handle_for_long_string() {
+        val code = """
+            re = '''I [dw]on't need \d{2} apples'''
+            lines = '''
+            The first newline is
+            trimmed in raw strings.
+            All other whitespace
+            is preserved.
+            '''
+            """.trimIndent()
+
+        val analyser = TomlAnalyser()
+        val container = analyser.analysis(code, "path/to/file.toml")
+
+        assertEquals(2, container.Fields.size)
+        val firstField = container.Fields[0]
+        assertEquals("re", firstField.TypeKey)
+        assertEquals("'''I [dw]on't need \\d{2} apples'''", firstField.TypeValue)
+
+        val secondField = container.Fields[1]
+        assertEquals("lines", secondField.TypeKey)
+        assertEquals("'''\nThe first newline is\ntrimmed in raw strings.\nAll other whitespace\nis preserved.\n'''", secondField.TypeValue)
+    }
 }
