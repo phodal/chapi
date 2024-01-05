@@ -20,6 +20,7 @@ data class AnnotationKeyValue(var Key: String = "", var Value: String = "")
 data class CodeAnnotation(
     var Name: String = "",
     var KeyValues: List<AnnotationKeyValue> = listOf(),
+    @Since("2.2.2")
     var Position: CodePosition = CodePosition(),
 ) {
     @Deprecated("is for Java/Kotlin Only", ReplaceWith("this.Name == \"Component\" || this.Name == \"Repository\""))

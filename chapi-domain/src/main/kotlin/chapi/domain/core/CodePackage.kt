@@ -10,6 +10,5 @@ data class CodePackage(
     var ID: String = "",
     var codeContainers: List<CodeContainer> = listOf(),
     var Packages : List<CodePackage> = listOf(),
-
     var Extension: JsonElement = JsonObject(HashMap())
 )

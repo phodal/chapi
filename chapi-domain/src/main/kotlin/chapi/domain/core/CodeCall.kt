@@ -38,9 +38,8 @@ data class CodeCall(
     var Position: CodePosition = CodePosition(),
     /**
      * like "v1.Group", the v1 will be the OriginNodeName
-     *
-     * @since 2.0.0-Beta.9
     */
+    @Since("2.0.0-Beta.9")
     var OriginNodeName: String = "",
 ) {
 

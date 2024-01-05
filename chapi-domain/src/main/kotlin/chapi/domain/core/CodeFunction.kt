@@ -41,7 +41,9 @@ data class CodeFunction(
     @Deprecated("for React")
     var IsReturnHtml: Boolean = false,
     var BodyHash: Int = 0,
+    @Since("2.0.0")
     var Type: FunctionType = FunctionType.Function,
+    @Since("2.1.4")
     var Content: String = "",
     // a experimental api for code analysis, please carefully use it.
 //    @property:ExperimentalStdlibApi val expression: Expression? = null,

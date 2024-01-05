@@ -59,6 +59,7 @@ data class CodeDataStruct(
      * If [NodeName] is default, [CodePosition] may be empty
      */
     var Position: CodePosition = CodePosition(),
+    @Since("2.1.4")
     var Content: String = "",
 ) {
     fun isUtilClass(): Boolean {
