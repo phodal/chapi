@@ -17,10 +17,24 @@ enum class TomlType {
 
 class TomlListener(val filePath: String) : TomlParserBaseListener() {
     private val fileName = Path(filePath).fileName.toString()
-    private val currentContainer = CodeContainer(FullName = fileName)
+    private val rootContainer = CodeContainer(FullName = fileName)
+    private var containerMap = mutableMapOf<String, CodeContainer>()
 
+    private var currentTableName = ""
 
     override fun enterKey_value(ctx: TomlParser.Key_valueContext?) {
+        val field = buildField(ctx)
+        if (currentTableName == "") {
+            rootContainer.Fields += field
+        } else {
+            containerMap.getOrDefault(currentTableName, CodeContainer(FullName = fileName, PackageName = currentTableName)).also {
+                it.Fields += field
+                containerMap[currentTableName] = it
+            }
+        }
+    }
+
+    private fun buildField(ctx: TomlParser.Key_valueContext?): CodeField {
         val key = ctx?.key()?.text ?: ""
         val value = ctx?.value()?.text ?: ""
         val firstOrNull = ctx?.value()?.children?.first()
@@ -35,15 +49,19 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
             else -> TomlType.None
         }
 
-        val fields = listOf(
-            CodeField(
-                TypeKey = key,
-                TypeValue = parseValue(value, type),
-                TypeType = type.toString()
-            )
+        val field = CodeField(
+            TypeKey = key,
+            TypeValue = parseValue(value, type),
+            TypeType = type.toString()
         )
 
-        currentContainer.Fields += fields
+        return field
+    }
+
+
+    override fun enterTable(ctx: TomlParser.TableContext?) {
+        val tableName = ctx?.standard_table()?.key()?.text ?: ""
+        currentTableName = tableName
     }
 
     private fun parseValue(value: String, type: TomlType): String {
@@ -60,7 +78,6 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
     }
 
     fun getNodeInfo(): CodeContainer {
-        return currentContainer
+        return rootContainer.copy(Containers = containerMap.values.toList())
     }
-
 }
