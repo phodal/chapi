@@ -1,6 +1,12 @@
-# Chapi
+---
+layout: default
+title: Chapi
+description: Chapi 是一个通用层次抽象解析器与信息转换器，它可以将不同编程语言的源代码转换为统一的层次抽象模型。
+nav_order: 1
+permalink: /
+---
 
-<img src="docs/logo.svg" width="100" height="100" alt="Chapi Logo">
+<img src="logo.svg" width="100" height="100" alt="Chapi Logo">
 
 [![Chapi CI](https://github.com/modernizing/chapi/actions/workflows/ci.yml/badge.svg)](https://github.com/modernizing/chapi/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/phodal/chapi/graph/badge.svg?token=sdB5L3xbRv)](https://codecov.io/gh/phodal/chapi)

@@ -67,7 +67,7 @@ bintray {
         issueTrackerUrl = 'https://github.com/phodal/chapi/issues'
         labels = ["meta-language", "meta-data", "meta-programming", "meta-analysis", "meta-model", "modeling"]
         githubRepo = "phodal/chapi"
-        githubReleaseNotesFile = 'README.md'
+        githubReleaseNotesFile = 'home.md'
         licenses = ['MPL-2.0']
         vcsUrl = "https://github.com/phodal/chapi"
         description = "Chapi (Common Hierarchical Abstract Parser and Information Converter) streamlines code analysis by converting diverse language source code into a unified abstract model, simplifying cross-language development."
