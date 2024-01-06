@@ -173,8 +173,8 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         // handle for a pointer
         val firstParameter = currentFunction.Parameters[0]
         if (firstParameter.TypeType.endsWith('*')) {
-            val pointerIndex = firstParameter.TypeType.length - 1
-            val baseType = firstParameter.TypeType.substring(0, pointerIndex)
+            val baseType = firstParameter.TypeType.removeSuffix("*")
+
             structMap.getOrPut(baseType) {
                 CodeDataStruct(NodeName = baseType)
             }.let {
