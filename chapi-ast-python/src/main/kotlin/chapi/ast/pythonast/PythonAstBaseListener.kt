@@ -11,22 +11,22 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     var localVars = mutableMapOf<String, String>()
 
     fun buildParameters(listCtx: PythonParser.TypedargslistContext?): List<CodeProperty> {
-        val parameters: MutableList<CodeProperty> = mutableListOf()
-        for (defParameters in listCtx!!.def_parameters()) {
-            for (defParaCtx in defParameters.def_parameter()) {
+        val parameters = listCtx?.def_parameters()?.map { defParameters ->
+            defParameters.def_parameter().map { defParaCtx ->
                 val parameter = CodeProperty(
                     TypeType = "",
                     TypeValue = defParaCtx.text
                 )
 
+                // method parameter default value
                 if (defParaCtx.ASSIGN() != null) {
                     parameter.DefaultValue = defParaCtx.test().text
                     parameter.TypeValue = defParaCtx.named_parameter().text
                 }
 
-                parameters += parameter
+                parameter
             }
-        }
+        }?.flatten() ?: listOf()
 
         return parameters
     }
@@ -47,16 +47,12 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     }
 
     fun buildAnnotationsByIndex(ctx: ParseTree, ctxIndex: Int): List<CodeAnnotation> {
-        val nodes: MutableList<PythonParser.DecoratorContext> = mutableListOf()
+        val nodes = mutableListOf<PythonParser.DecoratorContext>()
         for (i in 0 until ctxIndex) {
             nodes += ctx.parent.getChild(i) as PythonParser.DecoratorContext
         }
 
-        val annotations: MutableList<CodeAnnotation> = mutableListOf()
-        for (node in nodes) {
-            annotations += this.buildAnnotation(node)
-        }
-
+        val annotations = nodes.map { buildAnnotation(it) }
         return annotations
     }
 
@@ -83,19 +79,10 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     }
 
     private fun buildArgList(arglistCtx: PythonParser.ArglistContext?): List<AnnotationKeyValue> {
-        var arguments: List<AnnotationKeyValue> = listOf()
-        for (argCtx in arglistCtx!!.argument()) {
+        val arguments = arglistCtx!!.argument().map { argCtx ->
             val key = argCtx.test(0).text
-            var value = ""
-            if (argCtx.test().size > 1) {
-                value = argCtx.test(1).text
-            }
-
-            val annotation = AnnotationKeyValue(
-                Key = key,
-                Value = value
-            )
-            arguments += annotation
+            val value = if (argCtx.test().size > 1) argCtx.test(1).text else ""
+            AnnotationKeyValue(key, value)
         }
 
         return arguments
