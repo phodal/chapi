@@ -9,9 +9,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     private val defaultDataStruct = CodeDataStruct()
     private var currentFunction = CodeFunction()
     private var structMap = mutableMapOf<String, CodeDataStruct>()
-    private var codeContainer: CodeContainer =
-        CodeContainer(FullName = fileName)
-
+    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
     override fun enterIncludeDeclaration(ctx: CParser.IncludeDeclarationContext?) {
         val includeIdentifier = ctx?.includeIdentifier()
@@ -27,7 +25,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     override fun enterStructOrUnionSpecifier(ctx: CParser.StructOrUnionSpecifierContext?) {
         val nodeName = ctx?.Identifier()?.text ?: ""
         structMap.getOrPut(nodeName) {
-            CodeDataStruct(NodeName = nodeName)
+            CodeDataStruct(NodeName = nodeName, Position = buildPosition(ctx))
         }.let {
             currentDataStruct = it
         }
@@ -38,14 +36,9 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
             if (specifierQualifierList != null) {
                 val key = specifierQualifierList.typeSpecifier().text
                 val qualifierList = specifierQualifierList.specifierQualifierList()
-                var value = ""
-                if (qualifierList != null) {
-                    value = qualifierList.text
-                }
-
                 val field = CodeField(
                     TypeType = key,
-                    TypeValue = value
+                    TypeValue = qualifierList?.text ?: ""
                 )
 
                 currentDataStruct.Fields += field
@@ -53,18 +46,20 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         }
     }
 
-    private fun parseDirectDeclarator(ctx: CParser.DirectDeclaratorContext) {
-        val directDeclaratorType = ctx::class.java.simpleName
-        when(directDeclaratorType) {
+    private fun parseDirectDeclarator(ctx: CParser.DirectDeclaratorContext?) {
+        val directDeclaratorType = ctx!!::class.java.simpleName
+        when (directDeclaratorType) {
             "ParameterDirectDeclaratorContext" -> {
                 handleParamDirectDeclCtx(ctx)
             }
+
             "IdentifierDirectDeclaratorContext" -> {
                 val directDeclarator = ctx as CParser.IdentifierDirectDeclaratorContext
                 if (directDeclarator.Identifier().text != null) {
-                  currentFunction.Name = directDeclarator.Identifier().text
+                    currentFunction.Name = directDeclarator.Identifier().text
                 }
             }
+
             "DeclaratorDirectDeclaratorContext" -> {}
             "AssignmentExpressionDirectDeclaratorContext" -> {}
             "PreStaticAssignmentExpressionDirectDeclaratorContext" -> {}
@@ -82,9 +77,11 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         currentFunction.Parameters = listOf()
         val directDeclarator = ctx as CParser.ParameterDirectDeclaratorContext
         parseDirectDeclarator(ctx.directDeclarator())
+
         val parameterTypeList = directDeclarator.parameterTypeList().parameterList()
         val parameters: MutableList<CParser.ParameterDeclarationContext> = ArrayList()
         this.buildParameters(parameterTypeList, parameters)
+
         for (parameter in parameters) {
             var type: String? = null
             var name: String? = null
@@ -128,31 +125,28 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     }
 
     override fun enterFunctionDefinition(ctx: CParser.FunctionDefinitionContext?) {
-        val codeFunction = CodeFunction()
-        currentFunction = codeFunction
-        if (ctx!!.declarationSpecifiers() != null) {
-            for (specifier in ctx.declarationSpecifiers().declarationSpecifier()) {
-                if (specifier.typeSpecifier().text != null) {
-                    if (specifier.typeSpecifier().typedefName() != null) {
-                        codeFunction.Name = specifier.typeSpecifier().typedefName().text
-                    } else {
-                        codeFunction.ReturnType = specifier.typeSpecifier().text
-                    }
-                }
+        currentFunction = CodeFunction(Position = buildPosition(ctx))
 
+        ctx?.declarationSpecifiers()?.declarationSpecifier()?.map {
+            if (it.typeSpecifier().text != null) {
+                if (it.typeSpecifier().typedefName() != null) {
+                    currentFunction.Name = it.typeSpecifier().typedefName().text
+                } else {
+                    currentFunction.ReturnType = it.typeSpecifier().text
+                }
             }
         }
 
-        parseDirectDeclarator(ctx.declarator().directDeclarator())
+        parseDirectDeclarator(ctx?.declarator()?.directDeclarator())
         if (currentFunction.Parameters.isNotEmpty()) {
             val firstParameter = currentFunction.Parameters[0]
-            if(firstParameter.TypeType.endsWith('*')) {
+            if (firstParameter.TypeType.endsWith('*')) {
                 val pointerIndex = firstParameter.TypeType.length - 1
                 val baseType = firstParameter.TypeType.substring(0, pointerIndex)
-                if (structMap.get(baseType) != null) {
-                    structMap[baseType]!!.Functions += currentFunction
-                } else {
-                    defaultDataStruct.Functions += currentFunction
+                structMap.getOrPut(baseType) {
+                    CodeDataStruct(NodeName = baseType)
+                }.let {
+                    it.Functions += currentFunction
                 }
             } else {
                 defaultDataStruct.Functions += currentFunction

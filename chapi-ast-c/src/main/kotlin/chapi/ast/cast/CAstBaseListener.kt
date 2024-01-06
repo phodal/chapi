@@ -6,13 +6,17 @@ import chapi.domain.core.*
 import org.antlr.v4.runtime.ParserRuleContext
 
 open class CAstBaseListener: CBaseListener() {
-    fun buildPosition(ctx: ParserRuleContext): CodePosition {
-        val position = CodePosition()
-        position.StartLine = ctx.start.line
-        position.StartLinePosition= ctx.start.charPositionInLine
-        position.StopLine = ctx.stop.line
-        position.StopLinePosition = ctx.stop.charPositionInLine
-        return position
+    fun buildPosition(ctx: ParserRuleContext?): CodePosition {
+        if (ctx == null) {
+            return CodePosition()
+        }
+
+        return CodePosition(
+            StartLine = ctx.start.line,
+            StartLinePosition= ctx.start.charPositionInLine,
+            StopLine = ctx.stop.line,
+            StopLinePosition = ctx.stop.charPositionInLine
+        )
     }
 
     fun buildParameters(ctx: CParser.ParameterListContext, parameters: MutableList<CParser.ParameterDeclarationContext>) {
