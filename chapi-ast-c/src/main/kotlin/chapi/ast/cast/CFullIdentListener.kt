@@ -25,15 +25,15 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     }
 
     override fun enterStructOrUnionSpecifier(ctx: CParser.StructOrUnionSpecifierContext?) {
-        val codeDataStruct = CodeDataStruct()
-        if (ctx!!.Identifier() != null) {
-            codeDataStruct.NodeName = ctx.Identifier().text
+        val nodeName = ctx?.Identifier()?.text ?: ""
+        structMap.getOrPut(nodeName) {
+            CodeDataStruct(NodeName = nodeName)
+        }.let {
+            currentDataStruct = it
         }
 
-        currentDataStruct = codeDataStruct
-
-        if (ctx.structDeclarationList() != null) {
-            val structDecl = ctx.structDeclarationList().structDeclaration()
+        ctx?.structDeclarationList()?.structDeclaration()?.let {
+            val structDecl = it
             val specifierQualifierList = structDecl.specifierQualifierList()
             if (specifierQualifierList != null) {
                 val key = specifierQualifierList.typeSpecifier().text
@@ -47,12 +47,10 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
                     TypeType = key,
                     TypeValue = value
                 )
-                codeDataStruct.Fields += field
-            }
 
+                currentDataStruct.Fields += field
+            }
         }
-        structMap[codeDataStruct.NodeName] = codeDataStruct
-        codeContainer.DataStructures += codeDataStruct
     }
 
     private fun parseDirectDeclarator(ctx: CParser.DirectDeclaratorContext) {
@@ -170,6 +168,8 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         if (defaultDataStruct.Functions.isNotEmpty()) {
             codeContainer.DataStructures += defaultDataStruct
         }
+
+        codeContainer.DataStructures += structMap.values
         return codeContainer
     }
 }

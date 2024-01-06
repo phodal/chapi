@@ -170,7 +170,7 @@ struct context{
 }; 
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-//        assertEquals(codeFile.DataStructures.size, 2)
+        assertEquals(codeFile.DataStructures.size, 2)
     }
 
     @Test
@@ -184,6 +184,18 @@ typedef struct {
 } element; // Complete definition
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.DataStructures.size, 3)
+        assertEquals(codeFile.DataStructures.size, 2)
+
+        val firstDs = codeFile.DataStructures[0]
+        assertEquals(firstDs.NodeName, "element")
+        assertEquals(firstDs.Fields.size, 0)
+
+        val secondDs = codeFile.DataStructures[1]
+//        assertEquals(secondDs.NodeName, "element")
+//        assertEquals(secondDs.Fields.size, 2)
+//        assertEquals(secondDs.Fields[0].TypeType, "int")
+//        assertEquals(secondDs.Fields[0].TypeValue, "value")
+//        assertEquals(secondDs.Fields[1].TypeType, "struct element*")
     }
 }
+
