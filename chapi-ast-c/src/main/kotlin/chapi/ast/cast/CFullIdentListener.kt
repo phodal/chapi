@@ -30,14 +30,10 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         }
 
         ctx?.structDeclarationList()?.structDeclaration()?.let {
-            val structDecl = it
-            val specifierQualifierList = structDecl.specifierQualifierList()
-            if (specifierQualifierList != null) {
-                val key = specifierQualifierList.typeSpecifier().text
-                val qualifierList = specifierQualifierList.specifierQualifierList()
+            it.specifierQualifierList()?.let { qualifierList ->
                 val field = CodeField(
-                    TypeType = key,
-                    TypeValue = qualifierList?.text ?: ""
+                    TypeType = qualifierList.typeSpecifier().text,
+                    TypeValue = qualifierList.specifierQualifierList()?.text ?: ""
                 )
 
                 currentDataStruct.Fields += field
@@ -52,10 +48,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
             }
 
             is CParser.IdentifierDirectDeclaratorContext -> {
-                val directDeclarator = ctx as CParser.IdentifierDirectDeclaratorContext
-                if (directDeclarator.Identifier().text != null) {
-                    currentFunction.Name = directDeclarator.Identifier().text
-                }
+                currentFunction.Name = ctx.Identifier().text
             }
 
             is CParser.DeclaratorDirectDeclaratorContext -> {}
@@ -84,6 +77,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
                     is CParser.IdentifierDirectDeclaratorContext -> {
                         directDeclarator.Identifier().text
                     }
+
                     else -> null
                 }
             }
@@ -131,7 +125,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
         if (currentFunction.Parameters.isEmpty()) return
 
-        // handle for pointer
+        // handle for a pointer
         val firstParameter = currentFunction.Parameters[0]
         if (firstParameter.TypeType.endsWith('*')) {
             val pointerIndex = firstParameter.TypeType.length - 1
