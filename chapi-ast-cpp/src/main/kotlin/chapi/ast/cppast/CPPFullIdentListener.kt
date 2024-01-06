@@ -1,72 +1,73 @@
 package chapi.ast.cppast
 
-import chapi.ast.antlr.CPPBaseListener
-import chapi.ast.antlr.CPPParser
+import chapi.ast.antlr.CPP14Parser
+import chapi.ast.antlr.CPP14ParserBaseListener
 import chapi.domain.core.CodeContainer
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeFunction
-import chapi.domain.core.CodeProperty
 
-class CPPFullIdentListener(fileName: String) : CPPBaseListener() {
+class CPPFullIdentListener(fileName: String) : CPP14ParserBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     private var defaultNode = CodeDataStruct()
 
-    override fun enterFunctiondefinition(ctx: CPPParser.FunctiondefinitionContext?) {
+    override fun enterFunctionDefinition(ctx: CPP14Parser.FunctionDefinitionContext?) {
         val method = CodeFunction()
         val context = ctx!!
 
-        if (context.declspecifierseq() != null) {
-            method.ReturnType = context.declspecifierseq().text
+        if (context.declSpecifierSeq() != null) {
+            method.ReturnType = context.declSpecifierSeq().text
         }
 
-        val firstPtrDecl = context.declarator().ptrdeclarator()
+        val firstPtrDecl = context.declarator().pointerDeclarator()
         if (firstPtrDecl != null) {
-            if (firstPtrDecl.noptrdeclarator() != null) {
+            if (firstPtrDecl.noPointerDeclarator() != null) {
                 tryFunctionBuild(firstPtrDecl, method)
             }
         }
     }
 
-    private fun tryFunctionBuild(firstPtrDecl: CPPParser.PtrdeclaratorContext, method: CodeFunction) {
-        val parametersandqualifiers = firstPtrDecl.noptrdeclarator().parametersandqualifiers()
-        if (parametersandqualifiers != null) {
-            val functionName = firstPtrDecl.noptrdeclarator().noptrdeclarator().text
+    private fun tryFunctionBuild(firstPtrDecl: CPP14Parser.PointerDeclaratorContext, method: CodeFunction) {
+        val parametersAndQualifiersContext = firstPtrDecl.noPointerDeclarator().parametersAndQualifiers()
+        if (parametersAndQualifiersContext != null) {
+            val functionName = firstPtrDecl.noPointerDeclarator().noPointerDeclarator().text
             method.Name = functionName
 
-            if (parametersandqualifiers.parameterdeclarationclause() != null) {
-                buildParameters(parametersandqualifiers.parameterdeclarationclause(), method)
+            if (parametersAndQualifiersContext.parameterDeclarationClause() != null) {
+                buildParameters(parametersAndQualifiersContext.parameterDeclarationClause(), method)
             }
 
             defaultNode.Functions += method
         }
+
     }
 
-    private fun buildParameters(paramDecl: CPPParser.ParameterdeclarationclauseContext, method: CodeFunction) {
-        if (paramDecl.parameterdeclarationlist() != null) {
-            buildParameter(paramDecl.parameterdeclarationlist()!!, method)
+    private fun buildParameters(parameterDeclarationClause: CPP14Parser.ParameterDeclarationClauseContext, method: CodeFunction) {
+        if (parameterDeclarationClause.parameterDeclarationList() != null) {
+            buildParameter(parameterDeclarationClause.parameterDeclarationList()!!, method)
         }
     }
 
-    private fun buildParameter(
-        paramDeclCtx: CPPParser.ParameterdeclarationlistContext,
-        method: CodeFunction
-    ) {
-        if (paramDeclCtx.parameterdeclarationlist() != null) {
-            buildParameter(paramDeclCtx.parameterdeclarationlist(), method)
-        }
-        val paramDecl = paramDeclCtx.parameterdeclaration()
-        if (paramDecl != null) {
-            val declspecifierseq = paramDecl.declspecifierseq()
-            val type = declspecifierseq.declspecifier().typespecifier().text
-            val param = CodeProperty(TypeType = type, TypeValue = "")
-
-            if (paramDecl.declarator() != null) {
-                param.TypeValue = paramDecl.declarator().text
-            }
-
-            method.Parameters += param
+    private fun buildParameter(parameterDeclarationList: CPP14Parser.ParameterDeclarationListContext, method: CodeFunction) {
+//        if (parameterDeclarationList.parameterDeclaration() != null) {
+//            buildParameter(parameterDeclarationList.parameterDeclarationList(), method)
+//            parameterDeclarationList.parameterDeclaration().forEach {
+//                buildParameter(it, method)
+//            }
+//        }
+        val parameterDeclaration = parameterDeclarationList.parameterDeclaration()
+        if (parameterDeclaration != null) {
+//            val declSpecifierSeq = parameterDeclaration.declSpecifierSeq()
+//            val declSpecifierSeq = parameterDeclaration
+//            val type = declSpecifierSeq.declSpecifier().typeSpecifier().text
+//            val param = CodeProperty(TypeType = type, TypeValue = "")
+//
+//            if (parameterDeclaration.declarator() != null) {
+//                param.TypeValue = parameterDeclaration.declarator().text
+//            }
+//            method.Parameters += param
         }
     }
+
 
     fun getNodeInfo(): CodeContainer {
         if (defaultNode.Functions.isNotEmpty()) {

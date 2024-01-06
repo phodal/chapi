@@ -1,7 +1,7 @@
 package chapi.ast.cppast
 
-import chapi.ast.antlr.CPPLexer
-import chapi.ast.antlr.CPPParser
+import chapi.ast.antlr.CPP14Lexer
+import chapi.ast.antlr.CPP14Parser
 import chapi.domain.core.CodeContainer
 import chapi.parser.Analyser
 import org.antlr.v4.runtime.CharStreams
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class CPPAnalyser: Analyser  {
     override fun analysis(code: String, filePath: String): CodeContainer {
-        val context = this.parse(code).translationunit()
+        val context = this.parse(code).translationUnit()
         val listener = CPPFullIdentListener(fileName = filePath)
 
         ParseTreeWalker().walk(listener, context)
@@ -19,10 +19,9 @@ open class CPPAnalyser: Analyser  {
         return nodeInfo
     }
 
-    open fun parse(str: String): CPPParser {
-        val fromString = CharStreams.fromString(str)
-        val lexer = CPPLexer (fromString)
-        val tokenStream = CommonTokenStream(lexer)
-        return CPPParser(tokenStream)
-    }
+    open fun parse(str: String): CPP14Parser =
+        CharStreams.fromString(str)
+            .let(::CPP14Lexer)
+            .let(::CommonTokenStream)
+            .let(::CPP14Parser)
 }
