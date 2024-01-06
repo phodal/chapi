@@ -1,22 +1,18 @@
 package chapi.ast.csharpast
 
 import chapi.ast.antlr.CSharpParser
-import chapi.ast.antlr.CSharpParser.Class_typeContext
-import chapi.ast.antlr.CSharpParser.Primary_expressionContext
-import chapi.ast.antlr.CSharpParser.Type_declarationContext
 import chapi.domain.core.*
-import chapi.infra.Stack
 import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
-
     private fun handleClassMember(memberCtx: CSharpParser.Class_member_declarationContext?) {
         val memberDeclaration = memberCtx!!.common_member_declaration() ?: return
         val firstChild = memberDeclaration.getChild(0) ?: return
 
         var returnType = "";
-        when (firstChild::class.java.simpleName) {
-            "TerminalNodeImpl" -> {
+        when (firstChild) {
+            is TerminalNodeImpl -> {
                 returnType = firstChild.text
             }
         }
@@ -123,28 +119,31 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
         if (ctx == null) return
 
         var commonMemberForClass: CSharpParser.Common_member_declarationContext? = null
-        if (ctx.parent.javaClass.simpleName == "Common_member_declarationContext") {
-            commonMemberForClass = ctx.parent as CSharpParser.Common_member_declarationContext
-        } else if (ctx.parent.parent.javaClass.simpleName == "Common_member_declarationContext") {
-            commonMemberForClass = ctx.parent.parent as CSharpParser.Common_member_declarationContext
+        when (val parent = ctx.parent) {
+            is CSharpParser.Common_member_declarationContext -> {
+                commonMemberForClass = parent
+            }
+
+            is CSharpParser.Class_member_declarationContext -> {
+                commonMemberForClass = parent.parent as CSharpParser.Common_member_declarationContext
+            }
         }
 
         if (commonMemberForClass == null) return
 
-        if (commonMemberForClass.parent.javaClass.simpleName == "Class_member_declarationContext") {
+        if (commonMemberForClass.parent is CSharpParser.Class_member_declarationContext) {
             handleClassMember(commonMemberForClass.parent as CSharpParser.Class_member_declarationContext?)
         }
     }
 
     override fun enterProperty_declaration(ctx: CSharpParser.Property_declarationContext?) {
-        val memberName = ctx!!.member_name()
-        when (ctx.parent.javaClass.simpleName) {
-            "Typed_member_declarationContext" -> {
-                val typedMember = ctx.parent as CSharpParser.Typed_member_declarationContext
-                val typeValue = memberName.text
-                val typeContext = typedMember.type_()
+        when (val parent = ctx?.parent) {
+            is CSharpParser.Typed_member_declarationContext -> {
+                val typeValue = ctx.member_name().text
+                val typeContext = parent.type_()
 
                 val field = createField(typeValue, typeContext)
+
                 currentStruct.Fields += field
             }
         }
@@ -154,11 +153,9 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
         val field = CodeField(TypeValue = typeValue)
         field.TypeType = typeContext.text
 
-        val child = typeContext.base_type().getChild(0)
-        when (child.javaClass.simpleName) {
-            "Class_typeContext" -> {
-                val clazzType = child as Class_typeContext
-                val nsOrType = clazzType.namespace_or_type_name()
+        when (val child = typeContext.base_type().getChild(0)) {
+            is CSharpParser.Class_typeContext -> {
+                val nsOrType = child.namespace_or_type_name()
                 if (nsOrType != null) {
                     field.Modifiers = listOf(nsOrType.identifier()[0].text)
                     if (nsOrType.type_argument_list() != null) {
@@ -180,30 +177,38 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
 
     // call from method invocation parent will be easy to search for method call
     override fun enterMethod_invocation(ctx: CSharpParser.Method_invocationContext?) {
-        if (ctx == null) {
-            return
-        }
-        val primaryExpr = ctx.parent as Primary_expressionContext
+        val parent = ctx?.parent ?: return
+        val primaryExpr = when (parent) {
+            is CSharpParser.Primary_expressionContext -> {
+                ctx.parent as CSharpParser.Primary_expressionContext
+            }
+
+            else -> {
+                null
+            }
+        } ?: return
 
         var ident = ""
         var member = ""
         var params: List<CodeProperty> = listOf()
         primaryExpr.children.forEach {
-            when (it.javaClass.simpleName) {
+            when (it) {
                 // todo: merge to primary expression
-                "SimpleNameExpressionContext" -> {
-                    ident = (it as CSharpParser.SimpleNameExpressionContext).identifier().text
+                is CSharpParser.SimpleNameExpressionContext -> {
+                    ident = it.identifier().text
                 }
-                "Member_accessContext" -> {
-                    member = (it as CSharpParser.Member_accessContext).identifier().text
+
+                is CSharpParser.Member_accessContext -> {
+                    member = it.identifier().text
                 }
-                "Method_invocationContext" -> {
+
+                is CSharpParser.Method_invocationContext -> {
                     // todo: parse parameters
-                    val argumentList = (it as CSharpParser.Method_invocationContext).argument_list()
-                    if (argumentList != null) {
+                    it.argument_list()?.let { argumentList ->
                         params = parseParameters(argumentList)
                     }
                 }
+
                 else -> {
                     println(it.javaClass.simpleName)
                 }
@@ -222,9 +227,4 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
             )
         }
     }
-
-//    //for debug only
-//    override fun enterEveryRule(ctx: ParserRuleContext?) {
-//        println(ctx!!.javaClass.simpleName)
-//    }
 }

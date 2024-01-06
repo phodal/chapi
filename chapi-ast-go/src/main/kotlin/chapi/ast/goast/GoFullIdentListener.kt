@@ -63,20 +63,20 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private var lastBlock = CodeFunction(Type = FunctionType.Block, Name = "chapi_block")
 
     override fun enterBlock(ctx: GoParser.BlockContext?) {
-        if (ctx?.parent is GoParser.StatementContext) {
-            lastBlock = CodeFunction(Type = FunctionType.Block, Name = "chapi_block" + "${blockStack.count()}")
-            blockStack.push(lastBlock)
-        }
+        if (ctx?.parent !is GoParser.StatementContext) return
+
+        lastBlock = CodeFunction(Type = FunctionType.Block, Name = "chapi_block" + "${blockStack.count()}")
+        blockStack.push(lastBlock)
     }
 
     override fun exitBlock(ctx: GoParser.BlockContext?) {
-        if (ctx?.parent is GoParser.StatementContext) {
-            val popBlock = blockStack.pop()!!
-            if (blockStack.count() > 0) {
-                blockStack.peek()!!.InnerFunctions += popBlock
-            } else {
-                currentFunction.InnerFunctions += popBlock
-            }
+        if (ctx?.parent !is GoParser.StatementContext) return
+
+        val popBlock = blockStack.pop()!!
+        if (blockStack.count() > 0) {
+            blockStack.peek()!!.InnerFunctions += popBlock
+        } else {
+            currentFunction.InnerFunctions += popBlock
         }
     }
 
@@ -110,9 +110,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         val typeValue = it.identifierList()?.text ?: ""
         val typeType = it.type_()?.text ?: ""
 
-        val pair = processingStringType(typeValue, typeType)
-
-        return Pair(pair.first, pair.second)
+        return processingStringType(typeValue, typeType)
     }
 
     private fun processingStringType(typeValue: String, typeType: String): Pair<String, String> {
@@ -287,7 +285,6 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             }
 
             else -> {
-                println("${child.javaClass} not implemented -> ${child.text}")
                 CodeCall(NodeName = child.text)
             }
         }
