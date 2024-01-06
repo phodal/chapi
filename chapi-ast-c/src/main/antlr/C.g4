@@ -34,7 +34,7 @@
 grammar C;
 
 compilationUnit
-    : includeDeclaration? translationUnit? EOF
+    : includeDeclaration? externalDeclaration+ EOF
     ;
 
 includeDeclaration
@@ -179,12 +179,8 @@ constantExpression
     ;
 
 declaration
-    : declarationSpecifiers initDeclaratorList? ';'
+    : declarationSpecifier+ initDeclaratorList? ';'
     | staticAssertDeclaration
-    ;
-
-declarationSpecifiers
-    : declarationSpecifier+
     ;
 
 declarationSpecifier
@@ -386,8 +382,8 @@ parameterList
     ;
 
 parameterDeclaration
-    : declarationSpecifiers declarator
-    | declarationSpecifiers abstractDeclarator?
+    : declarationSpecifier+ declarator
+    | declarationSpecifier+ abstractDeclarator?
     ;
 
 identifierList
@@ -501,7 +497,7 @@ forCondition
     ;
 
 forDeclaration
-    : declarationSpecifiers initDeclaratorList?
+    : declarationSpecifier+ initDeclaratorList?
     ;
 
 forExpression
@@ -518,10 +514,6 @@ jumpStatement
     ) ';'
     ;
 
-translationUnit
-    : externalDeclaration+
-    ;
-
 externalDeclaration
     : functionDefinition
     | declaration
@@ -529,7 +521,7 @@ externalDeclaration
     ;
 
 functionDefinition
-    : declarationSpecifiers? declarator declarationList? compoundStatement
+    : declarationSpecifier+ declarator declarationList? compoundStatement
     ;
 
 declarationList

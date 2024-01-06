@@ -184,17 +184,14 @@ typedef struct {
 } element; // Complete definition
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.DataStructures.size, 2)
+        assertEquals(codeFile.DataStructures.size, 1)
 
-        val firstDs = codeFile.DataStructures[0]
-        assertEquals(firstDs.NodeName, "element")
-        assertEquals(firstDs.Fields.size, 0)
-
-        val secondDs = codeFile.DataStructures[1]
-//        assertEquals(secondDs.NodeName, "element")
-//        assertEquals(secondDs.Fields.size, 2)
-//        assertEquals(secondDs.Fields[0].TypeType, "int")
-//        assertEquals(secondDs.Fields[0].TypeValue, "value")
-//        assertEquals(secondDs.Fields[1].TypeType, "struct element*")
+        val elementDs = codeFile.DataStructures[0]
+        assertEquals(elementDs.NodeName, "element")
+        assertEquals(elementDs.Fields.size, 2)
+        assertEquals(elementDs.Fields[0].TypeType, "int")
+        assertEquals(elementDs.Fields[0].TypeValue, "value")
+//        assertEquals(elementDs.Fields[1].TypeType, "struct element*")
+        assertEquals(elementDs.Fields[1].TypeValue, "")
     }
 }

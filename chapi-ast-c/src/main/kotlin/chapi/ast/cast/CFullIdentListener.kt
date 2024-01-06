@@ -21,8 +21,35 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         codeContainer.Imports += imp
     }
 
-    override fun enterStructOrUnionSpecifier(ctx: CParser.StructOrUnionSpecifierContext?) {
-        val nodeName = ctx?.Identifier()?.text ?: ""
+
+    override fun enterDeclaration(ctx: CParser.DeclarationContext?) {
+        val isTypeDef = ctx?.declarationSpecifier()?.any {
+            it.storageClassSpecifier()?.Typedef() != null
+        } ?: false
+
+        val maybeNodeName = ctx?.declarationSpecifier()?.filter {
+            it.typeSpecifier()?.typedefName() != null
+        }?.map {
+            it.typeSpecifier()?.typedefName()?.text
+        }?.firstOrNull()
+
+        val structOrUnionSpecifier = ctx?.declarationSpecifier()?.filter {
+            it.typeSpecifier()?.structOrUnionSpecifier() != null
+        }?.map {
+            it.typeSpecifier()?.structOrUnionSpecifier()
+        }?.firstOrNull()
+
+        structOrUnionSpecifier?.let {
+            var nodeName = maybeNodeName ?: structOrUnionSpecifier.Identifier()?.text
+            if (nodeName.isNullOrEmpty()) {
+                nodeName = structOrUnionSpecifier.structOrUnion().text
+            }
+
+            handleStructOrUnion(structOrUnionSpecifier, nodeName ?: "")
+        }
+    }
+
+    private fun handleStructOrUnion(ctx: CParser.StructOrUnionSpecifierContext?, nodeName: String) {
         structMap.getOrPut(nodeName) {
             CodeDataStruct(NodeName = nodeName, Position = buildPosition(ctx))
         }.let {
@@ -70,7 +97,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         parseDirectDeclarator(ctx.directDeclarator())
 
         currentFunction.Parameters = ctx.parameterTypeList().parameterList().parameterDeclaration().mapNotNull {
-            val type = it.declarationSpecifiers().declarationSpecifier().firstOrNull()?.typeSpecifier()?.text
+            val type = it.declarationSpecifier().firstOrNull()?.typeSpecifier()?.text
 
             val name = it.declarator().directDeclarator()?.let { directDeclarator ->
                 when (directDeclarator) {
@@ -112,8 +139,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
     override fun enterFunctionDefinition(ctx: CParser.FunctionDefinitionContext?) {
         currentFunction = CodeFunction(Position = buildPosition(ctx))
-
-        ctx?.declarationSpecifiers()?.declarationSpecifier()?.map {
+        ctx?.declarationSpecifier()?.map {
             if (it.typeSpecifier().text != null) {
                 if (it.typeSpecifier().typedefName() != null) {
                     currentFunction.Name = it.typeSpecifier().typedefName().text
