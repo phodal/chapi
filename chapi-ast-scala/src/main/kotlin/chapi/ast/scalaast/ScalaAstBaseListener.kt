@@ -6,16 +6,11 @@ import chapi.domain.core.CodeProperty
 
 open class ScalaAstBaseListener : ScalaBaseListener() {
     fun buildParameters(classParamClauses: ScalaParser.ClassParamClausesContext?): List<CodeProperty> {
-        var parameters : List<CodeProperty> = listOf()
-        if (classParamClauses != null) {
-            for (paramClauseContext in classParamClauses.classParamClause()) {
-                for (classParamContext in paramClauseContext.classParams().classParam()) {
-                    parameters += buildParameter(classParamContext)
-                }
+        return classParamClauses?.classParamClause()?.flatMap { paramClauseContext ->
+            paramClauseContext.classParams().classParam().map { classParamContext ->
+                buildParameter(classParamContext)
             }
-        }
-
-        return parameters
+        } ?: emptyList()
     }
 
     private fun buildParameter(classParamContext: ScalaParser.ClassParamContext): CodeProperty {
