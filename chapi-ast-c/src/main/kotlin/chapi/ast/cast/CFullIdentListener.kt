@@ -56,8 +56,25 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
             currentDataStruct = it
         }
 
-        ctx?.structDeclarationList()?.structDeclaration()?.map {
-            it.specifierQualifierList()?.let { qualifierList ->
+        ctx?.structDeclarationList()?.structDeclaration()?.forEach { structDeclCtx ->
+            /// for forward struct declaration
+            structDeclCtx.structDeclaratorList()?.let {
+                val type = structDeclCtx.specifierQualifierList()?.typeSpecifier()?.let {
+                    val specifier = it.structOrUnionSpecifier()
+                    specifier?.structOrUnion()?.text + " " + specifier?.Identifier()?.text
+                }
+                val value = structDeclCtx.specifierQualifierList()?.specifierQualifierList()?.text ?: ""
+
+                val field = CodeField(
+                    TypeType = type ?: "",
+                    TypeValue = value
+                )
+
+                currentDataStruct.Fields += field
+                return@forEach
+            }
+
+            structDeclCtx.specifierQualifierList()?.let { qualifierList ->
                 val field = CodeField(
                     TypeType = qualifierList.typeSpecifier().text,
                     TypeValue = qualifierList.specifierQualifierList()?.text ?: ""

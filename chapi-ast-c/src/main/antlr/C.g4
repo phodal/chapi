@@ -34,7 +34,7 @@
 grammar C;
 
 compilationUnit
-    : includeDeclaration? externalDeclaration+ EOF
+    : includeDeclaration? (externalDeclaration+)? EOF
     ;
 
 includeDeclaration

@@ -191,7 +191,7 @@ typedef struct {
         assertEquals(elementDs.Fields.size, 2)
         assertEquals(elementDs.Fields[0].TypeType, "int")
         assertEquals(elementDs.Fields[0].TypeValue, "value")
-//        assertEquals(elementDs.Fields[1].TypeType, "struct element*")
+        assertEquals(elementDs.Fields[1].TypeType, "struct element")
         assertEquals(elementDs.Fields[1].TypeValue, "")
     }
 }
