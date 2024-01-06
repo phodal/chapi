@@ -9,7 +9,7 @@ data class CodeProperty(
     var TypeValue: String,
     var TypeType: String,
     var Annotations: List<CodeAnnotation> = listOf(),
-    // for TypeScript and Parameter
+    /// for TypeScript and Parameter
     var ObjectValue: List<CodeProperty> = listOf(),
     var ReturnTypes: List<CodeProperty> = listOf(),
     var Parameters: List<CodeProperty> = listOf(),

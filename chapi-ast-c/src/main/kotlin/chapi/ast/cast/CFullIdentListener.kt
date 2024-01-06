@@ -29,7 +29,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
             currentDataStruct = it
         }
 
-        ctx?.structDeclarationList()?.structDeclaration()?.let {
+        ctx?.structDeclarationList()?.structDeclaration()?.map {
             it.specifierQualifierList()?.let { qualifierList ->
                 val field = CodeField(
                     TypeType = qualifierList.typeSpecifier().text,
@@ -82,8 +82,10 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
                 }
             }
 
+            val pointer = it.declarator().pointer()?.text ?: ""
+
             if (type != null && name != null) {
-                CodeProperty(TypeValue = name, TypeType = type)
+                CodeProperty(TypeValue = name, TypeType = type + pointer)
             } else {
                 null
             }

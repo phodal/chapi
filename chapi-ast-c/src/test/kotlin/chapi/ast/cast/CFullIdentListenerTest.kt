@@ -198,4 +198,3 @@ typedef struct {
 //        assertEquals(secondDs.Fields[1].TypeType, "struct element*")
     }
 }
-
