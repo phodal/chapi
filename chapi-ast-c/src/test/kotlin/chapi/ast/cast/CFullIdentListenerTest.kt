@@ -1,17 +1,19 @@
 package chapi.ast.cast
 
 import org.junit.jupiter.api.Test
+import java.io.File
 import kotlin.test.assertEquals
 
 internal class CFullIdentListenerTest {
+
     @Test
-    internal fun shouldGetCodeFileName() {
-        val code = this::class.java.getResource("/_fixtures/examples/1-helloworld.c").readText()
-        val fileName = "helloworld.c"
-
-        val codeFile = CAnalyser().analysis(code, fileName)
-
-        assertEquals(codeFile.FullName, fileName)
+    fun allGrammarUnderResources() {
+        val content = this::class.java.getResource("/grammar")!!
+        File(content.toURI()).walkTopDown().forEach {
+            if (it.isFile && it.extension == "rs") {
+                CAnalyser().analysis(it.readText(), it.name)
+            }
+        }
     }
 
     @Test

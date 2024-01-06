@@ -21,14 +21,14 @@ language stages:
 | Features      | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
 |---------------|------|--------|----|--------|-------|----|----|-------|-----|------|
 | http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       |     | 🆕   |
-| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | 🆕 | 🆕 | ✅     | 🆕  | ✅    |
+| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | 🆕  | ✅    |
 | function call | ✅    | 🆕     | 🆕 | ✅      | ✅     |    |    |       |     | ✅    |
 | arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     |     | 🆕   |
 | real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
 
-- [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is a architecture workbench, also for architecture
-  governance, which can analysis architecture in container, component, code level, create architecure fitness functions,
-  and anaysis system dependencies..
+- [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is an architecture workbench, also for architecture
+  governance, which can analysis architecture in container, component, code level, create architecture fitness functions,
+  and analysis system dependencies.
 - [UnitGen](https://github.com/unit-mesh/unit-gen) is a code fine-tuning data framework that generates data from your
   existing codebase.
 - [ChocolateFactory](https://github.com/unit-mesh/chocolate-factory) is a cutting-edge LLM toolkit designed to empower
@@ -38,7 +38,6 @@ PS: welcome to PR to send your projects
 
 ## Language Information
 
-
 language versions（tested）:
 
 - Java: 8, 11, 17
@@ -46,7 +45,6 @@ language versions（tested）:
 - Kotlin
 - Rust: v1.60.0
 - Python: 2, 3
-
 
 // tier 1 languages
 ":chapi-ast-java",
