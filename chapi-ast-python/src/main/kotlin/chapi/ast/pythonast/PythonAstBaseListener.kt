@@ -104,21 +104,19 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     fun buildExprStmt(exprCtx: PythonParser.Expr_stmtContext) {
         var leftPart = ""
         val starExpr = exprCtx.getChild(0) as PythonParser.Testlist_star_exprContext
-        val childType = starExpr.getChild(0)::class.java.simpleName
-        if (childType == "TestlistContext") {
+        val childType = starExpr.getChild(0)
+        if (childType is PythonParser.TestlistContext) {
             for (testContext in starExpr.testlist().test()) {
                 buildTestContext(testContext)
                 leftPart = testContext.text
             }
         }
 
-        val assignPartCtx = exprCtx.assign_part()
-        if (assignPartCtx != null) {
-            if (assignPartCtx.ASSIGN() != null) {
-                val rightObj = buildAssignPart(assignPartCtx)
-                localVars[leftPart] = rightObj
-            }
-        }
+        val assignPartCtx = exprCtx.assign_part() ?: return
+        if (assignPartCtx.ASSIGN() == null) return
+
+        val rightObj = buildAssignPart(assignPartCtx)
+        localVars[leftPart] = rightObj
     }
 
     private fun buildAssignPart(assignPartCtx: PythonParser.Assign_partContext): String {
@@ -147,6 +145,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
                     }
                 }
             }
+
             else -> {
 //                println("buildTestContext -> $childCtx")
             }
@@ -156,28 +155,25 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     }
 
     private fun buildAtomExpr(exprCtx: PythonParser.ExprContext): String {
-        var funcCalls: List<CodeCall> = listOf()
         val atomName = exprCtx.atom().text
-        for (trailerContext in exprCtx.trailer()) {
-            var caller = ""
-            var nodeName = ""
-            if (trailerContext.DOT() != null) {
-                if (trailerContext.name() != null) {
-                    caller = trailerContext.name().text
-                }
-                nodeName = atomName
+
+        val codeCalls = exprCtx.trailer().map { trailerContext ->
+            val caller = if (trailerContext.DOT() != null) {
+                trailerContext?.name()?.text ?: ""
             } else {
-                caller = atomName
+                atomName
             }
 
-            funcCalls += CodeCall(
+            val nodeName = if (trailerContext.DOT() != null) atomName else ""
+
+            CodeCall(
                 NodeName = nodeName,
                 FunctionName = caller,
                 Position = buildPosition(trailerContext)
             )
         }
 
-        currentFunction.FunctionCalls = funcCalls
+        currentFunction.FunctionCalls = codeCalls
 
         return atomName
     }
