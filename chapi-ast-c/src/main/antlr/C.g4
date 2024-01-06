@@ -389,13 +389,11 @@ typeQualifierList
     ;
 
 parameterTypeList
-    :   parameterList
-    |   parameterList ',' '...'
+    :   parameterList (',' '...')?
     ;
 
 parameterList
-    :   parameterDeclaration
-    |   parameterList ',' parameterDeclaration
+    :   parameterDeclaration (',' parameterDeclaration)*
     ;
 
 parameterDeclaration

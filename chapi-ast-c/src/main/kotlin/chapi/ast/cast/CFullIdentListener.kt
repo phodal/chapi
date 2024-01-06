@@ -1,6 +1,5 @@
 package chapi.ast.cast
 
-import chapi.ast.antlr.CBaseListener
 import chapi.ast.antlr.CParser
 import chapi.domain.core.*
 
@@ -74,15 +73,10 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         }
     }
 
-    private fun handleParamDirectDeclCtx(ctx: CParser.DirectDeclaratorContext) {
-        currentFunction.Parameters = listOf()
-        val directDeclarator = ctx as CParser.ParameterDirectDeclaratorContext
+    private fun handleParamDirectDeclCtx(ctx: CParser.ParameterDirectDeclaratorContext) {
         parseDirectDeclarator(ctx.directDeclarator())
 
-        val parameterTypeList = directDeclarator.parameterTypeList().parameterList()
-        val parameters: MutableList<CParser.ParameterDeclarationContext> = ArrayList()
-        this.buildParameters(parameterTypeList, parameters)
-
+        val parameters = ctx.parameterTypeList().parameterList().parameterDeclaration()
         for (parameter in parameters) {
             var type: String? = null
             var name: String? = null
@@ -95,6 +89,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
             if (declarator.Identifier().text != null) {
                 name = declarator.Identifier().text
             }
+
             if (type != null && name != null) {
                 val codeParameter = CodeProperty(
                     TypeValue = name,
@@ -105,18 +100,16 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         }
     }
 
-    private fun handleFuncPointerDirectDeclCtx(ctx: CParser.DirectDeclaratorContext) {
-        currentFunction.Parameters = listOf()
-        var name: String? = null
-        var type: String? = null
-        val directDeclarator = ctx as CParser.FunctionPointerDirectDeclaratorContext
-        if (directDeclarator.typeSpecifier() != null) {
-            type = directDeclarator.typeSpecifier().text
+    private fun handleFuncPointerDirectDeclCtx(ctx: CParser.FunctionPointerDirectDeclaratorContext) {
+        val type = ctx.typeSpecifier()?.text
+        val name = when (val directDeclaratorType = ctx.directDeclarator()) {
+            is CParser.IdentifierDirectDeclaratorContext -> {
+                directDeclaratorType.Identifier().text
+            }
+
+            else -> null
         }
-        val directDeclaratorType = directDeclarator.directDeclarator()::class.java.simpleName
-        if (directDeclaratorType == "IdentifierDirectDeclaratorContext") {
-            name = (directDeclarator.directDeclarator() as CParser.IdentifierDirectDeclaratorContext).Identifier().text
-        }
+
         if (name != null && type != null) {
             currentFunction.Parameters += CodeProperty(
                 TypeValue = name,
@@ -139,19 +132,21 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         }
 
         parseDirectDeclarator(ctx?.declarator()?.directDeclarator())
-        if (currentFunction.Parameters.isNotEmpty()) {
-            val firstParameter = currentFunction.Parameters[0]
-            if (firstParameter.TypeType.endsWith('*')) {
-                val pointerIndex = firstParameter.TypeType.length - 1
-                val baseType = firstParameter.TypeType.substring(0, pointerIndex)
-                structMap.getOrPut(baseType) {
-                    CodeDataStruct(NodeName = baseType)
-                }.let {
-                    it.Functions += currentFunction
-                }
-            } else {
-                defaultDataStruct.Functions += currentFunction
+
+        if (currentFunction.Parameters.isEmpty()) return
+
+        // handle for pointer
+        val firstParameter = currentFunction.Parameters[0]
+        if (firstParameter.TypeType.endsWith('*')) {
+            val pointerIndex = firstParameter.TypeType.length - 1
+            val baseType = firstParameter.TypeType.substring(0, pointerIndex)
+            structMap.getOrPut(baseType) {
+                CodeDataStruct(NodeName = baseType)
+            }.let {
+                it.Functions += currentFunction
             }
+        } else {
+            defaultDataStruct.Functions += currentFunction
         }
     }
 
