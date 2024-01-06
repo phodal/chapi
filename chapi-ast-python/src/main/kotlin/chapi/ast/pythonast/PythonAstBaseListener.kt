@@ -11,7 +11,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     var localVars = mutableMapOf<String, String>()
 
     fun buildParameters(listCtx: PythonParser.TypedargslistContext?): List<CodeProperty> {
-        var parameters: List<CodeProperty> = listOf()
+        val parameters: MutableList<CodeProperty> = mutableListOf()
         for (defParameters in listCtx!!.def_parameters()) {
             for (defParaCtx in defParameters.def_parameter()) {
                 val parameter = CodeProperty(
@@ -42,6 +42,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
                 return i
             }
         }
+
         return 0
     }
 
@@ -51,7 +52,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
             nodes += ctx.parent.getChild(i) as PythonParser.DecoratorContext
         }
 
-        var annotations: List<CodeAnnotation> = listOf()
+        val annotations: MutableList<CodeAnnotation> = mutableListOf()
         for (node in nodes) {
             annotations += this.buildAnnotation(node)
         }
@@ -123,11 +124,9 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     private fun buildAssignPart(assignPartCtx: PythonParser.Assign_partContext): String {
         var returnAtom = ""
         for (starExprCtx in assignPartCtx.testlist_star_expr()) {
-            val child = starExprCtx.getChild(0)
-            when (child::class.java.simpleName) {
-                "TestlistContext" -> {
-                    val testlistCtx = child as PythonParser.TestlistContext
-                    for (testContext in testlistCtx.test()) {
+            when (val child = starExprCtx.getChild(0)) {
+                is PythonParser.TestlistContext -> {
+                    child.test().forEach { testContext ->
                         returnAtom = this.buildTestContext(testContext)
                     }
                 }
@@ -139,20 +138,17 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
 
     private fun buildTestContext(testContext: PythonParser.TestContext): String {
         var returnType = ""
-        val childCtx = testContext.getChild(0).getChild(0).getChild(0)
-        val exprType = childCtx::class.java.simpleName
-        when (exprType) {
-            "ExprContext" -> {
-                val exprCtx = childCtx as PythonParser.ExprContext
-                val exprChild = exprCtx.getChild(0)::class.java.simpleName
+        when (val childCtx = testContext.getChild(0).getChild(0).getChild(0)) {
+            is PythonParser.ExprContext -> {
+                val exprChild = childCtx.getChild(0)
                 when (exprChild) {
-                    "AtomContext" -> {
-                        returnType = buildAtomExpr(exprCtx)
+                    is PythonParser.AtomContext -> {
+                        returnType = buildAtomExpr(childCtx)
                     }
                 }
             }
             else -> {
-                println("buildTestContext -> " + exprType)
+//                println("buildTestContext -> $childCtx")
             }
         }
 
