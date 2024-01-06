@@ -47,29 +47,30 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     }
 
     private fun parseDirectDeclarator(ctx: CParser.DirectDeclaratorContext?) {
-        val directDeclaratorType = ctx!!::class.java.simpleName
-        when (directDeclaratorType) {
-            "ParameterDirectDeclaratorContext" -> {
+        when (ctx) {
+            is CParser.ParameterDirectDeclaratorContext -> {
                 handleParamDirectDeclCtx(ctx)
             }
 
-            "IdentifierDirectDeclaratorContext" -> {
+            is CParser.IdentifierDirectDeclaratorContext -> {
                 val directDeclarator = ctx as CParser.IdentifierDirectDeclaratorContext
                 if (directDeclarator.Identifier().text != null) {
                     currentFunction.Name = directDeclarator.Identifier().text
                 }
             }
 
-            "DeclaratorDirectDeclaratorContext" -> {}
-            "AssignmentExpressionDirectDeclaratorContext" -> {}
-            "PreStaticAssignmentExpressionDirectDeclaratorContext" -> {}
-            "PostStaticAssignmentExpressionDirectDeclaratorContext" -> {}
-            "TypeQualifierListPointerDirectDeclaratorContext" -> {}
-            "IdentifierListDirectDeclaratorContext" -> {}
-            "BitFieldDirectDeclaratorContext" -> {}
-            "FunctionPointerDirectDeclaratorContext" -> {
+            is CParser.DeclaratorDirectDeclaratorContext -> {}
+            is CParser.AssignmentExpressionDirectDeclaratorContext -> {}
+            is CParser.PreStaticAssignmentExpressionDirectDeclaratorContext -> {}
+            is CParser.PostStaticAssignmentExpressionDirectDeclaratorContext -> {}
+            is CParser.TypeQualifierListPointerDirectDeclaratorContext -> {}
+            is CParser.IdentifierListDirectDeclaratorContext -> {}
+            is CParser.BitFieldDirectDeclaratorContext -> {}
+            is CParser.FunctionPointerDirectDeclaratorContext -> {
                 handleFuncPointerDirectDeclCtx(ctx)
             }
+
+            else -> {}
         }
     }
 
