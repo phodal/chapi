@@ -13,23 +13,22 @@ class CPPFullIdentListener(fileName: String) : CPP14ParserBaseListener() {
 
     override fun enterFunctionDefinition(ctx: CPP14Parser.FunctionDefinitionContext?) {
         val method = CodeFunction()
-        val context = ctx!!
 
-        if (context.declSpecifierSeq() != null) {
-            method.ReturnType = context.declSpecifierSeq().text
+        ctx?.declarator()?.let {
+            method.Name = it.text
+        }
+        ctx?.declSpecifierSeq()?.let {
+            method.ReturnType = it.text
         }
 
-        val firstPtrDecl = context.declarator().pointerDeclarator() ?: return
-        if (firstPtrDecl.noPointerDeclarator() != null) {
-            tryFunctionBuild(firstPtrDecl, method)
-        }
-    }
+        val firstPtrDecl = ctx?.declarator()?.pointerDeclarator() ?: return
+        val noPointerDeclarator = firstPtrDecl.noPointerDeclarator() ?: return
 
-    private fun tryFunctionBuild(firstPtrDecl: CPP14Parser.PointerDeclaratorContext, method: CodeFunction) {
-        val parametersAndQualifiersContext = firstPtrDecl.noPointerDeclarator().parametersAndQualifiers() ?: return
-        method.Name = firstPtrDecl.noPointerDeclarator().noPointerDeclarator().text
+        val parameters = noPointerDeclarator.parametersAndQualifiers() ?: return
 
-        parametersAndQualifiersContext.parameterDeclarationClause()?.let {
+        method.Name = noPointerDeclarator.noPointerDeclarator().text
+
+        parameters.parameterDeclarationClause()?.let {
             method.Parameters = buildParameters(it)
         }
 
@@ -37,8 +36,8 @@ class CPPFullIdentListener(fileName: String) : CPP14ParserBaseListener() {
     }
 
     private fun buildParameters(parameterDeclaration: CPP14Parser.ParameterDeclarationClauseContext): List<CodeProperty> {
-        return parameterDeclaration.parameterDeclarationList()?.let {
-            it.parameterDeclaration().map {
+        return parameterDeclaration.parameterDeclarationList()?.let { listContext ->
+            listContext.parameterDeclaration().map {
                 val type = it.declSpecifierSeq().declSpecifier().firstOrNull()?.typeSpecifier()?.text
                 val name = it.declarator()?.text
 
