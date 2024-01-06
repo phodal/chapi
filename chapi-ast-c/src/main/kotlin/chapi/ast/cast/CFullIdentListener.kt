@@ -76,28 +76,24 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     private fun handleParamDirectDeclCtx(ctx: CParser.ParameterDirectDeclaratorContext) {
         parseDirectDeclarator(ctx.directDeclarator())
 
-        val parameters = ctx.parameterTypeList().parameterList().parameterDeclaration()
-        for (parameter in parameters) {
-            var type: String? = null
-            var name: String? = null
-            for (specifier in parameter.declarationSpecifiers().declarationSpecifier()) {
-                if (specifier.typeSpecifier().text != null) {
-                    type = specifier.typeSpecifier().text
+        currentFunction.Parameters = ctx.parameterTypeList().parameterList().parameterDeclaration().mapNotNull {
+            val type = it.declarationSpecifiers().declarationSpecifier().firstOrNull()?.typeSpecifier()?.text
+
+            val name = it.declarator().directDeclarator()?.let { directDeclarator ->
+                when (directDeclarator) {
+                    is CParser.IdentifierDirectDeclaratorContext -> {
+                        directDeclarator.Identifier().text
+                    }
+                    else -> null
                 }
-            }
-            val declarator = parameter.declarator().directDeclarator() as CParser.IdentifierDirectDeclaratorContext
-            if (declarator.Identifier().text != null) {
-                name = declarator.Identifier().text
             }
 
             if (type != null && name != null) {
-                val codeParameter = CodeProperty(
-                    TypeValue = name,
-                    TypeType = type
-                )
-                currentFunction.Parameters += codeParameter
+                CodeProperty(TypeValue = name, TypeType = type)
+            } else {
+                null
             }
-        }
+        }.toMutableList()
     }
 
     private fun handleFuncPointerDirectDeclCtx(ctx: CParser.FunctionPointerDirectDeclaratorContext) {
