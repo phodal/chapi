@@ -14,10 +14,13 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
 
     override fun enterIncludeDeclaration(ctx: CParser.IncludeDeclarationContext?) {
-        val importName = ctx!!.includeIdentifier().text
+        val includeIdentifier = ctx?.includeIdentifier()
+        val importName = includeIdentifier?.text ?: ""
         val imp = CodeImport(
-            Source = importName
+            Source = importName,
+            AsName = includeIdentifier?.Identifier()?.text ?: ""
         )
+
         codeContainer.Imports += imp
     }
 
@@ -52,7 +55,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         codeContainer.DataStructures += codeDataStruct
     }
 
-    fun parseDirectDeclarator(ctx: CParser.DirectDeclaratorContext) {
+    private fun parseDirectDeclarator(ctx: CParser.DirectDeclaratorContext) {
         val directDeclaratorType = ctx::class.java.simpleName
         when(directDeclaratorType) {
             "ParameterDirectDeclaratorContext" -> {
@@ -82,7 +85,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         val directDeclarator = ctx as CParser.ParameterDirectDeclaratorContext
         parseDirectDeclarator(ctx.directDeclarator())
         val parameterTypeList = directDeclarator.parameterTypeList().parameterList()
-        var parameters: MutableList<CParser.ParameterDeclarationContext> = ArrayList()
+        val parameters: MutableList<CParser.ParameterDeclarationContext> = ArrayList()
         this.buildParameters(parameterTypeList, parameters)
         for (parameter in parameters) {
             var type: String? = null

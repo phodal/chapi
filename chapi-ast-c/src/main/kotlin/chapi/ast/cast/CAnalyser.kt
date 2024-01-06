@@ -18,12 +18,9 @@ open class CAnalyser: Analyser {
         return listener.getNodeInfo()
     }
 
-    open fun parse(str: String): CParser {
-        val fromString = CharStreams.fromString(str)
-        val tokenSource = CLexer(fromString)
-        val commonTokenStream = CommonTokenStream(tokenSource)
-        val parser = CParser(commonTokenStream)
-        return parser
-    }
-
+    open fun parse(str: String): CParser =
+        CharStreams.fromString(str)
+            .let(::CLexer)
+            .let(::CommonTokenStream)
+            .let(::CParser)
 }

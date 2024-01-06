@@ -170,6 +170,7 @@ struct context{
 }; 
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
+//        assertEquals(codeFile.DataStructures.size, 2)
     }
 
     @Test
@@ -183,5 +184,6 @@ typedef struct {
 } element; // Complete definition
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 3)
     }
 }
