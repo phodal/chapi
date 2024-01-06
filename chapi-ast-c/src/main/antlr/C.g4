@@ -69,14 +69,16 @@ genericAssociation
     ;
 
 postfixExpression
-    : (primaryExpression | '__extension__'? '(' typeName ')' '{' initializerList ','? '}') (
-        '[' expression ']'
-        | '(' argumentExpressionList? ')'
-        | ('.' | '->') Identifier
-        | '++'
-        | '--'
-    )*
+    : (primaryExpression | extensionExpression) (postixCall | '++' | '--')*
     ;
+
+extensionExpression : '__extension__'? '(' typeName ')' '{' initializerList ','? '}' ;
+
+postixCall
+        :'[' expression ']'                     #arrayAccessPostfixExpression
+        | '(' argumentExpressionList? ')'       #functionCallPostfixExpression
+        | ('.' | '->') Identifier               #memberAccessPostfixExpression
+        ;
 
 argumentExpressionList
     : assignmentExpression (',' assignmentExpression)*

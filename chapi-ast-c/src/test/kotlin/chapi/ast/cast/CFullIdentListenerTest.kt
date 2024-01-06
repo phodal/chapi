@@ -196,4 +196,38 @@ typedef struct {
         assertEquals(elementDs.Fields[1].TypeType, "struct element")
         assertEquals(elementDs.Fields[1].TypeValue, "")
     }
+
+    @Test
+    fun shouldIdentifyFirstFunctionCall() {
+        val code = """
+            void aX(void);
+            int a1(int param1);
+            int a2(int param1, param2);
+            void a3();
+            void a3(void);
+            
+            int f(int arg1, char arg2)
+            {
+                a1(arg1);
+                a2(arg1, arg2);
+                a3();
+            }
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        assertEquals(functionCalls.size, 3)
+        assertEquals(functionCalls[0].FunctionName, "a1")
+        assertEquals(functionCalls[0].Parameters[0].TypeValue, "arg1")
+
+        assertEquals(functionCalls[1].FunctionName, "a2")
+        assertEquals(functionCalls[1].Parameters[0].TypeValue, "arg1")
+        assertEquals(functionCalls[1].Parameters[1].TypeValue, "arg2")
+
+        assertEquals(functionCalls[2].FunctionName, "a3")
+        assertEquals(functionCalls[2].Parameters.size, 0)
+    }
 }
+

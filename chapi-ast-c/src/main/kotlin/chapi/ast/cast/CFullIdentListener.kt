@@ -189,6 +189,47 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
     }
 
+    override fun enterPostfixExpression(ctx: CParser.PostfixExpressionContext?) {
+        val call = ctx?.postixCall() ?: return
+        val functionName = ctx.primaryExpression()?.Identifier()?.text ?: return
+
+        val children = call.firstOrNull()?.children ?: return
+        // function call children should be '(', some parameters?, ')', so the size should be at least 2
+        if (children.size < 2) return
+
+        val codeCall = CodeCall(
+            FunctionName = functionName,
+            Parameters = buildParameters(call),
+            Position = buildPosition(ctx)
+        )
+
+        currentFunction.FunctionCalls += codeCall
+    }
+
+    private fun buildParameters(call: List<CParser.PostixCallContext>): List<CodeProperty> {
+        return call.mapNotNull { callContext ->
+            when(callContext) {
+                is CParser.ArrayAccessPostfixExpressionContext -> {
+                    null
+                }
+                is CParser.FunctionCallPostfixExpressionContext -> {
+                    callContext.argumentExpressionList()?.assignmentExpression()?.map {
+                        CodeProperty(
+                            TypeType = it.text,
+                            TypeValue = it.text
+                        )
+                    }?.toList() ?: listOf()
+                }
+
+                is CParser.MemberAccessPostfixExpressionContext -> {
+                    null
+                }
+
+                else -> null
+            }
+        }.flatten()
+    }
+
     fun getNodeInfo(): CodeContainer {
         if (defaultDataStruct.Functions.isNotEmpty()) {
             codeContainer.DataStructures += defaultDataStruct
