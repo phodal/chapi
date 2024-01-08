@@ -27,9 +27,9 @@ allprojects {
     apply(plugin = "java")
 
     group = "com.phodal.chapi"
-    version = "2.2.4"
+    version = "2.2.5"
     description =
-        "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
+        "Chapi is A common hierarchical abstract parser && information convertor, streamlines code analysis by converting diverse language source code into a unified abstract model, simplifying cross-language development."
 
     repositories {
         mavenCentral()
