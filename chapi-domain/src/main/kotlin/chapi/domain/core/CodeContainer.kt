@@ -18,6 +18,8 @@ data class CodeContainer(
      */
     var Fields: List<CodeField> = listOf(),
     var Containers: List<CodeContainer> = listOf(),
+    @Since("2.2.5")
+    var Content: String = "",
 ) {
     fun buildSourceCode(codeLines: List<String>) {
         this.DataStructures.map { ds ->
