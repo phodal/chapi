@@ -8,10 +8,11 @@ internal class CFullIdentListenerTest {
 
     @Test
     fun allGrammarUnderResources() {
-        val content = this::class.java.getResource("/grammar")!!
-        File(content.toURI()).walkTopDown().forEach {
-            if (it.isFile && it.extension == "c") {
-//                println("Analyse ${it.name}")
+        val content = this::class.java.getResource("/grammar")!!.toURI()
+//        val content = "/Users/phodal/Downloads/redis-unstable"
+        File(content).walkTopDown().forEach {
+            if (it.isFile && (it.extension == "c" || it.extension == "h")) {
+                println("Analyse ${it.path}")
                 CAnalyser().analysis(it.readText(), it.name)
             }
         }
@@ -237,10 +238,11 @@ typedef struct {
             #include <stdio.h>
             #include <string.h>
             #include <stdlib.h>
+            #include "redismodule.h"
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.Imports.size, 3)
+        assertEquals(codeFile.Imports.size, 4)
     }
 
     @Test

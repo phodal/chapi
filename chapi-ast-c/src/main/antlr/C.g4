@@ -34,15 +34,28 @@
 grammar C;
 
 compilationUnit
-    : includeDeclaration* (externalDeclaration+)? EOF
+    : (includeDeclaration+)? (externalDeclaration+)? EOF
     ;
 
 includeDeclaration
-    : '#' Whitespace? 'include' Whitespace? (('"' includeIdentifier '"') | ('<' includeIdentifier '>' ))
+    : '#' include (StringLiteral | ('<' includeIdentifier '>' ))
+    | '#' Identifier expression*
+    ;
+
+MultiLineMacro
+    : '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN)
+    ;
+
+//Directive
+//    : '#' ~ [\n]* -> channel (HIDDEN)
+//    ;
+
+include
+    : 'include'
     ;
 
 includeIdentifier
-    : Identifier (Dot Identifier+)?
+    : Identifier (Dot Identifier)?
     ;
 
 primaryExpression
@@ -1088,14 +1101,6 @@ fragment SChar
     | '\\\n'   // Added line
     | '\\\r\n' // Added line
     ;
-//
-//MultiLineMacro
-//    : '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN)
-//    ;
-//
-//Directive
-//    : '#' ~ [\n]* -> channel (HIDDEN)
-//    ;
 
 // ignore the following asm blocks:
 /*

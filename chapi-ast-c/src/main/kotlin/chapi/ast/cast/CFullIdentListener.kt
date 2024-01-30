@@ -41,7 +41,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         structOrUnionSpecifier?.let {
             var nodeName = maybeNodeName ?: structOrUnionSpecifier.Identifier()?.text
             if (nodeName.isNullOrEmpty()) {
-                nodeName = structOrUnionSpecifier.structOrUnion().text
+                nodeName = structOrUnionSpecifier?.structOrUnion()?.text ?: ""
             }
 
             handleStructOrUnion(structOrUnionSpecifier, nodeName ?: "")
@@ -75,7 +75,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
             structDeclCtx.specifierQualifierList()?.let { qualifierList ->
                 val field = CodeField(
-                    TypeType = qualifierList.typeSpecifier().text,
+                    TypeType = qualifierList.typeSpecifier()?.text ?: "",
                     TypeValue = qualifierList.specifierQualifierList()?.text ?: ""
                 )
 
@@ -156,7 +156,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     override fun enterFunctionDefinition(ctx: CParser.FunctionDefinitionContext?) {
         currentFunction = CodeFunction(Position = buildPosition(ctx))
         ctx?.declarationSpecifier()?.map {
-            if (it.typeSpecifier().text != null) {
+            if (it.typeSpecifier()?.text != null) {
                 if (it.typeSpecifier()?.typedefName() != null) {
                     currentFunction.Name = it.typeSpecifier().typedefName().text
                 } else {
