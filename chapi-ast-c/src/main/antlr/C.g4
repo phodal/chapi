@@ -55,7 +55,7 @@ include
     ;
 
 includeIdentifier
-    : Identifier (Dot Identifier)?
+    : Identifier ('/' Identifier)* (Dot Identifier)?
     ;
 
 primaryExpression
