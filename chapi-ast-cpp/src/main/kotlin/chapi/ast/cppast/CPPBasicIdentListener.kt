@@ -2,10 +2,7 @@ package chapi.ast.cppast
 
 import chapi.ast.antlr.CPP14Parser
 import chapi.ast.antlr.CPP14ParserBaseListener
-import chapi.domain.core.CodeContainer
-import chapi.domain.core.CodeDataStruct
-import chapi.domain.core.CodeFunction
-import chapi.domain.core.CodeProperty
+import chapi.domain.core.*
 
 class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -72,9 +69,17 @@ class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
             currentNode?.Implements = extends
         }
 
-        ctx?.memberSpecification()?.memberdeclaration()?.let {
-            // TODO: add member
-        }
+        val fields = ctx?.memberSpecification()?.memberdeclaration()?.map {
+            val type = it?.declSpecifierSeq()?.declSpecifier()?.firstOrNull()?.typeSpecifier()?.text
+
+            it.memberDeclaratorList()?.memberDeclarator()?.map { memberDeclarator ->
+                val name = memberDeclarator.declarator()?.text
+
+                CodeField(TypeKey = name ?: "", TypeType = type ?: "", TypeValue = type ?: "")
+            } ?: listOf()
+        }?.flatten() ?: listOf()
+
+        currentNode?.Fields = fields
     }
 
     override fun exitClassSpecifier(ctx: CPP14Parser.ClassSpecifierContext?) {

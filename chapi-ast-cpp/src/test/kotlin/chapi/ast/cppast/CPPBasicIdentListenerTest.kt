@@ -131,4 +131,23 @@ void display(char c, int n) {
         assertEquals(container.DataStructures[0].NodeName, "M")
     }
 
+    @Test
+    internal fun shouldIdentifyClassField() {
+        val code = """
+        class Entity
+        {
+        public:
+            int Id, No;
+        };
+        """.trimIndent()
+
+        val container = CPPAnalyser().analysis(code, "helloworld.cpp")
+        assertEquals(container.DataStructures.size, 1)
+        assertEquals(container.DataStructures[0].Fields.size, 2)
+        // fields
+        assertEquals(container.DataStructures[0].Fields[0].TypeType, "int")
+        assertEquals(container.DataStructures[0].Fields[0].TypeKey, "Id")
+        assertEquals(container.DataStructures[0].Fields[1].TypeType, "int")
+        assertEquals(container.DataStructures[0].Fields[1].TypeKey, "No")
+    }
 }
