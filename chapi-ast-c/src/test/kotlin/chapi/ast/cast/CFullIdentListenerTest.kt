@@ -8,8 +8,8 @@ internal class CFullIdentListenerTest {
 
     @Test
     fun allGrammarUnderResources() {
-        val content = this::class.java.getResource("/grammar")!!.toURI()
-//        val content = "/Users/phodal/Downloads/redis-unstable"
+//        val content = this::class.java.getResource("/grammar")!!.toURI()
+        val content = "/Users/phodal/Downloads/redis-unstable"
         File(content).walkTopDown().forEach {
             if (it.isFile && (it.extension == "c" || it.extension == "h")) {
                 println("Analyse ${it.path}")
@@ -377,6 +377,28 @@ typedef struct {
             void hello() {
                 va_arg(ap, char *);
             }
+            
+            #include "test/jemalloc_test.h"
+            #include "jemalloc/internal/mpsc_queue.h"
+
+            mpsc_queue_proto(static);
+            
+            #define ERR(e)		e, #e
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
+
+    @Test
+    fun shouldHandleMacroInStructure() {
+        val code = """
+            struct node_s {
+            #define NODE_MAGIC 0x9823af7e
+            	uint32_t magic;
+            	heap_link_t link;
+            	uint64_t key;
+            };
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")

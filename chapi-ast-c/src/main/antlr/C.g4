@@ -39,15 +39,15 @@ compilationUnit
 
 singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))         #includeDeclaration
-    | '#' 'define' expression*                                           #defineDeclaration
-    | '#' macroKeywords  expression*                                     #conditionalDeclaration
+    | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*                    #defineDeclaration
     | Identifier postixCall? ('{' blockItem* '}')?                       #macroCallBlockDeclaration
     | Identifier postixCall ';'?                                         #macroFuncCallDeclaration
     | Identifier                                                         #macroDeclaration
+    | '#' Identifier                                                     #macroIdDeclaration
     ;
 
 macroKeywords
-    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif'
+    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define'
     ;
 
 MultiLineMacro
@@ -270,6 +270,7 @@ structDeclarationList
 structDeclaration // The first two rules have priority order and cannot be simplified to one expression.
     : specifierQualifierList structDeclaratorList? ';'
     | staticAssertDeclaration
+    | singleLineMacroDeclaration
     ;
 
 specifierQualifierList
@@ -548,6 +549,8 @@ typeKeywords
     | 'double'
     | 'signed'
     | 'unsigned'
+    | 'void'
+    | 'static'
     ;
 
 keywords
