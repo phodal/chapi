@@ -42,7 +42,9 @@ singleLineMacroDeclaration
     | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*                    #defineDeclaration
     | Identifier postixCall ';'?                                         #macroFuncCallDeclaration
     | Identifier                                                         #macroDeclaration
-    | '#' Identifier                                                     #macroIdDeclaration
+    // #define KUMAX(x)	((uintmax_t)x##ULL)
+    | '#' Identifier                                                      #macroIdDeclaration
+    | Identifier? '#'? '#' Identifier                                    #macroCastDeclaration
     | Identifier postixCall? ('{' blockItem* '}')? Identifier            #macroCallBlockDeclaration
     ;
 
@@ -63,7 +65,7 @@ includeIdentifier
     ;
 
 primaryExpression
-    : (Identifier | typeKeywords) pointer?
+    : (Identifier | (typeKeywords typeKeywords*)) pointer?
     | Constant
     | StringLiteral+
     | '(' expression ')'
@@ -124,6 +126,7 @@ castExpression
     : '__extension__'? '(' typeName ')' castExpression
     | unaryExpression
     | DigitSequence // for
+    | singleLineMacroDeclaration
     ;
 
 multiplicativeExpression

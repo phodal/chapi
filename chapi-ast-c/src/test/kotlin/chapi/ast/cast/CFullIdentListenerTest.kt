@@ -340,6 +340,7 @@ typedef struct {
         val code = """
             TEST_BEGIN(test_prof_thread_name_threaded) {
             	TEST_FFS(unsigned, u, u);
+            	TEST_FFS(unsigned long, lu, lu, "lu");
             }
             TEST_END
 
@@ -393,12 +394,14 @@ typedef struct {
     @Test
     fun shouldHandleMacroInStructure() {
         val code = """
+            #define KUMAX(x)	((uintmax_t)x##ULL)
+            
             struct node_s {
             #define NODE_MAGIC 0x9823af7e
             	uint32_t magic;
             	heap_link_t link;
             	uint64_t key;
-            };
+            };            
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
