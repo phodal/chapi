@@ -3,7 +3,7 @@ package chapi.parser.cmake
 import chapi.domain.core.CodeContainer
 
 class CMakeBasicListener(val filePath: String) : CMakeBaseListener() {
-    val container: CodeContainer = CodeContainer(FullName = filePath)
+    private val container: CodeContainer = CodeContainer(FullName = filePath)
 
     override fun enterCommand_invocation(ctx: CMakeParser.Command_invocationContext?) {
         val id = ctx?.Identifier()?.text ?: ""
@@ -12,7 +12,7 @@ class CMakeBasicListener(val filePath: String) : CMakeBaseListener() {
         container.Fields += chapi.domain.core.CodeField(
             TypeKey = id,
             TypeValue = arg.joinToString(" "),
-            TypeType = "CMake"
+            TypeType = "String"
         )
     }
 
