@@ -92,7 +92,7 @@ void display(char c, int n) {
     }
 
     @Test
-    internal fun shouldIdentifyFunction() {
+    internal fun shouldIdentifyClassFunction() {
         val code = """
             class EntityB: public Entity
             {
@@ -112,4 +112,23 @@ void display(char c, int n) {
         assertEquals(container.DataStructures[0].NodeName, "EntityB")
         assertEquals(container.DataStructures[0].Functions[0].Name, "init")
     }
+
+    @Test
+    internal fun shouldIdentifyNameSpace() {
+        val code = """
+            namespace NS
+            {
+                class M
+                {
+                    friend class F;  // Introduces F but doesn't define it
+                };
+            }
+            """.trimIndent()
+
+        val container = CPPAnalyser().analysis(code, "helloworld.cpp")
+        assertEquals(container.PackageName, "NS")
+        assertEquals(container.DataStructures.size, 1)
+        assertEquals(container.DataStructures[0].NodeName, "M")
+    }
+
 }

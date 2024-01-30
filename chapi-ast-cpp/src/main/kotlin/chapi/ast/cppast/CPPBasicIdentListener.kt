@@ -15,6 +15,12 @@ class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
     private var classes = mutableListOf<CodeDataStruct>()
     private var currentNode: CodeDataStruct? = null
 
+    override fun enterNamespaceDefinition(ctx: CPP14Parser.NamespaceDefinitionContext?) {
+        ctx?.Identifier()?.let {
+            codeContainer.PackageName = it.text
+        }
+    }
+
     override fun enterFunctionDefinition(ctx: CPP14Parser.FunctionDefinitionContext?) {
         val method = CodeFunction()
 

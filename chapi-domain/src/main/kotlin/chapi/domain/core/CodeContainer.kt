@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class CodeContainer(
     var FullName: String = "",
     /**
+     * In Rust, the package name is the module name.
+     * In C++, C#, the namespace is the package name.
      * In toml, the package name is the table name.
      */
     var PackageName: String = "",
