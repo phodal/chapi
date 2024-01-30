@@ -1,4 +1,49 @@
-# [](https://github.com/phodal/chapi/compare/v2.2.3...v) (2024-01-04)
+# [](https://github.com/phodal/chapi/compare/v2.3.1...v) (2024-01-30)
+
+
+
+## [2.3.1](https://github.com/phodal/chapi/compare/v2.3.0...v2.3.1) (2024-01-30)
+
+
+### Bug Fixes
+
+* **c:** allow multiple include declarations in C grammar ([f19d745](https://github.com/phodal/chapi/commit/f19d7453ba14f4d2c96f36974a6a7577336b7b99))
+
+
+
+# [2.3.0](https://github.com/phodal/chapi/compare/v2.2.3...v2.3.0) (2024-01-30)
+
+
+### Bug Fixes
+
+* fix build issue ([5fb6cf3](https://github.com/phodal/chapi/commit/5fb6cf36dadb6c512bf93c5b8ab3b88277653400))
+* **rust:** fix error pakcageName issue and just set it to empty ([1e99200](https://github.com/phodal/chapi/commit/1e9920053d15f3974970d26c59f7a33088030b5e))
+
+
+### Features
+
+* add handle for toml type ([d64b477](https://github.com/phodal/chapi/commit/d64b47735d10a1e3bf649b2684d94c0e3c650648))
+* add some domain functions to core ([ea2555b](https://github.com/phodal/chapi/commit/ea2555b86a1e5a573f2e29e8ba24757de595ca0f))
+* **c:** add first function call demos [#96](https://github.com/phodal/chapi/issues/96) ([fa10d9a](https://github.com/phodal/chapi/commit/fa10d9a64cd57109b51f260360422d3ff0f5ed37))
+* **cmake:** add CMakeBasicListenerTest and rename CMakeChapiListener to CMakeBasicListener [#24](https://github.com/phodal/chapi/issues/24) ([7c35520](https://github.com/phodal/chapi/commit/7c355201f17f459336fef3b5869b06cdb49d4055))
+* **cmake:** add CMakefile example and usage in CMakeAnalyser [#24](https://github.com/phodal/chapi/issues/24) ([6ee6974](https://github.com/phodal/chapi/commit/6ee6974e633f99b35e86c5e457bc953e0dafe9ee))
+* **cmake:** add private modifier to container variable [#24](https://github.com/phodal/chapi/issues/24) ([15d4574](https://github.com/phodal/chapi/commit/15d4574383747eaaee79394f4d9eb08094cab6df))
+* **core:** add since annotation for flag ([bcb64bb](https://github.com/phodal/chapi/commit/bcb64bb266684cf1ca34e7fba47ecac32af6e302))
+* **cpp:** add CMake parser and analyser [#24](https://github.com/phodal/chapi/issues/24) ([17015ba](https://github.com/phodal/chapi/commit/17015ba17f81ea9b6bf07e21fe95f91986586b05))
+* **cpp:** add support for identifying C++ structures [#24](https://github.com/phodal/chapi/issues/24) ([15c8f0e](https://github.com/phodal/chapi/commit/15c8f0e14da40cf2268cc57600278a0320471375))
+* **cpp:** add support for identifying inheritance [#24](https://github.com/phodal/chapi/issues/24) ([766d10f](https://github.com/phodal/chapi/commit/766d10fd4009bf404780d615b08fd197e6504769))
+* **cpp:** add test case for identifying class fields [#14](https://github.com/phodal/chapi/issues/14) ([f0eed87](https://github.com/phodal/chapi/commit/f0eed87cb95b64b524fc15a84803c2d197a67998))
+* **cpp:** add test case for identifying functions [#24](https://github.com/phodal/chapi/issues/24) ([2728231](https://github.com/phodal/chapi/commit/2728231261504210ff6f8ffc688b087416034e31))
+* **cppast:** add support for identifying namespaces ([d382bdd](https://github.com/phodal/chapi/commit/d382bdd287356dfeb137a0c9a92dcf7b646e8c18))
+* **docs:** update language support table in README.md ([0dd84ee](https://github.com/phodal/chapi/commit/0dd84eed3cb5e992ad9b2c23ba3cbf2c506de1ee))
+* **rust:** enable analysis git package ([706bba1](https://github.com/phodal/chapi/commit/706bba1afe01a67c551c91484279c2af2d16f4cb))
+* **rust:** try to handle function call ([853503c](https://github.com/phodal/chapi/commit/853503ca16ff176ca11f40aafca4958c56d61699))
+* **toml:** add handle for second sample ([f43f1a2](https://github.com/phodal/chapi/commit/f43f1a2bf47072e292a28b08bfc4c995c97ec178))
+* **toml:** add parser for analysis container ([3c7264f](https://github.com/phodal/chapi/commit/3c7264f3d101bdc710b5e8b4966ff3a06331f3f1))
+* **toml:** add parser for array ([fc08236](https://github.com/phodal/chapi/commit/fc08236630d704a19eb37f21e875eedb0f9f2eab))
+* **toml:** init first parse for result ([e38da8b](https://github.com/phodal/chapi/commit/e38da8b961720e5ee42477d14890b7676f1405c6))
+* **toml:** test for child name ([2eb203a](https://github.com/phodal/chapi/commit/2eb203a585684e82c549b307d63d65833dba7432))
+* update cpp to 14 for better render [#24](https://github.com/phodal/chapi/issues/24) ([6632e83](https://github.com/phodal/chapi/commit/6632e8341d0cc2b32afaf3f81625d696647c2b05))
 
 
 
