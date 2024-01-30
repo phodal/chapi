@@ -9,7 +9,7 @@ internal class CFullIdentListenerTest {
     @Test
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!.toURI()
-//        val content = "/Users/phodal/Downloads/redis-unstable"
+//        val content = "/Users/phodal/Downloads/redis-unstable/deps/jemalloc/test"
         File(content).walkTopDown().forEach {
             if (it.isFile && (it.extension == "c" || it.extension == "h")) {
                 println("Analyse ${it.path}")
@@ -404,6 +404,38 @@ typedef struct {
             	heap_link_t link;
             	uint64_t key;
             };            
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
+
+    @Test
+    fun shouldHandleMacroInDecl() {
+        val code = """
+            TEST_BEGIN(test_junk_alloc_free) {
+            size_t sizevals[] = {
+            		1, 8, 100, 1000, 100*1000
+            #if LG_SIZEOF_PTR == 3
+            		    , 10 * 1000 * 1000
+            #endif
+            	};
+            	size_t lg_alignvals[] = {
+            		0, 4, 10, 15, 16, LG_PAGE
+            #if LG_SIZEOF_PTR == 3
+            		    , 20, 24
+            #endif
+            	};
+            }
+            END_TEST
+            
+            #if 0
+            #define TRACE_HOOK(fmt, ...) malloc_printf(fmt, __VA_ARGS__)
+            #else
+            #define TRACE_HOOK(fmt, ...)
+            #endif
+            
+            size_t n = malloc_snprintf(&buf[i], buflen-i, "%"FMTu64, t0 / t1);
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")

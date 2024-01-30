@@ -66,7 +66,6 @@ includeIdentifier
 
 primaryExpression
     : Identifier
-    | typeKeywords (Identifier | typeKeywords)* pointer?
     | Constant
     | StringLiteral+
     | '(' expression ')'
@@ -74,7 +73,10 @@ primaryExpression
     | '__extension__'? '(' compoundStatement ')' // Blocks (GCC extension)
     | '__builtin_va_arg' '(' unaryExpression ',' typeName ')'
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
-    | StringLiteral singleLineMacroDeclaration StringLiteral (singleLineMacroDeclaration | StringLiteral)*
+    // for macro support
+    | (typeKeywords | Identifier | '==' | '!=') (Identifier | typeKeywords )* pointer?
+    | StringLiteral singleLineMacroDeclaration (singleLineMacroDeclaration | StringLiteral)*
+    | Ellipsis
     ;
 
 genericSelection
@@ -347,6 +349,7 @@ directDeclarator
     |   Identifier ':' DigitSequence                                                #bitFieldDirectDeclarator  // bit field
     |   vcSpecificModifer Identifier                                                #vcSpecificModiferDirectDeclarator
     |   '(' typeSpecifier? pointer directDeclarator ')'                             #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
+    | singleLineMacroDeclaration                                                    #macroDirectDeclarator
     ;
 
 vcSpecificModifer
@@ -434,7 +437,7 @@ typedefName
 
 initializer
     : assignmentExpression
-    | '{' initializerList ','? '}'
+    | '{' initializerList ','? singleLineMacroDeclaration? '}'
     ;
 
 initializerList
