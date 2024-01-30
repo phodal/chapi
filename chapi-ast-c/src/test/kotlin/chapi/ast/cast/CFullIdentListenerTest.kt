@@ -229,5 +229,17 @@ typedef struct {
         assertEquals(functionCalls[2].FunctionName, "a3")
         assertEquals(functionCalls[2].Parameters.size, 0)
     }
+
+    @Test
+    fun shouldIdentifyMultipleInclude() {
+        val code = """
+            #include <stdio.h>
+            #include <string.h>
+            #include <stdlib.h>
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.Imports.size, 3)
+    }
 }
 
