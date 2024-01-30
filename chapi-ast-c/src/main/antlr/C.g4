@@ -40,8 +40,12 @@ compilationUnit
 oneLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))         #includeDeclaration
     | '#' 'define' expression*                                           #defineDeclaration
-    | '#'( 'if' | 'undef' | 'else' | 'pragma' | 'endif' )  expression*   #conditionalDeclaration
+    | '#' macroKeywords  expression*   #conditionalDeclaration
     | Identifier postixCall?  compoundStatement?                         #macroCall
+    ;
+
+macroKeywords
+    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef'
     ;
 
 MultiLineMacro
