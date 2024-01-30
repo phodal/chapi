@@ -90,4 +90,26 @@ void display(char c, int n) {
         assertEquals(container.DataStructures[1].NodeName, "AggregateRoot")
         assertEquals(container.DataStructures[1].Implements[0], "Entity")
     }
+
+    @Test
+    internal fun shouldIdentifyFunction() {
+        val code = """
+            class EntityB: public Entity
+            {
+            public:
+            	EntityB(){};
+            	~EntityB(){};
+            	ValueObjectD* vo_d; 
+            	void init(){
+            		vo_d = new ValueObjectD();
+            		std::cout << "entity b init" << "\n";
+            	};
+            };
+            """.trimIndent()
+
+        val container = CPPAnalyser().analysis(code, "helloworld.cpp")
+        assertEquals(container.DataStructures.size, 1)
+        assertEquals(container.DataStructures[0].NodeName, "EntityB")
+        assertEquals(container.DataStructures[0].Functions[0].Name, "init")
+    }
 }

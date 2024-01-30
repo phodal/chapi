@@ -36,7 +36,11 @@ class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
             method.Parameters = buildParameters(it)
         }
 
-        defaultNode.Functions += method
+        if (currentNode != null) {
+            currentNode?.Functions = currentNode?.Functions?.plus(method)!!
+        } else {
+            defaultNode.Functions += method
+        }
     }
 
     private fun buildParameters(parameterDeclaration: CPP14Parser.ParameterDeclarationClauseContext): List<CodeProperty> {
