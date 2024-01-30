@@ -188,7 +188,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
     override fun enterPostfixExpression(ctx: CParser.PostfixExpressionContext?) {
         val call = ctx?.postixCall() ?: return
-        val functionName = ctx.primaryExpression()?.Identifier()?.text ?: return
+        val functionName = ctx.primaryExpression()?.Identifier()?.firstOrNull()?.text ?: return
 
         val children = call.firstOrNull()?.children ?: return
         // function call children should be '(', some parameters?, ')', so the size should be at least 2

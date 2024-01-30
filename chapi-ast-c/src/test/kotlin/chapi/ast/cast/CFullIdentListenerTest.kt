@@ -395,7 +395,9 @@ typedef struct {
     fun shouldHandleMacroInStructure() {
         val code = """
             #define KUMAX(x)	((uintmax_t)x##ULL)
-            
+            typedef rb_tree(node_t) unsummarized_tree_t;
+            rb_gen(static UNUSED, unsummarized_tree_);
+                
             struct node_s {
             #define NODE_MAGIC 0x9823af7e
             	uint32_t magic;

@@ -65,7 +65,8 @@ includeIdentifier
     ;
 
 primaryExpression
-    : (Identifier | (typeKeywords typeKeywords*)) pointer?
+    : Identifier
+    | typeKeywords (Identifier | typeKeywords)* pointer?
     | Constant
     | StringLiteral+
     | '(' expression ')'
