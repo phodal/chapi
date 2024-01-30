@@ -21,9 +21,9 @@ language stages:
 | Features      | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
 |---------------|------|--------|----|--------|-------|----|----|-------|-----|------|
 | http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       |     | 🆕   |
-| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | 🆕  | ✅    |
+| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | ✅   | ✅    |
 | function call | ✅    | 🆕     | 🆕 | ✅      | ✅     |    |    |       |     | ✅    |
-| arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     |     | 🆕   |
+| arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     | ✅   | 🆕   |
 | real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
 
 - [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is an architecture workbench, also for architecture
