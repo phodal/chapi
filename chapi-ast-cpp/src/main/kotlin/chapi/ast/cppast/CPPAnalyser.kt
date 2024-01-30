@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker
 open class CPPAnalyser: Analyser  {
     override fun analysis(code: String, filePath: String): CodeContainer {
         val context = this.parse(code).translationUnit()
-        val listener = CPPFullIdentListener(fileName = filePath)
+        val listener = CPPBasicIdentListener(fileName = filePath)
 
         ParseTreeWalker().walk(listener, context)
 

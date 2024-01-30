@@ -3,7 +3,7 @@ package chapi.ast.cppast
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-internal class CPPFullIdentListenerTest {
+internal class CPPBasicIdentListenerTest {
     @Test
     internal fun shouldAnalysisHelloWorld() {
         val code = this::class.java.getResource("/grammar/helloworld.cpp").readText()
@@ -53,5 +53,20 @@ void display(char c, int n) {
         assertEquals(params[0].TypeValue, "c")
         assertEquals(params[1].TypeType, "int")
         assertEquals(params[1].TypeValue, "n")
+    }
+
+    @Test
+    internal fun shouldIdentifyClassName() {
+        val code = """
+        class Entity
+        {
+        public:
+            int Id;
+        };
+        """.trimIndent()
+
+        val container = CPPAnalyser().analysis(code, "helloworld.cpp")
+        assertEquals(container.DataStructures.size, 1)
+        assertEquals(container.DataStructures[0].NodeName, "Entity")
     }
 }

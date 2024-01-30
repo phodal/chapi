@@ -7,9 +7,12 @@ import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeFunction
 import chapi.domain.core.CodeProperty
 
-class CPPFullIdentListener(fileName: String) : CPP14ParserBaseListener() {
+class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     private var defaultNode = CodeDataStruct()
+    private var currentFunction: CodeFunction? = null
+    private var classes = mutableListOf<CodeDataStruct>()
+    private var currentNode: CodeDataStruct? = null
 
     override fun enterFunctionDefinition(ctx: CPP14Parser.FunctionDefinitionContext?) {
         val method = CodeFunction()
@@ -46,10 +49,30 @@ class CPPFullIdentListener(fileName: String) : CPP14ParserBaseListener() {
         } ?: listOf()
     }
 
+    override fun enterClassSpecifier(ctx: CPP14Parser.ClassSpecifierContext?) {
+        ctx?.classHead()?.let {
+            currentNode = CodeDataStruct()
+            currentNode?.NodeName = it.classHeadName()?.className()?.text ?: ""
+        }
+
+        ctx?.memberSpecification()?.memberdeclaration()?.let {
+            // TODO: add member
+        }
+    }
+
+    override fun exitClassSpecifier(ctx: CPP14Parser.ClassSpecifierContext?) {
+        currentNode?.let {
+            classes.add(it)
+        }
+    }
 
     fun getNodeInfo(): CodeContainer {
         if (defaultNode.Functions.isNotEmpty()) {
             codeContainer.DataStructures += defaultNode
+        }
+
+        if (classes.isNotEmpty()) {
+            codeContainer.DataStructures += classes
         }
 
         return codeContainer
