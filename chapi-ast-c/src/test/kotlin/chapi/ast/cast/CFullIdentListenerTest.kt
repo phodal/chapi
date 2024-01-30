@@ -10,7 +10,8 @@ internal class CFullIdentListenerTest {
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!
         File(content.toURI()).walkTopDown().forEach {
-            if (it.isFile && it.extension == "rs") {
+            if (it.isFile && it.extension == "c") {
+//                println("Analyse ${it.name}")
                 CAnalyser().analysis(it.readText(), it.name)
             }
         }

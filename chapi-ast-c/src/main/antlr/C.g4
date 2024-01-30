@@ -42,7 +42,7 @@ includeDeclaration
     ;
 
 includeIdentifier
-    : Identifier Dot? 'h'?
+    : Identifier (Dot Identifier+)?
     ;
 
 primaryExpression
@@ -523,7 +523,7 @@ externalDeclaration
     ;
 
 functionDefinition
-    : declarationSpecifier+ declarator declarationList? compoundStatement
+    : (declarationSpecifier+)? declarator declarationList? compoundStatement
     ;
 
 declarationList
@@ -1088,7 +1088,7 @@ fragment SChar
     | '\\\n'   // Added line
     | '\\\r\n' // Added line
     ;
-
+//
 //MultiLineMacro
 //    : '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN)
 //    ;
@@ -1096,10 +1096,6 @@ fragment SChar
 //Directive
 //    : '#' ~ [\n]* -> channel (HIDDEN)
 //    ;
-
-ComplexDefine
-    :   '#' Whitespace? 'define'  ~[#]* -> skip
-    ;
 
 // ignore the following asm blocks:
 /*

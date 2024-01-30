@@ -11,11 +11,10 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
     override fun enterIncludeDeclaration(ctx: CParser.IncludeDeclarationContext?) {
-        val includeIdentifier = ctx?.includeIdentifier()
-        val importName = includeIdentifier?.text ?: ""
+        val identifier = ctx?.includeIdentifier()
         val imp = CodeImport(
-            Source = importName,
-            AsName = includeIdentifier?.Identifier()?.text ?: ""
+            Source = identifier?.text ?: "",
+            AsName = identifier?.text ?: ""
         )
 
         codeContainer.Imports += imp
