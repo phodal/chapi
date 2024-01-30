@@ -9,6 +9,7 @@ import chapi.domain.core.CodeProperty
 
 class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    /// for example, Friend function, global function (`main`), etc.
     private var defaultNode = CodeDataStruct()
     private var currentFunction: CodeFunction? = null
     private var classes = mutableListOf<CodeDataStruct>()
@@ -53,6 +54,12 @@ class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
         ctx?.classHead()?.let {
             currentNode = CodeDataStruct()
             currentNode?.NodeName = it.classHeadName()?.className()?.text ?: ""
+
+            val extends = it.baseClause()?.baseSpecifierList()?.baseSpecifier()?.map { baseSpecifier ->
+                 baseSpecifier.baseTypeSpecifier()?.classOrDeclType()?.className()?.text ?: ""
+            } ?: listOf()
+
+            currentNode?.Implements = extends
         }
 
         ctx?.memberSpecification()?.memberdeclaration()?.let {

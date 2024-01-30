@@ -69,4 +69,25 @@ void display(char c, int n) {
         assertEquals(container.DataStructures.size, 1)
         assertEquals(container.DataStructures[0].NodeName, "Entity")
     }
+
+    @Test
+    internal fun shouldIdentifyInheritance() {
+        val code = """
+        class Entity
+        {
+        public:
+            int Id;
+        };
+        
+        class AggregateRoot: public Entity
+        {
+        };
+        """.trimIndent()
+
+        val container = CPPAnalyser().analysis(code, "helloworld.cpp")
+        assertEquals(container.DataStructures.size, 2)
+        assertEquals(container.DataStructures[0].NodeName, "Entity")
+        assertEquals(container.DataStructures[1].NodeName, "AggregateRoot")
+        assertEquals(container.DataStructures[1].Implements[0], "Entity")
+    }
 }
