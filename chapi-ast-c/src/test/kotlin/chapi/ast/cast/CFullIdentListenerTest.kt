@@ -339,7 +339,7 @@ typedef struct {
     fun shouldHandleForMultipleMacroWithId() {
         val code = """
             TEST_BEGIN(test_prof_thread_name_threaded) {
-            	
+            	TEST_FFS(unsigned, u, u);
             }
             TEST_END
 

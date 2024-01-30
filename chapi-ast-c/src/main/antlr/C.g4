@@ -34,14 +34,16 @@
 grammar C;
 
 compilationUnit
-    : (oneLineMacroDeclaration | externalDeclaration)* EOF
+    : (singleLineMacroDeclaration | externalDeclaration)* EOF
     ;
 
-oneLineMacroDeclaration
+singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))         #includeDeclaration
     | '#' 'define' expression*                                           #defineDeclaration
-    | '#' macroKeywords  expression*   #conditionalDeclaration
-    | Identifier postixCall?  compoundStatement?                         #macroCall
+    | '#' macroKeywords  expression*                                     #conditionalDeclaration
+    | Identifier postixCall? ('{' blockItem* '}')?                       #macroCallBlockDeclaration
+    | Identifier postixCall ';'?                                         #macroFuncCallDeclaration
+    | Identifier                                                         #macroDeclaration
     ;
 
 macroKeywords
@@ -61,7 +63,7 @@ includeIdentifier
     ;
 
 primaryExpression
-    : Identifier
+    : (Identifier | typeKeywords)
     | Constant
     | StringLiteral+
     | '(' expression ')'
@@ -198,7 +200,7 @@ constantExpression
 declaration
     : Static?  declarationSpecifier+ initDeclaratorList? ';'
     | staticAssertDeclaration
-    | oneLineMacroDeclaration
+    | singleLineMacroDeclaration
     ;
 
 declarationSpecifier
@@ -534,6 +536,17 @@ functionDefinition
 
 declarationList
     : declaration+
+    ;
+
+typeKeywords
+    : 'char'
+    | 'short'
+    | 'int'
+    | 'long'
+    | 'float'
+    | 'double'
+    | 'signed'
+    | 'unsigned'
     ;
 
 keywords
