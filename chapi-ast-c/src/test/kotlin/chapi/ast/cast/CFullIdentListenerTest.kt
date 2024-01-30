@@ -436,6 +436,8 @@ typedef struct {
             #endif
             
             size_t n = malloc_snprintf(&buf[i], buflen-i, "%"FMTu64, t0 / t1);
+            
+            const char filename_prefix[] = TEST_PREFIX ".";
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")

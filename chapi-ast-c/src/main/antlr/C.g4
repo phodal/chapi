@@ -75,7 +75,7 @@ primaryExpression
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
     // for macro support
     | (typeKeywords | Identifier | '==' | '!=') (Identifier | typeKeywords )* pointer?
-    | StringLiteral singleLineMacroDeclaration (singleLineMacroDeclaration | StringLiteral)*
+    | (singleLineMacroDeclaration | StringLiteral)+
     | Ellipsis
     ;
 
