@@ -34,12 +34,12 @@
 grammar C;
 
 compilationUnit
-    : (includeDeclaration+)? (externalDeclaration+)? EOF
+    : (oneLineMacroDeclaration | externalDeclaration)* EOF
     ;
 
-includeDeclaration
-    : '#' include (StringLiteral | ('<' includeIdentifier '>' ))
-    | '#' Identifier expression*
+oneLineMacroDeclaration
+    : '#' include (StringLiteral | ('<' includeIdentifier '>' )) #includeDeclaration
+    | '#' Identifier expression*                                 #defineDeclaration
     ;
 
 MultiLineMacro
@@ -194,7 +194,7 @@ constantExpression
     ;
 
 declaration
-    : declarationSpecifier+ initDeclaratorList? ';'
+    : Static?  declarationSpecifier+ initDeclaratorList? ';'
     | staticAssertDeclaration
     ;
 
@@ -324,18 +324,6 @@ declarator
     ;
 
 directDeclarator
-//    : Identifier
-//    | '(' declarator ')'
-//    | directDeclarator '[' typeQualifierList? assignmentExpression? ']'
-//    | directDeclarator '[' 'static' typeQualifierList? assignmentExpression ']'
-//    | directDeclarator '[' typeQualifierList 'static' assignmentExpression ']'
-//    | directDeclarator '[' typeQualifierList? '*' ']'
-//    | directDeclarator '(' parameterTypeList ')'
-//    | directDeclarator '(' identifierList? ')'
-//    | Identifier ':' DigitSequence         // bit field
-//    | vcSpecificModifer Identifier         // Visual C Extension
-//    | '(' vcSpecificModifer declarator ')' // Visual C Extension
-//    ;
     :   Identifier                                                                 #identifierDirectDeclarator
     |   '(' declarator ')'                                                          #declaratorDirectDeclarator
     |   directDeclarator '[' typeQualifierList? assignmentExpression? ']'           #assignmentExpressionDirectDeclarator

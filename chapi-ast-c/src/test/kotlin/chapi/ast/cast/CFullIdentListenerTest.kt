@@ -23,6 +23,9 @@ internal class CFullIdentListenerTest {
         val code = """
 #include <stdio.h>
 
+static RedisModuleType *MemAllocType;
+
+#define MAX_DB 16
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
 
