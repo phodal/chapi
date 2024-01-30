@@ -307,6 +307,10 @@ typedef struct {
                         errString = msg; \
                         goto end;        \
                     }
+                    
+                    if (flags & REDISMODULE_CTX_FLAGS_AOF) FAIL("AOF Flag was set")
+                    RedisModule_Call(ctx, "config", "ccc", "set", "appendonly", "yes");
+                    while(RedisModule_Scan(ctx, cursor, scan_strings_callback, &pd));
                 end:
                     /* Revert config changes */
             }

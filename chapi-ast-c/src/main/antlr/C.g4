@@ -481,6 +481,7 @@ blockItem
 
 expressionStatement
     : expression? ';'
+    | expression ';'?
     ;
 
 selectionStatement
