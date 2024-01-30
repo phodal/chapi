@@ -21,5 +21,6 @@ include(
 
     // others
     ":chapi-parser-toml",
+    ":chapi-parser-cmake",
 )
 
