@@ -48,16 +48,12 @@ MultiLineMacro
     : '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN)
     ;
 
-//Directive
-//    : '#' ~ [\n]* -> channel (HIDDEN)
-//    ;
-
 include
     : 'include'
     ;
 
 includeIdentifier
-    : Identifier ('/' Identifier)* (Dot Identifier)?
+    : (Identifier | keywords) ('/' Identifier)* (Dot Identifier)?
     ;
 
 primaryExpression
@@ -534,6 +530,40 @@ functionDefinition
 
 declarationList
     : declaration+
+    ;
+
+keywords
+    : 'float'
+    | 'double'
+    | 'char'
+    | 'int'
+    | 'long'
+    | 'short'
+    | 'signed'
+    | 'unsigned'
+    | 'void'
+    | 'const'
+    | 'volatile'
+    | 'extern'
+    | 'static'
+    | 'auto'
+    | 'register'
+    | 'typedef'
+    | 'struct'
+    | 'union'
+    | 'enum'
+    | 'case'
+    | 'default'
+    | 'if'
+    | 'else'
+    | 'switch'
+    | 'while'
+    | 'do'
+    | 'for'
+    | 'goto'
+    | 'continue'
+    | 'break'
+    | 'return'
     ;
 
 Auto

@@ -243,10 +243,11 @@ typedef struct {
             #include <stdlib.h>
             #include "redismodule.h"
             #include <sys/mman.h>
+            #include <float.h>
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.Imports.size, 5)
+        assertEquals(codeFile.Imports.size, 6)
     }
 
     @Test
