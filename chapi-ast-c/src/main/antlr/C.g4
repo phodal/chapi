@@ -47,7 +47,7 @@ singleLineMacroDeclaration
     ;
 
 macroKeywords
-    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef'
+    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif'
     ;
 
 MultiLineMacro
@@ -63,7 +63,7 @@ includeIdentifier
     ;
 
 primaryExpression
-    : (Identifier | typeKeywords)
+    : (Identifier | typeKeywords) pointer?
     | Constant
     | StringLiteral+
     | '(' expression ')'

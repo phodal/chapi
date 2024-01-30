@@ -370,4 +370,16 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 1)
     }
+
+    @Test
+    fun shouldHandleForKeywordArg() {
+        val code = """
+            void hello() {
+                va_arg(ap, char *);
+            }
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
 }
