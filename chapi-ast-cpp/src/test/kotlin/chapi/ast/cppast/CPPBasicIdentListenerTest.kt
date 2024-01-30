@@ -1,5 +1,6 @@
 package chapi.ast.cppast
 
+import chapi.domain.core.DataStructType
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -149,5 +150,21 @@ void display(char c, int n) {
         assertEquals(container.DataStructures[0].Fields[0].TypeKey, "Id")
         assertEquals(container.DataStructures[0].Fields[1].TypeType, "int")
         assertEquals(container.DataStructures[0].Fields[1].TypeKey, "No")
+    }
+
+    @Test
+    internal fun shouldIdentifyCppStructure() {
+        val code = """
+        struct Person
+        {
+            char name[50];
+            int age;
+            float salary;
+        };
+        """.trimIndent()
+
+        val container = CPPAnalyser().analysis(code, "helloworld.cpp")
+        assertEquals(container.DataStructures.size, 1)
+        assertEquals(container.DataStructures[0].Type, DataStructType.STRUCT)
     }
 }

@@ -60,6 +60,16 @@ class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
     override fun enterClassSpecifier(ctx: CPP14Parser.ClassSpecifierContext?) {
         ctx?.classHead()?.let {
             currentNode = CodeDataStruct()
+
+            it.classKey()?.let { keyContext ->
+                currentNode?.Type = when (keyContext.text) {
+                    "class" -> DataStructType.CLASS
+                    "struct" -> DataStructType.STRUCT
+                    "union" -> DataStructType.UNION
+                    else -> DataStructType.CLASS
+                }
+            }
+
             currentNode?.NodeName = it.classHeadName()?.className()?.text ?: ""
 
             val extends = it.baseClause()?.baseSpecifierList()?.baseSpecifier()?.map { baseSpecifier ->
@@ -87,6 +97,8 @@ class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
             classes.add(it)
         }
     }
+
+
 
     fun getNodeInfo(): CodeContainer {
         if (defaultNode.Functions.isNotEmpty()) {

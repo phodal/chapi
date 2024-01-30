@@ -15,6 +15,8 @@ enum class DataStructType(val structType: String) {
     INNER_STRUCTURES("InnerStructures"),
     CREATOR_CLASS("CreatorClass"),
     ABSTRACT_CLASS("AbstractClass"),
+    /// add 2.2.6 for cpp
+    UNION("Union"),
 
     // for scala, Rust
     TRAIT("Trait"),
