@@ -1,4 +1,35 @@
-# [](https://github.com/phodal/chapi/compare/v2.3.1...v) (2024-01-30)
+# [](https://github.com/phodal/chapi/compare/v2.3.2...v) (2024-01-30)
+
+
+
+## [2.3.2](https://github.com/phodal/chapi/compare/v2.3.1...v2.3.2) (2024-01-30)
+
+
+### Bug Fixes
+
+* **cc:** add default NodeName to defaultDataStruct [#24](https://github.com/phodal/chapi/issues/24) ([7c3b9d6](https://github.com/phodal/chapi/commit/7c3b9d6a01dab7eaa6457289c077645efebfed55))
+* **c:** fix imports issue [#24](https://github.com/phodal/chapi/issues/24) ([bd0e7ec](https://github.com/phodal/chapi/commit/bd0e7eca66e2b1b5f52fbbd7caa40db9b79ce7bd))
+* **c:** fix macro call block declaration and macro keywords in C grammar [#24](https://github.com/phodal/chapi/issues/24) ([7d60204](https://github.com/phodal/chapi/commit/7d60204f20573502619c82294a04e8848abbc8b6))
+* **c:** fix missing semicolon in expressionStatement ([46cd01d](https://github.com/phodal/chapi/commit/46cd01d3a160e8285511ea5d6fbda49b535f3445))
+* **c:** fix parsing of function names with multiple identifiers [#24](https://github.com/phodal/chapi/issues/24) ([dc538e2](https://github.com/phodal/chapi/commit/dc538e2943369a0087ca9afc97a800d47fa2446c))
+* **chapi-ast-c:** modify C.g4 to support multiple macro declarations [#24](https://github.com/phodal/chapi/issues/24) ([df1d26f](https://github.com/phodal/chapi/commit/df1d26f18d76804af6f7b14e1df423f0924bcf1c))
+
+
+### Features
+
+* **c:** add macro support to primaryExpression and genericSelection [#24](https://github.com/phodal/chapi/issues/24) ([dae101f](https://github.com/phodal/chapi/commit/dae101f0dd072de2e035e8ce3038e70bd0a37a2d))
+* **c:** add support for C keywords in includeIdentifier [#24](https://github.com/phodal/chapi/issues/24) ([ad1780d](https://github.com/phodal/chapi/commit/ad1780d1846839063771009db3d5379bb7d9749e))
+* **c:** add support for including identifiers with slashes [#24](https://github.com/phodal/chapi/issues/24) ([7f2ded2](https://github.com/phodal/chapi/commit/7f2ded2838eaaf47afe17df93718c89f407c62ad))
+* **c:** add support for macro calls and upper case identifiers [#24](https://github.com/phodal/chapi/issues/24) ([f546e18](https://github.com/phodal/chapi/commit/f546e1859da1816c70ddb082df3ce5852cb16251))
+* **c:** add support for macro cast declaration [#24](https://github.com/phodal/chapi/issues/24) ([86896ac](https://github.com/phodal/chapi/commit/86896ac438372ff7090ee7371c7c1b11e3c9b208))
+* **c:** add support for single-line macro declarations [#24](https://github.com/phodal/chapi/issues/24) ([9510ba7](https://github.com/phodal/chapi/commit/9510ba70ac3aeb295279456963958ccab9dd642e))
+* **chapi-ast-c:** add support for 'elif' macro keyword [#24](https://github.com/phodal/chapi/issues/24) ([b5b7c5f](https://github.com/phodal/chapi/commit/b5b7c5fcc1f526111cd0dbee9990055afb511234))
+* **chapi-ast-c:** add support for additional macro keyword in C.g4 [#24](https://github.com/phodal/chapi/issues/24) ([799a3f6](https://github.com/phodal/chapi/commit/799a3f68fcec2949bdf751fbd5584d7e22668bc8))
+* **chapi-ast-c:** add support for block macro calls [#24](https://github.com/phodal/chapi/issues/24) ([119f69f](https://github.com/phodal/chapi/commit/119f69f286b6278798fc75a6f3da9affca1625a3))
+* **chapi-ast-c:** add support for ifndef macro keyword [#24](https://github.com/phodal/chapi/issues/24) ([84ce0e4](https://github.com/phodal/chapi/commit/84ce0e40b817312bb0ab763b4c080cd3c2d6d7db))
+* **c:** improve include declaration handling [#24](https://github.com/phodal/chapi/issues/24) ([7feb7ca](https://github.com/phodal/chapi/commit/7feb7caa8c2ea4b0a29f86609e007d4ad61dad08))
+* **c:** modify C grammar to support one-line macro declarations [#24](https://github.com/phodal/chapi/issues/24) ([a04ad5d](https://github.com/phodal/chapi/commit/a04ad5dcd7f82cc204345cddf3964df444054dae))
+* **c:** modify C grammar to support one-line macro declarations [#24](https://github.com/phodal/chapi/issues/24) ([214a150](https://github.com/phodal/chapi/commit/214a1504f3e64430b3a532664384458d819befae))
 
 
 
