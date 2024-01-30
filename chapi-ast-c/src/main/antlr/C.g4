@@ -47,7 +47,7 @@ singleLineMacroDeclaration
     ;
 
 macroKeywords
-    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef'
+    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef'
     ;
 
 MultiLineMacro
@@ -71,6 +71,7 @@ primaryExpression
     | '__extension__'? '(' compoundStatement ')' // Blocks (GCC extension)
     | '__builtin_va_arg' '(' unaryExpression ',' typeName ')'
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
+    | StringLiteral singleLineMacroDeclaration StringLiteral
     ;
 
 genericSelection

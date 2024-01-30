@@ -357,4 +357,17 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 1)
     }
+
+    @Test
+    fun shouldSupportForMacroConcat() {
+        val code = """
+            static size_t
+            tcache_bytes_read(void) {
+            	mallctl("stats.arenas." STRINGIFY(MALLCTL_ARENAS_ALL) ".tcache_bytes", &tcache_bytes, &sz, NULL, 0);
+            }
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
 }
