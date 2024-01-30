@@ -41,7 +41,7 @@ oneLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))         #includeDeclaration
     | '#' 'define' expression*                                           #defineDeclaration
     | '#'( 'if' | 'undef' | 'else' | 'pragma' | 'endif' )  expression*   #conditionalDeclaration
-    | MacroId postixCall?  compoundStatement?                         #macroCall
+    | Identifier postixCall?  compoundStatement?                         #macroCall
     ;
 
 MultiLineMacro

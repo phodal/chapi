@@ -333,4 +333,27 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 2)
     }
+
+    @Test
+    fun shouldHandleForMultipleMacroWithId() {
+        val code = """
+            TEST_BEGIN(test_prof_thread_name_threaded) {
+            	
+            }
+            TEST_END
+
+            #undef NTHREADS
+            #undef NRESET
+
+            int
+            main(void) {
+            	return test(
+            	    test_prof_thread_name_validation,
+            	    test_prof_thread_name_threaded);
+            }
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
 }
