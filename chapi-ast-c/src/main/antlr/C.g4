@@ -38,9 +38,10 @@ compilationUnit
     ;
 
 oneLineMacroDeclaration
-    : '#' include (StringLiteral | ('<' includeIdentifier '>' )) #includeDeclaration
-    | '#' Identifier expression*                                 #defineDeclaration
-    | '#'( 'if' | 'undef' | 'define')  expression*               #conditionalDeclaration
+    : '#' include (StringLiteral | ('<' includeIdentifier '>' ))         #includeDeclaration
+    | '#' 'define' expression*                                           #defineDeclaration
+    | '#'( 'if' | 'undef' | 'else' | 'pragma' | 'endif' )  expression*   #conditionalDeclaration
+    | MacroId postixCall?  compoundStatement?                         #macroCall
     ;
 
 MultiLineMacro
@@ -246,6 +247,7 @@ typeSpecifier
     | enumSpecifier
     | typedefName
     | '__typeof__' '(' constantExpression ')' // GCC extension
+    | postfixExpression
     ;
 
 structOrUnionSpecifier
@@ -907,6 +909,15 @@ fragment IdentifierNondigit
 
 fragment Nondigit
     : [a-zA-Z_]
+    ;
+
+
+MacroId
+    : UpperedId (UpperedId)*
+    ;
+
+fragment UpperedId
+    : [A-Z_]
     ;
 
 fragment Digit
