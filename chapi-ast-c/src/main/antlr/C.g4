@@ -40,6 +40,7 @@ compilationUnit
 oneLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' )) #includeDeclaration
     | '#' Identifier expression*                                 #defineDeclaration
+    | '#'( 'if' | 'undef' | 'define')  expression*               #conditionalDeclaration
     ;
 
 MultiLineMacro
@@ -196,6 +197,7 @@ constantExpression
 declaration
     : Static?  declarationSpecifier+ initDeclaratorList? ';'
     | staticAssertDeclaration
+    | oneLineMacroDeclaration
     ;
 
 declarationSpecifier

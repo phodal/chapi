@@ -295,4 +295,25 @@ typedef struct {
         assertEquals(codeFile.DataStructures[0].Functions.size, 3)
         assertEquals(codeFile.DataStructures[0].Functions[0].Name, "print_x")
     }
+
+    @Test
+    fun shouldEnableMacroInFunction() {
+        val code = """
+            int TestCtxFlags(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
+                #undef FAIL
+                #define FAIL(msg)        \
+                    {                    \
+                        ok = 0;          \
+                        errString = msg; \
+                        goto end;        \
+                    }
+                end:
+                    /* Revert config changes */
+            }
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Functions.size, 1)
+    }
 }
