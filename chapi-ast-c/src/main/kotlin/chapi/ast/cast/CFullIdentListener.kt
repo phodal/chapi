@@ -5,7 +5,7 @@ import chapi.domain.core.*
 
 open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     private var currentDataStruct = CodeDataStruct()
-    private val defaultDataStruct = CodeDataStruct()
+    private val defaultDataStruct = CodeDataStruct(NodeName = "default")
     private var currentFunction = CodeFunction()
     private var structMap = mutableMapOf<String, CodeDataStruct>()
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -116,7 +116,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         currentFunction.Parameters = ctx.parameterTypeList().parameterList().parameterDeclaration().mapNotNull {
             val type = it.declarationSpecifier().firstOrNull()?.typeSpecifier()?.text
 
-            val name = it.declarator().directDeclarator()?.let { directDeclarator ->
+            val name = it.declarator()?.directDeclarator()?.let { directDeclarator ->
                 when (directDeclarator) {
                     is CParser.IdentifierDirectDeclaratorContext -> {
                         directDeclarator.Identifier().text
@@ -126,7 +126,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
                 }
             }
 
-            val pointer = it.declarator().pointer()?.text ?: ""
+            val pointer = it.declarator()?.pointer()?.text ?: ""
 
             if (type != null && name != null) {
                 CodeProperty(TypeValue = name, TypeType = type + pointer)
@@ -158,7 +158,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         currentFunction = CodeFunction(Position = buildPosition(ctx))
         ctx?.declarationSpecifier()?.map {
             if (it.typeSpecifier().text != null) {
-                if (it.typeSpecifier().typedefName() != null) {
+                if (it.typeSpecifier()?.typedefName() != null) {
                     currentFunction.Name = it.typeSpecifier().typedefName().text
                 } else {
                     currentFunction.ReturnType = it.typeSpecifier().text
@@ -168,11 +168,9 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
         parseDirectDeclarator(ctx?.declarator()?.directDeclarator())
 
-        if (currentFunction.Parameters.isEmpty()) return
-
         // handle for a pointer
-        val firstParameter = currentFunction.Parameters[0]
-        if (firstParameter.TypeType.endsWith('*')) {
+        val firstParameter = currentFunction.Parameters.firstOrNull()
+        if (firstParameter?.TypeType?.endsWith('*') == true) {
             val baseType = firstParameter.TypeType.removeSuffix("*")
 
             structMap.getOrPut(baseType) {
