@@ -40,10 +40,10 @@ compilationUnit
 singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))         #includeDeclaration
     | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*                    #defineDeclaration
-    | Identifier postixCall? ('{' blockItem* '}')?                       #macroCallBlockDeclaration
     | Identifier postixCall ';'?                                         #macroFuncCallDeclaration
     | Identifier                                                         #macroDeclaration
     | '#' Identifier                                                     #macroIdDeclaration
+    | Identifier postixCall? ('{' blockItem* '}')? Identifier            #macroCallBlockDeclaration
     ;
 
 macroKeywords
@@ -71,7 +71,7 @@ primaryExpression
     | '__extension__'? '(' compoundStatement ')' // Blocks (GCC extension)
     | '__builtin_va_arg' '(' unaryExpression ',' typeName ')'
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
-    | StringLiteral singleLineMacroDeclaration StringLiteral
+    | StringLiteral singleLineMacroDeclaration StringLiteral (singleLineMacroDeclaration | StringLiteral)*
     ;
 
 genericSelection
