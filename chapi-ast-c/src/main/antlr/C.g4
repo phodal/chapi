@@ -61,7 +61,7 @@ primaryExpression
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
     // for macro support
     | typeQualifier? (typeKeywords | Identifier) (Identifier | typeKeywords)* pointer?
-    | StringLiteral? (directDeclarator | StringLiteral)+
+    | StringLiteral? (directDeclarator | StringLiteral | 'error')+
     | Ellipsis
     ;
 
@@ -454,15 +454,17 @@ staticAssertDeclaration
     ;
 
 statement
-    : labeledStatement
+    : normalStatement
+    | macroStatement
+    ;
+
+normalStatement : labeledStatement
     | compoundStatement
     | expressionStatement
     | selectionStatement
     | iterationStatement
     | jumpStatement
-    | ('__asm' | '__asm__') ('volatile' | '__volatile__')? asmBody
-    | macroStatement
-    ;
+    | ('__asm' | '__asm__') ('volatile' | '__volatile__')? asmBody ;
 
 asmBody
     : '(' (logicals)? (':' (logicals)?)* ')' ';'?
@@ -477,8 +479,8 @@ macroStatement
 
 singleLineMacroDeclaration
     : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))             #includeDeclaration
-    | macroKeywords Identifier? structOrUnionSpecifier                                #macroStructureDeclaration
-    | macroKeywords Identifier? (expression)*
+    | macroKeywords Identifier structOrUnionSpecifier                                #macroStructureDeclaration
+    | macroKeywords (expressionStatement)*
                 ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
     | 'define' macroFunctionExpression macroFunctionExpression                        #macroAliasDeclaration
     | '#'? Identifier                                                                 #macroCastDeclaration

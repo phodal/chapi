@@ -13,7 +13,7 @@ internal class CFullIdentListenerTest {
     @Test
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!.toURI()
-//        val content = "/Users/phodal/Downloads/redis-unstable"
+//        val content = "/Users/phodal/Downloads/redis-unstable/deps/lua/src"
         runBlocking {
             File(content).walkTopDown().asFlow().mapNotNull {
                 if (it.isFile && (it.extension == "c" || it.extension == "h")) {
