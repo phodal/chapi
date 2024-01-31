@@ -476,7 +476,9 @@ macroStatement
 singleLineMacroDeclaration
     : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))            #includeDeclaration
     | macroKeywords Identifier? expression* '#' macroKeywords identifierList?        #ifdefDeclaration
+    // #define LUAI_USER_ALIGNMENT_T	union { double u; void *s; long l; }
     | macroKeywords                                                                  #defineDeclaration
+    | 'define' Identifier structOrUnionSpecifier                                     #macroFunctionDeclaration
     | '#'? Identifier                                                                #macroCastDeclaration
 //    | 'define' expression* '#' 'undef' identifierList?                               #macroExpansionDeclaration
 //    | macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration2

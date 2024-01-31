@@ -598,4 +598,14 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 0)
     }
+
+    @Test
+    fun shouldSupportMacroStruct() {
+        val code = """
+            #define LUAI_USER_ALIGNMENT_T	union { double u; void *s; long l; }
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 0)
+    }
 }
