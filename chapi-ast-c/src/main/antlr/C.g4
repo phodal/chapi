@@ -342,9 +342,7 @@ directDeclarator
     |   '(' typeSpecifier? pointer directDeclarator ')'                             #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
     //singleLineMacroDeclaration
     // #define KUMAX(x)	((uintmax_t)x##ULL)
-    | '#' '#'? macroKeywords? expression                                            #defineDirectDeclarator
-    // #define KUMAX(x)	((uintmax_t)x##ULL)
-//    | '#'  Identifier                                                           #macroCastDeclarator
+    | singleLineMacroDeclaration                                                    #singleLineMacroDirectDeclarator
     ;
 
 vcSpecificModifer
@@ -473,7 +471,6 @@ statement
 macroStatement
     : singleLineMacroDeclaration
     ;
-
 
 singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
@@ -971,6 +968,10 @@ fragment IdentifierNondigit
     : Nondigit
     | UniversalCharacterName
     //|   // other implementation-defined characters...
+    ;
+
+fragment UpperCase
+    : [A-Z_]
     ;
 
 fragment Nondigit
