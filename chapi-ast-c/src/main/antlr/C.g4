@@ -470,16 +470,16 @@ macroStatement
     ;
 
 singleLineMacroDeclaration
-    : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
+    : '#' include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))            #includeDeclaration
     | '#' 'define' expression* '#' 'undef' identifierList?                               #macroExpansionDeclaration
-    | '#' ('ifdef' | 'endif') Identifier expression* '#' 'endif' Identifier?             #ifdefDeclaration
+    | '#' ('ifdef' | 'ifndef' |'if') Identifier expression* '#' 'endif' Identifier?      #ifdefDeclaration
     | '#' macroKeywords                                                                  #defineDeclaration
     | '#' '#'? Identifier                                                                #macroCastDeclaration
     | '#' macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration2
     ;
 
 macroKeywords
-    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define'
+    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define' | 'ifndef'
     ;
 
 labeledStatement
