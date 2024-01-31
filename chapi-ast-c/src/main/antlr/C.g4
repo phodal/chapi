@@ -61,7 +61,7 @@ primaryExpression
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
     // for macro support
     | typeQualifier? (typeKeywords | Identifier | '==' | '!=') (Identifier | typeKeywords)* pointer?
-    | (directDeclarator | StringLiteral)+
+    | StringLiteral? (directDeclarator | StringLiteral)+
     | Ellipsis
     ;
 
@@ -471,9 +471,9 @@ macroStatement
 
 singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
-    | '#' macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration
     | '#' macroKeywords                                                                  #defineDeclaration
     | '#' '#'? Identifier                                                                #macroCastDeclaration
+    | '#' macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration
     ;
 
 macroKeywords
