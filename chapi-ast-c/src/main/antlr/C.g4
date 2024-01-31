@@ -84,7 +84,7 @@ postfixExpression
 extensionExpression : '__extension__'? '(' typeName ')' '{' initializerList ','? '}' ;
 
 postixCall
-        :'[' (singleLineMacroDeclaration expression)? expression ']'    #arrayAccessPostfixExpression
+        :'[' (macroStatement expression)? expression ']'   #arrayAccessPostfixExpression
         // for macro support: ph_gen(, hpdata_age_heap, hpdata_t, age_link, hpdata_age_comp)
         | '(' ','? argumentExpressionList? ')'                         #functionCallPostfixExpression
         | ('.' | '->') Identifier                                      #memberAccessPostfixExpression
@@ -195,7 +195,7 @@ constantExpression
 declaration
     : Static?  declarationSpecifier+ initDeclaratorList? ';'
     | staticAssertDeclaration
-    | singleLineMacroDeclaration
+    | macroStatement
     ;
 
 declarationSpecifier
@@ -264,7 +264,7 @@ structDeclarationList
 structDeclaration // The first two rules have priority order and cannot be simplified to one expression.
     : specifierQualifierList structDeclaratorList? ';'
     | staticAssertDeclaration
-    | singleLineMacroDeclaration
+    | macroStatement
     ;
 
 specifierQualifierList
@@ -337,9 +337,8 @@ directDeclarator
     |   Identifier ':' DigitSequence                                                #bitFieldDirectDeclarator  // bit field
     |   vcSpecificModifer Identifier                                                #vcSpecificModiferDirectDeclarator
     |   '(' typeSpecifier? pointer directDeclarator ')'                             #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
-    //singleLineMacroDeclaration
     // #define KUMAX(x)	((uintmax_t)x##ULL)
-    | singleLineMacroDeclaration                                                    #singleLineMacroDirectDeclarator
+    | macroStatement                                                                #singleLineMacroDirectDeclarator
     ;
 
 vcSpecificModifer
@@ -466,16 +465,16 @@ statement
     ;
 
 macroStatement
-    : singleLineMacroDeclaration
+    : '#' singleLineMacroDeclaration
     ;
 
 singleLineMacroDeclaration
-    : '#' include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))            #includeDeclaration
-    | '#' 'define' expression* '#' 'undef' identifierList?                               #macroExpansionDeclaration
-    | '#' ('ifdef' | 'ifndef' |'if') Identifier expression* '#' 'endif' Identifier?      #ifdefDeclaration
-    | '#' macroKeywords                                                                  #defineDeclaration
-    | '#' '#'? Identifier                                                                #macroCastDeclaration
-    | '#' macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration2
+    : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))            #includeDeclaration
+    | macroKeywords Identifier? expression* '#' macroKeywords identifierList?             #ifdefDeclaration
+    | macroKeywords                                                                  #defineDeclaration
+    | '#'? Identifier                                                                #macroCastDeclaration
+//    | 'define' expression* '#' 'undef' identifierList?                               #macroExpansionDeclaration
+//    | macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration2
     ;
 
 macroKeywords
