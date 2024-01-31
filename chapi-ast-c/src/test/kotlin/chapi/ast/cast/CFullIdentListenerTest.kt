@@ -451,4 +451,44 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 1)
     }
+
+    @Test
+    fun shouldHandleMacroInFunc() {
+        val code = """
+            static const ctl_named_node_t stats_arenas_i_mutexes_node[] = {
+                #define OP(mtx) {NAME(#mtx), CHILD(named, stats_arenas_i_mutexes_##mtx)},
+                MUTEX_PROF_ARENA_MUTEXES
+                #undef OP
+            };
+            
+            void os_pages_unmap(void *addr, size_t size) {
+            	assert(ALIGNMENT_ADDR2BASE(addr, os_page) == addr);
+            	assert(ALIGNMENT_CEILING(size, os_page) == size);
+
+            #ifdef _WIN32
+            	if (VirtualFree(addr, 0, MEM_RELEASE) == 0)
+            #else
+            	if (munmap(addr, size) == -1)
+            #endif
+            	{
+            		char buf[BUFERROR_BUF];
+
+            		buferror(get_errno(), buf, sizeof(buf));
+            		malloc_printf("<jemalloc>: Error in "
+            #ifdef _WIN32
+            		    "VirtualFree"
+            #else
+            		    "munmap"
+            #endif
+            		    "(): %s\n", buf);
+            		if (opt_abort) {
+            			abort();
+            		}
+            	}
+            }
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
+    }
 }

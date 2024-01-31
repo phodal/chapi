@@ -35,13 +35,7 @@ grammar C;
 
 compilationUnit
     // statement for macro support
-    : (singleLineMacroDeclaration | externalDeclaration | statement)* EOF
-    ;
-
-singleLineMacroDeclaration
-    : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
-    | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*     #defineDeclaration
-    | '#' '#'? Identifier                                                                #macroCastDeclaration
+    : (externalDeclaration | statement)* EOF
     ;
 
 macroKeywords
@@ -438,15 +432,16 @@ typedefName
 
 initializer
     : assignmentExpression
-    | '{' initializerList ','? directDeclarator? '}'
+    | '{' initializerList ','? '}'
     ;
 
 initializerList
-    : designation? initializer (',' designation? initializer)*
+    : designation? initializer (',' designation? initializer macroStatement?)*
     ;
 
 designation
     : designatorList '='
+    | directDeclarator
     ;
 
 designatorList
@@ -472,6 +467,18 @@ statement
     | ('__asm' | '__asm__') ('volatile' | '__volatile__') '(' (
         logicalOrExpression (',' logicalOrExpression)*
     )? (':' (logicalOrExpression (',' logicalOrExpression)*)?)* ')' ';'
+    | macroStatement
+    ;
+
+macroStatement
+    : singleLineMacroDeclaration
+    ;
+
+
+singleLineMacroDeclaration
+    : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
+    | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*     #defineDeclaration
+    | '#' '#'? Identifier                                                                #macroCastDeclaration
     ;
 
 labeledStatement
