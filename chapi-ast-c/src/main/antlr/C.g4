@@ -40,12 +40,8 @@ compilationUnit
 singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
     | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*     #defineDeclaration
-    | Identifier postixCall ';'?                                                         #macroFuncCallDeclaration
-    | Identifier                                                                         #macroDeclaration
     // #define KUMAX(x)	((uintmax_t)x##ULL)
-    | '#' Identifier                                                                     #macroIdDeclaration
     | Identifier? '#'? '#' Identifier                                                    #macroCastDeclaration
-    | Identifier postixCall? ('{' blockItem* '}')? Identifier                            #macroCallBlockDeclaration
     ;
 
 macroKeywords
@@ -75,7 +71,7 @@ primaryExpression
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
     // for macro support
     | (typeKeywords | Identifier | '==' | '!=') (Identifier | typeKeywords )* pointer?
-    | (singleLineMacroDeclaration | StringLiteral)+
+    | (directDeclarator | StringLiteral)+
     | Ellipsis
     ;
 
@@ -338,7 +334,7 @@ declarator
     ;
 
 directDeclarator
-    :   Identifier                                                                 #identifierDirectDeclarator
+    :   Identifier                                                                  #identifierDirectDeclarator
     |   '(' declarator ')'                                                          #declaratorDirectDeclarator
     |   directDeclarator '[' typeQualifierList? assignmentExpression? ']'           #assignmentExpressionDirectDeclarator
     |   directDeclarator '[' 'static' typeQualifierList? assignmentExpression ']'   #preStaticAssignmentExpressionDirectDeclarator
