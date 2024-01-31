@@ -471,9 +471,11 @@ macroStatement
 
 singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
+    | '#' 'define' expression* '#' 'undef' identifierList?                               #macroExpansionDeclaration
+    | '#' ('ifdef' | 'endif') Identifier expression* '#' 'endif' Identifier?             #ifdefDeclaration
     | '#' macroKeywords                                                                  #defineDeclaration
     | '#' '#'? Identifier                                                                #macroCastDeclaration
-    | '#' macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration
+    | '#' macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration2
     ;
 
 macroKeywords
