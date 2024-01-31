@@ -88,10 +88,10 @@ postfixExpression
 extensionExpression : '__extension__'? '(' typeName ')' '{' initializerList ','? '}' ;
 
 postixCall
-        :'[' expression ']'                     #arrayAccessPostfixExpression
+        :'[' (singleLineMacroDeclaration expression)? expression ']'    #arrayAccessPostfixExpression
         // for macro support: ph_gen(, hpdata_age_heap, hpdata_t, age_link, hpdata_age_comp)
-        | '(' ','? argumentExpressionList? ')'       #functionCallPostfixExpression
-        | ('.' | '->') Identifier               #memberAccessPostfixExpression
+        | '(' ','? argumentExpressionList? ')'                         #functionCallPostfixExpression
+        | ('.' | '->') Identifier                                      #memberAccessPostfixExpression
         ;
 
 argumentExpressionList

@@ -534,4 +534,18 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 1)
     }
+
+    @Test
+    fun shouldHandleMacroInArray() {
+        val code = """
+            static char log_filename[
+            #ifdef JEMALLOC_PROF
+                PATH_MAX +
+            #endif
+                1];
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 0)
+    }
 }
