@@ -38,10 +38,6 @@ compilationUnit
     : (externalDeclaration | statement)* EOF
     ;
 
-macroKeywords
-    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define'
-    ;
-
 MultiLineMacro
     : '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN)
     ;
@@ -268,6 +264,7 @@ structDeclarationList
 structDeclaration // The first two rules have priority order and cannot be simplified to one expression.
     : specifierQualifierList structDeclaratorList? ';'
     | staticAssertDeclaration
+    | singleLineMacroDeclaration
     ;
 
 specifierQualifierList
@@ -477,6 +474,10 @@ singleLineMacroDeclaration
     | '#' macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration
     | '#' macroKeywords                                                                  #defineDeclaration
     | '#' '#'? Identifier                                                                #macroCastDeclaration
+    ;
+
+macroKeywords
+    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define'
     ;
 
 labeledStatement

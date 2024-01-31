@@ -32,6 +32,9 @@ dependencies {
 
     implementation("org.antlr:antlr4:4.13.1")
     implementation("org.antlr:antlr4-runtime:4.13.1")
+
+    // coroutines
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
 }
 
 sourceSets.main {

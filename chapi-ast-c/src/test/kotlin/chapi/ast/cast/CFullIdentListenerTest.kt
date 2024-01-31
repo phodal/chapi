@@ -1,5 +1,9 @@
 package chapi.ast.cast
 
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -9,16 +13,20 @@ internal class CFullIdentListenerTest {
     @Test
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!.toURI()
-//        val content = "/Users/phodal/Downloads/redis-unstable/deps/jemalloc/src"
-        File(content).walkTopDown().forEach {
-            if (it.isFile && (it.extension == "c" || it.extension == "h")) {
-                val start = System.currentTimeMillis()
-                println("Analyse ${it.path}")
-                CAnalyser().analysis(it.readText(), it.name)
-                val end = System.currentTimeMillis()
-                val seconds = (end - start) / 1000
-                println("cost ${end - start}ms")
-            }
+//        val content = "/Users/phodal/Downloads/redis-unstable"
+        runBlocking {
+            File(content).walkTopDown().asFlow().mapNotNull {
+                if (it.isFile && (it.extension == "c" || it.extension == "h")) {
+                    val start = System.currentTimeMillis()
+                    println("Analyse ${it.path}")
+                    val analysis = CAnalyser().analysis(it.readText(), it.name)
+                    val end = System.currentTimeMillis()
+                    println("cost ${end - start}ms")
+                    analysis
+                } else {
+                    null
+                }
+            }.collect()
         }
     }
 
@@ -549,5 +557,34 @@ typedef struct {
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 0)
+    }
+
+    @Test
+    fun shouldHandleMacroIArrayDefine() {
+        val code = """
+            static char log_filename[
+            #ifdef JEMALLOC_PROF
+                PATH_MAX +
+            #endif
+                1];
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 0)
+    }
+
+    @Test
+    fun shouldEnableMacroInTypedefStruct() {
+        val code = """
+            typedef struct {
+                uint64_t ns;
+            #ifdef JEMALLOC_DEBUG
+                uint32_t magic; /* Tracks if initialized. */
+            #endif
+            } nstime_t;
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
     }
 }
