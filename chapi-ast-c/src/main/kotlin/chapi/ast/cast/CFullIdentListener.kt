@@ -41,10 +41,10 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
         structOrUnionSpecifier?.let {
             var nodeName = maybeNodeName ?: structOrUnionSpecifier.Identifier()?.text
             if (nodeName.isNullOrEmpty()) {
-                nodeName = structOrUnionSpecifier?.structOrUnion()?.text ?: ""
+                nodeName = structOrUnionSpecifier.structOrUnion()?.text ?: ""
             }
 
-            handleStructOrUnion(structOrUnionSpecifier, nodeName ?: "")
+            handleStructOrUnion(structOrUnionSpecifier, nodeName)
         }
     }
 
