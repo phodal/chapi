@@ -38,14 +38,14 @@ compilationUnit
     ;
 
 singleLineMacroDeclaration
-    : '#' include (StringLiteral | ('<' includeIdentifier '>' ))         #includeDeclaration
-    | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*                    #defineDeclaration
-    | Identifier postixCall ';'?                                         #macroFuncCallDeclaration
-    | Identifier                                                         #macroDeclaration
+    : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
+    | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*     #defineDeclaration
+    | Identifier postixCall ';'?                                                         #macroFuncCallDeclaration
+    | Identifier                                                                         #macroDeclaration
     // #define KUMAX(x)	((uintmax_t)x##ULL)
-    | '#' Identifier                                                      #macroIdDeclaration
-    | Identifier? '#'? '#' Identifier                                    #macroCastDeclaration
-    | Identifier postixCall? ('{' blockItem* '}')? Identifier            #macroCallBlockDeclaration
+    | '#' Identifier                                                                     #macroIdDeclaration
+    | Identifier? '#'? '#' Identifier                                                    #macroCastDeclaration
+    | Identifier postixCall? ('{' blockItem* '}')? Identifier                            #macroCallBlockDeclaration
     ;
 
 macroKeywords
