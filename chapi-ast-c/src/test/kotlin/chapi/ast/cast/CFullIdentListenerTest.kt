@@ -426,6 +426,8 @@ typedef struct {
             		    , 20, 24
             #endif
             	};
+            
+                CTL_M2_GET("stats.arenas.0.dss", i, &dss, const char *);
             }
             END_TEST
             
@@ -438,6 +440,8 @@ typedef struct {
             size_t n = malloc_snprintf(&buf[i], buflen-i, "%"FMTu64, t0 / t1);
             
             const char filename_prefix[] = TEST_PREFIX ".";
+            
+            ph_gen(, edata_avail, edata_t, avail_link, edata_esnead_comp)
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")

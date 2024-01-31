@@ -34,13 +34,13 @@
 grammar C;
 
 compilationUnit
-    : (singleLineMacroDeclaration | externalDeclaration)* EOF
+    // statement for macro support
+    : (singleLineMacroDeclaration | externalDeclaration | statement)* EOF
     ;
 
 singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
     | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*     #defineDeclaration
-    // #define KUMAX(x)	((uintmax_t)x##ULL)
     | '#' '#'? Identifier                                                                #macroCastDeclaration
     ;
 
@@ -70,7 +70,7 @@ primaryExpression
     | '__builtin_va_arg' '(' unaryExpression ',' typeName ')'
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
     // for macro support
-    | (typeKeywords | Identifier | '==' | '!=') (Identifier | typeKeywords )* pointer?
+    | typeQualifier? (typeKeywords | Identifier | '==' | '!=') (Identifier | typeKeywords)* pointer?
     | (directDeclarator | StringLiteral)+
     | Ellipsis
     ;
@@ -193,6 +193,8 @@ assignmentOperator
 
 expression
     : assignmentExpression (',' assignmentExpression)*
+    // for macro support, like ph_gen(, edata_avail, edata_t, avail_link, edata_esnead_comp)
+    | ','
     ;
 
 constantExpression
@@ -344,6 +346,7 @@ directDeclarator
     |   vcSpecificModifer Identifier                                                #vcSpecificModiferDirectDeclarator
     |   '(' typeSpecifier? pointer directDeclarator ')'                             #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
     //singleLineMacroDeclaration
+    // #define KUMAX(x)	((uintmax_t)x##ULL)
     | '#' '#'? macroKeywords? expression* (',' (expression | directDeclarator))*          #defineDirectDeclarator
     // #define KUMAX(x)	((uintmax_t)x##ULL)
 //    | '#'  Identifier                                                           #macroCastDeclarator
