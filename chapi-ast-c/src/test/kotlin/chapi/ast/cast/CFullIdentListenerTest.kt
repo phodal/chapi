@@ -103,6 +103,7 @@ struct {
 }  myVariableName;
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
     }
 
     @Test
@@ -119,6 +120,7 @@ struct Info{
 };
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 1)
     }
 
     @Test
