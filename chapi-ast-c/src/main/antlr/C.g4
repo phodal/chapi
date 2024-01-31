@@ -168,6 +168,7 @@ assignmentExpression
     : conditionalExpression
     | unaryExpression assignmentOperator assignmentExpression
     | DigitSequence // for
+    | macroStatement
     ;
 
 assignmentOperator
@@ -429,6 +430,8 @@ typedefName
 initializer
     : assignmentExpression
     | '{' initializerList ','? '}'
+//    | '#if' expressionStatement initializerList '#' 'endif'
+    | macroStatement ','? initializerList ','? macroStatement
     ;
 
 initializerList
@@ -458,7 +461,8 @@ statement
     | macroStatement
     ;
 
-normalStatement : labeledStatement
+normalStatement
+    : labeledStatement
     | compoundStatement
     | expressionStatement
     | selectionStatement
@@ -479,15 +483,21 @@ macroStatement
 
 singleLineMacroDeclaration
     : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))             #includeDeclaration
-    | macroKeywords Identifier structOrUnionSpecifier                                #macroStructureDeclaration
-    | 'define' expressionStatement macroFunctionExpression                           #macroAliasDeclaration
-    | macroKeywords (expressionStatement)*
-                ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
+    | ('ifdef' | 'ifndef' | 'if') Identifier statement* ('#' 'else' statement*)? '#' 'endif'
+                                                                                      #ifdefDeclaration
+    | 'define' Identifier expressionStatement                                         #macroAssignDeclaration
+    | 'define' expressionStatement macroFunctionExpression                            #macroAliasDeclaration
+    | 'define' Identifier structOrUnionSpecifier                                      #macroStructureDeclaration
+//    | macroKeywords (assignmentExpression)*
+//                ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
     | '#'? Identifier                                                                 #macroCastDeclaration
+    | macroKeywords macroFunctionExpression?                                          #macroStatementDeclaration
     ;
 
 macroFunctionExpression
-    : Identifier '(' ( parameterTypeList| (macroType (',' macroType)*) ) ')'
+    : Identifier
+    | Identifier '(' ( parameterTypeList| (macroType (',' macroType)*) ) ')'
+    | assignmentExpression
     ;
 
 macroType
@@ -525,7 +535,8 @@ expressionStatement
     ;
 
 selectionStatement
-    : 'if' '(' expression ')' statement ('else' statement)?
+    // the macro may break the grammar, so statement is optional
+    : 'if' '(' expression ')' statement? ('else' statement)?
     | 'switch' '(' expression ')' statement
     ;
 
@@ -990,10 +1001,6 @@ fragment IdentifierNondigit
     : Nondigit
     | UniversalCharacterName
     //|   // other implementation-defined characters...
-    ;
-
-fragment UpperCase
-    : [A-Z_]
     ;
 
 fragment Nondigit

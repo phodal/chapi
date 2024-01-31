@@ -6,3 +6,17 @@
 #define hashpointer(t,p)	hashmod(t, IntPoint(p))
 #define numints		cast_int(sizeof(lua_Number)/sizeof(int))
 #define dummynode		(&dummynode_)
+
+#ifndef MINSTRTABSIZE
+#define MINSTRTABSIZE	32
+#endif
+
+#ifndef LUA_MINBUFFER
+#define LUA_MINBUFFER	32
+#endif
+
+#ifndef lua_lock
+#define lua_lock(L)     ((void) 0)
+#define lua_unlock(L)   ((void) 0)
+#endif
+
