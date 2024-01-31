@@ -458,11 +458,16 @@ statement
     | selectionStatement
     | iterationStatement
     | jumpStatement
-    | ('__asm' | '__asm__') ('volatile' | '__volatile__') '(' (
-        logicalOrExpression (',' logicalOrExpression)*
-    )? (':' (logicalOrExpression (',' logicalOrExpression)*)?)* ')' ';'
+    | ('__asm' | '__asm__') ('volatile' | '__volatile__')? asmBody
     | macroStatement
     ;
+
+asmBody
+    : '(' (logicals)? (':' (logicals)?)* ')' ';'?
+    | typeSpecifier expression
+    ;
+
+logicals : logicalOrExpression (',' logicalOrExpression)* ;
 
 macroStatement
     : '#' singleLineMacroDeclaration
@@ -470,7 +475,7 @@ macroStatement
 
 singleLineMacroDeclaration
     : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))            #includeDeclaration
-    | macroKeywords Identifier? expression* '#' macroKeywords identifierList?             #ifdefDeclaration
+    | macroKeywords Identifier? expression* '#' macroKeywords identifierList?        #ifdefDeclaration
     | macroKeywords                                                                  #defineDeclaration
     | '#'? Identifier                                                                #macroCastDeclaration
 //    | 'define' expression* '#' 'undef' identifierList?                               #macroExpansionDeclaration
@@ -478,7 +483,7 @@ singleLineMacroDeclaration
     ;
 
 macroKeywords
-    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define' | 'ifndef'
+    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define' | 'ifndef' | 'error'
     ;
 
 labeledStatement

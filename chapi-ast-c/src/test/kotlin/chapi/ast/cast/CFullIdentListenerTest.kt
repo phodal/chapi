@@ -588,4 +588,14 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 1)
     }
+
+    @Test
+    fun shouldSupportForAsmBody() {
+        val code = """
+            #define lua_number2int(i,d)   __asm fld d   __asm fistp i
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 0)
+    }
 }
