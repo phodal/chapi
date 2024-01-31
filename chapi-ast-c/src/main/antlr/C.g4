@@ -348,7 +348,7 @@ directDeclarator
     |   '(' typeSpecifier? pointer directDeclarator ')'                             #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
     //singleLineMacroDeclaration
     // #define KUMAX(x)	((uintmax_t)x##ULL)
-    | '#' '#'? macroKeywords? expression* (',' (expression | directDeclarator))*          #defineDirectDeclarator
+    | '#' '#'? macroKeywords? expression                                            #defineDirectDeclarator
     // #define KUMAX(x)	((uintmax_t)x##ULL)
 //    | '#'  Identifier                                                           #macroCastDeclarator
     ;

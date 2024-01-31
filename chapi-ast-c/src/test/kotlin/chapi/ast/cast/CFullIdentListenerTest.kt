@@ -12,8 +12,12 @@ internal class CFullIdentListenerTest {
 //        val content = "/Users/phodal/Downloads/redis-unstable/deps/jemalloc/src"
         File(content).walkTopDown().forEach {
             if (it.isFile && (it.extension == "c" || it.extension == "h")) {
+                val start = System.currentTimeMillis()
                 println("Analyse ${it.path}")
                 CAnalyser().analysis(it.readText(), it.name)
+                val end = System.currentTimeMillis()
+                val seconds = (end - start) / 1000
+                println("cost ${end - start}ms ~ ${seconds}s")
             }
         }
     }
