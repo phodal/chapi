@@ -480,18 +480,19 @@ macroStatement
 singleLineMacroDeclaration
     : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))             #includeDeclaration
     | macroKeywords Identifier structOrUnionSpecifier                                #macroStructureDeclaration
+    | 'define' expressionStatement macroFunctionExpression                           #macroAliasDeclaration
     | macroKeywords (expressionStatement)*
                 ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
-    | 'define' macroFunctionExpression macroFunctionExpression                        #macroAliasDeclaration
     | '#'? Identifier                                                                 #macroCastDeclaration
     ;
 
 macroFunctionExpression
-    : Identifier '(' (macroFunctionExpression | macroType | expression | macroKeywords)* ')'
+    : Identifier '(' ( parameterTypeList| (macroType (',' macroType)*) ) ')'
     ;
 
 macroType
     : typeQualifier? (typeKeywords | Identifier | '==' | '!=' | comparator) (Identifier | typeKeywords)* pointer?
+    | expressionStatement
     ;
 
 
