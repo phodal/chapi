@@ -41,7 +41,7 @@ singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
     | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*     #defineDeclaration
     // #define KUMAX(x)	((uintmax_t)x##ULL)
-    | Identifier? '#'? '#' Identifier                                                    #macroCastDeclaration
+    | '#' '#'? Identifier                                                    #macroCastDeclaration
     ;
 
 macroKeywords
