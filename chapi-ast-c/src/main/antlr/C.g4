@@ -41,7 +41,7 @@ singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
     | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*     #defineDeclaration
     // #define KUMAX(x)	((uintmax_t)x##ULL)
-    | '#' '#'? Identifier                                                    #macroCastDeclaration
+    | '#' '#'? Identifier                                                                #macroCastDeclaration
     ;
 
 macroKeywords
@@ -125,7 +125,6 @@ castExpression
     : '__extension__'? '(' typeName ')' castExpression
     | unaryExpression
     | DigitSequence // for
-    | singleLineMacroDeclaration
     ;
 
 multiplicativeExpression
@@ -272,7 +271,6 @@ structDeclarationList
 structDeclaration // The first two rules have priority order and cannot be simplified to one expression.
     : specifierQualifierList structDeclaratorList? ';'
     | staticAssertDeclaration
-    | singleLineMacroDeclaration
     ;
 
 specifierQualifierList
@@ -345,7 +343,10 @@ directDeclarator
     |   Identifier ':' DigitSequence                                                #bitFieldDirectDeclarator  // bit field
     |   vcSpecificModifer Identifier                                                #vcSpecificModiferDirectDeclarator
     |   '(' typeSpecifier? pointer directDeclarator ')'                             #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
-    | singleLineMacroDeclaration                                                    #macroDirectDeclarator
+    //singleLineMacroDeclaration
+    | '#' '#'? macroKeywords? expression* (',' (expression | directDeclarator))*          #defineDirectDeclarator
+    // #define KUMAX(x)	((uintmax_t)x##ULL)
+//    | '#'  Identifier                                                           #macroCastDeclarator
     ;
 
 vcSpecificModifer
@@ -433,7 +434,7 @@ typedefName
 
 initializer
     : assignmentExpression
-    | '{' initializerList ','? singleLineMacroDeclaration? '}'
+    | '{' initializerList ','? directDeclarator? '}'
     ;
 
 initializerList
