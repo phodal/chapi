@@ -60,7 +60,7 @@ primaryExpression
     | '__builtin_va_arg' '(' unaryExpression ',' typeName ')'
     | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
     // for macro support
-    | typeQualifier? (typeKeywords | Identifier | '==' | '!=') (Identifier | typeKeywords)* pointer?
+    | typeQualifier? (typeKeywords | Identifier) (Identifier | typeKeywords)* pointer?
     | StringLiteral? (directDeclarator | StringLiteral)+
     | Ellipsis
     ;
@@ -131,8 +131,10 @@ shiftExpression
     ;
 
 relationalExpression
-    : shiftExpression (('<' | '>' | '<=' | '>=') shiftExpression)*
+    : shiftExpression ((comparator) shiftExpression)*
     ;
+
+comparator : '<' | '>' | '<=' | '>=' ;
 
 equalityExpression
     : relationalExpression (('==' | '!=') relationalExpression)*
@@ -474,15 +476,22 @@ macroStatement
     ;
 
 singleLineMacroDeclaration
-    : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))            #includeDeclaration
-    // #define LUAI_USER_ALIGNMENT_T	union { double u; void *s; long l; }
-    | macroKeywords Identifier? (structOrUnionSpecifier | expression)*
-                ('#' macroKeywords)? identifierList?                                  #ifdefDeclaration
-//    | macroKeywords                                                                  #defineDeclaration
-    | '#'? Identifier                                                                #macroCastDeclaration
-//    | 'define' expression* '#' 'undef' identifierList?                               #macroExpansionDeclaration
-//    | macroKeywords expression* '#' macroKeywords identifierList?                    #macroExpansionDeclaration2
+    : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))             #includeDeclaration
+    | macroKeywords Identifier? structOrUnionSpecifier                                #macroStructureDeclaration
+    | macroKeywords Identifier? (expression)*
+                ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
+    | 'define' macroFunctionExpression macroFunctionExpression                        #macroAliasDeclaration
+    | '#'? Identifier                                                                 #macroCastDeclaration
     ;
+
+macroFunctionExpression
+    : Identifier '(' (macroFunctionExpression | macroType | expression | macroKeywords)* ')'
+    ;
+
+macroType
+    : typeQualifier? (typeKeywords | Identifier | '==' | '!=' | comparator) (Identifier | typeKeywords)* pointer?
+    ;
+
 
 macroKeywords
     :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define' | 'ifndef' | 'error'
