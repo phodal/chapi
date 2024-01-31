@@ -17,7 +17,7 @@ internal class CFullIdentListenerTest {
                 CAnalyser().analysis(it.readText(), it.name)
                 val end = System.currentTimeMillis()
                 val seconds = (end - start) / 1000
-                println("cost ${end - start}ms ~ ${seconds}s")
+                println("cost ${end - start}ms")
             }
         }
     }

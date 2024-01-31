@@ -93,6 +93,10 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 - import analysis support
     - in C#, import `namespace` can use call in namespace
 
+### C issue
+
+Since Macro can be everywhere, If your code includes lots of Macro, it will be slow.
+
 ### Kotlin
 
 - need to implementation `warpTargetFullType` to got Class in same package.

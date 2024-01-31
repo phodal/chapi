@@ -474,7 +474,7 @@ macroStatement
 
 singleLineMacroDeclaration
     : '#' include (StringLiteral | ('<' includeIdentifier '>' ))                         #includeDeclaration
-    | '#' macroKeywords expression* (',' (expression | singleLineMacroDeclaration))*     #defineDeclaration
+    | '#' macroKeywords expression*                                                      #defineDeclaration
     | '#' '#'? Identifier                                                                #macroCastDeclaration
     ;
 

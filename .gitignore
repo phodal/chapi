@@ -42,3 +42,5 @@ api.json
 nodes.json
 nohup.out
 *.tokens
+recording.jsonl
+
