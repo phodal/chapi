@@ -35,8 +35,8 @@ grammar C;
 
 compilationUnit
     // statement for macro support
-    : (externalDeclaration)* EOF
-//    | (externalDeclaration | statement | macroPostixCall)* EOF
+//    : (externalDeclaration)* EOF
+    : (externalDeclaration | statement | macroPostixCall)* EOF
     ;
 
 MultiLineMacro
@@ -489,42 +489,42 @@ logicals : logicalOrExpression (',' logicalOrExpression)* ;
 Directive: '#' ~ [\n]* -> channel (HIDDEN);
 
 macroStatement
-//    : '#' singleLineMacroDeclaration*
-    : '#' include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))          #includeDeclaration
+    : '#' singleLineMacroDeclaration*
+//    : '#' include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))          #includeDeclaration
     ;
 
-//singleLineMacroDeclaration
-//    : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))             #includeDeclaration
-//    | ('ifdef' | 'ifndef' | 'if') Identifier statement* ('#' 'else' statement*)? '#' 'endif'
-//                                                                                      #ifdefDeclaration
-//    | 'define' Identifier defineMacro                                                 #defineDeclaration
-////    | macroKeywords (assignmentExpression)*
-////                ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
-//    | '#'? Identifier                                                                 #macroCastDeclaration
-//    | macroKeywords macroFunctionExpression?                                          #macroStatementDeclaration
-//    ;
-//
-//defineMacro
-//    : expressionStatement?                                        #macroAssignDeclaration
-//    | postixCall Identifier postixCall                            #macroAliasDeclaration
-//    | structOrUnionSpecifier                                      #macroStructureDeclaration
-//    ;
-//
-//
-//macroFunctionExpression
-//    : Identifier
-//    | Identifier '(' ( parameterTypeList| (macroType (',' macroType)*) ) ')'
-//    | assignmentExpression
-//    ;
-//
-//macroType
-//    : typeQualifier? (typeKeywords | Identifier | '==' | '!=' | comparator) (Identifier | typeKeywords)* pointer?
-//    | expressionStatement
-//    ;
-//
-//macroKeywords
-//    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define' | 'ifndef' | 'error'
-//    ;
+singleLineMacroDeclaration
+    : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))             #includeDeclaration
+    | ('ifdef' | 'ifndef' | 'if') Identifier statement* ('#' 'else' statement*)? '#' 'endif'
+                                                                                      #ifdefDeclaration
+    | 'define' Identifier defineMacro                                                 #defineDeclaration
+//    | macroKeywords (assignmentExpression)*
+//                ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
+    | '#'? Identifier                                                                 #macroCastDeclaration
+    | macroKeywords macroFunctionExpression?                                          #macroStatementDeclaration
+    ;
+
+defineMacro
+    : expressionStatement?                                        #macroAssignDeclaration
+    | postixCall Identifier postixCall                            #macroAliasDeclaration
+    | structOrUnionSpecifier                                      #macroStructureDeclaration
+    ;
+
+
+macroFunctionExpression
+    : Identifier
+    | Identifier '(' ( parameterTypeList| (macroType (',' macroType)*) ) ')'
+    | assignmentExpression
+    ;
+
+macroType
+    : typeQualifier? (typeKeywords | Identifier | '==' | '!=' | comparator) (Identifier | typeKeywords)* pointer?
+    | expressionStatement
+    ;
+
+macroKeywords
+    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define' | 'ifndef' | 'error'
+    ;
 
 labeledStatement
     : Identifier ':' statement?
@@ -1021,15 +1021,6 @@ fragment IdentifierNondigit
 
 fragment Nondigit
     : [a-zA-Z_]
-    ;
-
-
-MacroId
-    : UpperedId (UpperedId)*
-    ;
-
-fragment UpperedId
-    : [A-Z_]
     ;
 
 fragment Digit
