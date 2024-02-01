@@ -23,10 +23,7 @@ open class CAnalyser : Analyser {
         pp.listener = DefaultPreprocessorListener()
     }
 
-    /**
-     * Adds a source code to the program, for example, C header files.
-     */
-    fun addSource(code: String) {
+    override fun addSource(code: String) {
         pp.addInput(LexerSource(InputStreamReader(code.byteInputStream()), true))
     }
 

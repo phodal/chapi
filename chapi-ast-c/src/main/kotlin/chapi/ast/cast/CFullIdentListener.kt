@@ -63,11 +63,18 @@ open class CFullIdentListener(fileName: String, includes: MutableList<String>) :
         ctx?.structDeclarationList()?.structDeclaration()?.forEach { structDeclCtx ->
             /// for forward struct declaration
             structDeclCtx.structDeclaratorList()?.let {
-                val type = structDeclCtx.specifierQualifierList()?.typeSpecifier()?.let {
-                    val specifier = it.structOrUnionSpecifier()
+                var type = structDeclCtx.specifierQualifierList()?.typeSpecifier()?.let { typeSpec ->
+                    val specifier = typeSpec.structOrUnionSpecifier()
                     specifier?.structOrUnion()?.text + " " + specifier?.Identifier()?.text
                 }
-                val value = structDeclCtx.specifierQualifierList()?.specifierQualifierList()?.text ?: ""
+                var value: String? = null
+
+                if (type == null || type == "null null") {
+                    type = structDeclCtx.specifierQualifierList()?.typeSpecifier()?.text ?: ""
+                    value = it.structDeclarator()?.firstOrNull()?.declarator()?.text ?: ""
+                } else {
+                    value = structDeclCtx.specifierQualifierList()?.specifierQualifierList()?.text ?: ""
+                }
 
                 val field = CodeField(
                     TypeType = type ?: "",

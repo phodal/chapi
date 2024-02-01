@@ -1,9 +1,12 @@
 package chapi.ast.cast
 
+import chapi.domain.core.CodeContainer
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -14,21 +17,33 @@ internal class CFullIdentListenerTest {
     @Test
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!.toURI()
-//        val content = "/Users/phodal/Downloads/redis-unstable"
+//        val content = "/Users/phodal/Downloads/redis-unstable/deps/lua"
         val totalStart = System.currentTimeMillis()
         runBlocking {
-            File(content).walkTopDown().asFlow().mapNotNull {
+            val analyser = CAnalyser()
+            val fileFlow = File(content).walkTopDown().asFlow()
+            fileFlow.mapNotNull {
+                if (it.isFile && (it.extension == "c" || it.extension == "h")) {
+                    analyser.addSource(it.readText())
+                }
+            }
+
+            val result: MutableList<CodeContainer> = mutableListOf()
+            fileFlow.mapNotNull {
                 if (it.isFile && (it.extension == "c" || it.extension == "h")) {
                     val start = System.currentTimeMillis()
                     println("Analyse ${it.path}")
-                    val analysis = CAnalyser().analysis(it.readText(), it.name)
+                    val analysis = analyser.analysis(it.readText(), it.name)
                     val end = System.currentTimeMillis()
                     println("cost ${end - start}ms")
-                    analysis
+                    result += analysis
                 } else {
                     null
                 }
             }.collect()
+
+            // log to file
+            File("result.json").writeText(Json.encodeToString(result))
         }
 
         val totalEnd = System.currentTimeMillis()
@@ -76,6 +91,24 @@ struct list_el {
         assertEquals(codeFile.DataStructures[0].Fields.size, 1)
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "int")
         assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "val")
+    }
+
+    @Test
+    internal fun shouldIdentifyStructWithPointer() {
+        val code = """
+typedef struct Mbuffer {
+  char *buffer;
+  size_t n;
+  size_t buffsize;
+} Mbuffer;
+
+"""
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+
+        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures[0].Fields.size, 3)
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeType, "char")
+        assertEquals(codeFile.DataStructures[0].Fields[0].TypeValue, "*buffer")
     }
 
     @Test
