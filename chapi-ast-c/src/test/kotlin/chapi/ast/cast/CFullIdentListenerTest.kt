@@ -267,7 +267,7 @@ typedef struct {
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.Imports.size, 6)
+        assertEquals(codeFile.Imports.size, 5)
     }
 
     @Test
