@@ -10,7 +10,7 @@ DELIMITED_DOC_COMMENT:       '/**' ~'/' .*? '*/'  -> channel(COMMENTS_CHANNEL);
 SINGLE_LINE_COMMENT:     '//'  InputCharacter*    -> channel(COMMENTS_CHANNEL);
 DELIMITED_COMMENT:       '/*'  .*? '*/'           -> channel(COMMENTS_CHANNEL);
 WHITESPACES:   (Whitespace | Newline)+            -> channel(HIDDEN);
-SHARP:         '#'                                -> mode(DIRECTIVE_MODE);
+SHARP:         '#'                                -> mode(DIRECTIVE_MODE), skip;
 
 //Directive:      '#' ~ [\n]* -> channel (HIDDEN);
 MultiLineMacro: '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN);
