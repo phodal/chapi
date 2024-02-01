@@ -2,7 +2,7 @@ lexer grammar CLexer;
 
 channels { COMMENTS_CHANNEL, DIRECTIVE }
 
-options { superClass = chapi.ast.antlr.CLexerBase; }
+//options { superClass = chapi.ast.antlr.CLexerBase; }
 
 SINGLE_LINE_DOC_COMMENT: '///' InputCharacter*    -> channel(COMMENTS_CHANNEL);
 EMPTY_DELIMITED_DOC_COMMENT: '/***/'              -> channel(COMMENTS_CHANNEL);
