@@ -342,15 +342,14 @@ namespace Chapi {
         val code = """
             using System.Text;  
             namespace testns {
-            public class testcls {
+                #if DEBUG
+                    public class testcls {
                             public static void Main(string []args) {
-                    #if DEBUG
                             int x = 2;
-                    #else
                             int y  = 10;
-                    #endif
                             }
                     }
+                #endif
             }"""
         val codeContainer = CSharpAnalyser().analysis(code, "test.cs")
         val structs = codeContainer.Containers[0].DataStructures
