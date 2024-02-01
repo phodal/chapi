@@ -611,4 +611,21 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 0)
     }
+
+    @Test
+    fun shouldHandleMacroCall() {
+        val code = """
+            #define Protect(x)	{ L->savedpc = pc; {x;}; base = L->base; }
+            
+            Protect(luaV_gettable(L, &g, rb, ra));
+            
+            Protect(
+              if (!call_binTM(L, rb, luaO_nilobject, ra, TM_LEN))
+                luaG_typeerror(L, rb, "get length of");
+            )
+            """.trimIndent()
+
+        val codeFile = CAnalyser().analysis(code, "helloworld.c")
+        assertEquals(codeFile.DataStructures.size, 0)
+    }
 }

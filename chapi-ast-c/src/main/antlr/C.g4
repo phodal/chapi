@@ -35,7 +35,7 @@ grammar C;
 
 compilationUnit
     // statement for macro support
-    : (externalDeclaration | statement)* EOF
+    : (externalDeclaration | statement | macroPostixCall)* EOF
     ;
 
 MultiLineMacro
@@ -84,10 +84,15 @@ postfixExpression
 extensionExpression : '__extension__'? '(' typeName ')' '{' initializerList ','? '}' ;
 
 postixCall
-        :'[' (macroStatement expression)? expression ']'   #arrayAccessPostfixExpression
+        :'[' (macroStatement expression)? expression ']'               #arrayAccessPostfixExpression
         // for macro support: ph_gen(, hpdata_age_heap, hpdata_t, age_link, hpdata_age_comp)
         | '(' ','? argumentExpressionList? ')'                         #functionCallPostfixExpression
         | ('.' | '->') Identifier                                      #memberAccessPostfixExpression
+        ;
+
+macroPostixCall
+        : postixCall
+        | Identifier '(' statement* ')'
         ;
 
 argumentExpressionList
@@ -167,8 +172,11 @@ conditionalExpression
 assignmentExpression
     : conditionalExpression
     | unaryExpression assignmentOperator assignmentExpression
-    | DigitSequence // for
+    | DigitSequence
+    // for support macro like: ph_gen(, hpdata_age_heap, &=)
     | macroStatement
+    | assignmentOperator
+    | macroPostixCall
     ;
 
 assignmentOperator
