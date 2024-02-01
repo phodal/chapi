@@ -477,38 +477,41 @@ asmBody
 
 logicals : logicalOrExpression (',' logicalOrExpression)* ;
 
+Directive: '#' ~ [\n]* -> channel (HIDDEN);
+
 macroStatement
-    : '#' singleLineMacroDeclaration
+//    : '#' singleLineMacroDeclaration*
+    : '#' include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))          #includeDeclaration
     ;
 
-singleLineMacroDeclaration
-    : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))             #includeDeclaration
-    | ('ifdef' | 'ifndef' | 'if') Identifier statement* ('#' 'else' statement*)? '#' 'endif'
-                                                                                      #ifdefDeclaration
-    | 'define' Identifier expressionStatement                                         #macroAssignDeclaration
-    | 'define' expressionStatement macroFunctionExpression                            #macroAliasDeclaration
-    | 'define' Identifier structOrUnionSpecifier                                      #macroStructureDeclaration
-//    | macroKeywords (assignmentExpression)*
-//                ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
-    | '#'? Identifier                                                                 #macroCastDeclaration
-    | macroKeywords macroFunctionExpression?                                          #macroStatementDeclaration
-    ;
-
-macroFunctionExpression
-    : Identifier
-    | Identifier '(' ( parameterTypeList| (macroType (',' macroType)*) ) ')'
-    | assignmentExpression
-    ;
-
-macroType
-    : typeQualifier? (typeKeywords | Identifier | '==' | '!=' | comparator) (Identifier | typeKeywords)* pointer?
-    | expressionStatement
-    ;
-
-
-macroKeywords
-    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define' | 'ifndef' | 'error'
-    ;
+//singleLineMacroDeclaration
+//    : include (StringLiteral | Identifier | ('<' includeIdentifier '>' ))             #includeDeclaration
+//    | ('ifdef' | 'ifndef' | 'if') Identifier statement* ('#' 'else' statement*)? '#' 'endif'
+//                                                                                      #ifdefDeclaration
+//    | 'define' Identifier expressionStatement?                                        #macroAssignDeclaration
+//    | 'define' Identifier postixCall Identifier postixCall                            #macroAliasDeclaration
+//    | 'define' Identifier structOrUnionSpecifier                                      #macroStructureDeclaration
+////    | macroKeywords (assignmentExpression)*
+////                ('#' macroKeywords)? identifierList?                                  #macroDefineDeclaration
+//    | '#'? Identifier                                                                 #macroCastDeclaration
+//    | macroKeywords assignmentExpression?                                          #macroStatementDeclaration
+//    ;
+//
+//macroFunctionExpression
+//    : Identifier
+//    | Identifier '(' ( parameterTypeList| (macroType (',' macroType)*) ) ')'
+//    | assignmentExpression
+//    ;
+//
+//macroType
+//    : typeQualifier? (typeKeywords | Identifier | '==' | '!=' | comparator) (Identifier | typeKeywords)* pointer?
+//    | expressionStatement
+//    ;
+//
+//
+//macroKeywords
+//    :  'if' | 'undef' | 'else' | 'pragma' | 'endif' | 'ifdef' | 'ifndef' | 'elif' | 'define' | 'ifndef' | 'error'
+//    ;
 
 labeledStatement
     : Identifier ':' statement?
