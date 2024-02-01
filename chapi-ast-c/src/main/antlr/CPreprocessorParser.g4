@@ -10,8 +10,8 @@ preprocessor_directive returns [Boolean value]
 	: DEFINE CONDITIONAL_SYMBOL (Identifier | DIGITS | preprocessor_directive)?  directive_new_line_or_sharp { this.OnPreprocessorDirectiveDefine(); }   #preprocessorDeclaration
 	| INCLUDE IncludeText directive_new_line_or_sharp { this.OnPreprocessorDirectiveInclude(); }        #preprocessorIncludeDeclaration
 	| UNDEF CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveUndef(); }     #preprocessorDeclaration
-//	| IFDEF CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveIfdef(); }     #preprocessorConditional
-//	| IFNDEF CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveIfndef(); }   #preprocessorConditional
+	| Ifdef CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveIfdef(); }     #preprocessorIfdefConditional
+	| Ifndef CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveIfndef(); }   #preprocessorIfndefConditional
 	| If expr=preprocessor_expression directive_new_line_or_sharp { this.OnPreprocessorDirectiveIf(); }	  #preprocessorConditional
 	| ELIF expr=preprocessor_expression directive_new_line_or_sharp { this.OnPreprocessorDirectiveElif(); } #preprocessorConditional
 	| Else directive_new_line_or_sharp { this.OnPreprocessorDirectiveElse(); }    #preprocessorConditional

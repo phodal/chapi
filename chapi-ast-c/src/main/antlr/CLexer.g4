@@ -108,8 +108,8 @@ TRUE             : 'true' ;
 FALSE            : 'false' ;
 
 // macro
-//Ifdef:   'ifdef';
-//Ifndef:  'ifndef';
+Ifdef:   'ifdef';
+Ifndef:  'ifndef';
 //Include: 'include';
 //Define:  'define';
 
@@ -197,8 +197,8 @@ DIRECTIVE_FALSE:               'false'                          -> channel(DIREC
 INCLUDE:                       'include'                        -> channel(DIRECTIVE);
 DEFINE:                        'define'                         -> channel(DIRECTIVE);
 UNDEF:                         'undef'                          -> channel(DIRECTIVE);
-IFDEF:                         'ifdef'                          -> channel(DIRECTIVE), type(If);
-IFNDEF:                        'ifndef'                         -> channel(DIRECTIVE), type(If);
+DIRECTIVE_IFDEF:                         'ifdef'                          -> channel(DIRECTIVE), type(Ifdef);
+DIRECTIVE_IFNDEF:                        'ifndef'                         -> channel(DIRECTIVE), type(Ifndef);
 DIRECTIVE_IF:                  'if'                             -> channel(DIRECTIVE), type(If);
 ELIF:                          'elif'                           -> channel(DIRECTIVE);
 DIRECTIVE_ELSE:                'else'                           -> channel(DIRECTIVE), type(Else);
@@ -218,6 +218,18 @@ DIRECTIVE_BANG:                '!'                              -> channel(DIREC
 DIRECTIVE_LG:                  '<'                              -> channel(DIRECTIVE), type(Less);
 DIRECTIVE_GT:                  '>'                              -> channel(DIRECTIVE), type(Greater);
 DIRECTIVE_DOT:                 '.'                              -> channel(DIRECTIVE), type(Dot);
+// '{'
+DIRECTIVE_LEFT_BRACE:          '{'                              -> channel(DIRECTIVE), type(LeftBrace);
+// '}'
+DIRECTIVE_RIGHT_BRACE:         '}'                              -> channel(DIRECTIVE), type(RightBrace);
+// ;
+DIRECTIVE_SEMI:                ';'                              -> channel(DIRECTIVE), type(Semi);
+// ,
+DIRECTIVE_COMMA:               ','                              -> channel(DIRECTIVE), type(Comma);
+// *
+DIRECTIVE_STAR:                '*'                              -> channel(DIRECTIVE), type(Star);
+// union
+DIRECTIVE_UNION:               'union'                          -> channel(DIRECTIVE), type(Union);
 DIRECTIVE_OP_EQ:               '=='                             -> channel(DIRECTIVE), type(OP_EQ);
 DIRECTIVE_OP_NE:               '!='                             -> channel(DIRECTIVE), type(OP_NE);
 DIRECTIVE_OP_AND:              '&&'                             -> channel(DIRECTIVE), type(OP_AND);

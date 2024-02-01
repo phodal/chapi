@@ -57,17 +57,11 @@ abstract class CPreprocessorParserBase extends Parser {
     }
 
     protected void OnPreprocessorDirectiveIfdef() {
-        ParserRuleContext c = this._ctx;
-        CPreprocessorParser.PreprocessorDeclarationContext d = (CPreprocessorParser.PreprocessorDeclarationContext) c;
-        ConditionalSymbols.add(d.CONDITIONAL_SYMBOL().getText());
-        d.value = AllConditions();
+        // todo
     }
 
     protected void OnPreprocessorDirectiveIfndef() {
-        ParserRuleContext c = this._ctx;
-        CPreprocessorParser.PreprocessorDeclarationContext d = (CPreprocessorParser.PreprocessorDeclarationContext) c;
-        ConditionalSymbols.add(d.CONDITIONAL_SYMBOL().getText());
-        d.value = AllConditions();
+        // todo
     }
 
     protected void OnPreprocessorDirectiveElif() {
