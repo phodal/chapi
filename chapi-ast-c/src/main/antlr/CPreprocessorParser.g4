@@ -4,18 +4,18 @@
 
 parser grammar CPreprocessorParser;
 
-options { tokenVocab=CPreprocessorLexer; superClass=chapi.ast.antlr.CPreprocessorParserBase; }
+options { tokenVocab=CLexer; superClass=chapi.ast.antlr.CPreprocessorParserBase; }
 
 preprocessor_directive returns [Boolean value]
 	: DEFINE CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveDefine(); }   #preprocessorDeclaration
 	| UNDEF CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveUndef(); }     #preprocessorDeclaration
 	| IFDEF CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveIfdef(); }     #preprocessorConditional
 	| IFNDEF CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveIfndef(); }   #preprocessorConditional
-	| IF expr=preprocessor_expression directive_new_line_or_sharp { this.OnPreprocessorDirectiveIf(); }	  #preprocessorConditional
+	| If expr=preprocessor_expression directive_new_line_or_sharp { this.OnPreprocessorDirectiveIf(); }	  #preprocessorConditional
 	| ELIF expr=preprocessor_expression directive_new_line_or_sharp { this.OnPreprocessorDirectiveElif(); } #preprocessorConditional
-	| ELSE directive_new_line_or_sharp { this.OnPreprocessorDirectiveElse(); }    #preprocessorConditional
+	| Else directive_new_line_or_sharp { this.OnPreprocessorDirectiveElse(); }    #preprocessorConditional
 	| ENDIF directive_new_line_or_sharp { this.OnPreprocessorDirectiveEndif(); } #preprocessorConditional
-	| LINE (DIGITS STRING? | DEFAULT | DIRECTIVE_HIDDEN) directive_new_line_or_sharp { this.OnPreprocessorDirectiveLine(); } #preprocessorLine
+	| LINE (DIGITS StringLiteral? | Default | DIRECTIVE_HIDDEN) directive_new_line_or_sharp { this.OnPreprocessorDirectiveLine(); } #preprocessorLine
 	| ERROR TEXT directive_new_line_or_sharp { this.OnPreprocessorDirectiveError(); }   #preprocessorDiagnostic
 	| WARNING TEXT directive_new_line_or_sharp { this.OnPreprocessorDirectiveWarning(); }   #preprocessorDiagnostic
 	| REGION TEXT? directive_new_line_or_sharp { this.OnPreprocessorDirectiveRegion(); }   #preprocessorRegion
@@ -34,7 +34,7 @@ preprocessor_expression returns [String value]
 	| FALSE { this.OnPreprocessorExpressionFalse(); }
 	| CONDITIONAL_SYMBOL { this.OnPreprocessorExpressionConditionalSymbol(); }
 	| OPEN_PARENS expr=preprocessor_expression CLOSE_PARENS { this.OnPreprocessorExpressionConditionalOpenParens(); }
-	| BANG expr=preprocessor_expression { this.OnPreprocessorExpressionConditionalBang(); }
+//	| BANG expr=preprocessor_expression { this.OnPreprocessorExpressionConditionalBang(); }
 	| expr1=preprocessor_expression OP_EQ expr2=preprocessor_expression { this.OnPreprocessorExpressionConditionalEq(); }
 	| expr1=preprocessor_expression OP_NE expr2=preprocessor_expression { this.OnPreprocessorExpressionConditionalNe(); }
 	| expr1=preprocessor_expression OP_AND expr2=preprocessor_expression { this.OnPreprocessorExpressionConditionalAnd(); }

@@ -11,21 +11,21 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
     private val importRegex = Regex("""#include\s+(<[^>]+>|\"[^\"]+\")""")
-    override fun enterPreprocessorDeclaration(ctx: CParser.PreprocessorDeclarationContext?) {
-        val text = ctx?.text
-        val matchResult = importRegex.find(text ?: "") ?: return
-
-        val value = matchResult.groupValues[1]
-            .removeSurrounding("\"", "\"")
-            .removeSurrounding("<", ">")
-
-        val imp = CodeImport(
-            Source = value,
-            AsName = value
-        )
-
-        codeContainer.Imports += imp
-    }
+//    override fun enterPreprocessorDeclaration(ctx: CParser.PreprocessorDeclarationContext?) {
+//        val text = ctx?.text
+//        val matchResult = importRegex.find(text ?: "") ?: return
+//
+//        val value = matchResult.groupValues[1]
+//            .removeSurrounding("\"", "\"")
+//            .removeSurrounding("<", ">")
+//
+//        val imp = CodeImport(
+//            Source = value,
+//            AsName = value
+//        )
+//
+//        codeContainer.Imports += imp
+//    }
 
     override fun enterDeclaration(ctx: CParser.DeclarationContext?) {
         val isTypeDef = ctx?.declarationSpecifier()?.any {
@@ -194,7 +194,7 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
     override fun enterPostfixExpression(ctx: CParser.PostfixExpressionContext?) {
         val call = ctx?.postixCall() ?: return
-        val functionName = ctx.primaryExpression()?.Identifier()?.firstOrNull()?.text ?: return
+        val functionName = ctx.primaryExpression()?.Identifier()?.text ?: return
 
         val children = call.firstOrNull()?.children ?: return
         // function call children should be '(', some parameters?, ')', so the size should be at least 2

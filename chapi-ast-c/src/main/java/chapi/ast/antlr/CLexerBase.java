@@ -5,9 +5,9 @@ import org.antlr.v4.runtime.Lexer;
 
 import java.util.Stack;
 
-abstract class CPreprocessorLexerBase extends Lexer
+abstract class CLexerBase extends Lexer
 {
-    protected CPreprocessorLexerBase(CharStream input)
+    protected CLexerBase(CharStream input)
     {
         super(input);
     }
@@ -72,7 +72,7 @@ abstract class CPreprocessorLexerBase extends Lexer
             }
             if (switchToFormatString)
             {
-                mode(CPreprocessorLexer.INTERPOLATION_FORMAT);
+//                mode(CLexer.INTERPOLATION_FORMAT);
             }
         }
     }
