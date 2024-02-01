@@ -27,7 +27,8 @@ language stages:
 | real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
 
 - [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is an architecture workbench, also for architecture
-  governance, which can analysis architecture in container, component, code level, create architecture fitness functions,
+  governance, which can analysis architecture in container, component, code level, create architecture fitness
+  functions,
   and analysis system dependencies.
 - [UnitGen](https://github.com/unit-mesh/unit-gen) is a code fine-tuning data framework that generates data from your
   existing codebase.
@@ -96,6 +97,12 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 ### C issue
 
 Since Macro can be everywhere, If your code includes lots of Macro, it will be slow.
+
+|       | without Macro | simple Macro (with postfixCall) | full Macro (maybe) | 
+|-------|---------------|---------------------------------|--------------------|
+| time1 | 100425ms      | 185662ms                        |                    | 
+| time2 | 96674ms       | 201791ms                        |                    |
+| time3 | 95434ms       | 184508ms                        |                    |
 
 ### Kotlin
 
