@@ -128,7 +128,7 @@ relationalExpression
 comparator : Less | Greater | LessEqual | GreaterEqual ;
 
 equalityExpression
-    : relationalExpression ((Equal | OP_NE) relationalExpression)*
+    : relationalExpression ((OP_EQ | OP_NE) relationalExpression)*
     ;
 
 andExpression
@@ -166,7 +166,7 @@ assignmentExpression
     ;
 
 assignmentOperator
-    : Equal
+    : OP_EQ
     | '*='
     | '/='
     | '%='
@@ -208,7 +208,7 @@ initDeclaratorList
     ;
 
 initDeclarator
-    : declarator (Equal initializer)?
+    : declarator (OP_EQ initializer)?
     ;
 
 storageClassSpecifier
@@ -287,7 +287,7 @@ enumeratorList
     ;
 
 enumerator
-    : enumerationConstant (Equal constantExpression)?
+    : enumerationConstant (OP_EQ constantExpression)?
     ;
 
 enumerationConstant
@@ -433,7 +433,7 @@ initializerList
     ;
 
 designation
-    : designatorList Equal
+    : designatorList Assign
     | directDeclarator
     ;
 

@@ -102,7 +102,7 @@ AndAssign        : '&=' ;
 XorAssign        : '^=' ;
 OrAssign         : '|=' ;
 Equal            : '==' ;
-OP_NE         : '!=' ;
+OP_NE            : '!=' ;
 Arrow            : '->' ;
 Dot              : '.' ;
 Ellipsis         : '...' ;
