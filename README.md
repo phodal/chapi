@@ -96,8 +96,9 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 ### C issue
 
-Since Macro can be everywhere, If your code includes lots of Macro, it will be slow.
+2024.01.29: C Basic
 
+Since Macro can be everywhere, If your code includes lots of Macro, it will be slow.
 Test in Lua 5.3.5: with 17402 C line, 3298 C Header line.
 
 For example:
@@ -112,6 +113,12 @@ For example:
         mp_cur_consume(c,9);
         break;
 ```
+
+2024.02.01: C Macro
+
+Todo: C need pre-process, so we need to use Macro to parse it, here is a library:
+
+- [https://github.com/shevek/jcpp](https://github.com/shevek/jcpp)
 
 ### Kotlin
 
