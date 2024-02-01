@@ -18,11 +18,13 @@ open class CSharpAnalyser : Analyser {
         return listener.getNodeInfo()
     }
 
+    // based on: https://gist.github.com/KvanTTT/d95579de257531a3cc15
     private fun parse(str: String): CSharpParser {
         val codeTokens: MutableList<Token> = mutableListOf()
         val commentTokens: MutableList<Token> = mutableListOf()
 
         val preprocessorLexer = CSharpLexer(CharStreams.fromString(str))
+        // Collect all tokens with lexer (CSharpLexer.g4).
         val tokens = preprocessorLexer.allTokens
         val directiveTokens: MutableList<Token> = mutableListOf()
         var directiveTokenSource = ListTokenSource(directiveTokens)

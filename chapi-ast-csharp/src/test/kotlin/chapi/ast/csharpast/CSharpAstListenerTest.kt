@@ -344,17 +344,20 @@ namespace Chapi {
             namespace testns {
                 #if DEBUG
                     public class testcls {
-                            public static void Main(string []args) {
+                        public static void Main(string []args) {
                             int x = 2;
                             int y  = 10;
-                            }
+                        }
                     }
                 #endif
             }"""
         val codeContainer = CSharpAnalyser().analysis(code, "test.cs")
         val structs = codeContainer.Containers[0].DataStructures
-        println(structs)
+
         assertEquals(structs.size, 1)
+        assertEquals(structs[0].NodeName, "testcls")
+        assertEquals(structs[0].Functions.size, 1)
+        assertEquals(structs[0].Functions[0].Name, "Main")
     }
 }
 
