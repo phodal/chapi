@@ -63,7 +63,6 @@ open class CAnalyser : Analyser {
                     // Parse condition in preprocessor directive (based on CSharpPreprocessorParser.g4 grammar).
                     try {
                         val directive = preprocessorParser.preprocessor_directive()
-
                         if (directive.value != null) {
                             // if true than next code is valid and not ignored.
                             compiledTokens = directive.value
@@ -88,12 +87,11 @@ open class CAnalyser : Analyser {
 
         includesDirective = preprocessorParser.IncludeSymbols.toMutableList()
 
-        codeTokens.map {
-            print(it.text + " ")
-        }
-
+//        codeTokens.map {
+//            print(it.text + " ")
+//        }
         // At the second stage, tokens are parsed in the usual way.
-        val codeTokenSource = ListTokenSource(tokens)
+        val codeTokenSource = ListTokenSource(codeTokens)
 
         val codeTokenStream = CommonTokenStream(codeTokenSource)
         val parser = CParser(codeTokenStream)

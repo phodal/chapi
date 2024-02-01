@@ -10,7 +10,7 @@ DELIMITED_DOC_COMMENT:       '/**' ~'/' .*? '*/'  -> channel(COMMENTS_CHANNEL);
 SINGLE_LINE_COMMENT:     '//'  InputCharacter*    -> channel(COMMENTS_CHANNEL);
 DELIMITED_COMMENT:       '/*'  .*? '*/'           -> channel(COMMENTS_CHANNEL);
 WHITESPACES:   (Whitespace | Newline)+            -> channel(HIDDEN);
-SHARP:         '#'                                -> mode(DIRECTIVE_MODE), skip;
+SHARP:         '#'                                -> mode(DIRECTIVE_MODE);
 
 //MultiLineMacro: '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN);
 //
@@ -145,8 +145,8 @@ DigitSequence
 
 IncludeText
     : '<' SChar* ('.' | '/' | SChar)* '>'
-    | STRING
-    | Identifier // for macro
+    | DIRECTIVE_STRING
+    | CONDITIONAL_SYMBOL
     ;
 
 STRING
@@ -222,6 +222,7 @@ DIRECTIVE_OP_EQ:               '=='                             -> channel(DIREC
 DIRECTIVE_OP_NE:               '!='                             -> channel(DIRECTIVE), type(OP_NE);
 DIRECTIVE_OP_AND:              '&&'                             -> channel(DIRECTIVE), type(OP_AND);
 DIRECTIVE_OP_OR:               '||'                             -> channel(DIRECTIVE), type(OP_OR);
+DIRECTIVE_DOUBLE_QUOTE:        '"'                              -> channel(DIRECTIVE);
 DIRECTIVE_STRING:              '"' ~('"' | [\r\n\u0085\u2028\u2029])* '"' -> channel(DIRECTIVE), type(STRING);
 CONDITIONAL_SYMBOL:            Identifier                       -> channel(DIRECTIVE);
 DIRECTIVE_SINGLE_LINE_COMMENT: '//' ~[\r\n\u0085\u2028\u2029]*  -> channel(COMMENTS_CHANNEL), type(SINGLE_LINE_COMMENT);

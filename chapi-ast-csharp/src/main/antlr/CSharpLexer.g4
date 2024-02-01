@@ -16,7 +16,7 @@ DELIMITED_DOC_COMMENT:       '/**' ~'/' .*? '*/'  -> channel(COMMENTS_CHANNEL);
 SINGLE_LINE_COMMENT:     '//'  InputCharacter*    -> channel(COMMENTS_CHANNEL);
 DELIMITED_COMMENT:       '/*'  .*? '*/'           -> channel(COMMENTS_CHANNEL);
 WHITESPACES:   (Whitespace | NewLine)+            -> channel(HIDDEN);
-SHARP:         '#'                                -> mode(DIRECTIVE_MODE), skip;
+SHARP:         '#'                                -> mode(DIRECTIVE_MODE);
 
 ABSTRACT:      'abstract';
 ADD:           'add';

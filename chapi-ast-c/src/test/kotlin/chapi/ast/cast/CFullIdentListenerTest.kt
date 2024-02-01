@@ -36,7 +36,6 @@ internal class CFullIdentListenerTest {
     }
 
     @Test
-    @Ignore
     internal fun shouldIdentifyImport() {
         val code = """
 #include <stdio.h>
@@ -256,7 +255,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldIdentifyMultipleInclude() {
         val code = """
             #include <stdio.h>
@@ -320,7 +318,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldEnableMacroInFunction() {
         val code = """
             int TestCtxFlags(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
@@ -341,7 +338,7 @@ typedef struct {
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures.size, 2)
         assertEquals(codeFile.DataStructures[0].Functions.size, 1)
     }
 
@@ -383,7 +380,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldSupportForMacroConcat() {
         val code = """
             #define STRINGIFY_HELPER(x) #x
@@ -396,7 +392,7 @@ typedef struct {
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures.size, 0)
     }
 
     @Test

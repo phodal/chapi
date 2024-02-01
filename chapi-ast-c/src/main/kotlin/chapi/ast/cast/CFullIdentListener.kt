@@ -10,12 +10,9 @@ open class CFullIdentListener(fileName: String, includes: MutableList<String>) :
     private var structMap = mutableMapOf<String, CodeDataStruct>()
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
-    private val importRegex = Regex("""#include\s+(<[^>]+>|\"[^\"]+\")""")
-
     init {
         includes.forEach {
-            val matchResult = importRegex.find(it) ?: return@forEach
-            val value = matchResult.groupValues[1]
+            val value = it
                 .removeSurrounding("\"", "\"")
                 .removeSurrounding("<", ">")
 
