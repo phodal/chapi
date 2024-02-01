@@ -46,17 +46,17 @@ primaryExpression
     | OPEN_PARENS expression CLOSE_PARENS
     | genericSelection
     | Extenion? OPEN_PARENS compoundStatement CLOSE_PARENS // Blocks (GCC extension)
-    | '__builtin_va_arg' OPEN_PARENS unaryExpression ',' typeName CLOSE_PARENS
-    | '__builtin_offsetof' OPEN_PARENS typeName ',' unaryExpression CLOSE_PARENS
+    | EXT_BuiltinVaArg OPEN_PARENS unaryExpression Comma typeName CLOSE_PARENS
+    | EXT_BuiltinOffsetof OPEN_PARENS typeName Comma unaryExpression CLOSE_PARENS
     // for macro support
     ;
 
 genericSelection
-    : '_Generic' OPEN_PARENS assignmentExpression ',' genericAssocList CLOSE_PARENS
+    : Generic OPEN_PARENS assignmentExpression Comma genericAssocList CLOSE_PARENS
     ;
 
 genericAssocList
-    : genericAssociation (',' genericAssociation)*
+    : genericAssociation (Comma genericAssociation)*
     ;
 
 genericAssociation
@@ -67,13 +67,13 @@ postfixExpression
     : (primaryExpression | extensionExpression) (postixCall | '++' | '--')*
     ;
 
-extensionExpression : Extenion? OPEN_PARENS typeName CLOSE_PARENS LeftBrace initializerList ','? RightBrace ;
+extensionExpression : Extenion? OPEN_PARENS typeName CLOSE_PARENS LeftBrace initializerList Comma? RightBrace ;
 
 postixCall
         :LeftBracket expression RightBracket                           #arrayAccessPostfixExpression
         // for macro support: ph_gen(, hpdata_age_heap, hpdata_t, age_link, hpdata_age_comp)
-        | OPEN_PARENS ','? argumentExpressionList? CLOSE_PARENS                         #functionCallPostfixExpression
-        | ('.' | '->') Identifier                                      #memberAccessPostfixExpression
+        | OPEN_PARENS Comma? argumentExpressionList? CLOSE_PARENS                         #functionCallPostfixExpression
+        | (Dot | Arrow) Identifier                                      #memberAccessPostfixExpression
         ;
 
 //macroPostixCall
@@ -82,25 +82,25 @@ postixCall
 //        ;
 //
 argumentExpressionList
-    : assignmentExpression (',' assignmentExpression)*
+    : assignmentExpression (Comma assignmentExpression)*
     ;
 
 unaryExpression
-    : ('++' | '--' | Sizeof)* (
+    : (PlusPlus | MinusMinus | Sizeof)* (
         postfixExpression
         | unaryOperator castExpression
-        | (Sizeof | '_Alignof') OPEN_PARENS typeName CLOSE_PARENS
+        | (Sizeof | Alignof) OPEN_PARENS typeName CLOSE_PARENS
         | OP_AND Identifier // GCC extension address of label
     )
     ;
 
 unaryOperator
     : And
-    | '*'
-    | '+'
-    | '-'
-    | '~'
-    | '!'
+    | Star
+    | Plus
+    | Minus
+    | Tilde
+    | Not
     ;
 
 castExpression
@@ -110,15 +110,15 @@ castExpression
     ;
 
 multiplicativeExpression
-    : castExpression (('*' | '/' | '%') castExpression)*
+    : castExpression ((Star | Div | Mod) castExpression)*
     ;
 
 additiveExpression
-    : multiplicativeExpression (('+' | '-') multiplicativeExpression)*
+    : multiplicativeExpression ((Minus | Plus) multiplicativeExpression)*
     ;
 
 shiftExpression
-    : additiveExpression ((LeftShift | '>>') additiveExpression)*
+    : additiveExpression ((LeftShift | RightShift) additiveExpression)*
     ;
 
 relationalExpression
@@ -128,7 +128,7 @@ relationalExpression
 comparator : Less | Greater | LessEqual | GreaterEqual ;
 
 equalityExpression
-    : relationalExpression ((OP_EQ | OP_NE) relationalExpression)*
+    : relationalExpression ((Equal | OP_NE) relationalExpression)*
     ;
 
 andExpression
@@ -167,22 +167,22 @@ assignmentExpression
 
 assignmentOperator
     : OP_EQ
-    | '*='
-    | '/='
-    | '%='
-    | '+='
-    | '-='
-    | '<<='
-    | '>>='
-    | '&='
-    | '^='
-    | '|='
+    | StarAssign
+    | DivAssign
+    | ModAssign
+    | PlusAssign
+    | MinusAssign
+    | LeftShiftAssign
+    | RightShiftAssign
+    | AndAssign
+    | XorAssign
+    | OrAssign
     ;
 
 expression
-    : assignmentExpression (',' assignmentExpression)*
+    : assignmentExpression (Comma assignmentExpression)*
     // for macro support, like ph_gen(, edata_avail, edata_t, avail_link, edata_esnead_comp)
-    | ','
+    | Comma
     ;
 
 constantExpression
@@ -204,7 +204,7 @@ declarationSpecifier
     ;
 
 initDeclaratorList
-    : initDeclarator (',' initDeclarator)*
+    : initDeclarator (Comma initDeclarator)*
     ;
 
 initDeclarator
@@ -215,7 +215,7 @@ storageClassSpecifier
     : Typedef
     | Extern
     | Static
-    | '_Thread_local'
+    | ThreadLocal
     | Auto
     | Register
     ;
@@ -230,12 +230,12 @@ typeSpecifier
     | Double
     | Signed
     | Unsigned
-    | '_Bool'
-    | '_Complex'
-    | '__m128'
-    | '__m128d'
-    | '__m128i'
-    | Extenion OPEN_PARENS ('__m128' | '__m128d' | '__m128i') CLOSE_PARENS
+    | Bool
+    | Complex
+    | EXT_M128
+    | EXT_M128d
+    | EXT_M128i
+    | Extenion OPEN_PARENS (EXT_M128 | EXT_M128d | EXT_M128i) CLOSE_PARENS
     | atomicTypeSpecifier
     | structOrUnionSpecifier
     | enumSpecifier
@@ -269,7 +269,7 @@ specifierQualifierList
     ;
 
 structDeclaratorList
-    : structDeclarator (',' structDeclarator)*
+    : structDeclarator (Comma structDeclarator)*
     ;
 
 structDeclarator
@@ -278,12 +278,12 @@ structDeclarator
     ;
 
 enumSpecifier
-    : Enum Identifier? LeftBrace enumeratorList ','? RightBrace
+    : Enum Identifier? LeftBrace enumeratorList Comma? RightBrace
     | Enum Identifier
     ;
 
 enumeratorList
-    : enumerator (',' enumerator)*
+    : enumerator (Comma enumerator)*
     ;
 
 enumerator
@@ -295,27 +295,27 @@ enumerationConstant
     ;
 
 atomicTypeSpecifier
-    : '_Atomic' OPEN_PARENS typeName CLOSE_PARENS
+    : Atomic OPEN_PARENS typeName CLOSE_PARENS
     ;
 
 typeQualifier
     : Const
     | Restrict
     | Volatile
-    | '_Atomic'
+    | Atomic
     ;
 
 functionSpecifier
     : Inline
-    | '_Noreturn'
-    | '__inline__' // GCC extension
-    | '__stdcall'
+    | Noreturn
+    | EXT_Inline // GCC extension
+    | EXT_Stdcall
     | gccAttributeSpecifier
-    | '__declspec' OPEN_PARENS Identifier CLOSE_PARENS
+    | EXT_Declspec OPEN_PARENS Identifier CLOSE_PARENS
     ;
 
 alignmentSpecifier
-    : '_Alignas' OPEN_PARENS (typeName | constantExpression) CLOSE_PARENS
+    : Alignas OPEN_PARENS (typeName | constantExpression) CLOSE_PARENS
     ;
 
 declarator
@@ -328,7 +328,7 @@ directDeclarator
     |   directDeclarator LeftBracket typeQualifierList? assignmentExpression? RightBracket           #assignmentExpressionDirectDeclarator
     |   directDeclarator LeftBracket Static typeQualifierList? assignmentExpression RightBracket   #preStaticAssignmentExpressionDirectDeclarator
     |   directDeclarator LeftBracket typeQualifierList Static assignmentExpression RightBracket    #postStaticAssignmentExpressionDirectDeclarator
-    |   directDeclarator LeftBracket typeQualifierList? '*' RightBracket                             #typeQualifierListPointerDirectDeclarator
+    |   directDeclarator LeftBracket typeQualifierList? Star RightBracket                             #typeQualifierListPointerDirectDeclarator
     |   directDeclarator OPEN_PARENS parameterTypeList CLOSE_PARENS                                  #parameterDirectDeclarator
     |   directDeclarator OPEN_PARENS identifierList? CLOSE_PARENS                                    #identifierListDirectDeclarator
     |   Identifier Colon DigitSequence                                                #bitFieldDirectDeclarator  // bit field
@@ -341,7 +341,7 @@ directDeclarator
 vcSpecificModifer
     : '__cdecl'
     | '__clrcall'
-    | '__stdcall'
+    | EXT_Stdcall
     | '__fastcall'
     | '__thiscall'
     | '__vectorcall'
@@ -357,11 +357,11 @@ gccAttributeSpecifier
     ;
 
 gccAttributeList
-    : gccAttribute? (',' gccAttribute?)*
+    : gccAttribute? (Comma gccAttribute?)*
     ;
 
 gccAttribute
-    : ~(',' | OPEN_PARENS | CLOSE_PARENS) // relaxed def for "identifier or reserved word"
+    : ~(Comma | OPEN_PARENS | CLOSE_PARENS) // relaxed def for "identifier or reserved word"
     (OPEN_PARENS argumentExpressionList? CLOSE_PARENS)?
     ;
 
@@ -370,7 +370,7 @@ nestedParenthesesBlock
     ;
 
 pointer
-    : (('*' | Caret) typeQualifierList?)+ // ^ - Blocks language extension
+    : ((Star | Caret) typeQualifierList?)+ // ^ - Blocks language extension
     ;
 
 typeQualifierList
@@ -378,11 +378,11 @@ typeQualifierList
     ;
 
 parameterTypeList
-    : parameterList (',' '...')?
+    : parameterList (Comma Ellipsis)?
     ;
 
 parameterList
-    : parameterDeclaration (',' parameterDeclaration)*
+    : parameterDeclaration (Comma parameterDeclaration)*
     ;
 
 parameterDeclaration
@@ -391,7 +391,7 @@ parameterDeclaration
     ;
 
 identifierList
-    : Identifier (',' Identifier)*
+    : Identifier (Comma Identifier)*
     ;
 
 typeName
@@ -408,12 +408,12 @@ directAbstractDeclarator
     | LeftBracket typeQualifierList? assignmentExpression? RightBracket
     | LeftBracket Static typeQualifierList? assignmentExpression RightBracket
     | LeftBracket typeQualifierList Static assignmentExpression RightBracket
-    | LeftBracket '*' RightBracket
+    | LeftBracket Star RightBracket
     | OPEN_PARENS parameterTypeList? CLOSE_PARENS gccDeclaratorExtension*
     | directAbstractDeclarator LeftBracket typeQualifierList? assignmentExpression? RightBracket
     | directAbstractDeclarator LeftBracket Static typeQualifierList? assignmentExpression RightBracket
     | directAbstractDeclarator LeftBracket typeQualifierList Static assignmentExpression RightBracket
-    | directAbstractDeclarator LeftBracket '*' RightBracket
+    | directAbstractDeclarator LeftBracket Star RightBracket
     | directAbstractDeclarator OPEN_PARENS parameterTypeList? CLOSE_PARENS gccDeclaratorExtension*
     ;
 
@@ -423,17 +423,17 @@ typedefName
 
 initializer
     : assignmentExpression
-    | LeftBrace initializerList ','? RightBrace
+    | LeftBrace initializerList Comma? RightBrace
 //    | '#if' expressionStatement initializerList '#' 'endif'
-//    | macroStatement ','? initializerList ','? macroStatement
+//    | macroStatement Comma? initializerList Comma? macroStatement
     ;
 
 initializerList
-    : designation? initializer (',' designation? initializer)*
+    : designation? initializer (Comma designation? initializer)*
     ;
 
 designation
-    : designatorList Assign
+    : designatorList OP_EQ
     | directDeclarator
     ;
 
@@ -443,11 +443,11 @@ designatorList
 
 designator
     : LeftBracket constantExpression RightBracket
-    | '.' Identifier
+    | Dot Identifier
     ;
 
 staticAssertDeclaration
-    : '_Static_assert' OPEN_PARENS constantExpression ',' STRING+ CLOSE_PARENS Semi
+    : StaticAssert OPEN_PARENS constantExpression Comma STRING+ CLOSE_PARENS Semi
     ;
 
 statement
@@ -469,7 +469,7 @@ asmBody
     | typeSpecifier expression
     ;
 
-logicals : logicalOrExpression (',' logicalOrExpression)* ;
+logicals : logicalOrExpression (Comma logicalOrExpression)* ;
 
 //macroStatement
 //    : PreprocessorBlock                                                                #preprocessorDeclaration
@@ -523,7 +523,7 @@ forDeclaration
     ;
 
 forExpression
-    : assignmentExpression (',' assignmentExpression)*
+    : assignmentExpression (Comma assignmentExpression)*
     ;
 
 jumpStatement
