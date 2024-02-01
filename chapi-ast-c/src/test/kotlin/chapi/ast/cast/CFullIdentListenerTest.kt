@@ -382,7 +382,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldSupportForMacroConcat() {
         val code = """
             static size_t
@@ -415,7 +414,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldHandleMacroInStructure() {
         val code = """
             #define KUMAX(x)	((uintmax_t)x##ULL)
@@ -431,7 +429,7 @@ typedef struct {
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures.size, 2)
     }
 
     @Test
@@ -473,7 +471,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldHandleMacroInFunc() {
         val code = """
             static const ctl_named_node_t stats_arenas_i_mutexes_node[] = {
@@ -514,7 +511,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldHandleForMacroForBrokenCondition() {
         val code = """
             static const ctl_named_node_t stats_mutexes_node[] = {
@@ -638,7 +634,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldHandleForMacroInCplusplus() {
         val code = """
             #ifndef HDR_TESTS_H
