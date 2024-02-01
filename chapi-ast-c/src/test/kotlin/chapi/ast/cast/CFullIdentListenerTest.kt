@@ -23,14 +23,14 @@ internal class CFullIdentListenerTest {
             val analyser = CAnalyser()
             val fileFlow = File(content).walkTopDown().asFlow()
             fileFlow.mapNotNull {
-                if (it.isFile && (it.extension == "c" || it.extension == "h")) {
+                if (it.isFile && (it.extension == "h")) {
                     analyser.addSource(it.readText())
                 }
-            }
+            }.collect()
 
             val result: MutableList<CodeContainer> = mutableListOf()
             fileFlow.mapNotNull {
-                if (it.isFile && (it.extension == "c" || it.extension == "h")) {
+                if (it.isFile && (it.extension == "c")) {
                     val start = System.currentTimeMillis()
                     println("Analyse ${it.path}")
                     val analysis = analyser.analysis(it.readText(), it.name)
