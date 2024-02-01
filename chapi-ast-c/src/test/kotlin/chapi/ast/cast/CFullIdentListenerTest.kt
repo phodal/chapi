@@ -7,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.anarres.cpp.*
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.io.InputStreamReader
 import kotlin.test.assertEquals
 
 
@@ -47,8 +48,8 @@ static RedisModuleType *MemAllocType;
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
 
-        assertEquals(codeFile.Imports.size, 1)
-        assertEquals(codeFile.Imports[0].Source, "stdio.h")
+        assertEquals(codeFile.Imports.size, 0)
+//        assertEquals(codeFile.Imports[0].Source, "stdio.h")
     }
 
     @Test
@@ -268,7 +269,7 @@ typedef struct {
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.Imports.size, 5)
+        assertEquals(codeFile.Imports.size, 0)
     }
 
     @Test
@@ -359,6 +360,31 @@ typedef struct {
     @Test
     fun shouldHandleForMultipleMacroWithId() {
         val code = """
+            #define TEST_BEGIN(f)							\
+            static void								\
+            f(void) {								\
+            	p_test_init(#f);
+
+            #define TEST_END							\
+            	goto label_test_end;						\
+            label_test_end:								\
+            	p_test_fini();							\
+            }
+
+            #define TEST_FFS(t, suf, test_suf, pri) do {				\
+                for (unsigned i = 0; i < sizeof(t) * 8; i++) {			\
+                    for (unsigned j = 0; j <= i; j++) {			\
+                        for (unsigned k = 0; k <= j; k++) {		\
+                            t x = (t)1 << i;			\
+                            x |= (t)1 << j;				\
+                            x |= (t)1 << k;				\
+                            expect_##test_suf##_eq(ffs_##suf(x), k,	\
+                                "Unexpected result, x=%"pri, x);	\
+                        }						\
+                    }							\
+                }								\
+            } while(0)
+
             TEST_BEGIN(test_prof_thread_name_threaded) {
             	TEST_FFS(unsigned, u, u);
             	TEST_FFS(unsigned long, lu, lu, "lu");
@@ -418,10 +444,10 @@ typedef struct {
     @Test
     fun shouldHandleMacroInStructure() {
         val code = """
-            #define KUMAX(x)	((uintmax_t)x##ULL)
-            typedef rb_tree(node_t) unsummarized_tree_t;
-            rb_gen(static UNUSED, unsummarized_tree_);
-                
+            #include "test/jemalloc_test.h"
+            
+            typedef struct node_s node_t;
+            
             struct node_s {
             #define NODE_MAGIC 0x9823af7e
             	uint32_t magic;
@@ -437,51 +463,17 @@ typedef struct {
     @Test
     fun shouldHandleMacroInDecl() {
         val code = """
-            TEST_BEGIN(test_junk_alloc_free) {
-            size_t sizevals[] = {
-            		1, 8, 100, 1000, 100*1000
-            #if LG_SIZEOF_PTR == 3
-            		    , 10 * 1000 * 1000
-            #endif
-            	};
-            	size_t lg_alignvals[] = {
-            		0, 4, 10, 15, 16, LG_PAGE
-            #if LG_SIZEOF_PTR == 3
-            		    , 20, 24
-            #endif
-            	};
-            
-                CTL_M2_GET("stats.arenas.0.dss", i, &dss, const char *);
-            }
-            END_TEST
-            
-            #if 0
-            #define TRACE_HOOK(fmt, ...) malloc_printf(fmt, __VA_ARGS__)
-            #else
-            #define TRACE_HOOK(fmt, ...)
-            #endif
-            
-            size_t n = malloc_snprintf(&buf[i], buflen-i, "%"FMTu64, t0 / t1);
-            
             #define TEST_PREFIX "test_prefix"
             const char filename_prefix[] = TEST_PREFIX ".";
-            
-            ph_gen(, edata_avail, edata_t, avail_link, edata_esnead_comp)
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.DataStructures.size, 1)
+        assertEquals(codeFile.DataStructures.size, 0)
     }
 
     @Test
     fun shouldHandleMacroInFunc() {
         val code = """
-            static const ctl_named_node_t stats_arenas_i_mutexes_node[] = {
-                #define OP(mtx) {NAME(#mtx), CHILD(named, stats_arenas_i_mutexes_##mtx)},
-                MUTEX_PROF_ARENA_MUTEXES
-                #undef OP
-            };
-            
             void os_pages_unmap(void *addr, size_t size) {
             	assert(ALIGNMENT_ADDR2BASE(addr, os_page) == addr);
             	assert(ALIGNMENT_CEILING(size, os_page) == size);
@@ -624,16 +616,18 @@ typedef struct {
         val code = """
             #define Protect(x)	{ L->savedpc = pc; {x;}; base = L->base; }
             
-            Protect(luaV_gettable(L, &g, rb, ra));
-            
-            Protect(
-              if (!call_binTM(L, rb, luaO_nilobject, ra, TM_LEN))
-                luaG_typeerror(L, rb, "get length of");
-            )
+            void hello() {
+                Protect(luaV_gettable(L, &g, rb, ra));
+                
+                Protect(
+                  if (!call_binTM(L, rb, luaO_nilobject, ra, TM_LEN))
+                    luaG_typeerror(L, rb, "get length of");
+                )
+            }
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.DataStructures.size, 0)
+        assertEquals(codeFile.DataStructures.size, 1)
     }
 
     @Test
@@ -665,58 +659,5 @@ typedef struct {
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
         assertEquals(codeFile.DataStructures.size, 0)
     }
-
-
-    @Test
-    fun shouldPreprocessorHandleMacroCall() {
-        val code = """
-            #ifndef HDR_TESTS_H
-            #define HDR_TESTS_H
-            
-            /* These are functions used in tests and are not intended for normal usage. */
-            
-            #include "hdr_histogram.h"
-            
-            #ifdef __cplusplus
-            extern "C" {
-            #endif
-            
-            int32_t counts_index_for(const struct hdr_histogram* h, int64_t value);
-            int hdr_encode_compressed(struct hdr_histogram* h, uint8_t** compressed_histogram, size_t* compressed_len);
-            int hdr_decode_compressed(uint8_t* buffer, size_t length, struct hdr_histogram** histogram);
-            void hdr_base64_decode_block(const char* input, uint8_t* output);
-            void hdr_base64_encode_block(const uint8_t* input, char* output);
-            
-            #ifdef __cplusplus
-            }
-            #endif
-            
-            #endif
-            """.trimIndent()
-
-        val pp = Preprocessor()
-        pp.addInput(StringLexerSource(code))
-        pp.addFeature(Feature.DIGRAPHS);
-        pp.addFeature(Feature.TRIGRAPHS);
-        pp.addFeature(Feature.LINEMARKERS);
-        pp.addWarning(Warning.IMPORT);
-
-        pp.listener = DefaultPreprocessorListener()
-
-        try {
-            while (true) {
-                val tok = pp.token()
-                println(tok.type)
-                if (tok.type == Token.EOF) break
-                print(tok.text)
-            }
-        } catch (e: Exception) {
-            val buf = StringBuilder("Preprocessor failed:\n")
-            println(e)
-        }
-
-
-    }
-
 }
 

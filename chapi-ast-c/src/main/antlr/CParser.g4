@@ -49,6 +49,7 @@ primaryExpression
     | EXT_BuiltinVaArg OPEN_PARENS unaryExpression Comma typeName CLOSE_PARENS
     | EXT_BuiltinOffsetof OPEN_PARENS typeName Comma unaryExpression CLOSE_PARENS
     // for macro support
+    | typeKeywords typeKeywords* pointer?
     ;
 
 genericSelection
@@ -160,9 +161,6 @@ assignmentExpression
     | unaryExpression assignmentOperator assignmentExpression
     | DigitSequence
     // for support macro like: ph_gen(, hpdata_age_heap, &=)
-//    | macroStatement
-//    | assignmentOperator
-//    | macroPostixCall
     ;
 
 assignmentOperator

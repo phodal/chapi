@@ -37,7 +37,7 @@ dependencies {
 
     // coroutines
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
-    testImplementation("org.anarres:jcpp:1.4.14")
+    implementation("org.anarres:jcpp:1.4.14")
 }
 
 sourceSets.main {

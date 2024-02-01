@@ -5,14 +5,64 @@ import chapi.ast.antlr.CParser
 import chapi.ast.antlr.CPreprocessorParser
 import chapi.domain.core.CodeContainer
 import chapi.parser.Analyser
+import org.anarres.cpp.*
 import org.antlr.v4.runtime.*
+import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.ParseTreeWalker
+import java.io.InputStreamReader
 
 open class CAnalyser : Analyser {
     private var includesDirective: MutableList<String> = mutableListOf()
+    val pp = Preprocessor()
+
+    init {
+        pp.addFeature(Feature.DIGRAPHS);
+        pp.addFeature(Feature.TRIGRAPHS);
+        pp.addWarning(Warning.IMPORT);
+
+        pp.listener = DefaultPreprocessorListener()
+    }
+
+    /**
+     * Adds a source code to the program.
+     *
+     * This method takes a string representation of the source code and adds it to the program. The source code is read from
+     * an input stream created from the given string. The input stream is then passed to the LexerSource object, which
+     * tokenizes the code and adds it to the program's input.
+     *
+     * @param code The string representation of the source code to be added.
+     *
+     * @throws IOException if an I/O error occurs while reading the source code.
+     *
+     * @see LexerSource
+     */
+    fun addSource(code: String) {
+        pp.addInput(LexerSource(InputStreamReader(code.byteInputStream()), true))
+    }
 
     override fun analysis(code: String, filePath: String): CodeContainer {
-        val context = this.parse(code).compilationUnit()
+        addSource(code)
+
+        val output = try {
+            val buf = StringBuilder()
+            while (true) {
+                val tok = pp.token()
+                if (tok.type == org.anarres.cpp.Token.EOF) break
+                buf.append(tok.text)
+            }
+
+            val output = buf.toString()
+            output.ifEmpty {
+                code
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            code
+        }
+
+        pp.close()
+
+        val context = this.parse(output).compilationUnit()
         val listener = CFullIdentListener(filePath, includesDirective)
 
         ParseTreeWalker().walk(listener, context)
