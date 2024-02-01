@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import java.io.File
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 internal class CFullIdentListenerTest {
@@ -36,7 +35,6 @@ internal class CFullIdentListenerTest {
     }
 
     @Test
-    @Ignore
     internal fun shouldIdentifyImport() {
         val code = """
 #include <stdio.h>
@@ -256,7 +254,6 @@ typedef struct {
     }
 
     @Test
-    @Ignore
     fun shouldIdentifyMultipleInclude() {
         val code = """
             #include <stdio.h>
@@ -630,6 +627,6 @@ typedef struct {
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.DataStructures.size, 0)
+        assertEquals(codeFile.DataStructures.size, 1)
     }
 }

@@ -486,7 +486,7 @@ asmBody
 
 logicals : logicalOrExpression (',' logicalOrExpression)* ;
 
-Directive: '#' ~ [\n]* -> channel (HIDDEN);
+//Directive: '#' ~ [\n]* -> channel (HIDDEN);
 
 macroStatement
     : '#' singleLineMacroDeclaration*

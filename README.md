@@ -100,14 +100,6 @@ Since Macro can be everywhere, If your code includes lots of Macro, it will be s
 
 Test in Lua 5.3.5: with 17402 C line, 3298 C Header line.
 
-|       | without Macro | simple Macro (with postfixCall) | full Macro (maybe) | 
-|-------|---------------|---------------------------------|--------------------|
-| time1 | 100425ms      | 185662ms                        | 158849ms           | 
-| time2 | 96674ms       | 201791ms                        | 173202ms           |
-| time3 | 95434ms       | 184508ms                        | 149230ms           |
-
-Known issues: line break in Macro will cause parse error.
-
 For example:
 
 ```c
