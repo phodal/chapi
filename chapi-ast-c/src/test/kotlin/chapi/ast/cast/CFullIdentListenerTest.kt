@@ -15,6 +15,7 @@ internal class CFullIdentListenerTest {
     fun allGrammarUnderResources() {
         val content = this::class.java.getResource("/grammar")!!.toURI()
 //        val content = "/Users/phodal/Downloads/redis-unstable/deps/lua/src"
+        val totalStart = System.currentTimeMillis()
         runBlocking {
             File(content).walkTopDown().asFlow().mapNotNull {
                 if (it.isFile && (it.extension == "c" || it.extension == "h")) {
@@ -29,6 +30,9 @@ internal class CFullIdentListenerTest {
                 }
             }.collect()
         }
+
+        val totalEnd = System.currentTimeMillis()
+        println("total cost ${totalEnd - totalStart}ms")
     }
 
     @Test

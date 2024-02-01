@@ -35,7 +35,8 @@ grammar C;
 
 compilationUnit
     // statement for macro support
-    : (externalDeclaration | statement | macroPostixCall)* EOF
+    : (externalDeclaration)* EOF
+//    | (externalDeclaration | statement | macroPostixCall)* EOF
     ;
 
 MultiLineMacro
