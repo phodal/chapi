@@ -56,9 +56,24 @@ open class CSharpAnalyser : Analyser {
                     preprocessorParser.inputStream = directiveTokenStream
                     preprocessorParser.reset()
                     // Parse condition in preprocessor directive (based on CSharpPreprocessorParser.g4 grammar).
-                    val directive: CSharpPreprocessorParser.Preprocessor_directiveContext = preprocessorParser.preprocessor_directive()
+                    val directive = preprocessorParser.preprocessor_directive()
+
                     // if true than next code is valid and not ignored.
                     compiledTokens = directive.value
+                    val directiveStr = tokens[index + 1].text.trim { it <= ' ' }
+                    if ("line" == directiveStr || "error" == directiveStr || "warning" == directiveStr || "define" == directiveStr || "endregion" == directiveStr || "endif" == directiveStr || "pragma" == directiveStr) {
+                        compiledTokens = true
+                    }
+                    var conditionalSymbol: String?
+                    if ("define" == tokens[index + 1].text) {
+                        // add to the conditional symbols
+                        conditionalSymbol = tokens[index + 2].text
+                        preprocessorParser.ConditionalSymbols.add(conditionalSymbol)
+                    }
+                    if ("undef" == tokens[index + 1].text) {
+                        conditionalSymbol = tokens[index + 2].text
+                        preprocessorParser.ConditionalSymbols.remove(conditionalSymbol)
+                    }
                     index = directiveTokenIndex - 1
                 }
                 token.channel == CSharpLexer.COMMENTS_CHANNEL -> {

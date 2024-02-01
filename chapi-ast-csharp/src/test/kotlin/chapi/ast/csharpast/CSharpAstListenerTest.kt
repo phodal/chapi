@@ -3,7 +3,7 @@ package chapi.ast.csharpast
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-internal class CSharpAstListenerTest  {
+internal class CSharpAstListenerTest {
     private val helloworld = """
     using System; 
       
@@ -334,6 +334,27 @@ namespace Chapi {
         // expression will split by `:`, cause issues the
         val codeContainer = CSharpAnalyser().analysis(code, "ChapiController.cs")
         val structs = codeContainer.Containers[0].DataStructures
+        assertEquals(structs.size, 1)
+    }
+
+    @Test
+    fun macroPreprocessor() {
+        val code = """
+            using System.Text;  
+            namespace testns {
+            public class testcls {
+                            public static void Main(string []args) {
+                    #if DEBUG
+                            int x = 2;
+                    #else
+                            int y  = 10;
+                    #endif
+                            }
+                    }
+            }"""
+        val codeContainer = CSharpAnalyser().analysis(code, "test.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+        println(structs)
         assertEquals(structs.size, 1)
     }
 }
