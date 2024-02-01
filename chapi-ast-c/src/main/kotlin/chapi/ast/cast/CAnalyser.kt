@@ -31,13 +31,24 @@ open class CAnalyser : Analyser {
     }
 
     override fun analysis(code: String, filePath: String): CodeContainer {
+        val output = preProcessing(code)
+
+        val context = this.parse(output).compilationUnit()
+        val listener = CFullIdentListener(filePath, includesDirective)
+
+        ParseTreeWalker().walk(listener, context)
+
+        return listener.getNodeInfo()
+    }
+
+    private fun preProcessing(code: String): String {
         addSource(code)
 
         val output = try {
             val buf = StringBuilder()
             while (true) {
                 val tok = pp.token()
-                if (tok.type == org.anarres.cpp.Token.EOF) break
+                if (tok.type == Token.EOF) break
                 buf.append(tok.text)
             }
 
@@ -52,13 +63,7 @@ open class CAnalyser : Analyser {
 
         // pp close is source not close pp
         pp.close()
-
-        val context = this.parse(output).compilationUnit()
-        val listener = CFullIdentListener(filePath, includesDirective)
-
-        ParseTreeWalker().walk(listener, context)
-
-        return listener.getNodeInfo()
+        return output
     }
 
     open fun parse(str: String): CParser =

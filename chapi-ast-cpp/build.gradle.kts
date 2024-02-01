@@ -32,6 +32,8 @@ dependencies {
 
     implementation("org.antlr:antlr4:4.13.1")
     implementation("org.antlr:antlr4-runtime:4.13.1")
+
+    implementation("org.anarres:jcpp:1.4.14")
 }
 
 sourceSets.main {
