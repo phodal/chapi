@@ -1,4 +1,39 @@
-# [](https://github.com/phodal/chapi/compare/v2.3.2...v) (2024-01-30)
+# [](https://github.com/phodal/chapi/compare/v2.3.3...v) (2024-02-01)
+
+
+
+## [2.3.3](https://github.com/phodal/chapi/compare/v2.3.2...v2.3.3) (2024-02-01)
+
+
+### Bug Fixes
+
+* **c:** disable macro for testing performance ([7f29459](https://github.com/phodal/chapi/commit/7f294590915b1eca204c2a41bedde4fe077c850e))
+* **c:** fix handling of structOrUnionSpecifier nodeName [#24](https://github.com/phodal/chapi/issues/24) ([eb3ee99](https://github.com/phodal/chapi/commit/eb3ee999280499041cd1078175f3da080c4ab329))
+* **c:** fix macro declaration and test file path ([19ed1df](https://github.com/phodal/chapi/commit/19ed1df5ab17528cff2bd792e9c4ebddee2c5927))
+* **c:** format code ([2e4401a](https://github.com/phodal/chapi/commit/2e4401ae30a238ca7e50d506502aad35917517d5))
+* **chapi-ast-c:** fix macro expansion declaration in C.g4 [#24](https://github.com/phodal/chapi/issues/24) ([84d5421](https://github.com/phodal/chapi/commit/84d5421b39949e3bc2f32c09dc590296775188a8))
+* **chapi-ast-c:** fix macroCastDeclaration in C.g4 ([42263d5](https://github.com/phodal/chapi/commit/42263d5271ce3b7c8acfaa7bec4ddaca3a1fa9b2))
+* **chapi-ast-c:** fix macroCastDeclaration in C.g4 ([f17c84b](https://github.com/phodal/chapi/commit/f17c84b5acfedd6239d43b19bf27f9b2dea63c3a))
+* **chapi-ast-c:** modify grammar rules for single line macro declarations [#24](https://github.com/phodal/chapi/issues/24) ([89e2082](https://github.com/phodal/chapi/commit/89e20820f4950ae104a9e91dee9b665043915b5e))
+* **c:** modify singleLineMacroDeclaration and macroKeywords [#24](https://github.com/phodal/chapi/issues/24) ([0eb39a6](https://github.com/phodal/chapi/commit/0eb39a6becfc7d4b717f86e93c3575071fd44e97))
+
+
+### Features
+
+* **c:** add support for asmBody in C grammar [#24](https://github.com/phodal/chapi/issues/24) ([841b0e9](https://github.com/phodal/chapi/commit/841b0e9570492b63c628ed05dd3fdf8272400d8d))
+* **c:** add support for macro alias declaration [#24](https://github.com/phodal/chapi/issues/24) ([8744a9d](https://github.com/phodal/chapi/commit/8744a9d5891c9272edb7a35d5c2081c3e54fb983))
+* **c:** add support for macro expansion declaration [#24](https://github.com/phodal/chapi/issues/24) ([2d2eecf](https://github.com/phodal/chapi/commit/2d2eecf5670e5de2a558cd9161150850b641d70e))
+* **c:** add support for macro function declaration [#24](https://github.com/phodal/chapi/issues/24) ([7a07305](https://github.com/phodal/chapi/commit/7a073052bb6cc21e0c794746bf84ed57afa2ab63))
+* **c:** add support for macro in array access [#24](https://github.com/phodal/chapi/issues/24) ([3c16528](https://github.com/phodal/chapi/commit/3c16528ee41cbe42b46de82c767354067143b0e2))
+* **c:** add support for macro postfix call [#24](https://github.com/phodal/chapi/issues/24) ([6f160bb](https://github.com/phodal/chapi/commit/6f160bbd08de6298f4c06c67a21f39d431337419))
+* **c:** add support for macro statements [#24](https://github.com/phodal/chapi/issues/24) ([3fe1789](https://github.com/phodal/chapi/commit/3fe17898f325a1e7d75e519d295ade0e1c2e1e68))
+* **c:** add support for macro statements [#24](https://github.com/phodal/chapi/issues/24) ([cc7ce0f](https://github.com/phodal/chapi/commit/cc7ce0f6ed913672b2ab79bbdbd0a6d78bc605ef))
+* **c:** add support for single line macro declaration [#24](https://github.com/phodal/chapi/issues/24) ([56c876f](https://github.com/phodal/chapi/commit/56c876f24d4b3dc27d91b693e13f57161bb0a114))
+* **c:** add support for single line macro declarations [#24](https://github.com/phodal/chapi/issues/24) ([ff26513](https://github.com/phodal/chapi/commit/ff26513b9c42ed67ab20a02ad841aedb49155564))
+* **chapi-ast-c:** add support for macro statements [#24](https://github.com/phodal/chapi/issues/24) ([879e24f](https://github.com/phodal/chapi/commit/879e24ff2498de0a5f47eb8287a01c0ed1e11285))
+* **chapi-ast-c:** add support for macro statements in C grammar [#24](https://github.com/phodal/chapi/issues/24) ([0ba7673](https://github.com/phodal/chapi/commit/0ba7673351cef286f0ee3f96a5ae3a86caed791a))
+* **c:** modify defineDirectDeclarator rule in C.g4 ([8536913](https://github.com/phodal/chapi/commit/8536913c3bbf5ef8614fd597067ba6bd276d97b1))
+* **c:** refactor support for macro expansion [#24](https://github.com/phodal/chapi/issues/24) ([924fcdb](https://github.com/phodal/chapi/commit/924fcdbb94f6863688b8a31601fac0170414fb71))
 
 
 

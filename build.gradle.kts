@@ -27,7 +27,7 @@ allprojects {
     apply(plugin = "java")
 
     group = "com.phodal.chapi"
-    version = "2.3.2"
+    version = "2.3.3"
     description =
         "Chapi is A common hierarchical abstract parser && information convertor, streamlines code analysis by converting diverse language source code into a unified abstract model, simplifying cross-language development."
 
