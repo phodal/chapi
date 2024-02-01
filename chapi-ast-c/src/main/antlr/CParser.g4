@@ -42,20 +42,17 @@ compilationUnit
 primaryExpression
     : Identifier
     | Constant
-    | StringLiteral+
-    | '(' expression ')'
+    | STRING+
+    | OPEN_PARENS expression CLOSE_PARENS
     | genericSelection
-    | '__extension__'? '(' compoundStatement ')' // Blocks (GCC extension)
-    | '__builtin_va_arg' '(' unaryExpression ',' typeName ')'
-    | '__builtin_offsetof' '(' typeName ',' unaryExpression ')'
+    | Extenion? OPEN_PARENS compoundStatement CLOSE_PARENS // Blocks (GCC extension)
+    | '__builtin_va_arg' OPEN_PARENS unaryExpression ',' typeName CLOSE_PARENS
+    | '__builtin_offsetof' OPEN_PARENS typeName ',' unaryExpression CLOSE_PARENS
     // for macro support
-//    | typeQualifier? (typeKeywords | Identifier) (Identifier | typeKeywords)* pointer?
-//    | StringLiteral? (directDeclarator | StringLiteral | ERROR)+
-//    | Ellipsis
     ;
 
 genericSelection
-    : '_Generic' '(' assignmentExpression ',' genericAssocList ')'
+    : '_Generic' OPEN_PARENS assignmentExpression ',' genericAssocList CLOSE_PARENS
     ;
 
 genericAssocList
@@ -70,18 +67,18 @@ postfixExpression
     : (primaryExpression | extensionExpression) (postixCall | '++' | '--')*
     ;
 
-extensionExpression : '__extension__'? '(' typeName ')' LeftBrace initializerList ','? RightBrace ;
+extensionExpression : Extenion? OPEN_PARENS typeName CLOSE_PARENS LeftBrace initializerList ','? RightBrace ;
 
 postixCall
-        :'[' expression ']'               #arrayAccessPostfixExpression
+        :LeftBracket expression RightBracket                           #arrayAccessPostfixExpression
         // for macro support: ph_gen(, hpdata_age_heap, hpdata_t, age_link, hpdata_age_comp)
-        | '(' ','? argumentExpressionList? ')'                         #functionCallPostfixExpression
+        | OPEN_PARENS ','? argumentExpressionList? CLOSE_PARENS                         #functionCallPostfixExpression
         | ('.' | '->') Identifier                                      #memberAccessPostfixExpression
         ;
 
 //macroPostixCall
 //        : postixCall
-//        | Identifier '(' statement* ')'
+//        | Identifier OPEN_PARENS statement* CLOSE_PARENS
 //        ;
 //
 argumentExpressionList
@@ -89,10 +86,10 @@ argumentExpressionList
     ;
 
 unaryExpression
-    : ('++' | '--' | 'sizeof')* (
+    : ('++' | '--' | Sizeof)* (
         postfixExpression
         | unaryOperator castExpression
-        | ('sizeof' | '_Alignof') '(' typeName ')'
+        | (Sizeof | '_Alignof') OPEN_PARENS typeName CLOSE_PARENS
         | OP_AND Identifier // GCC extension address of label
     )
     ;
@@ -107,7 +104,7 @@ unaryOperator
     ;
 
 castExpression
-    : '__extension__'? '(' typeName ')' castExpression
+    : Extenion? OPEN_PARENS typeName CLOSE_PARENS castExpression
     | unaryExpression
     | DigitSequence // for
     ;
@@ -121,7 +118,7 @@ additiveExpression
     ;
 
 shiftExpression
-    : additiveExpression (('<<' | '>>') additiveExpression)*
+    : additiveExpression ((LeftShift | '>>') additiveExpression)*
     ;
 
 relationalExpression
@@ -193,7 +190,7 @@ constantExpression
     ;
 
 declaration
-    : Static?  declarationSpecifier+ initDeclaratorList? ';'
+    : Static?  declarationSpecifier+ initDeclaratorList? Semi
     | staticAssertDeclaration
 //    | macroStatement
     ;
@@ -238,12 +235,12 @@ typeSpecifier
     | '__m128'
     | '__m128d'
     | '__m128i'
-    | '__extension__' '(' ('__m128' | '__m128d' | '__m128i') ')'
+    | Extenion OPEN_PARENS ('__m128' | '__m128d' | '__m128i') CLOSE_PARENS
     | atomicTypeSpecifier
     | structOrUnionSpecifier
     | enumSpecifier
     | typedefName
-    | EXT_Typeof '(' constantExpression ')' // GCC extension
+    | EXT_Typeof OPEN_PARENS constantExpression CLOSE_PARENS // GCC extension
     | postfixExpression
     ;
 
@@ -262,7 +259,7 @@ structDeclarationList
     ;
 
 structDeclaration // The first two rules have priority order and cannot be simplified to one expression.
-    : specifierQualifierList structDeclaratorList? ';'
+    : specifierQualifierList structDeclaratorList? Semi
     | staticAssertDeclaration
 //    | macroStatement
     ;
@@ -298,7 +295,7 @@ enumerationConstant
     ;
 
 atomicTypeSpecifier
-    : '_Atomic' '(' typeName ')'
+    : '_Atomic' OPEN_PARENS typeName CLOSE_PARENS
     ;
 
 typeQualifier
@@ -314,11 +311,11 @@ functionSpecifier
     | '__inline__' // GCC extension
     | '__stdcall'
     | gccAttributeSpecifier
-    | '__declspec' '(' Identifier ')'
+    | '__declspec' OPEN_PARENS Identifier CLOSE_PARENS
     ;
 
 alignmentSpecifier
-    : '_Alignas' '(' (typeName | constantExpression) ')'
+    : '_Alignas' OPEN_PARENS (typeName | constantExpression) CLOSE_PARENS
     ;
 
 declarator
@@ -327,16 +324,16 @@ declarator
 
 directDeclarator
     :   Identifier                                                                  #identifierDirectDeclarator
-    |   '(' declarator ')'                                                          #declaratorDirectDeclarator
-    |   directDeclarator '[' typeQualifierList? assignmentExpression? ']'           #assignmentExpressionDirectDeclarator
-    |   directDeclarator '[' Static typeQualifierList? assignmentExpression ']'   #preStaticAssignmentExpressionDirectDeclarator
-    |   directDeclarator '[' typeQualifierList Static assignmentExpression ']'    #postStaticAssignmentExpressionDirectDeclarator
-    |   directDeclarator '[' typeQualifierList? '*' ']'                             #typeQualifierListPointerDirectDeclarator
-    |   directDeclarator '(' parameterTypeList ')'                                  #parameterDirectDeclarator
-    |   directDeclarator '(' identifierList? ')'                                    #identifierListDirectDeclarator
+    |   OPEN_PARENS declarator CLOSE_PARENS                                                          #declaratorDirectDeclarator
+    |   directDeclarator LeftBracket typeQualifierList? assignmentExpression? RightBracket           #assignmentExpressionDirectDeclarator
+    |   directDeclarator LeftBracket Static typeQualifierList? assignmentExpression RightBracket   #preStaticAssignmentExpressionDirectDeclarator
+    |   directDeclarator LeftBracket typeQualifierList Static assignmentExpression RightBracket    #postStaticAssignmentExpressionDirectDeclarator
+    |   directDeclarator LeftBracket typeQualifierList? '*' RightBracket                             #typeQualifierListPointerDirectDeclarator
+    |   directDeclarator OPEN_PARENS parameterTypeList CLOSE_PARENS                                  #parameterDirectDeclarator
+    |   directDeclarator OPEN_PARENS identifierList? CLOSE_PARENS                                    #identifierListDirectDeclarator
     |   Identifier Colon DigitSequence                                                #bitFieldDirectDeclarator  // bit field
     |   vcSpecificModifer Identifier                                                #vcSpecificModiferDirectDeclarator
-    |   '(' typeSpecifier? pointer directDeclarator ')'                             #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
+    |   OPEN_PARENS typeSpecifier? pointer directDeclarator CLOSE_PARENS                             #functionPointerDirectDeclarator // function pointer like: (__cdecl *f)
     // #define KUMAX(x)	((uintmax_t)x##ULL)
 //    | macroStatement                                                                #singleLineMacroDirectDeclarator
     ;
@@ -351,12 +348,12 @@ vcSpecificModifer
     ;
 
 gccDeclaratorExtension
-    : Ext_Asm '(' StringLiteral+ ')'
+    : EXT_Asm OPEN_PARENS STRING+ CLOSE_PARENS
     | gccAttributeSpecifier
     ;
 
 gccAttributeSpecifier
-    : '__attribute__' '(' '(' gccAttributeList ')' ')'
+    : '__attribute__' OPEN_PARENS OPEN_PARENS gccAttributeList CLOSE_PARENS CLOSE_PARENS
     ;
 
 gccAttributeList
@@ -364,12 +361,12 @@ gccAttributeList
     ;
 
 gccAttribute
-    : ~(',' | '(' | ')') // relaxed def for "identifier or reserved word"
-    ('(' argumentExpressionList? ')')?
+    : ~(',' | OPEN_PARENS | CLOSE_PARENS) // relaxed def for "identifier or reserved word"
+    (OPEN_PARENS argumentExpressionList? CLOSE_PARENS)?
     ;
 
 nestedParenthesesBlock
-    : (~('(' | ')') | '(' nestedParenthesesBlock ')')*
+    : (~(OPEN_PARENS | CLOSE_PARENS) | OPEN_PARENS nestedParenthesesBlock CLOSE_PARENS)*
     ;
 
 pointer
@@ -407,17 +404,17 @@ abstractDeclarator
     ;
 
 directAbstractDeclarator
-    : '(' abstractDeclarator ')' gccDeclaratorExtension*
-    | '[' typeQualifierList? assignmentExpression? ']'
-    | '[' Static typeQualifierList? assignmentExpression ']'
-    | '[' typeQualifierList Static assignmentExpression ']'
-    | '[' '*' ']'
-    | '(' parameterTypeList? ')' gccDeclaratorExtension*
-    | directAbstractDeclarator '[' typeQualifierList? assignmentExpression? ']'
-    | directAbstractDeclarator '[' Static typeQualifierList? assignmentExpression ']'
-    | directAbstractDeclarator '[' typeQualifierList Static assignmentExpression ']'
-    | directAbstractDeclarator '[' '*' ']'
-    | directAbstractDeclarator '(' parameterTypeList? ')' gccDeclaratorExtension*
+    : OPEN_PARENS abstractDeclarator CLOSE_PARENS gccDeclaratorExtension*
+    | LeftBracket typeQualifierList? assignmentExpression? RightBracket
+    | LeftBracket Static typeQualifierList? assignmentExpression RightBracket
+    | LeftBracket typeQualifierList Static assignmentExpression RightBracket
+    | LeftBracket '*' RightBracket
+    | OPEN_PARENS parameterTypeList? CLOSE_PARENS gccDeclaratorExtension*
+    | directAbstractDeclarator LeftBracket typeQualifierList? assignmentExpression? RightBracket
+    | directAbstractDeclarator LeftBracket Static typeQualifierList? assignmentExpression RightBracket
+    | directAbstractDeclarator LeftBracket typeQualifierList Static assignmentExpression RightBracket
+    | directAbstractDeclarator LeftBracket '*' RightBracket
+    | directAbstractDeclarator OPEN_PARENS parameterTypeList? CLOSE_PARENS gccDeclaratorExtension*
     ;
 
 typedefName
@@ -445,12 +442,12 @@ designatorList
     ;
 
 designator
-    : '[' constantExpression ']'
+    : LeftBracket constantExpression RightBracket
     | '.' Identifier
     ;
 
 staticAssertDeclaration
-    : '_Static_assert' '(' constantExpression ',' StringLiteral+ ')' ';'
+    : '_Static_assert' OPEN_PARENS constantExpression ',' STRING+ CLOSE_PARENS Semi
     ;
 
 statement
@@ -465,10 +462,10 @@ normalStatement
     | selectionStatement
     | iterationStatement
     | jumpStatement
-    | (Ext_Asm | '__asm__') (Volatile | '__volatile__')? asmBody ;
+    | (EXT_Asm | EXT_Asm_) (Volatile | EXT_Volatile)? asmBody ;
 
 asmBody
-    : '(' (logicals)? (Colon (logicals)?)* ')' ';'?
+    : OPEN_PARENS (logicals)? (Colon (logicals)?)* CLOSE_PARENS Semi?
     | typeSpecifier expression
     ;
 
@@ -498,27 +495,27 @@ blockItem
     ;
 
 expressionStatement
-    : expression? ';'
-    | expression ';'?
+    : expression? Semi
+    | expression Semi?
     ;
 
 selectionStatement
     // the macro may break the grammar, so statement is optional
-    : 'if' '(' expression ')' statement? ('else' statement)?
-    | 'switch' '(' expression ')' statement
+    : If OPEN_PARENS expression CLOSE_PARENS statement? (Else statement)?
+    | Switch OPEN_PARENS expression CLOSE_PARENS statement
     ;
 
 iterationStatement
-    : While '(' expression ')' statement
-    | Do statement While '(' expression ')' ';'
-    | For '(' forCondition ')' statement
+    : While OPEN_PARENS expression CLOSE_PARENS statement
+    | Do statement While OPEN_PARENS expression CLOSE_PARENS Semi
+    | For OPEN_PARENS forCondition CLOSE_PARENS statement
     ;
 
-//    |   'for' '(' expression? ';' expression?  ';' forUpdate? ')' statement
-//    |   For '(' declaration  expression? ';' expression? ')' statement
+//    |   For OPEN_PARENS expression? Semi expression?  Semi forUpdate? CLOSE_PARENS statement
+//    |   For OPEN_PARENS declaration  expression? Semi expression? CLOSE_PARENS statement
 
 forCondition
-    : (forDeclaration | expression?) ';' forExpression? ';' forExpression?
+    : (forDeclaration | expression?) Semi forExpression? Semi forExpression?
     ;
 
 forDeclaration
@@ -531,18 +528,18 @@ forExpression
 
 jumpStatement
     : (
-        'goto' Identifier
-        | 'continue'
-        | 'break'
-        | 'return' expression?
-        | 'goto' unaryExpression // GCC extension
-    ) ';'
+        Goto Identifier
+        | Continue
+        | Break
+        | Return expression?
+        | Goto unaryExpression // GCC extension
+    ) Semi
     ;
 
 externalDeclaration
     : functionDefinition
     | declaration
-    | ';'    // stray ;
+    | Semi    // stray ;
     ;
 
 functionDefinition
@@ -588,14 +585,14 @@ keywords
     | Enum
     | Case
     | Default
-    | 'if'
-    | 'else'
-    | 'switch'
-    | 'while'
-    | 'do'
-    | 'for'
-    | 'goto'
-    | 'continue'
-    | 'break'
-    | 'return'
+    | If
+    | Else
+    | Switch
+    | While
+    | Do
+    | For
+    | Goto
+    | Continue
+    | Break
+    | Return
     ;

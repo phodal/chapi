@@ -17,6 +17,7 @@ abstract class CPreprocessorParserBase extends Parser {
 
     Stack<Boolean> conditions = new Stack<Boolean>();
     public HashSet<String> ConditionalSymbols = new HashSet<String>();
+    public HashSet<String> IncludeSymbols = new HashSet<String>();
 
     protected Boolean AllConditions()
     {
@@ -26,6 +27,14 @@ abstract class CPreprocessorParserBase extends Parser {
                 return false;
         }
         return true;
+    }
+
+    protected void OnPreprocessorDirectiveInclude()
+    {
+        ParserRuleContext c = this._ctx;
+        CPreprocessorParser.PreprocessorIncludeDeclarationContext d = (CPreprocessorParser.PreprocessorIncludeDeclarationContext) c;
+        IncludeSymbols.add(d.getText());
+        d.value = AllConditions();
     }
 
     protected void OnPreprocessorDirectiveDefine()
@@ -106,13 +115,6 @@ abstract class CPreprocessorParserBase extends Parser {
         CPreprocessorParser.PreprocessorConditionalContext d = (CPreprocessorParser.PreprocessorConditionalContext)c;
         conditions.pop();
         d.value = conditions.peek();
-    }
-
-    protected void OnPreprocessorDirectiveLine()
-    {
-        ParserRuleContext c = this._ctx;
-        CPreprocessorParser.PreprocessorLineContext d = (CPreprocessorParser.PreprocessorLineContext)c;
-        d.value = AllConditions();
     }
 
     protected void OnPreprocessorDirectiveError()

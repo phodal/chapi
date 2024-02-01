@@ -112,8 +112,8 @@ FALSE            : 'false' ;
 // macro
 //Ifdef:   'ifdef';
 //Ifndef:  'ifndef';
-Include: 'include';
-Define:  'define';
+//Include: 'include';
+//Define:  'define';
 
 // gcc
 Extenion   : '__extension__';
@@ -140,6 +140,20 @@ EXT_Volatile: '__volatile__';
 
 Identifier
     : IdentifierNondigit (IdentifierNondigit | Digit)*
+    ;
+
+DigitSequence
+    : Digit+
+    ;
+
+STRING
+    : EncodingPrefix? '"' SCharSequence? '"'
+    ;
+Constant
+    : IntegerConstant
+    | FloatingConstant
+    //|   EnumerationConstant
+    | CharacterConstant
     ;
 
 // ignore the following asm blocks:
@@ -174,10 +188,10 @@ LineComment
 mode DIRECTIVE_MODE;
 
 DIRECTIVE_WHITESPACES:         Whitespace+                      -> channel(HIDDEN);
-DIGITS:                        [0-9]+                           -> channel(DIRECTIVE);
+//DIGITS:                        [0-9]+                           -> channel(DIRECTIVE);
 DIRECTIVE_TRUE:                'true'                           -> channel(DIRECTIVE), type(TRUE);
 DIRECTIVE_FALSE:               'false'                          -> channel(DIRECTIVE), type(FALSE);
-INCLUDE:                       'include'                        -> channel(DIRECTIVE), type(Include);
+INCLUDE:                       'include'                        -> channel(DIRECTIVE);
 DEFINE:                        'define'                         -> channel(DIRECTIVE);
 UNDEF:                         'undef'                          -> channel(DIRECTIVE);
 IFDEF:                         'ifdef'                          -> channel(DIRECTIVE), type(If);
@@ -202,7 +216,7 @@ DIRECTIVE_OP_EQ:               '=='                             -> channel(DIREC
 DIRECTIVE_OP_NE:               '!='                             -> channel(DIRECTIVE), type(OP_NE);
 DIRECTIVE_OP_AND:              '&&'                             -> channel(DIRECTIVE), type(OP_AND);
 DIRECTIVE_OP_OR:               '||'                             -> channel(DIRECTIVE), type(OP_OR);
-DIRECTIVE_STRING:              '"' ~('"' | [\r\n\u0085\u2028\u2029])* '"' -> channel(DIRECTIVE), type(StringLiteral);
+DIRECTIVE_STRING:              '"' ~('"' | [\r\n\u0085\u2028\u2029])* '"' -> channel(DIRECTIVE), type(STRING);
 CONDITIONAL_SYMBOL:            Identifier                       -> channel(DIRECTIVE);
 DIRECTIVE_SINGLE_LINE_COMMENT: '//' ~[\r\n\u0085\u2028\u2029]*  -> channel(COMMENTS_CHANNEL), type(SINGLE_LINE_COMMENT);
 DIRECTIVE_NEW_LINE:            Newline                          -> channel(DIRECTIVE), mode(DEFAULT_MODE);
@@ -237,13 +251,6 @@ fragment UniversalCharacterName
 
 fragment HexQuad
     : HexadecimalDigit HexadecimalDigit HexadecimalDigit HexadecimalDigit
-    ;
-
-Constant
-    : IntegerConstant
-    | FloatingConstant
-    //|   EnumerationConstant
-    | CharacterConstant
     ;
 
 fragment IntegerConstant
@@ -332,10 +339,6 @@ fragment Sign
     : [+-]
     ;
 
-DigitSequence
-    : Digit+
-    ;
-
 fragment HexadecimalFractionalConstant
     : HexadecimalDigitSequence? '.' HexadecimalDigitSequence
     | HexadecimalDigitSequence '.'
@@ -386,10 +389,6 @@ fragment OctalEscapeSequence
 
 fragment HexadecimalEscapeSequence
     : '\\x' HexadecimalDigit+
-    ;
-
-StringLiteral
-    : EncodingPrefix? '"' SCharSequence? '"'
     ;
 
 fragment EncodingPrefix
