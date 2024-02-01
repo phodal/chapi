@@ -10,16 +10,22 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     private var structMap = mutableMapOf<String, CodeDataStruct>()
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
-    override fun enterIncludeDeclaration(ctx: CParser.IncludeDeclarationContext?) {
-        val identifier = ctx?.includeIdentifier()
+    private val importRegex = Regex("""#include\s+(<[^>]+>|\"[^\"]+\")""")
+    override fun enterPreprocessorDeclaration(ctx: CParser.PreprocessorDeclarationContext?) {
+        val text = ctx?.text
+        val matchResult = importRegex.find(text ?: "") ?: return
+
+        val value = matchResult.groupValues[1]
+            .removeSurrounding("\"", "\"")
+            .removeSurrounding("<", ">")
+
         val imp = CodeImport(
-            Source = identifier?.text ?: "",
-            AsName = identifier?.text ?: ""
+            Source = value,
+            AsName = value
         )
 
         codeContainer.Imports += imp
     }
-
 
     override fun enterDeclaration(ctx: CParser.DeclarationContext?) {
         val isTypeDef = ctx?.declarationSpecifier()?.any {
@@ -205,10 +211,11 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
 
     private fun buildParameters(call: List<CParser.PostixCallContext>): List<CodeProperty> {
         return call.mapNotNull { callContext ->
-            when(callContext) {
+            when (callContext) {
                 is CParser.ArrayAccessPostfixExpressionContext -> {
                     null
                 }
+
                 is CParser.FunctionCallPostfixExpressionContext -> {
                     callContext.argumentExpressionList()?.assignmentExpression()?.map {
                         CodeProperty(
