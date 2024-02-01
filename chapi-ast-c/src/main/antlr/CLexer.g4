@@ -14,8 +14,6 @@ SHARP:         '#'                                -> mode(DIRECTIVE_MODE), skip;
 
 //MultiLineMacro: '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN);
 //
-//Directive:      '#' ~ [\n]* -> channel (HIDDEN);
-
 Auto             : 'auto' ;
 Break            : 'break' ;
 Case             : 'case' ;
@@ -137,13 +135,18 @@ EXT_Asm_: '__asm__';
 EXT_Attribute: '__attribute__';
 EXT_Volatile: '__volatile__';
 
-
 Identifier
     : IdentifierNondigit (IdentifierNondigit | Digit)*
     ;
 
 DigitSequence
     : Digit+
+    ;
+
+IncludeText
+    : '<' SChar* ('.' | '/' | SChar)* '>'
+    | STRING
+    | Identifier // for macro
     ;
 
 STRING
@@ -188,7 +191,7 @@ LineComment
 mode DIRECTIVE_MODE;
 
 DIRECTIVE_WHITESPACES:         Whitespace+                      -> channel(HIDDEN);
-//DIGITS:                        [0-9]+                           -> channel(DIRECTIVE);
+DIGITS:                        [0-9]+                           -> channel(DIRECTIVE);
 DIRECTIVE_TRUE:                'true'                           -> channel(DIRECTIVE), type(TRUE);
 DIRECTIVE_FALSE:               'false'                          -> channel(DIRECTIVE), type(FALSE);
 INCLUDE:                       'include'                        -> channel(DIRECTIVE);
@@ -212,6 +215,9 @@ DIRECTIVE_HIDDEN:              'hidden'                         -> channel(DIREC
 DIRECTIVE_OPEN_PARENS:         '('                              -> channel(DIRECTIVE), type(OPEN_PARENS);
 DIRECTIVE_CLOSE_PARENS:        ')'                              -> channel(DIRECTIVE), type(CLOSE_PARENS);
 DIRECTIVE_BANG:                '!'                              -> channel(DIRECTIVE), type(Not);
+DIRECTIVE_LG:                  '<'                              -> channel(DIRECTIVE), type(Less);
+DIRECTIVE_GT:                  '>'                              -> channel(DIRECTIVE), type(Greater);
+DIRECTIVE_DOT:                 '.'                              -> channel(DIRECTIVE), type(Dot);
 DIRECTIVE_OP_EQ:               '=='                             -> channel(DIRECTIVE), type(OP_EQ);
 DIRECTIVE_OP_NE:               '!='                             -> channel(DIRECTIVE), type(OP_NE);
 DIRECTIVE_OP_AND:              '&&'                             -> channel(DIRECTIVE), type(OP_AND);
@@ -220,6 +226,7 @@ DIRECTIVE_STRING:              '"' ~('"' | [\r\n\u0085\u2028\u2029])* '"' -> cha
 CONDITIONAL_SYMBOL:            Identifier                       -> channel(DIRECTIVE);
 DIRECTIVE_SINGLE_LINE_COMMENT: '//' ~[\r\n\u0085\u2028\u2029]*  -> channel(COMMENTS_CHANNEL), type(SINGLE_LINE_COMMENT);
 DIRECTIVE_NEW_LINE:            Newline                          -> channel(DIRECTIVE), mode(DEFAULT_MODE);
+INCLUDE_TEXT:                  IncludeText                      -> channel(DIRECTIVE), type(IncludeText);
 
 mode DIRECTIVE_TEXT;
 

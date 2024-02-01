@@ -9,23 +9,19 @@ import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class CAnalyser : Analyser {
+    private var includesDirective: MutableList<String> = mutableListOf()
+
     override fun analysis(code: String, filePath: String): CodeContainer {
         val context = this.parse(code).compilationUnit()
-        val listener = CFullIdentListener(filePath)
+        val listener = CFullIdentListener(filePath, includesDirective)
 
         ParseTreeWalker().walk(listener, context)
 
         return listener.getNodeInfo()
     }
 
-//    open fun parse(str: String): CParser =
-//        CharStreams.fromString(str)
-//            .let(::CLexer)
-//            .let(::CommonTokenStream)
-//            .let(::CParser)
-
     // based on: https://gist.github.com/KvanTTT/d95579de257531a3cc15
-    private fun parse(str: String): CParser {
+    open fun parse(str: String): CParser {
         val codeTokens: MutableList<Token> = mutableListOf()
         val commentTokens: MutableList<Token> = mutableListOf()
 
@@ -65,25 +61,17 @@ open class CAnalyser : Analyser {
                     preprocessorParser.reset()
 
                     // Parse condition in preprocessor directive (based on CSharpPreprocessorParser.g4 grammar).
-                    val directiveStr = tokens[index + 1].text.trim { it <= ' ' }
-                    if ("line" == directiveStr || "error" == directiveStr || "warning" == directiveStr || "define" == directiveStr || "endregion" == directiveStr || "endif" == directiveStr || "pragma" == directiveStr) {
-                        compiledTokens = true
-                    }
-                    var conditionalSymbol: String?
-                    when (tokens[index + 1].text) {
-                        "define",
-                        "ifdef",
-                        "ifndef" -> {
-                            // add to the conditional symbols
-                            conditionalSymbol = tokens[index + 2].text
-                            preprocessorParser.ConditionalSymbols.add(conditionalSymbol)
+                    try {
+                        val directive = preprocessorParser.preprocessor_directive()
+
+                        if (directive.value != null) {
+                            // if true than next code is valid and not ignored.
+                            compiledTokens = directive.value
+                            index = directiveTokenIndex - 1
                         }
+                    } catch (e: RecognitionException) {
+                        // Ignore invalid preprocessor directives.
                     }
-                    if ("undef" == tokens[index + 1].text) {
-                        conditionalSymbol = tokens[index + 2].text
-                        preprocessorParser.ConditionalSymbols.remove(conditionalSymbol)
-                    }
-                    index = directiveTokenIndex - 1
                 }
 
                 token.channel == CLexer.COMMENTS_CHANNEL -> {
@@ -98,9 +86,12 @@ open class CAnalyser : Analyser {
             index++
         }
 
+        includesDirective = preprocessorParser.IncludeSymbols.toMutableList()
+
         codeTokens.map {
             print(it.text + " ")
         }
+
         // At the second stage, tokens are parsed in the usual way.
         val codeTokenSource = ListTokenSource(tokens)
 

@@ -3,7 +3,7 @@ package chapi.ast.cast
 import chapi.ast.antlr.CParser
 import chapi.domain.core.*
 
-open class CFullIdentListener(fileName: String) : CAstBaseListener() {
+open class CFullIdentListener(fileName: String, includes: MutableList<String>) : CAstBaseListener() {
     private var currentDataStruct = CodeDataStruct()
     private val defaultDataStruct = CodeDataStruct(NodeName = "default")
     private var currentFunction = CodeFunction()
@@ -11,21 +11,23 @@ open class CFullIdentListener(fileName: String) : CAstBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
 
     private val importRegex = Regex("""#include\s+(<[^>]+>|\"[^\"]+\")""")
-//    override fun enterPreprocessorDeclaration(ctx: CParser.PreprocessorDeclarationContext?) {
-//        val text = ctx?.text
-//        val matchResult = importRegex.find(text ?: "") ?: return
-//
-//        val value = matchResult.groupValues[1]
-//            .removeSurrounding("\"", "\"")
-//            .removeSurrounding("<", ">")
-//
-//        val imp = CodeImport(
-//            Source = value,
-//            AsName = value
-//        )
-//
-//        codeContainer.Imports += imp
-//    }
+
+    init {
+        includes.forEach {
+            val matchResult = importRegex.find(it) ?: return@forEach
+            val value = matchResult.groupValues[1]
+                .removeSurrounding("\"", "\"")
+                .removeSurrounding("<", ">")
+
+            val imp = CodeImport(
+                Source = value,
+                AsName = value
+            )
+
+            codeContainer.Imports += imp
+        }
+
+    }
 
     override fun enterDeclaration(ctx: CParser.DeclarationContext?) {
         val isTypeDef = ctx?.declarationSpecifier()?.any {
