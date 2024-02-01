@@ -1,4 +1,30 @@
-# [](https://github.com/phodal/chapi/compare/v2.3.3...v) (2024-02-01)
+# [](https://github.com/phodal/chapi/compare/v2.3.4...v) (2024-02-01)
+
+
+
+## [2.3.4](https://github.com/phodal/chapi/compare/v2.3.3...v2.3.4) (2024-02-01)
+
+
+### Bug Fixes
+
+* **chapi-ast-c:** enable CFullIdentListenerTest ignored tests ([a7e7b72](https://github.com/phodal/chapi/commit/a7e7b72d03a98b7a01d1fdfbe98037ffe6ebcd44))
+* **chapi-ast-c:** fix comparison and assignment operators [#24](https://github.com/phodal/chapi/issues/24) ([5c4668e](https://github.com/phodal/chapi/commit/5c4668e178853e4f02a6595a2f5210a441cb1ab1))
+* fix test ([9f764e7](https://github.com/phodal/chapi/commit/9f764e72d1e5a829d00643d4ad196b34cc1b32d5))
+
+
+### Features
+
+* **c:** add support for adding source code to the program [#24](https://github.com/phodal/chapi/issues/24) ([023fabe](https://github.com/phodal/chapi/commit/023fabe89ef5652c6c93021107348308a410e415))
+* **c:** add support for C# preprocessor directives from https://gist.github.com/KvanTTT/d95579de257531a3cc15 ([aabd390](https://github.com/phodal/chapi/commit/aabd390072118a06f520801afd8c1154d70223e3))
+* **c:** add support for parsing #include directives ([efe7163](https://github.com/phodal/chapi/commit/efe7163ef2f79232bf7b676a478a1ee127f9adf7))
+* **c:** add support for parsing #include statements [#24](https://github.com/phodal/chapi/issues/24) ([6cb14b4](https://github.com/phodal/chapi/commit/6cb14b45a3a10c275c988250d5b4e41c1335ea53))
+* **c:** add support for preprocessing C code [#24](https://github.com/phodal/chapi/issues/24) ([199ba07](https://github.com/phodal/chapi/commit/199ba073de0101d4f823ad5f9125c3c194e7fb1a))
+* **chapi-ast-c:** add override to addSource method [#24](https://github.com/phodal/chapi/issues/24) ([ce431e4](https://github.com/phodal/chapi/commit/ce431e48f76d2933f81844bae376a128b8270f59))
+* **chapi-ast-c:** update grammar for CParser.g4 ([2cbf67d](https://github.com/phodal/chapi/commit/2cbf67d04bebd078432883f7090d162fad4a12f1))
+* **csharp:** add support for conditional compilation ([262dd0e](https://github.com/phodal/chapi/commit/262dd0ed1bf000a50a86a3edafb471984f59b150))
+* **csharp:** add support for parsing C# code and extracting function information ([86edfbe](https://github.com/phodal/chapi/commit/86edfbe1331b9643a68624e6772b25a1a0a80487))
+* **csharp:** add test case for macro preprocessor ([0975824](https://github.com/phodal/chapi/commit/09758240630eeda73f53ca6b460a5adf0b1aed11))
+* **docs:** add C Macro library recommendation [#24](https://github.com/phodal/chapi/issues/24) ([cd59c58](https://github.com/phodal/chapi/commit/cd59c581565bac0ba5a9c6d7048b590038148922))
 
 
 

@@ -43,7 +43,6 @@ interface Analyser {
 
     /**
      * Adds a source code to the program, for example, C header files.
-     *
      */
     @Since("2.3.4")
     fun addSource(code: String) {
