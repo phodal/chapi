@@ -72,8 +72,8 @@ extensionExpression : Extenion? OPEN_PARENS typeName CLOSE_PARENS LeftBrace init
 postixCall
         :LeftBracket expression RightBracket                           #arrayAccessPostfixExpression
         // for macro support: ph_gen(, hpdata_age_heap, hpdata_t, age_link, hpdata_age_comp)
-        | OPEN_PARENS Comma? argumentExpressionList? CLOSE_PARENS                         #functionCallPostfixExpression
-        | (Dot | Arrow) Identifier                                      #memberAccessPostfixExpression
+        | OPEN_PARENS Comma? argumentExpressionList? CLOSE_PARENS      #functionCallPostfixExpression
+        | (Dot | Arrow) Identifier                                     #memberAccessPostfixExpression
         ;
 
 //macroPostixCall

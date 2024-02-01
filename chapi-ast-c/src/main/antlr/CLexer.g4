@@ -12,8 +12,9 @@ DELIMITED_COMMENT:       '/*'  .*? '*/'           -> channel(COMMENTS_CHANNEL);
 WHITESPACES:   (Whitespace | Newline)+            -> channel(HIDDEN);
 SHARP:         '#'                                -> mode(DIRECTIVE_MODE);
 
-//MultiLineMacro: '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN);
-//
+//Directive:      '#' ~ [\n]* -> channel (HIDDEN);
+MultiLineMacro: '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN);
+
 Auto             : 'auto' ;
 Break            : 'break' ;
 Case             : 'case' ;
@@ -143,12 +144,6 @@ DigitSequence
     : Digit+
     ;
 
-IncludeText
-    : '<' SChar* ('.' | '/' | SChar)* '>'
-    | DIRECTIVE_STRING
-    | CONDITIONAL_SYMBOL
-    ;
-
 STRING
     : EncodingPrefix? '"' SCharSequence? '"'
     ;
@@ -239,7 +234,7 @@ DIRECTIVE_STRING:              '"' ~('"' | [\r\n\u0085\u2028\u2029])* '"' -> cha
 CONDITIONAL_SYMBOL:            Identifier                       -> channel(DIRECTIVE);
 DIRECTIVE_SINGLE_LINE_COMMENT: '//' ~[\r\n\u0085\u2028\u2029]*  -> channel(COMMENTS_CHANNEL), type(SINGLE_LINE_COMMENT);
 DIRECTIVE_NEW_LINE:            Newline                          -> channel(DIRECTIVE), mode(DEFAULT_MODE);
-INCLUDE_TEXT:                  IncludeText                      -> channel(DIRECTIVE), type(IncludeText);
+INCLUDE_TEXT:   ('<' SChar* ('.' | '/' | SChar)* '>' | DIRECTIVE_STRING | CONDITIONAL_SYMBOL)  -> channel(DIRECTIVE);
 
 mode DIRECTIVE_TEXT;
 

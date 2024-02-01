@@ -8,7 +8,7 @@ options { tokenVocab=CLexer; superClass=chapi.ast.antlr.CPreprocessorParserBase;
 
 preprocessor_directive returns [Boolean value]
 	: DEFINE CONDITIONAL_SYMBOL (Identifier | DIGITS | preprocessor_directive)?  directive_new_line_or_sharp { this.OnPreprocessorDirectiveDefine(); }   #preprocessorDeclaration
-	| INCLUDE IncludeText directive_new_line_or_sharp { this.OnPreprocessorDirectiveInclude(); }        #preprocessorIncludeDeclaration
+	| INCLUDE INCLUDE_TEXT directive_new_line_or_sharp { this.OnPreprocessorDirectiveInclude(); }       #preprocessorIncludeDeclaration
 	| UNDEF CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveUndef(); }     #preprocessorDeclaration
 	| Ifdef CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveIfdef(); }     #preprocessorIfdefConditional
 	| Ifndef CONDITIONAL_SYMBOL directive_new_line_or_sharp { this.OnPreprocessorDirectiveIfndef(); }   #preprocessorIfndefConditional

@@ -25,6 +25,8 @@ dependencies {
     // Kotlin reflection.
     testImplementation(kotlin("test"))
 
+    // https://mvnrepository.com/artifact/org.anarres/jcpp
+
     // JUnit 5
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
@@ -35,6 +37,7 @@ dependencies {
 
     // coroutines
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
+    testImplementation("org.anarres:jcpp:1.4.14")
 }
 
 sourceSets.main {

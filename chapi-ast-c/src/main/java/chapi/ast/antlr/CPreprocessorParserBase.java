@@ -29,7 +29,7 @@ abstract class CPreprocessorParserBase extends Parser {
     protected void OnPreprocessorDirectiveInclude() {
         ParserRuleContext c = this._ctx;
         CPreprocessorParser.PreprocessorIncludeDeclarationContext d = (CPreprocessorParser.PreprocessorIncludeDeclarationContext) c;
-        IncludeSymbols.add(d.IncludeText().getText());
+        IncludeSymbols.add(d.INCLUDE_TEXT().getText());
         d.value = AllConditions();
     }
 
