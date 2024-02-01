@@ -24,17 +24,7 @@ open class CAnalyser : Analyser {
     }
 
     /**
-     * Adds a source code to the program.
-     *
-     * This method takes a string representation of the source code and adds it to the program. The source code is read from
-     * an input stream created from the given string. The input stream is then passed to the LexerSource object, which
-     * tokenizes the code and adds it to the program's input.
-     *
-     * @param code The string representation of the source code to be added.
-     *
-     * @throws IOException if an I/O error occurs while reading the source code.
-     *
-     * @see LexerSource
+     * Adds a source code to the program, for example, C header files.
      */
     fun addSource(code: String) {
         pp.addInput(LexerSource(InputStreamReader(code.byteInputStream()), true))
