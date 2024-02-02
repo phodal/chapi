@@ -14,14 +14,14 @@
 Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in
 refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/).
 
-Chapi (pronoounce /tʃɑpi/) also pronounce XP in Chinese if you always call X in 叉.
+Chapi (pronounce /tʃɑpi/) also pronounce XP in Chinese if you always call X in 叉.
 
 language stages:
 
 | Features      | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
 |---------------|------|--------|----|--------|-------|----|----|-------|-----|------|
-| http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       |     | 🆕   |
-| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | ✅   | ✅    |
+| http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       | ✅   | 🆕   |
+| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | 🆕  | ✅    |
 | function call | ✅    | 🆕     | 🆕 | ✅      | ✅     |    |    |       |     | ✅    |
 | arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     | ✅   | 🆕   |
 | real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
@@ -47,6 +47,7 @@ language versions（tested）:
 - Rust: v1.60.0
 - Python: 2, 3
 
+```goovy
 // tier 1 languages
 ":chapi-ast-java",
 ":chapi-ast-typescript",
@@ -55,13 +56,14 @@ language versions（tested）:
 ":chapi-ast-kotlin",
 ":chapi-ast-go",
 ":chapi-ast-python",
-":chapi-ast-scala",
 
 // tier 3 languages
+":chapi-ast-c",
 ":chapi-ast-rust",
 ":chapi-ast-csharp",
-":chapi-ast-c",
+":chapi-ast-scala",
 ":chapi-ast-cpp",
+```
 
 Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
 
@@ -94,31 +96,9 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 - import analysis support
     - in C#, import `namespace` can use call in namespace
 
-### C issue
+### C 
 
-2024.01.29: C Basic
-
-Since Macro can be everywhere, If your code includes lots of Macro, it will be slow.
-Test in Lua 5.3.5: with 17402 C line, 3298 C Header line.
-
-For example:
-
-```c
-#if LUA_VERSION_NUM < 503
-        lua_pushnumber(L,
-#else
-        lua_pushinteger(L,
-#endif
-             (int64_t)c->p[8]);
-        mp_cur_consume(c,9);
-        break;
-```
-
-2024.02.01: C Macro
-
-Todo: C need pre-process, so we need to use Macro to parse it, here is a library:
-
-- [https://github.com/shevek/jcpp](https://github.com/shevek/jcpp)
+We use [https://github.com/shevek/jcpp](https://github.com/shevek/jcpp) to pre-process C code.
 
 ### Kotlin
 
