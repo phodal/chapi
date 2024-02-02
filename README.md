@@ -22,9 +22,9 @@ language stages:
 |---------------|------|--------|----|--------|-------|----|----|-------|-----|------|
 | http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       | ✅   | 🆕   |
 | syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | 🆕  | ✅    |
-| function call | ✅    | 🆕     | 🆕 | ✅      | ✅     |    |    |       |     | ✅    |
-| arch/package  | ✅    |        |    | ✅      | ✅     |    |    | ✅     | ✅   | 🆕   |
-| real world    | ✅    |        |    | 🆕     | ✅     |    |    |       |     |      |
+| function call | ✅    | ✅      | 🆕 | ✅      | ✅     | 🆕 |    |       |     | ✅    |
+| arch/package  | ✅    |        |    | ✅      | ✅     | 🆕 |    | ✅     | ✅   | 🆕   |
+| real world    | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |
 
 - [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is an architecture workbench, also for architecture
   governance, which can analysis architecture in container, component, code level, create architecture fitness
