@@ -61,8 +61,8 @@ static RedisModuleType *MemAllocType;
 """
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
 
-        assertEquals(codeFile.Imports.size, 0)
-//        assertEquals(codeFile.Imports[0].Source, "stdio.h")
+        assertEquals(codeFile.Imports.size, 1)
+        assertEquals(codeFile.Imports[0].Source, "stdio.h")
     }
 
     @Test
@@ -300,7 +300,7 @@ typedef struct {
             """.trimIndent()
 
         val codeFile = CAnalyser().analysis(code, "helloworld.c")
-        assertEquals(codeFile.Imports.size, 0)
+        assertEquals(codeFile.Imports.size, 6)
     }
 
     @Test

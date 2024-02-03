@@ -30,7 +30,13 @@ open class CAnalyser : Analyser {
         pp.addInput(LexerSource(InputStreamReader(code.byteInputStream()), true))
     }
 
+    private val importRegex = Regex("""#include\s+(<[^>]+>|\"[^\"]+\")""")
+
     override fun analysis(code: String, filePath: String): CodeContainer {
+        includesDirective = importRegex.findAll(code).map {
+            it.groupValues[1]
+        }.toMutableList()
+
         val output = preProcessing(code)
 
         val context = this.parse(output).compilationUnit()
