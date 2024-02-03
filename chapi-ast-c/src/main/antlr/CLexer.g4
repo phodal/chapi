@@ -2,7 +2,6 @@ lexer grammar CLexer;
 
 channels { COMMENTS_CHANNEL, DIRECTIVE }
 
-//options { superClass = chapi.ast.antlr.CLexerBase; }
 
 SINGLE_LINE_DOC_COMMENT: '///' InputCharacter*    -> channel(COMMENTS_CHANNEL);
 EMPTY_DELIMITED_DOC_COMMENT: '/***/'              -> channel(COMMENTS_CHANNEL);
@@ -10,9 +9,9 @@ DELIMITED_DOC_COMMENT:       '/**' ~'/' .*? '*/'  -> channel(COMMENTS_CHANNEL);
 SINGLE_LINE_COMMENT:     '//'  InputCharacter*    -> channel(COMMENTS_CHANNEL);
 DELIMITED_COMMENT:       '/*'  .*? '*/'           -> channel(COMMENTS_CHANNEL);
 WHITESPACES:   (Whitespace | Newline)+            -> channel(HIDDEN);
+// if we want to capture in again, we can use
 SHARP:         '#'                                -> mode(DIRECTIVE_MODE), skip;
 
-//Directive:      '#' ~ [\n]* -> channel (HIDDEN);
 MultiLineMacro: '#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN);
 
 Auto             : 'auto' ;
@@ -192,8 +191,8 @@ DIRECTIVE_FALSE:               'false'                          -> channel(DIREC
 INCLUDE:                       'include'                        -> channel(DIRECTIVE);
 DEFINE:                        'define'                         -> channel(DIRECTIVE);
 UNDEF:                         'undef'                          -> channel(DIRECTIVE);
-DIRECTIVE_IFDEF:                         'ifdef'                          -> channel(DIRECTIVE), type(Ifdef);
-DIRECTIVE_IFNDEF:                        'ifndef'                         -> channel(DIRECTIVE), type(Ifndef);
+DIRECTIVE_IFDEF:               'ifdef'                          -> channel(DIRECTIVE), type(Ifdef);
+DIRECTIVE_IFNDEF:              'ifndef'                         -> channel(DIRECTIVE), type(Ifndef);
 DIRECTIVE_IF:                  'if'                             -> channel(DIRECTIVE), type(If);
 ELIF:                          'elif'                           -> channel(DIRECTIVE);
 DIRECTIVE_ELSE:                'else'                           -> channel(DIRECTIVE), type(Else);
@@ -213,17 +212,11 @@ DIRECTIVE_BANG:                '!'                              -> channel(DIREC
 DIRECTIVE_LG:                  '<'                              -> channel(DIRECTIVE), type(Less);
 DIRECTIVE_GT:                  '>'                              -> channel(DIRECTIVE), type(Greater);
 DIRECTIVE_DOT:                 '.'                              -> channel(DIRECTIVE), type(Dot);
-// '{'
 DIRECTIVE_LEFT_BRACE:          '{'                              -> channel(DIRECTIVE), type(LeftBrace);
-// '}'
 DIRECTIVE_RIGHT_BRACE:         '}'                              -> channel(DIRECTIVE), type(RightBrace);
-// ;
 DIRECTIVE_SEMI:                ';'                              -> channel(DIRECTIVE), type(Semi);
-// ,
 DIRECTIVE_COMMA:               ','                              -> channel(DIRECTIVE), type(Comma);
-// *
 DIRECTIVE_STAR:                '*'                              -> channel(DIRECTIVE), type(Star);
-// union
 DIRECTIVE_UNION:               'union'                          -> channel(DIRECTIVE), type(Union);
 DIRECTIVE_OP_EQ:               '=='                             -> channel(DIRECTIVE), type(OP_EQ);
 DIRECTIVE_OP_NE:               '!='                             -> channel(DIRECTIVE), type(OP_NE);
@@ -248,7 +241,6 @@ fragment InputCharacter:       ~[\r\n\u0085\u2028\u2029];
 fragment IdentifierNondigit
     : Nondigit
     | UniversalCharacterName
-    //|   // other implementation-defined characters...
     ;
 
 fragment Nondigit

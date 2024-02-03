@@ -17,10 +17,10 @@ permalink: /
 > language source code into a unified abstract model, simplifying cross-language development. Chapi
 > 是一个通用层次抽象解析器与信息转换器，它可以将不同编程语言的源代码转换为统一的层次抽象模型。
 
-Chapi => Cha + Pi    => Tea Pi => Tea π => 茶 π. See on in
+Chapi => Cha + Pi => Tea Pi => Tea π => 茶 π. See on in
 refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/).
 
-Chapi (pronoounce /tʃɑpi/) also pronounce XP in Chinese if you always call X in 叉.
+Chapi (pronounce /tʃɑpi/) also pronounce XP in Chinese if you always call X in 叉.
 
 language stages:
 
