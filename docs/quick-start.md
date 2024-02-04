@@ -61,3 +61,16 @@ public static void main(String[] args) {
 }
 ```
 
+## 3. Use the AST
+
+Use the following code to use the AST:
+
+```java
+import chapi.ast.javaast.JavaAnalyser;
+
+// main
+public static void main(String[] args) {
+    JavaAnalyser analyser = new JavaAnalyser();
+    List<CodeContainer> containerList= analyser.parse("public class HelloWorld { public static void main(String[] args) { System.out.println(\"Hello, World\"); } }", "HelloWorld.java");
+    // handle the containerList
+```
