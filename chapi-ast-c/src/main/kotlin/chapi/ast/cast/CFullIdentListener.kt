@@ -27,10 +27,6 @@ open class CFullIdentListener(fileName: String, includes: MutableList<String>) :
     }
 
     override fun enterDeclaration(ctx: CParser.DeclarationContext?) {
-        val isTypeDef = ctx?.declarationSpecifier()?.any {
-            it.storageClassSpecifier()?.Typedef() != null
-        } ?: false
-
         val maybeNodeName = ctx?.declarationSpecifier()?.filter {
             it.typeSpecifier()?.typedefName() != null
         }?.map {
@@ -67,8 +63,8 @@ open class CFullIdentListener(fileName: String, includes: MutableList<String>) :
                     val specifier = typeSpec.structOrUnionSpecifier()
                     specifier?.structOrUnion()?.text + " " + specifier?.Identifier()?.text
                 }
-                var value: String? = null
 
+                val value: String?
                 if (type == null || type == "null null") {
                     type = structDeclCtx.specifierQualifierList()?.typeSpecifier()?.text ?: ""
                     value = it.structDeclarator()?.firstOrNull()?.declarator()?.text ?: ""
@@ -77,7 +73,7 @@ open class CFullIdentListener(fileName: String, includes: MutableList<String>) :
                 }
 
                 val field = CodeField(
-                    TypeType = type ?: "",
+                    TypeType = type,
                     TypeValue = value
                 )
 
