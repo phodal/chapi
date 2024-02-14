@@ -304,7 +304,7 @@ typedef struct {
     }
 
     @Test
-    fun readlWorld() {
+    fun shouldSuccessHandleDs() {
         val code = """
             // https://stackoverflow.com/questions/12642830/can-i-define-a-function-inside-a-c-structure
             #include <stdio.h>

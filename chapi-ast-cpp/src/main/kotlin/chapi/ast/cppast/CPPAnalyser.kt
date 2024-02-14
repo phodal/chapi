@@ -45,11 +45,16 @@ open class CPPAnalyser: Analyser  {
         return output
     }
 
+    private val importRegex = Regex("""#include\s+(<[^>]+>|\"[^\"]+\")""")
 
     override fun analysis(code: String, filePath: String): CodeContainer {
         val processedCode = preProcessing(code)
+        val includesDirective = importRegex.findAll(code).map {
+            it.groupValues[1]
+        }.toMutableList()
+
         val context = this.parse(processedCode).translationUnit()
-        val listener = CPPBasicIdentListener(fileName = filePath)
+        val listener = CPPBasicIdentListener(fileName = filePath, includesDirective)
 
         ParseTreeWalker().walk(listener, context)
 

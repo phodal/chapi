@@ -4,13 +4,29 @@ import chapi.ast.antlr.CPP14Parser
 import chapi.ast.antlr.CPP14ParserBaseListener
 import chapi.domain.core.*
 
-class CPPBasicIdentListener(fileName: String) : CPP14ParserBaseListener() {
+class CPPBasicIdentListener(fileName: String, includes: MutableList<String>) : CPP14ParserBaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
     /// for example, Friend function, global function (`main`), etc.
     private var defaultNode = CodeDataStruct()
     private var currentFunction: CodeFunction? = null
     private var classes = mutableListOf<CodeDataStruct>()
     private var currentNode: CodeDataStruct? = null
+
+    init {
+        includes.forEach {
+            val value = it
+                .removeSurrounding("\"", "\"")
+                .removeSurrounding("<", ">")
+
+            val imp = CodeImport(
+                Source = value,
+                AsName = value
+            )
+
+            codeContainer.Imports += imp
+        }
+
+    }
 
     override fun enterNamespaceDefinition(ctx: CPP14Parser.NamespaceDefinitionContext?) {
         ctx?.Identifier()?.let {

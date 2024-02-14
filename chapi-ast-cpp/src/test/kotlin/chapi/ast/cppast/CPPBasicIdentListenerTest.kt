@@ -31,6 +31,10 @@ int main(){}
 """
         val container = CPPAnalyser().analysis(code, "helloworld.cpp")
         assertEquals(container.DataStructures[0].Functions[0].ReturnType, "int")
+
+        // imports
+        assertEquals(container.Imports.size, 1)
+        assertEquals(container.Imports[0].Source, "iostream")
     }
 
     @Test
