@@ -36,7 +36,7 @@ dependencies {
     implementation("org.antlr:antlr4-runtime:4.13.1")
 
     // coroutines
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.anarres:jcpp:1.4.14")
 }
 
