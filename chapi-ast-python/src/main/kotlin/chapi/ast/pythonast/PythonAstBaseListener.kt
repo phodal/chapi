@@ -90,8 +90,8 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
 
     fun buildExprStmt(exprCtx: PythonParser.Expr_stmtContext) {
         var leftPart = ""
-        val starExpr = exprCtx.getChild(0) as PythonParser.Testlist_star_exprContext
-        val childType = starExpr.getChild(0)
+        val starExpr = exprCtx.getChild(0) as? PythonParser.Testlist_star_exprContext
+        val childType = starExpr?.getChild(0)
         if (childType is PythonParser.TestlistContext) {
             for (testContext in starExpr.testlist().test()) {
                 buildTestContext(testContext)
@@ -109,7 +109,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     private fun buildAssignPart(assignPartCtx: PythonParser.Assign_partContext): String {
         var returnAtom = ""
         for (starExprCtx in assignPartCtx.testlist_star_expr()) {
-            when (val child = starExprCtx.getChild(0)) {
+            when (val child = starExprCtx?.getChild(0)) {
                 is PythonParser.TestlistContext -> {
                     child.test().forEach { testContext ->
                         returnAtom = this.buildTestContext(testContext)
@@ -123,7 +123,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
 
     private fun buildTestContext(testContext: PythonParser.TestContext): String {
         var returnType = ""
-        when (val childCtx = testContext.getChild(0).getChild(0).getChild(0)) {
+        when (val childCtx = testContext.getChild(0)?.getChild(0)?.getChild(0)) {
             is PythonParser.ExprContext -> {
                 val exprChild = childCtx.getChild(0)
                 when (exprChild) {
