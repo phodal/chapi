@@ -110,7 +110,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
     private fun buildOptionalParameter(paramCtx: TypeScriptParser.OptionalParameterContext): CodeProperty {
         var paramType = ""
         if (paramCtx.typeAnnotation() != null) {
-            paramType = buildTypeAnnotation(paramCtx.typeAnnotation())!!
+            paramType = buildTypeAnnotation(paramCtx.typeAnnotation())
         }
 
         return CodeProperty(
@@ -122,7 +122,7 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
     private fun buildRequireParameter(paramCtx: TypeScriptParser.RequiredParameterContext): CodeProperty {
         var paramType = ""
         if (paramCtx.typeAnnotation() != null) {
-            paramType = buildTypeAnnotation(paramCtx.typeAnnotation())!!
+            paramType = buildTypeAnnotation(paramCtx.typeAnnotation())
         }
 
         return CodeProperty(
