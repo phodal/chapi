@@ -46,7 +46,7 @@ open class JavaAstListener : JavaParserBaseListener() {
     }
 
     fun isChainCall(targetTypeStr: String?): Boolean {
-        return targetTypeStr!!.contains("(") && targetTypeStr.contains(")") && targetTypeStr.contains(".")
+        return targetTypeStr?.contains("(") == true && targetTypeStr.contains(")") && targetTypeStr.contains(".")
     }
 
     fun buildAnnotationForMethod(modifierCtx: JavaParser.ModifierContext): List<CodeAnnotation> {

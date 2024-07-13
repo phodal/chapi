@@ -56,7 +56,7 @@ class CPPBasicIdentListener(fileName: String, includes: MutableList<String>) : C
         }
 
         if (currentNode != null) {
-            currentNode?.Functions = currentNode?.Functions?.plus(method)!!
+            currentNode?.Functions = currentNode?.Functions?.plus(method) ?: listOf(method)
         } else {
             defaultNode.Functions += method
         }
