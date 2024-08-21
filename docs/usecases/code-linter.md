@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Code Liner
+title: Code Linter
 nav_order: 1
 parent: Usecases
 permalink: /usecases/code-linter

@@ -110,8 +110,8 @@ We use [https://github.com/shevek/jcpp](https://github.com/shevek/jcpp) to pre-p
 
 ```
 dependencies {
-    implementation 'com.phodal.chapi:chapi-ast-java:2.2.2'
-    implementation 'com.phodal.chapi:chapi-domain:2.2.2'
+    implementation 'com.phodal.chapi:chapi-ast-java:2.3.6'
+    implementation 'com.phodal.chapi:chapi-domain:2.3.6'
 }
 ```
 

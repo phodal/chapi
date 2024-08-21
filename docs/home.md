@@ -109,8 +109,8 @@ Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily
 
 ```
 dependencies {
-    implementation 'com.phodal.chapi:chapi-ast-java:2.2.2'
-    implementation 'com.phodal.chapi:chapi-domain:2.2.2'
+    implementation 'com.phodal.chapi:chapi-ast-java:2.3.6'
+    implementation 'com.phodal.chapi:chapi-domain:2.3.6'
 }
 ```
 
