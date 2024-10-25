@@ -83,11 +83,14 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
         return codeDataStruct
     }
 
-    private fun constructField(child: Protobuf3Parser.FieldContext) = CodeField(
-        TypeType = child.type_().text,
-        TypeKey = child.fieldName().text,
-        TypeValue = child.fieldNumber().text
-    )
+    private fun constructField(child: Protobuf3Parser.FieldContext): CodeField {
+        return CodeField(
+            TypeType = child.type_().text,
+            TypeKey = child.fieldName().text,
+            TypeValue = child.fieldNumber().text,
+            Modifiers = child.fieldLabel()?.text?.let { listOf(it) } ?: emptyList()
+        )
+    }
 
     private fun constructEnum(child: Protobuf3Parser.EnumDefContext): CodeDataStruct {
         val name = child.enumName().text
