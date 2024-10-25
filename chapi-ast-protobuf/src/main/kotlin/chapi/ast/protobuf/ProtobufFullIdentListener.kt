@@ -31,6 +31,14 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
 
         /// since a message element will be all def
         ctx.messageBody().messageElement().map {
+            ///     : field
+            //    | enumDef
+            //    | messageDef
+            //    | extendDef
+            //    | optionStatement
+            //    | oneof
+            //    | mapField
+            //    | reserved
             when (val child = it.getChild(0)) {
                 is Protobuf3Parser.FieldContext -> {
                     codeDataStruct.Fields += CodeField(
@@ -38,6 +46,37 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
                         TypeKey = child.fieldName().text,
                         TypeValue = child.fieldNumber().text
                     )
+                }
+                is Protobuf3Parser.EnumDefContext -> {
+
+                }
+
+                is Protobuf3Parser.MessageDefContext -> {
+
+                }
+
+                is Protobuf3Parser.ExtendDefContext -> {
+
+                }
+
+                is Protobuf3Parser.OptionStatementContext -> {
+
+                }
+
+                is Protobuf3Parser.OneofContext -> {
+
+                }
+
+                is Protobuf3Parser.MapFieldContext -> {
+
+                }
+
+                is Protobuf3Parser.ReservedContext -> {
+
+                }
+
+                else -> {
+                    println("Unknown message element: $child")
                 }
             }
         }
