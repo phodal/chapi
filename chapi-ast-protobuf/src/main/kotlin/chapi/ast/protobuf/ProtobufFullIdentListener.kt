@@ -2,10 +2,7 @@ package chapi.ast.protobuf
 
 import chapi.ast.antlr.Protobuf3BaseListener
 import chapi.ast.antlr.Protobuf3Parser
-import chapi.domain.core.CodeContainer
-import chapi.domain.core.CodeDataStruct
-import chapi.domain.core.CodeField
-import chapi.domain.core.DataStructType
+import chapi.domain.core.*
 
 class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -28,6 +25,34 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
 
     override fun enterExtendDef(ctx: Protobuf3Parser.ExtendDefContext?) {
         /// todo spike for scene
+    }
+
+    override fun enterServiceDef(ctx: Protobuf3Parser.ServiceDefContext?) {
+        val dsName = ctx!!.serviceName().text
+        val functions: List<CodeFunction> = ctx.serviceElement()?.mapNotNull { context ->
+            if (context.rpc() == null) return@mapNotNull null
+
+            val messageTypes = context.rpc().messageType().map { it.text }
+
+            CodeFunction(
+                Name = context.rpc().rpcName().text,
+                FilePath = codeContainer.FullName,
+                Package = codeContainer.PackageName,
+                Type = FunctionType.RPC,
+                Parameters = messageTypes.first()?.let { listOf(CodeProperty(TypeType = it, TypeValue = it)) } ?: emptyList(),
+                ReturnType = messageTypes.last(),
+            )
+        } ?: emptyList()
+
+        val codeDataStruct = CodeDataStruct(
+            NodeName = dsName,
+            Module = codeContainer.PackageName,
+            FilePath = codeContainer.FullName,
+            Package = codeContainer.PackageName,
+            Functions = functions
+        )
+
+        codeContainer.DataStructures += codeDataStruct
     }
 
     private fun constructMessageDef(ctx: Protobuf3Parser.MessageDefContext): CodeDataStruct {

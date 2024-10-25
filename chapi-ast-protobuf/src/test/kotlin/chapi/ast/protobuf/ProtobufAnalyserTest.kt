@@ -1,5 +1,6 @@
 package chapi.ast.protobuf
 
+import chapi.domain.core.FunctionType
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -118,5 +119,64 @@ message Person {
         assertEquals("string", nestedField2.TypeType)
         assertEquals("city", nestedField2.TypeKey)
         assertEquals("2", nestedField2.TypeValue)
+    }
+
+    /// should support for service code
+    @Test
+    fun `should parse valid protobuf code with service and return a CodeContainer`() {
+        // Given
+        @Language("protobuf")
+        val protobufCode = """syntax = "proto3";
+
+package service.user;
+            
+service User {
+    rpc Login (UserBase) returns (UserBase);
+    rpc PhoneCheck (PhoneCheckReq) returns (PhoneCheckReply);
+    rpc UserEdit (UserBase) returns (.google.protobuf.Empty);
+    rpc ListUserInfo (ListUserInfoReq) returns (ListUserInfoReply);
+
+    /////////////like/////////////
+    rpc AddLike (LikeReq) returns (LikeReply);
+    rpc CancelLike (LikeReq) returns (LikeReply);
+    rpc ListUserLike(ListUserLikeReq) returns (ListUserLikeReply);
+    rpc IsLike(IsLikeReq) returns (IsLikeReply);
+
+    ////////////Relation///////////
+    rpc ModifyRelation (ModifyRelationReq) returns (ModifyRelationReply);
+    // 返回UserInfo的列表，分页
+    rpc ListFollowUserInfo (ListRelationUserInfoReq) returns (ListUserInfoReply);
+    rpc ListFanUserInfo (ListRelationUserInfoReq) returns (ListUserInfoReply);
+    rpc ListBlackUserInfo (ListRelationUserInfoReq) returns (ListUserInfoReply);
+    // 仅仅返回全部mid列表，不包含UserInfo
+    rpc ListFollow (ListRelationReq) returns (ListRelationReply);
+    rpc ListBlack (ListRelationReq) returns (ListRelationReply);
+}
+  """
+
+        val filePath = "path/to/file.proto"
+        val analyser = ProtobufAnalyser()
+
+        // When
+        val codeContainer = analyser.analysis(protobufCode, filePath)
+
+        // Then
+        assertNotNull(codeContainer)
+        assertEquals("service.user", codeContainer.PackageName)
+        assertTrue(codeContainer.DataStructures.isNotEmpty())
+
+        val dataStruct = codeContainer.DataStructures.first()
+        assertEquals("User", dataStruct.NodeName)
+
+        val function = dataStruct.Functions
+        assertEquals(14, function.size)
+
+        val firstFunction = function.first()
+        assertEquals("Login", firstFunction.Name)
+        assertEquals("service.user", firstFunction.Package)
+        assertEquals("path/to/file.proto", firstFunction.FilePath)
+        assertEquals(FunctionType.RPC, firstFunction.Type)
+        assertEquals("UserBase", firstFunction.Parameters.first().TypeType)
+        assertEquals("UserBase", firstFunction.ReturnType)
     }
 }

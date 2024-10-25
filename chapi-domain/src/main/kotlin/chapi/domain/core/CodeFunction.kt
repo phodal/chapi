@@ -1,6 +1,5 @@
 package chapi.domain.core
 
-import chapi.domain.core.CodeCall
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -12,6 +11,9 @@ enum class FunctionType {
 
     // for Golang block
     Block,
+
+    // for RPC
+    RPC,
 }
 
 @Serializable
