@@ -26,6 +26,10 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
         codeContainer.DataStructures += enumDs
     }
 
+    override fun enterExtendDef(ctx: Protobuf3Parser.ExtendDefContext?) {
+        /// todo spike for scene
+    }
+
     private fun constructMessageDef(ctx: Protobuf3Parser.MessageDefContext): CodeDataStruct {
         val messageName = ctx.messageName().text
         val codeDataStruct = CodeDataStruct(
@@ -38,11 +42,7 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
         ctx.messageBody().messageElement().map { context ->
             when (val child = context.getChild(0)) {
                 is Protobuf3Parser.FieldContext -> {
-                    codeDataStruct.Fields += CodeField(
-                        TypeType = child.type_().text,
-                        TypeKey = child.fieldName().text,
-                        TypeValue = child.fieldNumber().text
-                    )
+                    codeDataStruct.Fields += constructField(child)
                 }
 
                 is Protobuf3Parser.EnumDefContext -> {
@@ -56,7 +56,7 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
                 }
 
                 is Protobuf3Parser.ExtendDefContext -> {
-
+                    // skip
                 }
 
                 is Protobuf3Parser.OptionStatementContext -> {
@@ -82,6 +82,12 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
         }
         return codeDataStruct
     }
+
+    private fun constructField(child: Protobuf3Parser.FieldContext) = CodeField(
+        TypeType = child.type_().text,
+        TypeKey = child.fieldName().text,
+        TypeValue = child.fieldNumber().text
+    )
 
     private fun constructEnum(child: Protobuf3Parser.EnumDefContext): CodeDataStruct {
         val name = child.enumName().text
