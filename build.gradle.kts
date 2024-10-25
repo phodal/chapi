@@ -146,6 +146,8 @@ dependencies {
     jacocoAggregation(project(":chapi-ast-kotlin"))
     jacocoAggregation(project(":chapi-ast-scala"))
     jacocoAggregation(project(":chapi-ast-cpp"))
+    jacocoAggregation(project(":chapi-ast-protobuf"))
+
     jacocoAggregation(project(":chapi-parser-toml"))
     jacocoAggregation(project(":chapi-parser-cmake"))
 }

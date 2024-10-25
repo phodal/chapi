@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package example;
+
+import "google/protobuf/descriptor.proto";
+import "common.proto"; // 假设存在此文件
+
+// 基本的用户消息
+message User {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+// 包含枚举和嵌套消息的订单消息
+message Order {
+  int32 order_id = 1;
+  Status status = 2;
+  repeated Item items = 3;
+
+  enum Status {
+    PENDING = 0;
+    PROCESSING = 1;
+    COMPLETED = 2;
+    CANCELLED = 3;
+  }
+
+  message Item {
+    int32 item_id = 1;
+    string description = 2;
+    float price = 3;
+  }
+}
+
+// 包含Oneof和Map类型的响应消息
+message Response {
+  oneof result {
+    Success success = 1;
+    Error error = 2;
+  }
+}
+
+message Success {
+  string message = 1;
+  map<string, string> data = 2;
+}
+
+message Error {
+  int32 code = 1;
+  string message = 2;
+}
+
+// 包含默认值和扩展的人员消息（Proto3中默认值已被移除，这里仅作为示例）
+message Person {
+  string name = 1;
+  int32 age = 2;
+  repeated string emails = 3;
+}
+
+// 扩展字段选项
+extend google.protobuf.FieldOptions {
+  string custom_option = 50001;
+}
+
+message Employee {
+  string position = 1 [(custom_option) = "Manager"];
+  Person person = 2;
+}
+
+// 产品消息，包含外部引用和包名冲突的处理
+message Product {
+  int32 id = 1;
+  string name = 2;
+  common.Category category = 3; // 引用外部定义的枚举
+}
+
+// 包含Reserved关键字和Deprecated字段的旧消息
+message LegacyMessage {
+  int32 id = 1;
+  string old_field = 2 [deprecated = true];
+  reserved 3, 4; // 以前使用过的字段号码
+  reserved "old_name"; // 以前使用过的字段名称
+
+  string new_field = 5;
+}
+
+// 基础消息
+message BaseMessage {
+  int32 id = 1;
+}
+
+// 由于Proto3不支持继承（extends），这里使用组合的方式
+message DerivedMessage {
+  BaseMessage base = 1;
+  string info = 2;
+}
+
+// 包含基础消息的容器消息
+message ContainerMessage {
+  repeated BaseMessage messages = 1;
+}
+
+// 服务定义和流式RPC
+service ChatService {
+  rpc Chat(stream ChatMessage) returns (stream ChatMessage);
+}
+
+// 聊天消息
+message ChatMessage {
+  string user = 1;
+  string message = 2;
+  int64 timestamp = 3;
+}
+
+// 自引用的节点消息，实现循环依赖
+message Node {
+  int32 id = 1;
+  repeated Node children = 2;
+}
+
+// 包含所有字段类型的消息
+message AllTypes {
+  double a_double = 1;
+  float a_float = 2;
+  int32 an_int32 = 3;
+  int64 an_int64 = 4;
+  uint32 a_uint32 = 5;
+  uint64 a_uint64 = 6;
+  sint32 a_sint32 = 7;
+  sint64 a_sint64 = 8;
+  fixed32 a_fixed32 = 9;
+  fixed64 a_fixed64 = 10;
+  sfixed32 a_sfixed32 = 11;
+  sfixed64 a_sfixed64 = 12;
+  bool a_bool = 13;
+  string a_string = 14;
+  bytes a_bytes = 15;
+}

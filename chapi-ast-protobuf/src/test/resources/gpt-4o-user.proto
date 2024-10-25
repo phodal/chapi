@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package api.v1;
+
+// 定义 API DTO 对象，通常反映领域模型的数据
+message UserDTO {
+  string id = 1;                      // 用户唯一标识符，通常使用 string 而非 int32
+  string name = 2;                    // 用户名称
+  repeated string roles = 3;          // 用户角色列表
+  map<string, string> metadata = 4;   // 用于存储键值对的附加元数据
+  Status status = 5;                  // 枚举类型，用户状态
+  ContactInfo contact_info = 6;       // 嵌套消息，用于联系信息
+
+  // 嵌套的联系信息（作为 DTO 的一部分）
+  message ContactInfo {
+    string email = 1;
+    string phone = 2;
+  }
+}
+
+// 用户状态枚举，符合常见 API 模型中状态设计
+enum Status {
+  ACTIVE = 0;     // 用户激活
+  INACTIVE = 1;   // 用户非活跃
+  DELETED = 2;    // 用户被删除
+}
+
+// 定义标准的 CRUD API 接口
+service UserService {
+  // 获取用户详细信息
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+
+  // 创建新用户
+  rpc CreateUser(CreateUserRequest) returns (UserResponse);
+
+  // 更新现有用户
+  rpc UpdateUser(UpdateUserRequest) returns (UserResponse);
+
+  // 删除用户
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+// 请求和响应对象设计
+message GetUserRequest {
+  string user_id = 1;  // 通过用户 ID 来获取用户信息
+}
+
+message GetUserResponse {
+  UserDTO user = 1;    // 返回用户 DTO 对象
+}
+
+message CreateUserRequest {
+  UserDTO user = 1;    // 传递完整的用户信息来创建用户
+}
+
+message UpdateUserRequest {
+  UserDTO user = 1;    // 更新时传递完整的用户信息
+}
+
+message DeleteUserRequest {
+  string user_id = 1;  // 通过用户 ID 来删除用户
+}
+
+message DeleteUserResponse {
+  bool success = 1;    // 是否成功删除用户
+}
+
+// 通用响应消息
+message UserResponse {
+  UserDTO user = 1;    // 返回用户 DTO 对象
+}

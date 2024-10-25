@@ -6,6 +6,9 @@ include(
     // tier 1 languages
     ":chapi-ast-java",
     ":chapi-ast-typescript",
+    
+    // tier 1 model language
+    ":chapi-ast-protobuf",
 
     // tier 2 languages
     ":chapi-ast-kotlin",

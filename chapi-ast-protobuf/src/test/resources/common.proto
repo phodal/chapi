@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package common;
+
+enum Category {
+  ELECTRONICS = 0;
+  CLOTHING = 1;
+  FOOD = 2;
+}
