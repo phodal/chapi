@@ -1,5 +1,3 @@
-// Save this code in a file named ProtobufAnalyserTest.kt under test directory
-
 package chapi.ast.protobuf
 
 import org.junit.jupiter.api.Test
@@ -21,5 +19,17 @@ class ProtobufAnalyserTest {
         assertNotNull(codeContainer)
         assertEquals("example", codeContainer.PackageName)
         assertTrue(codeContainer.DataStructures.isNotEmpty())
+
+        val dataStruct = codeContainer.DataStructures.first()
+        assertEquals("Person", dataStruct.NodeName)
+        assertEquals("example", dataStruct.Module)
+        assertEquals("path/to/file.proto", dataStruct.FilePath)
+        assertEquals("example", dataStruct.Package)
+        assertTrue(dataStruct.Fields.isNotEmpty())
+
+        val field = dataStruct.Fields.first()
+        assertEquals("string", field.TypeType)
+        assertEquals("name", field.TypeKey)
+        assertEquals("1", field.TypeValue)
     }
 }
