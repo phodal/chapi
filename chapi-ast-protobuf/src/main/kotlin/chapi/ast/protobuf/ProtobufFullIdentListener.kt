@@ -85,7 +85,7 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
                 }
 
                 is Protobuf3Parser.OptionStatementContext -> {
-
+                    // skip
                 }
 
                 is Protobuf3Parser.OneofContext -> {
