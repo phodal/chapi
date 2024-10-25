@@ -112,7 +112,7 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
         return CodeField(
             TypeType = child.type_().text,
             TypeKey = child.fieldName().text,
-            TypeValue = child.fieldNumber().text,
+            TypeValue = child.fieldNumber()?.text ?: "",
             Modifiers = child.fieldLabel()?.text?.let { listOf(it) } ?: emptyList()
         )
     }
