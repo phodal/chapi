@@ -52,7 +52,7 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
                 }
 
                 is Protobuf3Parser.MessageDefContext -> {
-
+                    codeDataStruct.InnerStructures += constructMessageDef(child)
                 }
 
                 is Protobuf3Parser.ExtendDefContext -> {
