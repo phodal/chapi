@@ -3,6 +3,7 @@ package chapi.ast.protobuf
 import chapi.ast.antlr.Protobuf3BaseListener
 import chapi.ast.antlr.Protobuf3Parser
 import chapi.domain.core.*
+import org.antlr.v4.runtime.ParserRuleContext
 
 class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -10,6 +11,15 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
     override fun enterPackageStatement(ctx: Protobuf3Parser.PackageStatementContext) {
         val packageName = ctx.fullIdent().text
         codeContainer.PackageName = packageName
+    }
+
+    fun buildPosition(ctx: ParserRuleContext): CodePosition {
+        val position = CodePosition()
+        position.StartLine = ctx.start.line
+        position.StartLinePosition = ctx.start.charPositionInLine
+        position.StopLine = ctx.stop.line
+        position.StopLinePosition = ctx.stop.charPositionInLine
+        return position
     }
 
     override fun enterMessageDef(ctx: Protobuf3Parser.MessageDefContext) {
@@ -41,6 +51,7 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
                 Type = FunctionType.RPC,
                 Parameters = messageTypes.first()?.let { listOf(CodeProperty(TypeType = it, TypeValue = it)) } ?: emptyList(),
                 ReturnType = messageTypes.last(),
+                Position = buildPosition(context)
             )
         } ?: emptyList()
 
@@ -49,7 +60,9 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
             Module = codeContainer.PackageName,
             FilePath = codeContainer.FullName,
             Package = codeContainer.PackageName,
-            Functions = functions
+            Functions = functions,
+            Position = buildPosition(ctx),
+            Type = DataStructType.INTERFACE
         )
 
         codeContainer.DataStructures += codeDataStruct
@@ -61,7 +74,9 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
             NodeName = messageName,
             Module = codeContainer.PackageName,
             FilePath = codeContainer.FullName,
-            Package = codeContainer.PackageName
+            Package = codeContainer.PackageName,
+            Type = DataStructType.STRUCT,
+            Position = buildPosition(ctx)
         )
 
         ctx.messageBody().messageElement().map { context ->
@@ -124,14 +139,17 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
             Type = DataStructType.ENUM,
             Module = codeContainer.PackageName,
             FilePath = codeContainer.FullName,
-            Package = codeContainer.PackageName
+            Package = codeContainer.PackageName,
+            Position = buildPosition(child)
         )
 
         child.enumBody().enumElement().map {
             when (val enumChild = it.getChild(0)) {
                 is Protobuf3Parser.OptionStatementContext -> {
                     enumDs.Fields += CodeField(
-
+                        TypeType = "option",
+                        TypeKey = enumChild.optionName().text,
+                        TypeValue = enumChild.constant().text
                     )
                 }
 

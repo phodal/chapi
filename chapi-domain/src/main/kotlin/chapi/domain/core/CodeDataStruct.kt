@@ -20,7 +20,9 @@ enum class DataStructType(val structType: String) {
 
     // for scala, Rust
     TRAIT("Trait"),
-    ENUM("Enum")
+    ENUM("Enum"),
+
+    //
 }
 
 @Serializable
