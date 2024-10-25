@@ -1,4 +1,14 @@
-# [](https://github.com/phodal/chapi/compare/v2.4.0...v) (2024-10-25)
+# [](https://github.com/phodal/chapi/compare/v2.4.1...v) (2024-10-25)
+
+
+
+## [2.4.1](https://github.com/phodal/chapi/compare/v2.4.0...v2.4.1) (2024-10-25)
+
+
+### Features
+
+* **protobuf:** add position tracking and data struct type enhancements [#31](https://github.com/phodal/chapi/issues/31) ([43fa06c](https://github.com/phodal/chapi/commit/43fa06c45bc027c4317e9bae88c0a9726d67f15b))
+* **protobuf:** add support for Protocol Buffers 2 grammar and parsing logic [#31](https://github.com/phodal/chapi/issues/31) ([abbc542](https://github.com/phodal/chapi/commit/abbc5422aff3df366be17419f1c7a752120a1cc6))
 
 
 
