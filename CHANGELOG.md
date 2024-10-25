@@ -1,4 +1,27 @@
-# [](https://github.com/phodal/chapi/compare/v2.3.5...v) (2024-02-01)
+# [](https://github.com/phodal/chapi/compare/v2.4.0...v) (2024-10-25)
+
+
+
+# [2.4.0](https://github.com/phodal/chapi/compare/v2.3.5...v2.4.0) (2024-10-25)
+
+
+### Bug Fixes
+
+* **chapi-ast-c:** fix lexer grammar and update documentation ([037695d](https://github.com/phodal/chapi/commit/037695dc67c276001e702d3eaacf28cc1e08a576))
+* **kotlin:** remove unnecessary non-null assertion from buildTypeAnnotation call ([f0689ef](https://github.com/phodal/chapi/commit/f0689ef5d7197d8aa3a966d098f392b8b76d3695))
+* **parser:** handle null contexts in PythonAstBaseListener.kt [#28](https://github.com/phodal/chapi/issues/28) ([7c3f1db](https://github.com/phodal/chapi/commit/7c3f1db60406d419fd3eba533be9fa2929309da9))
+
+
+### Features
+
+* **c:** add support for parsing #include directives ([e1cda08](https://github.com/phodal/chapi/commit/e1cda08149f490b0a668add153d379259531896d))
+* **chapi-ast-cpp:** add support for importing C++ headers ([3956222](https://github.com/phodal/chapi/commit/39562227fda0cc7ae66fa767ccbdf99843108cba))
+* **docs:** add links and code example to usecases and quick-start ([49fdc47](https://github.com/phodal/chapi/commit/49fdc47cfce54a7f1a09e0f977d34ea7063e001f))
+* **protobuf-parser:** enhance parsing for enum definitions and inner structures [#31](https://github.com/phodal/chapi/issues/31) ([67e8578](https://github.com/phodal/chapi/commit/67e85786f173d3145c0a8888baa151bf6440ee13))
+* **protobuf:** add antlr grammar and parser for protobuf files [#31](https://github.com/phodal/chapi/issues/31) ([f56a0f6](https://github.com/phodal/chapi/commit/f56a0f6e560487fe593b7ec9e29870c91560b0e2))
+* **protobuf:** enhance support for nested messages and enums [#31](https://github.com/phodal/chapi/issues/31) ([f856656](https://github.com/phodal/chapi/commit/f8566565d2cef0fbcdeda469566421dc5900ddd9))
+* **protobuf:** implement service parsing and add RPC function type [#31](https://github.com/phodal/chapi/issues/31) ([96aecea](https://github.com/phodal/chapi/commit/96aeceae18a17d2c54ae4cabbc8c14ce0de457c4))
+* **README:** update architecture matrix ([903396e](https://github.com/phodal/chapi/commit/903396e2ee3f89e1909eadc545858fa75cfe8067))
 
 
 
