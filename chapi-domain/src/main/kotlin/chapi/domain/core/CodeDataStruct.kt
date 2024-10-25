@@ -43,6 +43,9 @@ data class CodeDataStruct(
     var Implements: List<String> = listOf(),
     var Extend: String = "",
     var Functions: List<CodeFunction> = listOf(),
+    /**
+     * for Java, TypeScript, a class can have inner class, interface, enum
+     */
     var InnerStructures: List<CodeDataStruct> = listOf(),
     var Annotations: List<CodeAnnotation> = listOf(),
     var FunctionCalls: List<CodeCall> = listOf(),

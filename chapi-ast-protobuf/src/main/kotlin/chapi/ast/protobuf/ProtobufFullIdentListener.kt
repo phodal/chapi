@@ -5,6 +5,7 @@ import chapi.ast.antlr.Protobuf3Parser
 import chapi.domain.core.CodeContainer
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeField
+import chapi.domain.core.DataStructType
 
 class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() {
     private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
@@ -14,14 +15,19 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
         codeContainer.PackageName = packageName
     }
 
-    override fun enterMessageDef(ctx: Protobuf3Parser.MessageDefContext?) {
+    override fun enterMessageDef(ctx: Protobuf3Parser.MessageDefContext) {
         val codeDataStruct = constructMessageDef(ctx)
 
         codeContainer.DataStructures += codeDataStruct
     }
 
-    private fun constructMessageDef(ctx: Protobuf3Parser.MessageDefContext?): CodeDataStruct {
-        val messageName = ctx!!.messageName().text
+    override fun enterEnumDef(ctx: Protobuf3Parser.EnumDefContext) {
+        val enumDs = constructEnum(ctx)
+        codeContainer.DataStructures += enumDs
+    }
+
+    private fun constructMessageDef(ctx: Protobuf3Parser.MessageDefContext): CodeDataStruct {
+        val messageName = ctx.messageName().text
         val codeDataStruct = CodeDataStruct(
             NodeName = messageName,
             Module = codeContainer.PackageName,
@@ -29,17 +35,8 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
             Package = codeContainer.PackageName
         )
 
-        /// since a message element will be all def
-        ctx.messageBody().messageElement().map {
-            ///     : field
-            //    | enumDef
-            //    | messageDef
-            //    | extendDef
-            //    | optionStatement
-            //    | oneof
-            //    | mapField
-            //    | reserved
-            when (val child = it.getChild(0)) {
+        ctx.messageBody().messageElement().map { context ->
+            when (val child = context.getChild(0)) {
                 is Protobuf3Parser.FieldContext -> {
                     codeDataStruct.Fields += CodeField(
                         TypeType = child.type_().text,
@@ -47,8 +44,11 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
                         TypeValue = child.fieldNumber().text
                     )
                 }
-                is Protobuf3Parser.EnumDefContext -> {
 
+                is Protobuf3Parser.EnumDefContext -> {
+                    val enumDs = constructEnum(child)
+
+                    codeDataStruct.InnerStructures += enumDs
                 }
 
                 is Protobuf3Parser.MessageDefContext -> {
@@ -81,6 +81,36 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
             }
         }
         return codeDataStruct
+    }
+
+    private fun constructEnum(child: Protobuf3Parser.EnumDefContext): CodeDataStruct {
+        val name = child.enumName().text
+        val enumDs = CodeDataStruct(
+            NodeName = name,
+            Type = DataStructType.ENUM,
+            Module = codeContainer.PackageName,
+            FilePath = codeContainer.FullName,
+            Package = codeContainer.PackageName
+        )
+
+        child.enumBody().enumElement().map {
+            when (val child = it.getChild(0)) {
+                is Protobuf3Parser.OptionStatementContext -> {
+                    enumDs.Fields += CodeField(
+
+                    )
+                }
+
+                is Protobuf3Parser.EnumFieldContext -> {
+                    enumDs.Fields += CodeField(
+                        TypeType = name,
+                        TypeKey = child.ident().text,
+                        TypeValue = child.intLit().text
+                    )
+                }
+            }
+        }
+        return enumDs
     }
 
     fun getNodeInfo(): CodeContainer {
