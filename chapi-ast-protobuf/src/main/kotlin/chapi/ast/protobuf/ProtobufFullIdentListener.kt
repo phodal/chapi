@@ -94,7 +94,7 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
         )
 
         child.enumBody().enumElement().map {
-            when (val child = it.getChild(0)) {
+            when (val enumChild = it.getChild(0)) {
                 is Protobuf3Parser.OptionStatementContext -> {
                     enumDs.Fields += CodeField(
 
@@ -104,8 +104,8 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
                 is Protobuf3Parser.EnumFieldContext -> {
                     enumDs.Fields += CodeField(
                         TypeType = name,
-                        TypeKey = child.ident().text,
-                        TypeValue = child.intLit().text
+                        TypeKey = enumChild.ident().text,
+                        TypeValue = enumChild.intLit().text
                     )
                 }
             }
