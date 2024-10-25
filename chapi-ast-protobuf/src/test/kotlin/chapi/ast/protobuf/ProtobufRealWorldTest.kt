@@ -1,8 +1,11 @@
 package chapi.ast.protobuf
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.io.File
 
 class ProtobufRealWorldTest {
     @Test
@@ -77,5 +80,21 @@ message ListBulletReply {
 
         // fourth DataStructure include 2 fields
         assertEquals(2, codeContainer.DataStructures[3].Fields.size)
+    }
+
+
+    /// load resource/gpt-4o-user.proto and parse it
+    @Test
+    fun `should parse gpt-4o-user proto and return a CodeContainer`() {
+        // Given
+        val filepath = this.javaClass.classLoader.getResource("gpt-4o-user.proto")!!.file
+        val protobufCode = File(filepath).readText()
+        val analyser = ProtobufAnalyser()
+
+        // When
+        val codeContainer = analyser.analysis(protobufCode, filepath)
+
+       // write to json
+        File("gpt-proto.json").writeText(Json.encodeToString(codeContainer))
     }
 }
