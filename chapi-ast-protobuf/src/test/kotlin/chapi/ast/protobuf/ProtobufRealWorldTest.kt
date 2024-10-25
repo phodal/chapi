@@ -97,4 +97,35 @@ message ListBulletReply {
        // write to json
         File("gpt-proto.json").writeText(Json.encodeToString(codeContainer))
     }
+
+    /// should parse proto2
+    @Test
+    fun `should parse proto2 and return a CodeContainer`() {
+        // Given
+        @Language("protobuf")
+        val protobufCode = """
+syntax = "proto2";
+
+package treelite;
+
+message Model {
+  repeated Tree trees = 1;
+  optional int32 num_feature = 2;
+  optional int32 num_output_group = 3;   // >1 for multi-class classification;
+                                         // =1 for everything else
+  optional bool random_forest_flag = 4;  // true for random forest
+                                         // false for gradient boosted trees
+  map<string, string> extra_params = 5;  // extra parameters
+}
+            """
+        val filePath = "path/to/file.proto"
+        val analyser = ProtobufAnalyser()
+
+        // When
+        val codeContainer = analyser.analysis(protobufCode, filePath)
+
+        // Then
+        assertEquals("treelite", codeContainer.PackageName)
+        assertEquals(1, codeContainer.DataStructures.size)
+    }
 }
