@@ -33,6 +33,35 @@ class ThriftFullIdentListener(fileName: String) : ThriftBaseListener() {
         codeContainer.DataStructures += codeDataStruct
     }
 
+    override fun enterService(ctx: ThriftParser.ServiceContext?) {
+
+        val functions: List<CodeFunction> = ctx?.function_()?.mapNotNull { functionContext ->
+            val messageTypes = functionContext.field().map { it.field_type().text }
+            CodeFunction(
+                Name = functionContext.IDENTIFIER().text,
+                FilePath = codeContainer.FullName,
+                Package = codeContainer.PackageName,
+                Type = FunctionType.RPC,
+                Parameters = messageTypes.map { CodeProperty(TypeType = it, TypeValue = it) },
+                ReturnType = functionContext.function_type().text,
+                Position = buildPosition(functionContext)
+            )
+        } ?: emptyList()
+
+        val codeDataStruct = CodeDataStruct(
+            NodeName = ctx?.IDENTIFIER()?.first()?.text!!,
+            Extend = if (ctx?.IDENTIFIER()?.size == 2) ctx.IDENTIFIER(1).text else "",
+            Module = codeContainer.PackageName,
+            Position = buildPosition(ctx),
+            FilePath = codeContainer.FullName,
+            Package = codeContainer.PackageName,
+            Type = DataStructType.INTERFACE,
+            Functions = functions
+        )
+
+        codeContainer.DataStructures += codeDataStruct
+    }
+
     private fun constructStructDef(ctx: ThriftParser.Struct_Context?): CodeDataStruct {
         val codeDataStruct = CodeDataStruct(
             NodeName = ctx!!.IDENTIFIER().text,
