@@ -50,7 +50,7 @@ class ThriftFullIdentListener(fileName: String) : ThriftBaseListener() {
         return CodeField(
             TypeType = child.field_type().text,
             TypeKey = child.IDENTIFIER().text,
-            TypeValue = child.field_id()?.text ?: "",
+            TypeValue = child.field_id()?.integer()?.text ?: "",
             Modifiers = listOf(child.field_req()?.text ?: ""),
         )
     }
