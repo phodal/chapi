@@ -40,4 +40,39 @@ struct CrazyNesting {
         assertEquals("2", codeContainer.DataStructures[0].Fields[1].TypeValue)
         assertEquals(listOf("optional"), codeContainer.DataStructures[0].Fields[1].Modifiers)
     }
+
+    /// union
+    @Test
+    fun `should success parse for union`() {
+        val thriftAnalyser = ThriftAnalyser()
+
+        @Language("Thrift")
+        val validThriftCode = """
+union SomeUnion {
+  1: map<Numberz, UserId> map_thing,
+  2: string string_thing,
+  3: i32 i32_thing,
+  4: Xtruct3 xtruct_thing,
+  5: Insanity insanity_thing
+}
+        """
+        val filePath = "MyService.thrift"
+
+        // When
+        val codeContainer = thriftAnalyser.analysis(validThriftCode, filePath)
+
+        // Then
+        assertEquals("MyService.thrift", codeContainer.FullName)
+        assertEquals("SomeUnion", codeContainer.DataStructures[0].NodeName)
+
+        //first field
+        assertEquals("map<Numberz,UserId>", codeContainer.DataStructures[0].Fields[0].TypeType)
+        assertEquals("map_thing", codeContainer.DataStructures[0].Fields[0].TypeKey)
+        assertEquals("1", codeContainer.DataStructures[0].Fields[0].TypeValue)
+
+        // second field
+        assertEquals("string", codeContainer.DataStructures[0].Fields[1].TypeType)
+        assertEquals("string_thing", codeContainer.DataStructures[0].Fields[1].TypeKey)
+        assertEquals("2", codeContainer.DataStructures[0].Fields[1].TypeValue)
+    }
 }

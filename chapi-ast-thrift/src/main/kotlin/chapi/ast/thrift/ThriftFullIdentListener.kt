@@ -26,7 +26,11 @@ class ThriftFullIdentListener(fileName: String) : ThriftBaseListener() {
     override fun enterStruct_(ctx: ThriftParser.Struct_Context?) {
         val codeDataStruct = constructStructDef(ctx)
         codeContainer.DataStructures += codeDataStruct
+    }
 
+    override fun enterUnion_(ctx: ThriftParser.Union_Context?) {
+        val codeDataStruct = constructUnionDef(ctx)
+        codeContainer.DataStructures += codeDataStruct
     }
 
     private fun constructStructDef(ctx: ThriftParser.Struct_Context?): CodeDataStruct {
@@ -37,6 +41,23 @@ class ThriftFullIdentListener(fileName: String) : ThriftBaseListener() {
             FilePath = codeContainer.FullName,
             Package = codeContainer.PackageName,
             Type = DataStructType.STRUCT,
+        )
+
+        ctx.field().forEach {
+            codeDataStruct.Fields += constructField(it)
+        }
+
+        return codeDataStruct
+    }
+
+    private fun constructUnionDef(ctx: ThriftParser.Union_Context?): CodeDataStruct {
+        val codeDataStruct = CodeDataStruct(
+            NodeName = ctx!!.IDENTIFIER().text,
+            Module = codeContainer.PackageName,
+            Position = buildPosition(ctx),
+            FilePath = codeContainer.FullName,
+            Package = codeContainer.PackageName,
+            Type = DataStructType.UNION,
         )
 
         ctx.field().forEach {
