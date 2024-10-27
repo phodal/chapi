@@ -9,6 +9,7 @@ include(
     
     // tier 1 model language
     ":chapi-ast-protobuf",
+    ":chapi-ast-thrift",
 
     // tier 2 languages
     ":chapi-ast-kotlin",
