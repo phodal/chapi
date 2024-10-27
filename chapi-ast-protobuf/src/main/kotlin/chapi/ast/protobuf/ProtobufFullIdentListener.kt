@@ -13,7 +13,7 @@ class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() 
         codeContainer.PackageName = packageName
     }
 
-    fun buildPosition(ctx: ParserRuleContext): CodePosition {
+    private fun buildPosition(ctx: ParserRuleContext): CodePosition {
         val position = CodePosition()
         position.StartLine = ctx.start.line
         position.StartLinePosition = ctx.start.charPositionInLine
