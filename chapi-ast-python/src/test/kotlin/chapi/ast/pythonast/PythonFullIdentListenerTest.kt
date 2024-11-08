@@ -292,4 +292,18 @@ def majority(prediction_or_completions, normalize=default_normalize, field=None)
 """
         PythonAnalyser().analysis(code, "")
     }
+
+    @Test
+    internal fun shouldSuccessIdentParams() {
+        val code = """
+class GPQAInstanceDataset(GPQA):
+    def __init__(self, evaluation_api, subset:str, root: str=None, split: str="train", max_samples=-1):
+        super().__init__(subset, root, split, max_samples)
+        self.evaluation_api = evaluation_api
+"""
+        val codeContainer = PythonAnalyser().analysis(code, "")
+        assertEquals(codeContainer.DataStructures[0].Functions[0].Parameters.size, 5)
+
+        println(codeContainer.DataStructures[0].Functions[0].Parameters)
+    }
 }

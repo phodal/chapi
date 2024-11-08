@@ -11,14 +11,15 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
     var localVars = mutableMapOf<String, String>()
 
     fun buildParameters(listCtx: PythonParser.TypedargslistContext?): List<CodeProperty> {
-        val parameters = listCtx?.def_parameters()?.map { defParameters ->
-            defParameters.def_parameter().map { defParaCtx ->
+        val parameters = listCtx?.def_parameters()?.mapNotNull { defParameters ->
+            defParameters.def_parameter().mapNotNull { defParaCtx ->
+                if (defParaCtx.text == "self") return@mapNotNull null
+
                 val parameter = CodeProperty(
                     TypeType = "",
                     TypeValue = defParaCtx.text
                 )
 
-                // method parameter default value
                 if (defParaCtx.ASSIGN() != null) {
                     parameter.DefaultValue = defParaCtx.test().text
                     parameter.TypeValue = defParaCtx.named_parameter().text
