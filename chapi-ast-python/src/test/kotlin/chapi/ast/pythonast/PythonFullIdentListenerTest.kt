@@ -302,8 +302,24 @@ class GPQAInstanceDataset(GPQA):
         self.evaluation_api = evaluation_api
 """
         val codeContainer = PythonAnalyser().analysis(code, "")
-        assertEquals(codeContainer.DataStructures[0].Functions[0].Parameters.size, 5)
+        val parameters = codeContainer.DataStructures[0].Functions[0].Parameters
+        assertEquals(parameters.size, 5)
 
-        println(codeContainer.DataStructures[0].Functions[0].Parameters)
+        /// Check the first parameter
+        assertEquals(parameters[0].TypeValue, "evaluation_api")
+
+        /// Check the second parameter
+        assertEquals(parameters[1].TypeValue, "subset")
+        assertEquals(parameters[1].TypeType, "str")
+
+        /// Check the third parameter
+        assertEquals(parameters[2].TypeValue, "root")
+        assertEquals(parameters[2].TypeType, "str")
+        assertEquals(parameters[2].DefaultValue, "None")
+
+        /// Check the fourth parameter
+        assertEquals(parameters[3].TypeValue, "split")
+        assertEquals(parameters[3].TypeType, "str")
+        assertEquals(parameters[3].DefaultValue, "\"train\"")
     }
 }
