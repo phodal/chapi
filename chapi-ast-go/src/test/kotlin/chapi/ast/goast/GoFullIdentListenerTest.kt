@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 internal class GoFullIdentListenerTest {
     @Test
     internal fun shouldIdentifyPackageName() {
-        var code = """
+        val code= """
 package main
 """
 
@@ -18,7 +18,7 @@ package main
 
     @Test
     internal fun shouldIdentifySingleImport() {
-        var code = """
+        val code= """
 package main
 
 import "fmt"
@@ -31,7 +31,7 @@ import "fmt"
 
     @Test
     internal fun shouldIdentifyMultipleLineImport() {
-        var code = """
+        val code= """
 package main
 
 import "fmt"
@@ -47,7 +47,7 @@ import . "time"
 
     @Test
     internal fun shouldIdentifyMultipleTogetherImport() {
-        var code = """
+        val code= """
 package main
 
 import (
@@ -66,7 +66,7 @@ import (
 
     @Test
     internal fun shouldIdentifyBasicStruct() {
-        var code = """
+        val code= """
 package main
 
 type School struct {
@@ -86,7 +86,7 @@ type School struct {
 
     @Test
     internal fun shouldIdentifyBasicStructFunction() {
-        var code = """
+        val code= """
 package main
 
 import "fmt"
@@ -111,7 +111,7 @@ func (a *Animal) Move() {
 
     @Test
     internal fun shouldIdentifyStructFunctionReturnType() {
-        var code = """
+        val code= """
 package main
 
 import "fmt"
@@ -132,7 +132,7 @@ func (a *Animal) Move() string {
 
     @Test
     internal fun shouldIdentifyFunctionAsDefault() {
-        var code = """
+        val code= """
 package main
 
 func add(x int, y int) int {
@@ -147,7 +147,7 @@ func add(x int, y int) int {
 
     @Test
     internal fun shouldIdentifyFunctionMultipleReturnType() {
-        var code = """
+        val code= """
 package main
 
 func get(x int, y int) (int, int) {
@@ -162,7 +162,7 @@ func get(x int, y int) (int, int) {
 
     @Test
     internal fun shouldIdentifyFunctionParameters() {
-        var code = """
+        val code= """
 package main
 
 func get(x int, y int) (int, int) {
@@ -179,7 +179,7 @@ func get(x int, y int) (int, int) {
 
     @Test
     internal fun shouldIdentifyStructFuncCall() {
-        var code = """
+        val code= """
 package main
 
 import "fmt"
@@ -202,7 +202,7 @@ func (a *Animal) Move() {
 
     @Test
     internal fun shouldIdentifyFuncCall() {
-        var code = """
+        val code= """
 package main
 
 import "fmt"
@@ -221,7 +221,7 @@ func main() {
 
     @Test
     internal fun shouldIdentifyFunctionLocalVars() {
-        var code = """
+        val code= """
 package main
 
 func VarDecls() {
@@ -238,7 +238,7 @@ func VarDecls() {
 
     @Test
     internal fun shouldIdentifyFunctionShortVars() {
-        var code = """
+        val code= """
 package main
 
 func ShortDecls() {
@@ -252,7 +252,7 @@ func ShortDecls() {
 
     @Test
     internal fun shouldIdentifyFunctionConstVars() {
-        var code = """
+        val code= """
 package main
 
 func ConstDecls() {
@@ -272,7 +272,7 @@ func ConstDecls() {
 
     @Test
     internal fun shouldIdentifyStructFunctionLocalVars() {
-        var code = """
+        val code= """
 package main
 
 import "fmt"
