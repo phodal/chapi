@@ -452,7 +452,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     override fun enterConstDecl(ctx: GoParser.ConstDeclContext?) {
         ctx?.constSpec()?.forEach { constSpecContext ->
             constSpecContext.identifierList().IDENTIFIER().forEach { terminalNode ->
-                localVars[terminalNode.text] = constSpecContext.type_()?.text ?: constSpecContext.expressionList().text
+                localVars[terminalNode.text] = constSpecContext.type_()?.text ?: constSpecContext?.expressionList()?.text ?: ""
             }
         }
     }
