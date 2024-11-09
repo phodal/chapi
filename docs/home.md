@@ -22,6 +22,7 @@ refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-te
 
 Chapi (pronounce /tʃɑpi/) also pronounce XP in Chinese if you always call X in 叉.
 
+
 language stages:
 
 | Features      | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
@@ -31,6 +32,15 @@ language stages:
 | function call | ✅    | ✅      | 🆕 | ✅      | ✅     | 🆕 |    |       |     | ✅    |
 | arch/package  | ✅    |        |    | ✅      | ✅     | 🆕 |    | ✅     | ✅   | 🆕   |
 | real world    | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |
+
+IDL stages:
+
+| Features      | Protobuf | Thrift | 
+|---------------|----------|--------|
+| syntax parse  | ✅        | ✅      |
+| http api decl | ✅        | ✅      |
+| arch/package  | ✅        |        |
+| real world    | ✅        |        | 
 
 - [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is an architecture workbench, also for architecture
   governance, which can analysis architecture in container, component, code level, create architecture fitness functions,

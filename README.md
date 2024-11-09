@@ -26,6 +26,15 @@ language stages:
 | arch/package  | ✅    |        |    | ✅      | ✅     | 🆕 |    | ✅     | ✅   | 🆕   |
 | real world    | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |
 
+IDL stages:
+
+| Features      | Protobuf | Thrift | 
+|---------------|----------|--------|
+| syntax parse  | ✅        | ✅      |
+| http api decl | ✅        | ✅      |
+| arch/package  | ✅        |        |
+| real world    | ✅        |        | 
+
 - [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is an architecture workbench, also for architecture
   governance, which can analysis architecture in container, component, code level, create architecture fitness
   functions,
