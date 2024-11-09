@@ -210,26 +210,29 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     override fun enterExpression(ctx: GoParser.ExpressionContext?) {
         when (val firstChild = ctx?.getChild(0)) {
             is GoParser.PrimaryExprContext -> {
-//                process
-                firstChild.getChild(1)?.let { this.handlePrimaryExprCtx(firstChild) }
+                firstChild.getChild(1)?.let {
+                    val codeCall = this.handlePrimaryExprCtx(firstChild)
+
+                    if (blockStack.count() > 0) {
+                        lastBlock.FunctionCalls += codeCall
+                    } else {
+                        currentFunction.FunctionCalls += codeCall
+                    }
+                }
             }
         }
     }
 
-    private fun handlePrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext) {
-        when (val arguments = primaryExprCtx.getChild(1)) {
+    private fun handlePrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext): List<CodeCall> {
+        return when (val arguments = primaryExprCtx.getChild(1)) {
             is GoParser.ArgumentsContext -> {
                 val codeCall = codeCallFromExprList(primaryExprCtx.getChild(0), arguments)
-
-                if (blockStack.count() > 0) {
-                    lastBlock.FunctionCalls += codeCall
-                } else {
-                    currentFunction.FunctionCalls += codeCall
-                }
+                listOf(codeCall)
             }
 
             else -> {
                 println("${arguments.javaClass} not implemented ${arguments.text}")
+                listOf()
             }
         }
     }
