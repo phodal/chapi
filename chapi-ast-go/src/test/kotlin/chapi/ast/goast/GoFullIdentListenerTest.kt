@@ -330,4 +330,53 @@ func (d *Dao) QueryBuglyProjectList() (projectList []string, err error) {
         assertEquals(functionCalls[1].NodeName, "Dao.db")
         assertEquals(functionCalls[1].FunctionName, "Rows")
     }
+
+    @Test
+    internal fun shouldIdentifyLocalVarWithText() {
+        @Language("Go")
+        val code= """
+package dao
+
+import (
+	"database/sql"
+	"fmt"
+
+	"go-common/app/admin/ep/merlin/model"
+)
+
+func (d *Dao) MobileMachineLendCount() (mobileMachinesUsageCount []*model.MobileMachineUsageCount, err error) {
+	var rows *sql.Rows
+
+	SQL := fmt.Sprintf("select b.id,b.name,count(b.name) as count from mobile_machine_logs as a "+
+		"left join mobile_machines as b on a.machine_id = b.id "+
+		"where a.operation_type='%s' and a.operation_result = '%s' "+
+		"group by b.id,b.`name` order by count desc", model.MBLendOutLog, model.OperationSuccessForMachineLog)
+
+	if rows, err = d.db.Raw(SQL).Rows(); err != nil {
+		return
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		mc := &model.MobileMachineUsageCount{}
+		if err = rows.Scan(&mc.MobileMachineID, &mc.MobileMachineName, &mc.Count); err != nil {
+			return
+		}
+		mobileMachinesUsageCount = append(mobileMachinesUsageCount, mc)
+	}
+	return
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        println(functionCalls)
+
+        assertEquals(functionCalls.size, 7)
+        assertEquals(functionCalls[0].NodeName, "fmt")
+
+        assertEquals(functionCalls[1].NodeName, "Dao.db")
+        assertEquals(functionCalls[1].FunctionName, "Raw")
+        assertEquals(functionCalls[1].Parameters.size, 1)
+        assertEquals(functionCalls[1].Parameters[0].TypeValue, "\"select b.id,b.name,count(b.name) as count from mobile_machine_logs as a \"+\"left join mobile_machines as b on a.machine_id = b.id \"+\"where a.operation_type='%s' and a.operation_result = '%s' \"+\"group by b.id,b.`name` order by count desc\"")
+    }
 }

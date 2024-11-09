@@ -3,6 +3,7 @@ package chapi.ast.goast
 import chapi.ast.antlr.GoParser
 import chapi.domain.core.*
 import chapi.infra.Stack
+import org.antlr.v4.runtime.RuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
@@ -321,7 +322,24 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         return calls
     }
 
-    private fun handleForPrimary(child: GoParser.PrimaryExprContext): String? {
+    var goPrintFuncs: List<String> = listOf(
+        "fmt.Print",
+        "fmt.Printf",
+        "fmt.Println",
+
+        "fmt.Sprint",
+        "fmt.Sprintf",
+        "fmt.Sprintln",
+
+        "fmt.Fprint",
+        "fmt.Fprintf",
+        "fmt.Fprintln",
+
+        "fmt.Errorf"
+    )
+
+
+    private fun handleForPrimary(child: GoParser.PrimaryExprContext, isForLocalVar: Boolean = false): String? {
         val nodeName = when (val first = child.getChild(0)) {
             is GoParser.OperandContext -> {
                 first.text
@@ -329,9 +347,19 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
             is GoParser.PrimaryExprContext -> {
                 if (first.primaryExpr() != null) {
-                    handleForPrimary(first).orEmpty()
+                    handleForPrimary(first, isForLocalVar).orEmpty()
                 } else {
-                    localVars.getOrDefault(first.text, first.text)
+                    val parent = child.parent
+                    if (isForLocalVar && first.text == "fmt" && parent.text.startsWith("fmt.")) {
+                        if (parent is GoParser.PrimaryExprContext) {
+                            val content = getValueFromPrintf(parent)
+                            localVars.getOrDefault(first.text, content)
+                        } else {
+                            localVars.getOrDefault(first.text, first.text)
+                        }
+                    } else {
+                        localVars.getOrDefault(first.text, first.text)
+                    }
                 }
             }
 
@@ -361,6 +389,20 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         return nodeName
     }
 
+    private fun getValueFromPrintf(parent: RuleContext): String {
+        val child = parent.getChild(1)
+        if (child !is GoParser.ArgumentsContext) {
+            return child.text.removePrefix("(").removeSuffix(")")
+        }
+
+        val first = child.getChild(1)
+        if (first is GoParser.ExpressionListContext) {
+            return first.getChild(0).text.removePrefix("(").removeSuffix(")")
+        }
+
+        return child.text.removePrefix("(").removeSuffix(")")
+    }
+
     override fun enterVarDecl(ctx: GoParser.VarDeclContext?) {
         ctx?.varSpec()?.forEach {
             it.identifierList().IDENTIFIER().forEach { terminalNode ->
@@ -371,15 +413,15 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     override fun enterShortVarDecl(ctx: GoParser.ShortVarDeclContext?) {
         ctx?.identifierList()?.IDENTIFIER()?.forEach {
-            localVars[it.text] = nodeNameFromExpr(ctx)
+            localVars[it.text] = nodeNameFromExpr(ctx, isForLocalVar = true)
         }
     }
 
-    private fun nodeNameFromExpr(ctx: GoParser.ShortVarDeclContext): String {
+    private fun nodeNameFromExpr(ctx: GoParser.ShortVarDeclContext, isForLocalVar: Boolean): String {
         ctx.expressionList().expression()?.forEach {
             when (val firstChild = it.getChild(0)) {
                 is GoParser.PrimaryExprContext -> {
-                    return handleForPrimary(firstChild).orEmpty()
+                    return handleForPrimary(firstChild, isForLocalVar).orEmpty()
                 }
             }
         }
