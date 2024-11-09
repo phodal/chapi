@@ -3,6 +3,7 @@ package chapi.ast.goast
 import chapi.ast.antlr.GoParser
 import chapi.domain.core.*
 import chapi.infra.Stack
+import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 /**
@@ -114,7 +115,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 TypeValue = ident,
                 TypeType = typetype
             )
-        }?: listOf()
+        } ?: listOf()
     }
 
     private fun processingType(it: GoParser.ParameterDeclContext): Pair<String, String> {
@@ -216,10 +217,10 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun handlePrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext) {
-        when (val child = primaryExprCtx.getChild(1)) {
+        when (val arguments = primaryExprCtx.getChild(1)) {
             is GoParser.ArgumentsContext -> {
-                val codeCall = codeCallFromExprList(primaryExprCtx)
-                codeCall.Parameters = parseArguments(child)
+                val codeCall = codeCallFromExprList(primaryExprCtx.getChild(0), arguments)
+                codeCall.Parameters = parseArguments(arguments)
                 codeCall.Package = wrapTarget(codeCall.NodeName)
 
                 if (blockStack.count() > 0) {
@@ -230,7 +231,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             }
 
             else -> {
-                println("${child.javaClass} not implemented ${child.text}")
+                println("${arguments.javaClass} not implemented ${arguments.text}")
             }
         }
     }
@@ -263,11 +264,20 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         return child.expressionList()?.expression()?.map {
             val (value, typetype) = processingStringType(it.text, "")
             CodeProperty(TypeValue = value, TypeType = typetype)
-        }?: listOf()
+        } ?: listOf()
     }
 
-    private fun codeCallFromExprList(primaryExprCtx: GoParser.PrimaryExprContext): CodeCall {
-        return when (val child = primaryExprCtx.getChild(0)) {
+    /**
+     * ```antlr
+     * primaryExpr:
+     * 	operand
+     * 	| conversion
+     * 	| methodExpr
+     * 	| primaryExpr ((DOT IDENTIFIER) | index | slice_ | typeAssertion | arguments);
+     * ```
+     */
+    private fun codeCallFromExprList(child: ParseTree, arguments: GoParser.ArgumentsContext): CodeCall {
+        return when (child) {
             is GoParser.OperandContext -> {
                 CodeCall(NodeName = child.text)
             }
