@@ -205,13 +205,13 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
      * 2. http.Status() will be Primary Dot arguments
      * 3. http[0] will be Primary Index
      * So, we just look up expression, the find the primaryExpr, will handle all cases
-     * expression -> primaryExpr -> PrimaryExpr, then handle [GoFullIdentListener.handlePrimaryExprCtx]
+     * expression -> primaryExpr -> PrimaryExpr, then handle [GoFullIdentListener.handlePrimaryExprCall]
      */
     override fun enterExpression(ctx: GoParser.ExpressionContext?) {
         when (val firstChild = ctx?.getChild(0)) {
             is GoParser.PrimaryExprContext -> {
                 firstChild.getChild(1)?.let {
-                    val codeCall = this.handlePrimaryExprCtx(firstChild)
+                    val codeCall = this.handlePrimaryExprCall(firstChild)
 
                     if (blockStack.count() > 0) {
                         lastBlock.FunctionCalls += codeCall
@@ -223,15 +223,13 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
-    private fun handlePrimaryExprCtx(primaryExprCtx: GoParser.PrimaryExprContext): List<CodeCall> {
+    private fun handlePrimaryExprCall(primaryExprCtx: GoParser.PrimaryExprContext): List<CodeCall> {
         return when (val arguments = primaryExprCtx.getChild(1)) {
             is GoParser.ArgumentsContext -> {
-                val codeCall = codeCallFromExprList(primaryExprCtx.getChild(0), arguments)
-                listOf(codeCall)
+                codeCallFromExprList(primaryExprCtx.getChild(0), arguments)
             }
 
             else -> {
-                println("${arguments.javaClass} not implemented ${arguments.text}")
                 listOf()
             }
         }
@@ -264,6 +262,10 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private fun parseArguments(child: GoParser.ArgumentsContext): List<CodeProperty> {
         return child.expressionList()?.expression()?.map {
             val (value, typetype) = processingStringType(it.text, "")
+            if (localVars.containsKey(value)) {
+                return@map CodeProperty(TypeValue = value, TypeType = localVars[value]!!)
+            }
+
             CodeProperty(TypeValue = value, TypeType = typetype)
         } ?: listOf()
     }
@@ -277,27 +279,37 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
      * 	| primaryExpr ((DOT IDENTIFIER) | index | slice_ | typeAssertion | arguments);
      * ```
      */
-    private fun codeCallFromExprList(child: ParseTree, arguments: GoParser.ArgumentsContext): CodeCall {
-        val codeCall = CodeCall(NodeName = child.text)
-        codeCall.Parameters = parseArguments(arguments)
-        codeCall.Package = wrapTarget(codeCall.NodeName)
+    private fun codeCallFromExprList(child: ParseTree, arguments: GoParser.ArgumentsContext): List<CodeCall> {
+        val calls = mutableListOf<CodeCall>()
+
+        val currentCall = CodeCall(NodeName = child.text).apply {
+            Parameters = parseArguments(arguments)
+            Package = wrapTarget(NodeName)
+        }
 
         when (child) {
             is GoParser.PrimaryExprContext -> {
                 when (child.getChild(1)) {
                     is TerminalNodeImpl -> {
-                        // TerminalNodeImpl => primaryExpr '.' IDENTIFIER
                         val nodeName = nodeNameFromPrimary(child)
 
-                        codeCall.NodeName = nodeName
-                        codeCall.FunctionName = child.getChild(2).text
-                        codeCall.Package = wrapTarget(codeCall.NodeName)
+                        if (child.getChild(0) is GoParser.PrimaryExprContext && child.childCount > 2) {
+                            val primaryCalls = handlePrimaryExprCall(child.getChild(0) as GoParser.PrimaryExprContext)
+                            calls.addAll(primaryCalls)
+                        }
+
+                        currentCall.apply {
+                            NodeName = nodeName
+                            FunctionName = child.getChild(2).text
+                            Package = wrapTarget(nodeName)
+                        }
                     }
                 }
             }
         }
 
-        return codeCall
+        calls.add(currentCall)
+        return calls
     }
 
     private fun nodeNameFromPrimary(child: GoParser.PrimaryExprContext): String {
