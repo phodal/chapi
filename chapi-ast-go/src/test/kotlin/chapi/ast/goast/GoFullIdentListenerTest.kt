@@ -267,7 +267,7 @@ func ConstDecls() {
 """
         val codeFile = GoAnalyser().analysis(code, "")
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables.size, 4)
-        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeType, "")
+        assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeType, "-1")
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeValue, "eof")
     }
 
@@ -329,6 +329,54 @@ func (d *Dao) QueryBuglyProjectList() (projectList []string, err error) {
 
         assertEquals(functionCalls[1].NodeName, "Dao.db")
         assertEquals(functionCalls[1].FunctionName, "Rows")
+    }
+
+    @Test
+    internal fun shouldIdentifyConstLocalVars() {
+        @Language("Go")
+        val code= """
+package dao
+
+
+const (
+	_taskSQL      = "SELECT id,business_id,flow_id,rid,admin_id,uid,state,weight,utime,gtime,mid,fans,`group`,reason,ctime,mtime from task WHERE id=?"
+	_listCheckSQL = "SELECT id FROM task WHERE id IN (%s)"
+
+	_dispatchByIDSQL = "UPDATE task SET gtime=? WHERE id=? AND state=? AND uid=? AND gtime=0"
+	_queryGtimeSQL   = "SELECT gtime FROM task WHERE id=? AND state=? AND uid=?"
+	_dispatchSQL     = "UPDATE task SET gtime=? WHERE state=? AND uid=? AND gtime='0000-00-00 00:00:00' ORDER BY weight LIMIT ?"
+	_releaseSQL      = "UPDATE task SET admin_id=0,uid=0,state=0,gtime='0000-00-00 00:00:00' WHERE business_id=? AND flow_id=? AND uid=? AND (state=? OR (state=0 AND admin_id>0))"
+	_resetGtimeSQL   = "UPDATE task SET gtime='0000-00-00 00:00:00' WHERE state=? AND business_id=? AND flow_id=? AND uid=?"
+	_seizeSQL        = "UPDATE task SET state=?,uid=? WHERE id=? AND state=?"
+	_submitSQL       = "UPDATE task SET state=?,uid=?,utime=? WHERE id=? AND state=? AND uid=?"
+	_delaySQL        = "UPDATE task SET state=?,uid=?,reason=?,gtime='0000-00-00 00:00:00' WHERE id=? AND state=? AND uid=?"
+
+	_consumerSQL     = "INSERT INTO task_consumer (business_id,flow_id,uid,state) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE state=?"
+	_onlinesSQL      = "SELECT uid,mtime FROM task_consumer WHERE business_id=? AND flow_id=? AND state=?"
+	_isconsumerOnSQL = "SELECT state FROM task_consumer WHERE business_id=? AND flow_id=? AND uid=?"
+
+	_queryTaskSQL     = "SELECT id,business_id,flow_id,uid,weight FROM task WHERE state=? AND mtime<=? AND id>? ORDER BY id LIMIT ?"
+	_countPersonalSQL = "SELECT count(*) FROM task WHERE state=? AND business_id=? AND flow_id=? AND uid=?"
+	_queryForSeizeSQL = "SELECT id FROM task WHERE state=? AND business_id=? AND flow_id=? AND uid IN (0,?) ORDER BY weight DESC LIMIT ?"
+	_listTasksSQL     = "SELECT `id`,`business_id`,`flow_id`,`rid`,`admin_id`,`uid`,`state`,`weight`,`utime`,`gtime`,`mid`,`fans`,`group`,`reason`,`ctime`,`mtime` FROM task %s ORDER BY weight DESC LIMIT ?,?"
+)
+
+func (d *Dao) CountPersonal(c context.Context, opt *common.BaseOptions) (count int64, err error) {
+	if err = d.db.QueryRow(c, _countPersonalSQL, modtask.TaskStateDispatch, opt.BusinessID, opt.FlowID, opt.UID).Scan(&count); err != nil {
+		log.Error("QueryRow error(%v)", errors.WithStack(err))
+		return
+	}
+	return
+}
+"""
+
+        val codeFile = GoAnalyser().analysis(code, "")
+        val vars = codeFile.DataStructures[0].Functions[0].LocalVariables
+
+        assertEquals(vars.size, 19)
+        // get first var
+        assertEquals(vars[0].TypeValue, "_taskSQL")
+        assertEquals(vars[0].TypeType, "\"SELECT id,business_id,flow_id,rid,admin_id,uid,state,weight,utime,gtime,mid,fans,`group`,reason,ctime,mtime from task WHERE id=?\"")
     }
 
     @Test

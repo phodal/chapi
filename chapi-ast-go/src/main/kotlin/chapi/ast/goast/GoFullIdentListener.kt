@@ -60,11 +60,13 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun exitFunctionDecl(ctx: GoParser.FunctionDeclContext?) {
-        currentFunction.addVarsFromMap(localVars)
+        currentFunction.LocalVariables = localVars.map { entry ->
+            CodeProperty(TypeValue = entry.key, DefaultValue = entry.value, TypeType = entry.value)
+        }
+
         defaultNode.Functions += currentFunction
         currentFunction = CodeFunction()
     }
-
 
     private var blockStack = Stack<CodeFunction>()
     private var lastBlock = CodeFunction(Type = FunctionType.Block, Name = "chapi_block")
@@ -149,7 +151,10 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
     override fun exitMethodDecl(ctx: GoParser.MethodDeclContext?) {
         val receiverName = this.getStructNameFromReceiver(ctx?.receiver()?.parameters())
-        currentFunction.addVarsFromMap(localVars)
+        currentFunction.LocalVariables = localVars.map { entry ->
+            CodeProperty(TypeValue = entry.key, DefaultValue = entry.value, TypeType = entry.value)
+        }
+
         this.addReceiverToStruct(receiverName, currentFunction)
         currentFunction = CodeFunction()
     }
@@ -432,7 +437,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     override fun enterConstDecl(ctx: GoParser.ConstDeclContext?) {
         ctx?.constSpec()?.forEach { constSpecContext ->
             constSpecContext.identifierList().IDENTIFIER().forEach { terminalNode ->
-                localVars[terminalNode.text] = constSpecContext.type_()?.text ?: ""
+                localVars[terminalNode.text] = constSpecContext.type_()?.text ?: constSpecContext.expressionList().text
             }
         }
     }
