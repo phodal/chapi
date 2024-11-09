@@ -219,7 +219,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             }
 
             else -> {
-//                println("${child.javaClass} not implemented ${child.text}")
+                println("${child.javaClass} not implemented ${child.text}")
             }
         }
     }
@@ -266,7 +266,6 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             }
 
             is GoParser.PrimaryExprContext -> {
-                CodeCall(NodeName = child.text)
                 when (child.getChild(1)) {
                     is TerminalNodeImpl -> {
                         // TerminalNodeImpl => primaryExpr '.' IDENTIFIER
