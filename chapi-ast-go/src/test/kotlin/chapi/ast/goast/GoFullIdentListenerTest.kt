@@ -427,4 +427,45 @@ func (d *Dao) MobileMachineLendCount() (mobileMachinesUsageCount []*model.Mobile
         assertEquals(functionCalls[1].Parameters.size, 1)
         assertEquals(functionCalls[1].Parameters[0].TypeValue, "\"select b.id,b.name,count(b.name) as count from mobile_machine_logs as a \"+\"left join mobile_machines as b on a.machine_id = b.id \"+\"where a.operation_type='%s' and a.operation_result = '%s' \"+\"group by b.id,b.`name` order by count desc\"")
     }
+
+    @Test
+    fun shouldIdentCallInSideCall() {
+        @Language("Go")
+        val code= """
+package dao
+
+const _chArcAddSQL      = "INSERT INTO member_channel_video%d (mid,cid,aid,order_num,modify_time) VALUES %s"
+            
+func (d *Dao) AddChannelArc(c context.Context, mid, cid int64, ts time.Time, chs []*model.ChannelArcSort) (lastID int64, err error) {
+	var (
+		res    sql.Result
+		values []string
+	)
+	for _, v := range chs {
+		values = append(values, fmt.Sprintf("(%d,%d,%d,%d,'%s')", mid, cid, v.Aid, v.OrderNum, ts.Format("2006-01-02 15:04:05")))
+	}
+	if res, err = d.db.Exec(c, fmt.Sprintf(_chArcAddSQL, channelHit(mid), strings.Join(values, ","))); err != nil {
+		log.Error("AddChannelArc: db.Exec(%d,%d) error(%v)", mid, cid, err)
+		return
+	}
+	return res.LastInsertId()
+}
+"""
+
+        val codeFile = GoAnalyser().analysis(code, "")
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        println(functionCalls)
+
+        assertEquals(functionCalls.size, 9)
+
+        val fourthCall = functionCalls[3]
+        assertEquals(fourthCall.NodeName, "Dao.db")
+        assertEquals(fourthCall.FunctionName, "Exec")
+        assertEquals(fourthCall.Parameters.size, 2)
+        val secondParameter = fourthCall.Parameters[1]
+        assertEquals(secondParameter.TypeValue, "\"INSERT INTO member_channel_video%d (mid,cid,aid,order_num,modify_time) VALUES %s\", channelHit(mid), strings.Join(values,\",\")")
+
+        val codeProperty = secondParameter.Parameters
+        assertEquals(codeProperty[0].TypeValue, "\"INSERT INTO member_channel_video%d (mid,cid,aid,order_num,modify_time) VALUES %s\"")
+    }
 }

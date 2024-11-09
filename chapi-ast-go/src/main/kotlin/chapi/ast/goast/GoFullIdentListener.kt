@@ -1,6 +1,7 @@
 package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
+import chapi.ast.antlr.GoParser.PrimaryExprContext
 import chapi.domain.core.*
 import chapi.infra.Stack
 import org.antlr.v4.runtime.RuleContext
@@ -271,6 +272,20 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             val (value, typetype) = processingStringType(it.text, "")
             if (localVars.containsKey(value)) {
                 return@map CodeProperty(TypeValue = localVars[value]!!, TypeType = typetype)
+            }
+
+            /// handle for fmt.print series function, if it.s a fmt.print series function, should return the value
+            val isPrintFunc = goPrintFuncs.any { value.split("(").firstOrNull() == it }
+            if (it.getChild(0) is PrimaryExprContext && isPrintFunc) {
+                val content = value.split("(").lastOrNull()?.removeSuffix(")")
+                val params = it.getChild(0).getChild(1) as? GoParser.ArgumentsContext
+                if (params != null) {
+                    val childElements = parseArguments(params)
+                    val elementContent = childElements.joinToString(", ") { it.TypeValue }
+                    return@map CodeProperty(TypeValue = elementContent, TypeType = typetype, Parameters = childElements)
+                }
+
+                return@map CodeProperty(TypeValue = content ?: "", TypeType = typetype)
             }
 
             CodeProperty(TypeValue = value, TypeType = typetype)

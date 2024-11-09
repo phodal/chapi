@@ -12,5 +12,8 @@ data class CodeProperty(
     /// for TypeScript and Parameter
     var ObjectValue: List<CodeProperty> = listOf(),
     var ReturnTypes: List<CodeProperty> = listOf(),
+    /**
+     * in Golang, we also use it to save fmt.Print series values, like `fmt.Println("hello", "world")`
+     */
     var Parameters: List<CodeProperty> = listOf(),
 )
