@@ -15,6 +15,11 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private var structMap = mutableMapOf<String, CodeDataStruct>()
     private var localVars = mutableMapOf<String, String>()
 
+    /**
+     * Only for resolve receiver for method call
+     */
+    private var receiverForCall = mutableMapOf<String, String>()
+
     private var currentFunction = CodeFunction(IsConstructor = false)
 
     override fun enterImportDecl(ctx: GoParser.ImportDeclContext?) {
@@ -87,6 +92,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterMethodDecl(ctx: GoParser.MethodDeclContext?) {
+        val receiverName = this.getStructNameFromReceiver(ctx!!.receiver()?.parameters())
+        if (ctx.receiver() != null) {
+            val text = ctx.receiver().parameters().parameterDecl()[0].identifierList().text
+            receiverForCall[text] = receiverName
+        }
+
         currentFunction = CodeFunction(
             Name = ctx!!.IDENTIFIER().text,
             MultipleReturns = buildReturnTypeFromSignature(ctx.signature()),
@@ -307,6 +318,11 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 first.text
             }
         }
+
+        if (receiverForCall.containsKey(nodeName)) {
+            return receiverForCall[nodeName]!!
+        }
+
         return nodeName
     }
 

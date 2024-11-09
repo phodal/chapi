@@ -1,6 +1,7 @@
 package chapi.ast.goast
 
 import chapi.domain.core.DataStructType
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -294,5 +295,33 @@ func (a *Animal) Move() {
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[1].TypeValue, "a")
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[2].TypeValue, "b")
         assertEquals(codeFile.DataStructures[0].Functions[0].LocalVariables[3].TypeValue, "c")
+    }
+
+    @Test
+    internal fun shouldSuccessGetSqlOfNode() {
+        @Language("Go")
+        val code= """
+package dao
+
+import (
+	"database/sql"
+)
+
+func (d *Dao) QueryBuglyProjectList() (projectList []string, err error) {
+	var (
+		rows *sql.Rows
+	)
+	sql := "select DISTINCT project_name from bugly_projects"
+	if rows, err = d.db.Raw(sql).Rows(); err != nil {
+		return
+	}
+}
+"""
+        val codeFile = GoAnalyser().analysis(code, "")
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+        println(functionCalls)
+
+        assertEquals(functionCalls.size, 1)
+        assertEquals(functionCalls[0].NodeName, "Dao")
     }
 }
