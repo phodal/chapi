@@ -291,15 +291,23 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             is GoParser.PrimaryExprContext -> {
                 when (child.getChild(1)) {
                     is TerminalNodeImpl -> {
-                        val nodeName = nodeNameFromPrimary(child)
 
                         if (child.getChild(0) is GoParser.PrimaryExprContext && child.childCount > 2) {
                             val primaryCalls = handlePrimaryExprCall(child.getChild(0) as GoParser.PrimaryExprContext)
                             calls.addAll(primaryCalls)
                         }
 
+                        val functionName = child.getChild(2).text
+                        val nodeName = handleForPrimary(child).orEmpty()
+
+                        // if nodeName ends with $.functionName, the functionName should be remove
+                        if (nodeName.endsWith(".$functionName")) {
+                            currentCall.NodeName = nodeName.substring(0, nodeName.length - functionName.length - 1)
+                        } else {
+                            currentCall.NodeName = nodeName
+                        }
+
                         currentCall.apply {
-                            NodeName = nodeName
                             FunctionName = child.getChild(2).text
                             Package = wrapTarget(nodeName)
                         }
@@ -312,7 +320,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         return calls
     }
 
-    private fun nodeNameFromPrimary(child: GoParser.PrimaryExprContext): String {
+    private fun handleForPrimary(child: GoParser.PrimaryExprContext): String? {
         val nodeName = when (val first = child.getChild(0)) {
             is GoParser.OperandContext -> {
                 first.text
@@ -320,7 +328,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
             is GoParser.PrimaryExprContext -> {
                 if (first.primaryExpr() != null) {
-                    nodeNameFromPrimary(first)
+                    handleForPrimary(first).orEmpty()
                 } else {
                     localVars.getOrDefault(first.text, first.text)
                 }
@@ -331,13 +339,26 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             }
         }
 
+        if (child.childCount > 1 && child.DOT() != null) {
+            val identifier = child.IDENTIFIER()?.text ?: ""
+            val fullName = "$nodeName.$identifier"
+            if (receiverForCall.containsKey(fullName)) {
+                return receiverForCall[fullName]!!
+            }
+            if (receiverForCall.containsKey(nodeName)) {
+                val baseType = receiverForCall[nodeName]!!
+                return "$baseType.$identifier"
+            }
+
+            return nodeName
+        }
+
         if (receiverForCall.containsKey(nodeName)) {
             return receiverForCall[nodeName]!!
         }
 
         return nodeName
     }
-
 
     override fun enterVarDecl(ctx: GoParser.VarDeclContext?) {
         ctx?.varSpec()?.forEach {
@@ -357,7 +378,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         ctx.expressionList().expression()?.forEach {
             when (val firstChild = it.getChild(0)) {
                 is GoParser.PrimaryExprContext -> {
-                    return nodeNameFromPrimary(firstChild)
+                    return handleForPrimary(firstChild).orEmpty()
                 }
             }
         }
