@@ -325,7 +325,7 @@ func (d *Dao) QueryBuglyProjectList() (projectList []string, err error) {
         assertEquals(functionCalls[0].NodeName, "Dao")
         assertEquals(functionCalls[0].FunctionName, "Raw")
         assertEquals(functionCalls[0].Parameters.size, 1)
-        assertEquals(functionCalls[0].Parameters[0].TypeValue, "sql")
+        assertEquals(functionCalls[0].Parameters[0].TypeValue, "\"select DISTINCT project_name from bugly_projects\"")
 
         assertEquals(functionCalls[1].NodeName, "Dao")
         assertEquals(functionCalls[1].FunctionName, "Rows")

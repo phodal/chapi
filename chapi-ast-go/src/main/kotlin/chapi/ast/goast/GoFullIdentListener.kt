@@ -263,7 +263,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         return child.expressionList()?.expression()?.map {
             val (value, typetype) = processingStringType(it.text, "")
             if (localVars.containsKey(value)) {
-                return@map CodeProperty(TypeValue = value, TypeType = localVars[value]!!)
+                return@map CodeProperty(TypeValue = localVars[value]!!, TypeType = typetype)
             }
 
             CodeProperty(TypeValue = value, TypeType = typetype)
