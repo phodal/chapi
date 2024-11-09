@@ -95,12 +95,13 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     override fun enterMethodDecl(ctx: GoParser.MethodDeclContext?) {
         val receiverName = this.getStructNameFromReceiver(ctx!!.receiver()?.parameters())
         if (ctx.receiver() != null) {
-            val text = ctx.receiver().parameters().parameterDecl()[0].identifierList().text
+            val parameterDecl = ctx.receiver().parameters().parameterDecl()
+            val text = parameterDecl.getOrNull(0)?.identifierList()?.text ?: ""
             receiverForCall[text] = receiverName
         }
 
         currentFunction = CodeFunction(
-            Name = ctx!!.IDENTIFIER().text,
+            Name = ctx.IDENTIFIER().text,
             MultipleReturns = buildReturnTypeFromSignature(ctx.signature()),
             Parameters = buildParameters(ctx.signature().parameters())
         )
