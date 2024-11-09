@@ -147,6 +147,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             tyType = "FunctionCall"
         }
 
+        // if value starts with & or * should be a pointer
+        if (value.startsWith("&") || value.startsWith("*")) {
+            tyType = "Pointer"
+            value = value.substring(1)
+        }
+
         return Pair(value, tyType)
     }
 
@@ -217,7 +223,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
      */
     override fun enterExpression(ctx: GoParser.ExpressionContext?) {
         when (val firstChild = ctx?.getChild(0)) {
-            is GoParser.PrimaryExprContext -> {
+            is PrimaryExprContext -> {
                 firstChild.getChild(1)?.let {
                     val codeCall = this.handlePrimaryExprCall(firstChild)
 
@@ -231,7 +237,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
-    private fun handlePrimaryExprCall(primaryExprCtx: GoParser.PrimaryExprContext): List<CodeCall> {
+    private fun handlePrimaryExprCall(primaryExprCtx: PrimaryExprContext): List<CodeCall> {
         return when (val arguments = primaryExprCtx.getChild(1)) {
             is GoParser.ArgumentsContext -> {
                 codeCallFromExprList(primaryExprCtx.getChild(0), arguments)
@@ -270,7 +276,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private fun parseArguments(child: GoParser.ArgumentsContext): List<CodeProperty> {
         return child.expressionList()?.expression()?.map {
             val (value, typetype) = processingStringType(it.text, "")
-            if (localVars.containsKey(value)) {
+            if (localVars.containsKey(value) && localVars[value] != "") {
                 return@map CodeProperty(TypeValue = localVars[value]!!, TypeType = typetype)
             }
 
@@ -310,12 +316,11 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
 
         when (child) {
-            is GoParser.PrimaryExprContext -> {
+            is PrimaryExprContext -> {
                 when (child.getChild(1)) {
                     is TerminalNodeImpl -> {
-
-                        if (child.getChild(0) is GoParser.PrimaryExprContext && child.childCount > 2) {
-                            val primaryCalls = handlePrimaryExprCall(child.getChild(0) as GoParser.PrimaryExprContext)
+                        if (child.getChild(0) is PrimaryExprContext && child.childCount > 2) {
+                            val primaryCalls = handlePrimaryExprCall(child.getChild(0) as PrimaryExprContext)
                             calls.addAll(primaryCalls)
                         }
 
@@ -359,19 +364,19 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     )
 
 
-    private fun handleForPrimary(child: GoParser.PrimaryExprContext, isForLocalVar: Boolean = false): String? {
+    private fun handleForPrimary(child: PrimaryExprContext, isForLocalVar: Boolean = false): String? {
         val nodeName = when (val first = child.getChild(0)) {
             is GoParser.OperandContext -> {
                 first.text
             }
 
-            is GoParser.PrimaryExprContext -> {
+            is PrimaryExprContext -> {
                 if (first.primaryExpr() != null) {
                     handleForPrimary(first, isForLocalVar).orEmpty()
                 } else {
                     val parent = child.parent
                     if (isForLocalVar && first.text == "fmt" && parent.text.startsWith("fmt.")) {
-                        if (parent is GoParser.PrimaryExprContext) {
+                        if (parent is PrimaryExprContext) {
                             val content = getValueFromPrintf(parent)
                             localVars.getOrDefault(first.text, content)
                         } else {
@@ -426,21 +431,24 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     override fun enterVarDecl(ctx: GoParser.VarDeclContext?) {
         ctx?.varSpec()?.forEach {
             it.identifierList().IDENTIFIER().forEach { terminalNode ->
-                localVars[terminalNode.text] = it.type_()?.text ?: ""
+                val nodeNameFromExpr = nodeNameFromExpr(it.expressionList(), isForLocalVar = true)
+                localVars[terminalNode.text] = nodeNameFromExpr.ifEmpty {
+                    it.type_()?.text ?: ""
+                }
             }
         }
     }
 
     override fun enterShortVarDecl(ctx: GoParser.ShortVarDeclContext?) {
         ctx?.identifierList()?.IDENTIFIER()?.forEach {
-            localVars[it.text] = nodeNameFromExpr(ctx, isForLocalVar = true)
+            localVars[it.text] = nodeNameFromExpr(ctx.expressionList(), isForLocalVar = true)
         }
     }
 
-    private fun nodeNameFromExpr(ctx: GoParser.ShortVarDeclContext, isForLocalVar: Boolean): String {
-        ctx.expressionList().expression()?.forEach {
+    private fun nodeNameFromExpr(expressionListContext: GoParser.ExpressionListContext?, isForLocalVar: Boolean): String {
+        expressionListContext?.expression()?.forEach {
             when (val firstChild = it.getChild(0)) {
-                is GoParser.PrimaryExprContext -> {
+                is PrimaryExprContext -> {
                     return handleForPrimary(firstChild, isForLocalVar).orEmpty()
                 }
             }

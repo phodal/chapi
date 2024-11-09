@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 internal class GoFullIdentListenerTest {
     @Test
     internal fun shouldIdentifyPackageName() {
-        val code= """
+        val code = """
 package main
 """
 
@@ -19,7 +19,7 @@ package main
 
     @Test
     internal fun shouldIdentifySingleImport() {
-        val code= """
+        val code = """
 package main
 
 import "fmt"
@@ -32,7 +32,7 @@ import "fmt"
 
     @Test
     internal fun shouldIdentifyMultipleLineImport() {
-        val code= """
+        val code = """
 package main
 
 import "fmt"
@@ -48,7 +48,7 @@ import . "time"
 
     @Test
     internal fun shouldIdentifyMultipleTogetherImport() {
-        val code= """
+        val code = """
 package main
 
 import (
@@ -67,7 +67,7 @@ import (
 
     @Test
     internal fun shouldIdentifyBasicStruct() {
-        val code= """
+        val code = """
 package main
 
 type School struct {
@@ -87,7 +87,7 @@ type School struct {
 
     @Test
     internal fun shouldIdentifyBasicStructFunction() {
-        val code= """
+        val code = """
 package main
 
 import "fmt"
@@ -112,7 +112,7 @@ func (a *Animal) Move() {
 
     @Test
     internal fun shouldIdentifyStructFunctionReturnType() {
-        val code= """
+        val code = """
 package main
 
 import "fmt"
@@ -133,7 +133,7 @@ func (a *Animal) Move() string {
 
     @Test
     internal fun shouldIdentifyFunctionAsDefault() {
-        val code= """
+        val code = """
 package main
 
 func add(x int, y int) int {
@@ -148,7 +148,7 @@ func add(x int, y int) int {
 
     @Test
     internal fun shouldIdentifyFunctionMultipleReturnType() {
-        val code= """
+        val code = """
 package main
 
 func get(x int, y int) (int, int) {
@@ -163,7 +163,7 @@ func get(x int, y int) (int, int) {
 
     @Test
     internal fun shouldIdentifyFunctionParameters() {
-        val code= """
+        val code = """
 package main
 
 func get(x int, y int) (int, int) {
@@ -180,7 +180,7 @@ func get(x int, y int) (int, int) {
 
     @Test
     internal fun shouldIdentifyStructFuncCall() {
-        val code= """
+        val code = """
 package main
 
 import "fmt"
@@ -203,7 +203,7 @@ func (a *Animal) Move() {
 
     @Test
     internal fun shouldIdentifyFuncCall() {
-        val code= """
+        val code = """
 package main
 
 import "fmt"
@@ -222,7 +222,7 @@ func main() {
 
     @Test
     internal fun shouldIdentifyFunctionLocalVars() {
-        val code= """
+        val code = """
 package main
 
 func VarDecls() {
@@ -239,7 +239,7 @@ func VarDecls() {
 
     @Test
     internal fun shouldIdentifyFunctionShortVars() {
-        val code= """
+        val code = """
 package main
 
 func ShortDecls() {
@@ -253,7 +253,7 @@ func ShortDecls() {
 
     @Test
     internal fun shouldIdentifyFunctionConstVars() {
-        val code= """
+        val code = """
 package main
 
 func ConstDecls() {
@@ -273,7 +273,7 @@ func ConstDecls() {
 
     @Test
     internal fun shouldIdentifyStructFunctionLocalVars() {
-        val code= """
+        val code = """
 package main
 
 import "fmt"
@@ -300,7 +300,7 @@ func (a *Animal) Move() {
     @Test
     internal fun shouldSuccessGetSqlOfNode() {
         @Language("Go")
-        val code= """
+        val code = """
 package dao
 
 import (
@@ -334,7 +334,7 @@ func (d *Dao) QueryBuglyProjectList() (projectList []string, err error) {
     @Test
     internal fun shouldIdentifyConstLocalVars() {
         @Language("Go")
-        val code= """
+        val code = """
 package dao
 
 
@@ -382,7 +382,7 @@ func (d *Dao) CountPersonal(c context.Context, opt *common.BaseOptions) (count i
     @Test
     internal fun shouldIdentifyLocalVarWithText() {
         @Language("Go")
-        val code= """
+        val code = """
 package dao
 
 import (
@@ -431,7 +431,7 @@ func (d *Dao) MobileMachineLendCount() (mobileMachinesUsageCount []*model.Mobile
     @Test
     fun shouldIdentCallInSideCall() {
         @Language("Go")
-        val code= """
+        val code = """
 package dao
 
 const _chArcAddSQL      = "INSERT INTO member_channel_video%d (mid,cid,aid,order_num,modify_time) VALUES %s"
@@ -467,5 +467,38 @@ func (d *Dao) AddChannelArc(c context.Context, mid, cid int64, ts time.Time, chs
 
         val codeProperty = secondParameter.Parameters
         assertEquals(codeProperty[0].TypeValue, "\"INSERT INTO member_channel_video%d (mid,cid,aid,order_num,modify_time) VALUES %s\"")
+    }
+
+    @Test
+    fun shouldLoadFromAddress() {
+        @Language("Go")
+        val code = """
+package dao
+
+const _updateUserInfoMysql      = "update capsule_info_%d set score = score + ? where uid = ? and type = ?";
+            
+func (d *Dao) UpdateCapsule() (affect int64, err error) {
+	var (
+		sqlStr, uKey, iKey string
+	)
+	sqlStr = fmt.Sprintf(_updateUserInfoMysql, getCapsuleTable(uid))
+	affect, err = d.execSqlWithBindParams(ctx, &sqlStr, score, uid, CoinIdIntMap[coinId])
+	return
+}
+"""
+
+        val codeFile = GoAnalyser().analysis(code, "")
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+
+        assertEquals(functionCalls.size, 3)
+
+        val getExecFunc = functionCalls[2]
+        assertEquals(getExecFunc.NodeName, "Dao")
+        assertEquals(getExecFunc.FunctionName, "execSqlWithBindParams")
+        assertEquals(getExecFunc.Parameters.size, 5)
+
+        val firstParameter = getExecFunc.Parameters[1]
+        println(firstParameter)
+        assertEquals(firstParameter.TypeValue, "string")
     }
 }
