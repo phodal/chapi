@@ -1,6 +1,7 @@
 package chapi.ast.goast
 
 import chapi.ast.antlr.GoParser
+import chapi.ast.antlr.GoParser.ExpressionContext
 import chapi.ast.antlr.GoParser.PrimaryExprContext
 import chapi.domain.core.*
 import chapi.infra.Stack
@@ -451,10 +452,30 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 is PrimaryExprContext -> {
                     return handleForPrimary(firstChild, isForLocalVar).orEmpty()
                 }
+
+                else -> {
+                    if (firstChild.text == "&") {
+                        val second = it.getChild(1)
+                        /// new struct, like &http.Request{}
+                        if (second is ExpressionContext) {
+                            val expression = second.getChild(0)
+                            if (expression is PrimaryExprContext) {
+                                val typeDecl = expression.children.first().getChild(0)?.getChild(0)?.getChild(0)
+                                if (typeDecl is GoParser.LiteralTypeContext) {
+                                    return typeDecl.getChild(0).text
+                                }
+                            }
+                        }
+
+                        return getValueFromPrintf(it)
+                    }
+
+                    return firstChild.text
+                }
             }
         }
 
-        return ""
+        return expressionListContext?.text ?: ""
     }
 
     override fun enterConstDecl(ctx: GoParser.ConstDeclContext?) {
