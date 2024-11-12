@@ -501,4 +501,43 @@ func (d *Dao) UpdateCapsule() (affect int64, err error) {
         println(firstParameter)
         assertEquals(firstParameter.TypeValue, "string")
     }
+
+    @Test
+    fun shouldResolveStructFieldType() {
+        @Language("Go")
+        val code = """
+package user
+
+import (
+	"context"
+    rcv1 "go-common/app/service/live/rc/api/liverpc/v1"
+)
+
+type Dao struct {
+	walletUrl     string
+	rcClient      rcv1.AchvRPCClient
+}
+
+func (d *Dao) GetLiveAchieve(ctx context.Context, uid int64) (achieve int64, err error) {
+	resp, err := d.rcClient.Userstatus(ctx, &rcv1.AchvUserstatusReq{})
+	if err != nil || resp == nil || resp.Data == nil {
+		log.Error("[dao.user|GetLiveAchieve] get rc achieve error(%v), uid(%d), resp(%v)", err, uid, resp)
+		return
+	}
+	achieve = resp.Data.Point
+	return
+}
+"""
+
+        val codeFile = GoAnalyser().analysis(code, "")
+        val functionCalls = codeFile.DataStructures[0].Functions[0].FunctionCalls
+
+        assertEquals(functionCalls.size, 2)
+
+        val getExecFunc = functionCalls[0]
+        assertEquals(getExecFunc.FunctionName, "Userstatus")
+        assertEquals(getExecFunc.Parameters.size, 2)
+
+        assertEquals(getExecFunc.NodeName, "Dao.rcClient")
+    }
 }
