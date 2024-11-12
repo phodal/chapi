@@ -366,6 +366,19 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
 
     private fun handleForPrimary(child: PrimaryExprContext, isForLocalVar: Boolean = false): String? {
+//        val possibleResult = handleForPrimary(first, isForLocalVar).orEmpty()
+        if (child.primaryExpr()?.text?.contains(".") == true) {
+            /// replace first.text to possibleResult
+            /// d.Field -> Dao.Field
+            val split = child.primaryExpr().text.split(".")
+            val withoutFirst = split.drop(1).joinToString(".")
+            // get first part and try to resolve in local var
+            val first = split.first()
+            if (localVars.containsKey(first)) {
+                return "${localVars[first]}.$withoutFirst"
+            }
+        }
+
         val nodeName = when (val first = child.getChild(0)) {
             is GoParser.OperandContext -> {
                 first.text

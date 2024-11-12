@@ -546,10 +546,10 @@ func (d *Dao) GetLiveAchieve(ctx context.Context, uid int64) (achieve int64, err
         val functionCalls = codeFile.DataStructures.first().Functions.last().FunctionCalls
 
         val getExecFunc = functionCalls[0]
-        println(getExecFunc)
+
         assertEquals(getExecFunc.FunctionName, "Userstatus")
         assertEquals(getExecFunc.Parameters.size, 2)
 
-        assertEquals(getExecFunc.NodeName, "Dao")
+        assertEquals(getExecFunc.NodeName, "Dao.rcClient")
     }
 }
