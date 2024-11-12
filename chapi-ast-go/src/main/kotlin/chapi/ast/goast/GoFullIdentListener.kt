@@ -456,13 +456,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 else -> {
                     if (firstChild.text == "&") {
                         val second = it.getChild(1)
-                        /// new struct, like &http.Request{}
                         if (second is ExpressionContext) {
                             val expression = second.getChild(0)
                             if (expression is PrimaryExprContext) {
                                 val typeDecl = expression.children.first().getChild(0)?.getChild(0)?.getChild(0)
-                                if (typeDecl is GoParser.LiteralTypeContext) {
-                                    return typeDecl.getChild(0).text
+                                if (typeDecl is GoParser.LiteralTypeContext && typeDecl.childCount > 0) {
+                                    return typeDecl.getChild(0)!!.text
                                 }
                             }
                         }
