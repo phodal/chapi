@@ -543,7 +543,9 @@ func (d *Dao) GetLiveAchieve(ctx context.Context, uid int64) (achieve int64, err
 """
 
         val codeFile = GoAnalyser().analysis(code, "")
-        val functionCalls = codeFile.DataStructures.first().Functions.last().FunctionCalls
+        val first = codeFile.DataStructures.first()
+
+        val functionCalls = first.Functions.last().FunctionCalls
 
         val getExecFunc = functionCalls[0]
 
