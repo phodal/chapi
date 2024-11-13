@@ -116,7 +116,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
                     this.buildExprStmt(smallStmtCtx)
                 }
                 else -> {
-                    println("enterSimple_stmt ->${smallStmtCtx::class.java.simpleName}")
+//                    println("enterSimple_stmt ->${smallStmtCtx::class.java.simpleName}")
                 }
             }
         }
