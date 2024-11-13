@@ -21,7 +21,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
                 )
 
                 if (defParaCtx.ASSIGN() != null) {
-                    parameter.DefaultValue = defParaCtx.test().text
+                    parameter.DefaultValue = defParaCtx?.test()?.text ?: ""
                 }
 
                 parameter
@@ -56,7 +56,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         return annotations
     }
 
-    fun buildAnnotation(node: PythonParser.DecoratorContext): CodeAnnotation {
+    private fun buildAnnotation(node: PythonParser.DecoratorContext): CodeAnnotation {
         val codeAnnotation = CodeAnnotation(
             Name = node.dotted_name().text
         )

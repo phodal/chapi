@@ -39,12 +39,12 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
 
         val codeImport = CodeImport(Source = sourceName)
 
-        ctx?.import_as_names()?.import_as_name()?.forEach { importAsNamecontext ->
-            val usageName = importAsNamecontext.name()[0].text
+        ctx?.import_as_names()?.import_as_name()?.forEach { nameContext ->
+            val usageName = nameContext.name()[0].text
             codeImport.UsageName += usageName
 
-            importAsNamecontext.AS()?.let {
-                codeImport.AsName = importAsNamecontext.name()[1].text
+            nameContext.AS()?.let {
+                codeImport.AsName = nameContext.name().getOrNull(1)?.text ?: ""
             }
         }
 
@@ -126,6 +126,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         if (defaultNode.Functions.isNotEmpty()) {
             this.codeContainer.DataStructures += defaultNode
         }
+
         return this.codeContainer
     }
 }
