@@ -16,8 +16,8 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
                 if (defParaCtx.text == "self") return@mapNotNull null
 
                 val parameter = CodeProperty(
-                    TypeValue = defParaCtx.named_parameter().name().text,
-                    TypeType = defParaCtx.named_parameter().test()?.text ?: ""
+                    TypeValue = defParaCtx.named_parameter()?.name()?.text ?: "",
+                    TypeType = defParaCtx.named_parameter()?.test()?.text ?: ""
                 )
 
                 if (defParaCtx.ASSIGN() != null) {
