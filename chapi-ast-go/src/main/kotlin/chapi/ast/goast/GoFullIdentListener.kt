@@ -108,7 +108,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         currentFunction = CodeFunction(
             Name = ctx.IDENTIFIER().text,
             MultipleReturns = buildReturnTypeFromSignature(ctx.signature()),
-            Parameters = buildParameters(ctx.signature().parameters())
+            Parameters = buildParameters(ctx.signature()?.parameters())
         )
     }
 
