@@ -176,7 +176,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private fun buildTypeSpec(typeSpec: GoParser.TypeSpecContext) {
         val typeDef = typeSpec.typeDef()
         val identifyName = typeDef?.IDENTIFIER()?.text ?: ""
-        typeDef.type_().typeLit()?.let {
+        typeDef?.type_()?.typeLit()?.let {
             when (val typeChild = it.getChild(0)) {
                 is GoParser.StructTypeContext -> {
                     buildStruct(identifyName, typeChild)
