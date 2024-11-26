@@ -4,7 +4,6 @@
 
 [![Chapi CI](https://github.com/modernizing/chapi/actions/workflows/ci.yml/badge.svg)](https://github.com/modernizing/chapi/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/phodal/chapi/graph/badge.svg?token=sdB5L3xbRv)](https://codecov.io/gh/phodal/chapi)
-[![Maintainability](https://api.codeclimate.com/v1/badges/2af5f5168a9ceb2ebe9b/maintainability)](https://codeclimate.com/github/phodal/chapi/maintainability)
 [![Maven Central](https://img.shields.io/maven-central/v/com.phodal.chapi/chapi-domain)](https://central.sonatype.com/artifact/com.phodal.chapi/chapi-domain)
 
 > CHAPI (Common Hierarchical Abstract Parser and Information Converter) streamlines code analysis by converting diverse
