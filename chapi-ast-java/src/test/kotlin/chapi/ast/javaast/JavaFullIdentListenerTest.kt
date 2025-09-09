@@ -467,4 +467,25 @@ public class DTOBuilder {
         assertEquals(codeFile.DataStructures.size, 1)
     }
 
+    @Test
+    fun testInnerCreatorParse() {
+        val code = """
+public class DTOBuilder {
+  public void test111() {
+  
+  }
+  public verify(DTO.@NotBlack(message="NOT_BLANK") DTO dto) {
+    return Result.OK(new HashedMap() {{
+                    put("moduleId", moduleId);
+                }});
+  }
+
+  public void test222() {
+  }
+}            
+        """
+
+        val codeFile = JavaAnalyser().identFullInfo(code, "")
+        assertEquals(codeFile.DataStructures.get(0).Functions.size, 3)
+    }
 }

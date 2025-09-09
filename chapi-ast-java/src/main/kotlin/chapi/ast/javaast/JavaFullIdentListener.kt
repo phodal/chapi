@@ -728,10 +728,6 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         addToCreatorNodeMethod()
         addToParentClassMethodInner()
 
-        classNodeStack.push(currentCreatorNode)
-
-        currentType = classNodeStack.elements[classNodeStack.elements.size - 1].Type
-        classNodeStack.pop()
     }
 
     private fun addToCreatorNodeMethod() {

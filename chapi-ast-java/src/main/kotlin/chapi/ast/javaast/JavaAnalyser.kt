@@ -13,8 +13,8 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker
 open class JavaAnalyser : TwoStepAnalyser() {
     override fun analysis(code: String, filePath: String, parseMode: ParseMode): CodeContainer {
         return when (parseMode) {
-            ParseMode.Basic -> identFullInfo(code, filePath)
-            ParseMode.Full -> identBasicInfo(code, filePath)
+            ParseMode.Basic -> identBasicInfo(code, filePath)
+            ParseMode.Full -> identFullInfo(code, filePath)
         }
     }
 
