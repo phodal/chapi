@@ -109,6 +109,56 @@ def printinfo( name, age = 35):
     }
 
     @Test
+    internal fun shouldIdentifyFunctionReturnType() {
+        val code = """
+def add(a: int, b: int) -> int:
+    return a + b
+
+"""
+        val codeFile = PythonAnalyser().analysis(code, "")
+        val firstFunc = codeFile.DataStructures[0].Functions[0]
+        assertEquals(firstFunc.Name, "add")
+        assertEquals(firstFunc.ReturnType, "int")
+        assertEquals(firstFunc.Parameters.size, 2)
+        assertEquals(firstFunc.Parameters[0].TypeValue, "a")
+        assertEquals(firstFunc.Parameters[0].TypeType, "int")
+    }
+
+    @Test
+    internal fun shouldIdentifyComplexReturnType() {
+        val code = """
+from typing import List, Optional
+
+def get_items() -> List[str]:
+    return ["item1", "item2"]
+
+def find_user(id: int) -> Optional[User]:
+    return None
+
+"""
+        val codeFile = PythonAnalyser().analysis(code, "")
+        assertEquals(codeFile.DataStructures[0].Functions[0].Name, "get_items")
+        assertEquals(codeFile.DataStructures[0].Functions[0].ReturnType, "List[str]")
+
+        assertEquals(codeFile.DataStructures[0].Functions[1].Name, "find_user")
+        assertEquals(codeFile.DataStructures[0].Functions[1].ReturnType, "Optional[User]")
+    }
+
+    @Test
+    internal fun shouldIdentifyAsyncFunctionReturnType() {
+        val code = """
+async def fetch_data() -> dict:
+    return {}
+
+"""
+        val codeFile = PythonAnalyser().analysis(code, "")
+        val firstFunc = codeFile.DataStructures[0].Functions[0]
+        assertEquals(firstFunc.Name, "fetch_data")
+        assertEquals(firstFunc.ReturnType, "dict")
+        assertEquals(firstFunc.Modifiers[0], "async")
+    }
+
+    @Test
     internal fun shouldIdentifyClassAnnotation() {
         val code = """
 @decorator
