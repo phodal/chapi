@@ -91,6 +91,36 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         return arguments
     }
 
+    private fun buildCallParameters(arglistCtx: PythonParser.ArglistContext?): List<CodeProperty> {
+        if (arglistCtx == null) {
+            return listOf()
+        }
+
+        return arglistCtx.argument().map { argCtx ->
+            // Check if this is an unpacking operator (* or **)
+            val typeValue = when {
+                argCtx.STAR() != null -> {
+                    // Single star unpacking: *args
+                    "*${argCtx.test(0).text}"
+                }
+                argCtx.POWER() != null -> {
+                    // Double star unpacking: **kwargs
+                    "**${argCtx.test(0).text}"
+                }
+                argCtx.ASSIGN() != null -> {
+                    // Keyword argument: key=value
+                    "${argCtx.test(0).text}=${argCtx.test(1).text}"
+                }
+                else -> {
+                    // Regular positional argument
+                    argCtx.test(0).text
+                }
+            }
+
+            CodeProperty(TypeValue = typeValue, TypeType = "")
+        }
+    }
+
     fun buildExprStmt(exprCtx: PythonParser.Expr_stmtContext, hasEnterClass: Boolean) {
         var leftPart = ""
         val starExpr = exprCtx.getChild(0) as? PythonParser.Testlist_star_exprContext
@@ -173,9 +203,20 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
 
             val nodeName = if (trailerContext.DOT() != null) atomName else ""
 
+            // Extract parameters from arguments if present
+            val parameters = trailerContext.arguments()?.let { argumentsCtx ->
+                // Check if it's a function call (OPEN_PAREN) not array access (OPEN_BRACKET)
+                if (argumentsCtx.OPEN_PAREN() != null) {
+                    buildCallParameters(argumentsCtx.arglist())
+                } else {
+                    listOf()
+                }
+            } ?: listOf()
+
             CodeCall(
                 NodeName = nodeName,
                 FunctionName = caller,
+                Parameters = parameters,
                 Position = buildPosition(trailerContext)
             )
         }
