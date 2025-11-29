@@ -372,4 +372,93 @@ class GPQAInstanceDataset(GPQA):
         assertEquals(parameters[3].TypeType, "str")
         assertEquals(parameters[3].DefaultValue, "\"train\"")
     }
+
+    @Test
+    internal fun shouldIdentifyClassVariablesAsFields() {
+        val code = """
+class UserService:
+    # Class variables
+    USER_NOT_FOUND = "User not found"
+    MAX_RETRIES = 3
+
+    def create_user(self, db: Session, user: UserCreate) -> User:
+        hashed_password = get_password_hash(user.password)
+        db_user = User(
+            username=user.username,
+            email=user.email,
+            hashed_password=hashed_password
+        )
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+
+    def get_users(self, db: Session, skip: int = 0, limit: int = 100):
+        return db.query(User).offset(skip).limit(limit).all()
+"""
+        val codeFile = PythonAnalyser().analysis(code, "")
+        val userServiceClass = codeFile.DataStructures[0]
+
+        // Class should have 2 fields
+        assertEquals(2, userServiceClass.Fields.size)
+        assertEquals("USER_NOT_FOUND", userServiceClass.Fields[0].TypeKey)
+        assertEquals("\"User not found\"", userServiceClass.Fields[0].TypeValue)
+        assertEquals("MAX_RETRIES", userServiceClass.Fields[1].TypeKey)
+        assertEquals("3", userServiceClass.Fields[1].TypeValue)
+
+        // Functions should have their own local variables, not class variables
+        val createUserFunc = userServiceClass.Functions[0]
+        assertEquals("create_user", createUserFunc.Name)
+        // Should have local variables like hashed_password, db_user
+        assertEquals(2, createUserFunc.LocalVariables.size)
+        assertEquals("hashed_password", createUserFunc.LocalVariables[0].TypeValue)
+        assertEquals("db_user", createUserFunc.LocalVariables[1].TypeValue)
+
+        // get_users function should not have class variables
+        val getUsersFunc = userServiceClass.Functions[1]
+        assertEquals("get_users", getUsersFunc.Name)
+        // Should have no local variables (the return statement doesn't create a variable)
+        assertEquals(0, getUsersFunc.LocalVariables.size)
+    }
+
+    @Test
+    internal fun shouldIdentifyGlobalVariablesInProceduralFiles() {
+        val code = """
+# Global variables
+DATABASE_URL = "postgresql://localhost/mydb"
+MAX_CONNECTIONS = 10
+DEBUG = True
+
+def connect_db():
+    conn = create_connection(DATABASE_URL)
+    return conn
+
+def get_max_connections():
+    return MAX_CONNECTIONS
+"""
+        val codeFile = PythonAnalyser().analysis(code, "")
+        val defaultNode = codeFile.DataStructures[0]
+
+        assertEquals("default", defaultNode.NodeName)
+
+        // Should have 3 global variables as fields
+        assertEquals(3, defaultNode.Fields.size)
+        assertEquals("DATABASE_URL", defaultNode.Fields[0].TypeKey)
+        assertEquals("\"postgresql://localhost/mydb\"", defaultNode.Fields[0].TypeValue)
+        assertEquals("MAX_CONNECTIONS", defaultNode.Fields[1].TypeKey)
+        assertEquals("10", defaultNode.Fields[1].TypeValue)
+        assertEquals("DEBUG", defaultNode.Fields[2].TypeKey)
+        assertEquals("True", defaultNode.Fields[2].TypeValue)
+
+        // Functions should have their own local variables, not global variables
+        val connectDbFunc = defaultNode.Functions[0]
+        assertEquals("connect_db", connectDbFunc.Name)
+        assertEquals(1, connectDbFunc.LocalVariables.size)
+        assertEquals("conn", connectDbFunc.LocalVariables[0].TypeValue)
+
+        // get_max_connections should have no local variables
+        val getMaxConnectionsFunc = defaultNode.Functions[1]
+        assertEquals("get_max_connections", getMaxConnectionsFunc.Name)
+        assertEquals(0, getMaxConnectionsFunc.LocalVariables.size)
+    }
 }

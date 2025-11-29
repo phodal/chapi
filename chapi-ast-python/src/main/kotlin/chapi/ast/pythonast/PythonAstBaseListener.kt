@@ -9,6 +9,9 @@ import org.antlr.v4.runtime.tree.ParseTree
 open class PythonAstBaseListener : PythonParserBaseListener() {
     var currentFunction: CodeFunction = CodeFunction()
     var localVars = mutableMapOf<String, String>()
+    var isInsideFunction: Boolean = false
+    var classFields = mutableListOf<CodeField>()
+    var moduleFields = mutableListOf<CodeField>()
 
     fun buildParameters(listCtx: PythonParser.TypedargslistContext?): List<CodeProperty> {
         val parameters = listCtx?.def_parameters()?.mapNotNull { defParameters ->
@@ -88,7 +91,7 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         return arguments
     }
 
-    fun buildExprStmt(exprCtx: PythonParser.Expr_stmtContext) {
+    fun buildExprStmt(exprCtx: PythonParser.Expr_stmtContext, hasEnterClass: Boolean) {
         var leftPart = ""
         val starExpr = exprCtx.getChild(0) as? PythonParser.Testlist_star_exprContext
         val childType = starExpr?.getChild(0)
@@ -103,7 +106,24 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
         if (assignPartCtx.ASSIGN() == null) return
 
         val rightObj = buildAssignPart(assignPartCtx)
-        localVars[leftPart] = rightObj
+
+        // Determine where to store the variable based on context
+        if (isInsideFunction) {
+            // Inside a function - add to local variables
+            localVars[leftPart] = rightObj
+        } else if (hasEnterClass) {
+            // Inside a class but not in a function - add to class fields
+            classFields.add(CodeField(
+                TypeKey = leftPart,
+                TypeValue = rightObj
+            ))
+        } else {
+            // At module level - add to module fields
+            moduleFields.add(CodeField(
+                TypeKey = leftPart,
+                TypeValue = rightObj
+            ))
+        }
     }
 
     private fun buildAssignPart(assignPartCtx: PythonParser.Assign_partContext): String {

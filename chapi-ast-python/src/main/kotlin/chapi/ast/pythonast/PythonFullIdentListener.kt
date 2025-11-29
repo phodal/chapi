@@ -73,6 +73,10 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     }
 
     override fun exitClassdef(ctx: PythonParser.ClassdefContext?) {
+        // Add class fields to the current node
+        currentNode.Fields = classFields.toList()
+        classFields.clear()
+
         hasEnterClass = false
         codeContainer.DataStructures += currentNode
         currentNode = CodeDataStruct()
@@ -102,6 +106,10 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         if (ctx.ARROW() != null && ctx.test() != null) {
             currentFunction.ReturnType = ctx.test().text
         }
+
+        // Mark that we're inside a function and clear local vars
+        isInsideFunction = true
+        localVars.clear()
     }
 
     override fun exitFuncdef(ctx: PythonParser.FuncdefContext?) {
@@ -112,13 +120,17 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
             currentNode.Functions += currentFunction
         }
         currentFunction = CodeFunction()
+
+        // Mark that we're no longer inside a function and clear local vars
+        isInsideFunction = false
+        localVars.clear()
     }
 
     override fun enterSimple_stmt(ctx: PythonParser.Simple_stmtContext?) {
         for (smallStmtCtx in ctx!!.small_stmt()) {
             when(smallStmtCtx) {
                 is PythonParser.Expr_stmtContext -> {
-                    this.buildExprStmt(smallStmtCtx)
+                    this.buildExprStmt(smallStmtCtx, hasEnterClass)
                 }
                 else -> {
 //                    println("enterSimple_stmt ->${smallStmtCtx::class.java.simpleName}")
@@ -128,7 +140,9 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     }
 
     fun getNodeInfo(): CodeContainer {
-        if (defaultNode.Functions.isNotEmpty()) {
+        if (defaultNode.Functions.isNotEmpty() || moduleFields.isNotEmpty()) {
+            // Add module-level fields to the default node
+            defaultNode.Fields = moduleFields.toList()
             this.codeContainer.DataStructures += defaultNode
         }
 
