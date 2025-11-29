@@ -97,6 +97,11 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         if (ctx.typedargslist() != null) {
             currentFunction.Parameters = this.buildParameters(ctx.typedargslist())
         }
+
+        // Extract return type annotation if present (ARROW test)
+        if (ctx.ARROW() != null && ctx.test() != null) {
+            currentFunction.ReturnType = ctx.test().text
+        }
     }
 
     override fun exitFuncdef(ctx: PythonParser.FuncdefContext?) {
