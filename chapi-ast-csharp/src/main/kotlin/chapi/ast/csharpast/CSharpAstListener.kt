@@ -118,6 +118,30 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         currentContainer.DataStructures += currentStruct
     }
 
+    override fun enterRecord_definition(ctx: CSharpParser.Record_definitionContext?) {
+        val recordName = ctx!!.identifier().text
+        val codeDataStruct = CodeDataStruct(
+            NodeName = recordName,
+            Package = currentNamespace,
+            Position = buildPosition(ctx),
+            Type = DataStructType.STRUCT  // Records are similar to structs
+        )
+
+        currentStruct = codeDataStruct
+
+        val parent = ctx.parent
+        when (parent.javaClass.simpleName) {
+            "Type_declarationContext" -> {
+                val typeDecl = parent as CSharpParser.Type_declarationContext
+                currentStruct.Annotations = parseAnnotations(typeDecl.attributes())
+            }
+        }
+    }
+
+    override fun exitRecord_definition(ctx: CSharpParser.Record_definitionContext?) {
+        currentContainer.DataStructures += currentStruct
+    }
+
     protected fun parseAnnotations(attributes: CSharpParser.AttributesContext?): List<CodeAnnotation> {
         var annotations = listOf<CodeAnnotation>();
 

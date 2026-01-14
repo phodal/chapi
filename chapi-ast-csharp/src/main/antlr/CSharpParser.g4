@@ -555,7 +555,8 @@ resource_acquisition
 
 //B.2.6 Namespaces;
 namespace_declaration
-	: NAMESPACE qi=qualified_identifier namespace_body? ';'?
+	: NAMESPACE qi=qualified_identifier namespace_body ';'?  // traditional namespace
+	| NAMESPACE qi=qualified_identifier ';' extern_alias_directives? using_directives? namespace_member_declarations?  // C# 10 file-scoped namespace
 	;
 
 qualified_identifier
@@ -579,10 +580,10 @@ using_directives
 	;
 
 using_directive
-	: USING identifier '=' namespace_or_type_name ';'            #usingAliasDirective
-	| USING namespace_or_type_name ';'                           #usingNamespaceDirective
+	: GLOBAL? USING identifier '=' namespace_or_type_name ';'            #usingAliasDirective
+	| GLOBAL? USING namespace_or_type_name ';'                           #usingNamespaceDirective
 	// C# 6: https://msdn.microsoft.com/en-us/library/ms228593.aspx
-	| USING STATIC namespace_or_type_name ';'                    #usingStaticDirective
+	| GLOBAL? USING STATIC namespace_or_type_name ';'                    #usingStaticDirective
 	;
 
 namespace_member_declarations
@@ -596,7 +597,7 @@ namespace_member_declaration
 
 type_declaration
 	: attributes? all_member_modifiers?
-      (class_definition | struct_definition | interface_definition | enum_definition | delegate_definition)
+      (class_definition | struct_definition | interface_definition | enum_definition | delegate_definition | record_definition)
   ;
 
 qualified_alias_member
@@ -682,6 +683,8 @@ all_member_modifier
 	| EXTERN
 	| PARTIAL
 	| ASYNC  // C# 5
+	| REQUIRED  // C# 11
+	| SCOPED  // C# 11
 	;
 
 // represents the intersection of struct_member_declaration and class_member_declaration
@@ -774,7 +777,9 @@ parameter_array
 
 accessor_declarations
 	: attrs=attributes? mods=accessor_modifier?
-	  (GET accessor_body set_accessor_declaration? | SET accessor_body get_accessor_declaration?)
+	  (GET accessor_body set_accessor_declaration?
+	  | SET accessor_body get_accessor_declaration?
+	  | INIT accessor_body get_accessor_declaration?)  // C# 9
 	;
 
 get_accessor_declaration
@@ -782,7 +787,7 @@ get_accessor_declaration
 	;
 
 set_accessor_declaration
-	: attributes? accessor_modifier? SET accessor_body
+	: attributes? accessor_modifier? (SET | INIT) accessor_body  // C# 9
 	;
 
 accessor_modifier
@@ -1138,6 +1143,11 @@ keyword
 class_definition
 	: CLASS identifier type_parameter_list? class_base? type_parameter_constraints_clauses?
 	    class_body ';'?
+	;
+
+record_definition
+	: RECORD (CLASS | STRUCT)? identifier type_parameter_list? (OPEN_PARENS formal_parameter_list? CLOSE_PARENS)? class_base? type_parameter_constraints_clauses?
+	    class_body? ';'?
 	;
 
 struct_definition

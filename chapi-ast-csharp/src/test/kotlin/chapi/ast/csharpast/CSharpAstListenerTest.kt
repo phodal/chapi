@@ -340,7 +340,7 @@ namespace Chapi {
     @Test
     fun macroPreprocessor() {
         val code = """
-            using System.Text;  
+            using System.Text;
             namespace testns {
                 #if DEBUG
                     public class testcls {
@@ -358,6 +358,74 @@ namespace Chapi {
         assertEquals(structs[0].NodeName, "testcls")
         assertEquals(structs[0].Functions.size, 1)
         assertEquals(structs[0].Functions[0].Name, "Main")
+    }
+
+    @Test
+    fun shouldSupportRecordType() {
+        val code = """
+        namespace RecordTests;
+
+        public record Person(string FirstName, string LastName);
+        """
+        val codeContainer = CSharpAnalyser().analysis(code, "test.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+
+        assertEquals(1, structs.size)
+        assertEquals("Person", structs[0].NodeName)
+    }
+
+    @Test
+    fun shouldSupportFileScopedNamespace() {
+        val code = """
+        namespace MyApp.Services;
+
+        public class MyService
+        {
+            public void DoSomething() { }
+        }
+        """
+        val codeContainer = CSharpAnalyser().analysis(code, "test.cs")
+
+        assertEquals(1, codeContainer.Containers.size)
+        assertEquals("MyApp.Services", codeContainer.Containers[0].PackageName)
+        assertEquals(1, codeContainer.Containers[0].DataStructures.size)
+        assertEquals("MyService", codeContainer.Containers[0].DataStructures[0].NodeName)
+    }
+
+    @Test
+    fun shouldSupportGlobalUsing() {
+        val code = """
+        global using System;
+        global using System.Collections.Generic;
+
+        namespace MyApp;
+
+        public class Program { }
+        """
+        val codeContainer = CSharpAnalyser().analysis(code, "test.cs")
+
+        assertEquals(2, codeContainer.Imports.size)
+        assertEquals("System", codeContainer.Imports[0].Source)
+        assertEquals("System.Collections.Generic", codeContainer.Imports[1].Source)
+    }
+
+    @Test
+    fun shouldSupportInitAccessor() {
+        val code = """
+        namespace Test;
+
+        public class Point
+        {
+            public int X { get; init; }
+            public int Y { get; init; }
+        }
+        """
+        val codeContainer = CSharpAnalyser().analysis(code, "test.cs")
+        val structs = codeContainer.Containers[0].DataStructures
+
+        assertEquals(1, structs.size)
+        assertEquals("Point", structs[0].NodeName)
+        assertEquals(2, structs[0].Fields.size)
     }
 }
 
