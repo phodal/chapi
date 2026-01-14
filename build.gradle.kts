@@ -100,6 +100,13 @@ subprojects {
     }
 
     signing {
+        // Only sign if signing credentials are available
+        val signingKeyId = project.findProperty("signing.keyId") as String? ?: System.getenv("GPG_KEY_ID")
+        val signingPassword = project.findProperty("signing.password") as String? ?: System.getenv("GPG_PASSPHRASE")
+        val signingKey = project.findProperty("signing.secretKeyRingFile") as String? ?: System.getenv("GPG_SECRET_KEY_RING_FILE")
+
+        isRequired = signingKeyId != null && signingPassword != null && signingKey != null
+
         sign(publishing.publications["mavenJava"])
     }
 
