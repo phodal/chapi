@@ -58,7 +58,8 @@ func installController(g *gin.Engine) *gin.Engine {
 """
         val codeContainer = GoAnalyser().analysis(helloworld, "")
         val value = codeContainer.DataStructures[0]
-        val firstCall = value.Functions[0].FunctionCalls[0]
+        // FunctionCalls[0] is newJWTAuth(), FunctionCalls[1] is g.POST("/login")
+        val firstCall = value.Functions[0].FunctionCalls[1]
 
         assertEquals(firstCall.NodeName, "*gin.Engine")
         assertEquals(firstCall.Package, "github.com/gin-gonic/gin")

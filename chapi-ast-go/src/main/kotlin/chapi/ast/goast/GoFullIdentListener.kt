@@ -31,7 +31,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterPackageClause(ctx: GoParser.PackageClauseContext?) {
-        codeContainer.PackageName = ctx?.IDENTIFIER()?.text ?: ""
+        codeContainer.PackageName = ctx?.packageName()?.identifier()?.IDENTIFIER()?.text ?: ""
     }
 
     override fun enterImportSpec(ctx: GoParser.ImportSpecContext?) {
@@ -41,7 +41,7 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         val codeImport = CodeImport(
             Source = sourceName,
             AsName = ctx.DOT()?.text ?: "",
-            UsageName = listOf(ctx.IDENTIFIER()?.text ?: "")
+            UsageName = listOf(ctx.packageName()?.identifier()?.IDENTIFIER()?.text ?: "")
         )
 
         codeContainer.Imports += codeImport
@@ -222,11 +222,16 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
      * 3. http[0] will be Primary Index
      * So, we just look up expression, the find the primaryExpr, will handle all cases
      * expression -> primaryExpr -> PrimaryExpr, then handle [GoFullIdentListener.handlePrimaryExprCall]
+     *
+     * New grammar structure:
+     * primaryExpr: (operand | conversion | methodExpr) (DOT IDENTIFIER | index | slice_ | typeAssertion | arguments)*
+     * So child(0) is operand/conversion/methodExpr, and subsequent children are DOT, IDENTIFIER, arguments, etc.
      */
     override fun enterExpression(ctx: GoParser.ExpressionContext?) {
         when (val firstChild = ctx?.getChild(0)) {
             is PrimaryExprContext -> {
-                firstChild.getChild(1)?.let {
+                // Check if there are any suffixes (DOT, arguments, etc.) after the first child
+                if (firstChild.childCount > 1) {
                     val codeCall = this.handlePrimaryExprCall(firstChild)
 
                     if (blockStack.count() > 0) {
@@ -239,16 +244,122 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         }
     }
 
+    /**
+     * Handle the new flat primaryExpr grammar structure.
+     * 
+     * New grammar: primaryExpr: (operand | conversion | methodExpr) (DOT IDENTIFIER | index | slice_ | typeAssertion | arguments)*
+     * 
+     * Example: d.db.Raw(sql).Rows() becomes a MethodExpr structure:
+     * - MethodExprContext (with type=d.db and method=Raw), ArgumentsContext, DOT, IDENTIFIER("Rows"), ArgumentsContext
+     * 
+     * This should produce two calls:
+     * 1. NodeName="Dao.db", FunctionName="Raw", Parameters=["sql"]
+     * 2. NodeName="Dao.db", FunctionName="Rows", Parameters=[]
+     * 
+     * Note: For chained calls, we keep the same base NodeName (the receiver type) for all method calls in the chain.
+     */
     private fun handlePrimaryExprCall(primaryExprCtx: PrimaryExprContext): List<CodeCall> {
-        return when (val arguments = primaryExprCtx.getChild(1)) {
-            is GoParser.ArgumentsContext -> {
-                codeCallFromExprList(primaryExprCtx.getChild(0), arguments)
+        val calls = mutableListOf<CodeCall>()
+        
+        // Build a list of path segments and find argument positions
+        // Each segment is either from operand or IDENTIFIER after DOT
+        val pathSegments = mutableListOf<String>()
+        
+        // Track the base path for chained calls - this is the initial receiver before any method calls
+        var basePath: String? = null
+        
+        // Process all children to find function calls (arguments)
+        var i = 0
+        while (i < primaryExprCtx.childCount) {
+            val child = primaryExprCtx.getChild(i)
+            
+            when {
+                // First child - operand/conversion/methodExpr
+                i == 0 -> {
+                    when (child) {
+                        is GoParser.OperandContext -> {
+                            // Operand can be literal, operandName (which can be qualifiedIdent), or (expression)
+                            pathSegments.add(child.text)
+                        }
+                        is GoParser.ConversionContext -> pathSegments.add(child.text)
+                        is GoParser.MethodExprContext -> {
+                            // MethodExpr: type DOT methodName
+                            // type could be a TypeName with QualifiedIdent (e.g., d.db)
+                            // We need to extract the full path
+                            val type = child.type_()
+                            val methodName = child.IDENTIFIER()?.text ?: ""
+                            
+                            // Get all identifiers from the type
+                            val typeName = type?.typeName()
+                            val qualifiedIdent = typeName?.qualifiedIdent()
+                            if (qualifiedIdent != null) {
+                                // QualifiedIdent is: IDENTIFIER DOT IDENTIFIER
+                                qualifiedIdent.IDENTIFIER().forEach { ident ->
+                                    pathSegments.add(ident.text)
+                                }
+                            } else {
+                                // Simple type name
+                                val typeText = type?.text ?: ""
+                                if (typeText.isNotEmpty()) {
+                                    pathSegments.add(typeText)
+                                }
+                            }
+                            
+                            if (methodName.isNotEmpty()) {
+                                pathSegments.add(methodName)
+                            }
+                        }
+                    }
+                }
+                // DOT followed by IDENTIFIER
+                child is TerminalNodeImpl && child.text == "." -> {
+                    // Next child should be IDENTIFIER
+                    if (i + 1 < primaryExprCtx.childCount) {
+                        val nextChild = primaryExprCtx.getChild(i + 1)
+                        if (nextChild is TerminalNodeImpl && nextChild.text != ".") {
+                            pathSegments.add(nextChild.text)
+                            i++ // Skip the IDENTIFIER we just processed
+                        }
+                    }
+                }
+                // Arguments - this is a function call
+                child is GoParser.ArgumentsContext -> {
+                    if (pathSegments.isNotEmpty()) {
+                        val functionName = pathSegments.last()
+                        val targetPath = if (pathSegments.size > 1) {
+                            pathSegments.dropLast(1).joinToString(".")
+                        } else {
+                            // When there's only one segment (the function name), 
+                            // this is a standalone function call without a receiver
+                            ""
+                        }
+                        
+                        // For chained calls, use the base path if we have one
+                        val effectivePath = basePath ?: targetPath
+                        
+                        // Create the call
+                        val targetNode = primaryExprCtx.getChild(0)
+                        calls.addAll(codeCallFromExprListWithPath(targetNode, child, functionName, effectivePath))
+                        
+                        // Store the base path for subsequent chained calls
+                        if (basePath == null && effectivePath.isNotEmpty()) {
+                            basePath = effectivePath
+                        }
+                        
+                        // Clear path segments but keep the base for next call in chain
+                        // The next IDENTIFIER after this will be added to continue the chain
+                        pathSegments.clear()
+                    }
+                }
+                // Skip index, slice_, typeAssertion for now (they don't create function calls)
+                child is GoParser.IndexContext -> {}
+                child is GoParser.Slice_Context -> {}
+                child is GoParser.TypeAssertionContext -> {}
             }
-
-            else -> {
-                listOf()
-            }
+            i++
         }
+        
+        return calls
     }
 
     /**
@@ -309,7 +420,46 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
      * 	| primaryExpr ((DOT IDENTIFIER) | index | slice_ | typeAssertion | arguments);
      * ```
      */
-    private fun codeCallFromExprList(child: ParseTree, arguments: GoParser.ArgumentsContext): List<CodeCall> {
+    private fun codeCallFromExprListWithPath(child: ParseTree, arguments: GoParser.ArgumentsContext, functionName: String, targetPath: String): List<CodeCall> {
+        val calls = mutableListOf<CodeCall>()
+
+        val currentCall = CodeCall(NodeName = targetPath).apply {
+            Parameters = parseArguments(arguments)
+            FunctionName = functionName
+        }
+
+        // Resolve local variables and receivers in the target path
+        if (targetPath.isNotEmpty()) {
+            val parts = targetPath.split(".")
+            val firstPart = parts.first()
+
+            // Check both localVars and receiverForCall
+            val resolvedFirst = when {
+                localVars.containsKey(firstPart) -> localVars[firstPart]!!
+                receiverForCall.containsKey(firstPart) -> receiverForCall[firstPart]!!
+                else -> null
+            }
+
+            if (resolvedFirst != null) {
+                // Replace first part with its resolved type
+                val remainingParts = parts.drop(1)
+                val resolvedPath = if (remainingParts.isNotEmpty()) {
+                    "$resolvedFirst.${remainingParts.joinToString(".")}"
+                } else {
+                    resolvedFirst
+                }
+                currentCall.NodeName = resolvedPath
+                currentCall.Package = wrapTarget(resolvedPath)
+            } else {
+                currentCall.Package = wrapTarget(targetPath)
+            }
+        }
+
+        calls.add(currentCall)
+        return calls
+    }
+
+    private fun codeCallFromExprList(child: ParseTree, arguments: GoParser.ArgumentsContext, functionName: String = ""): List<CodeCall> {
         val calls = mutableListOf<CodeCall>()
 
         val currentCall = CodeCall(NodeName = child.text).apply {
@@ -319,29 +469,46 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
         when (child) {
             is PrimaryExprContext -> {
-                when (child.getChild(1)) {
-                    is TerminalNodeImpl -> {
-                        if (child.getChild(0) is PrimaryExprContext && child.childCount > 2) {
-                            val primaryCalls = handlePrimaryExprCall(child.getChild(0) as PrimaryExprContext)
-                            calls.addAll(primaryCalls)
-                        }
+                // New grammar: child(0) is operand/conversion/methodExpr
+                // If we have a functionName passed in, use it
+                if (functionName.isNotEmpty()) {
+                    val nodeName = handleForPrimary(child).orEmpty()
+                    currentCall.NodeName = nodeName
+                    currentCall.FunctionName = functionName
+                    currentCall.Package = wrapTarget(nodeName)
+                } else {
+                    // Old logic for compatibility
+                    when (child.getChild(1)) {
+                        is TerminalNodeImpl -> {
+                            if (child.getChild(0) is PrimaryExprContext && child.childCount > 2) {
+                                val primaryCalls = handlePrimaryExprCall(child.getChild(0) as PrimaryExprContext)
+                                calls.addAll(primaryCalls)
+                            }
 
-                        val functionName = child.getChild(2).text
-                        val nodeName = handleForPrimary(child).orEmpty()
+                            val funcName = child.getChild(2).text
+                            val nodeName = handleForPrimary(child).orEmpty()
 
-                        // if nodeName ends with $.functionName, the functionName should be remove
-                        if (nodeName.endsWith(".$functionName")) {
-                            currentCall.NodeName = nodeName.substring(0, nodeName.length - functionName.length - 1)
-                        } else {
-                            currentCall.NodeName = nodeName
-                        }
+                            // if nodeName ends with $.functionName, the functionName should be remove
+                            if (nodeName.endsWith(".$funcName")) {
+                                currentCall.NodeName = nodeName.substring(0, nodeName.length - funcName.length - 1)
+                            } else {
+                                currentCall.NodeName = nodeName
+                            }
 
-                        currentCall.apply {
-                            FunctionName = child.getChild(2).text
-                            Package = wrapTarget(nodeName)
+                            currentCall.apply {
+                                FunctionName = child.getChild(2).text
+                                Package = wrapTarget(nodeName)
+                            }
                         }
                     }
                 }
+            }
+
+            is GoParser.OperandContext -> {
+                // Direct operand call (e.g., function())
+                currentCall.NodeName = child.text
+                currentCall.FunctionName = if (functionName.isNotEmpty()) functionName else child.text
+                currentCall.Package = wrapTarget(child.text)
             }
         }
 
@@ -367,17 +534,52 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
 
     private fun handleForPrimary(child: PrimaryExprContext, isForLocalVar: Boolean = false): String? {
-//        val possibleResult = handleForPrimary(first, isForLocalVar).orEmpty()
-        if (child.primaryExpr()?.text?.contains(".") == true) {
-            /// replace first.text to possibleResult
-            /// d.Field -> Dao.Field
-            val split = child.primaryExpr().text.split(".")
-            val withoutFirst = split.drop(1).joinToString(".")
-            // get first part and try to resolve in local var
-            val first = split.first()
-            if (localVars.containsKey(first)) {
-                return "${localVars[first]}.$withoutFirst"
+        // Build the full method call path from the primaryExpr children
+        // Structure: (operand | conversion | methodExpr) (DOT IDENTIFIER | ... | arguments)*
+        val pathParts = mutableListOf<String>()
+        
+        for (i in 0 until child.childCount) {
+            val c = child.getChild(i)
+            when {
+                c is GoParser.OperandContext -> pathParts.add(c.text)
+                c is GoParser.ConversionContext -> pathParts.add(c.text)
+                c is GoParser.MethodExprContext -> {
+                    val typeName = c.type_()?.text ?: ""
+                    val methodName = c.IDENTIFIER()?.text ?: ""
+                    if (typeName.isNotEmpty()) pathParts.add(typeName)
+                    if (methodName.isNotEmpty()) pathParts.add(methodName)
+                }
+                c is TerminalNodeImpl && c.text != "." && c.text != "(" && c.text != ")" -> {
+                    // IDENTIFIER after DOT
+                    pathParts.add(c.text)
+                }
+                c is GoParser.ArgumentsContext -> {
+                    // Stop at arguments - we've collected the full path
+                    break
+                }
             }
+        }
+        
+        val fullPath = pathParts.joinToString(".")
+        
+        // For fmt.Sprintf and similar, extract the value when assigning to local var
+        if (isForLocalVar && goPrintFuncs.contains(fullPath)) {
+            val args = child.arguments()?.firstOrNull()
+            if (args != null) {
+                return getValueFromPrintf(child)
+            }
+        }
+        
+        // Check if we should resolve a local variable
+        val firstPart = pathParts.firstOrNull() ?: ""
+        if (firstPart.isNotEmpty() && localVars.containsKey(firstPart) && pathParts.size > 1) {
+            // When assigning to a local var, don't append the function name
+            // The local var should store the receiver type, not the full method path
+            if (isForLocalVar) {
+                return localVars[firstPart]!!
+            }
+            val remainingParts = pathParts.drop(1).joinToString(".")
+            return "${localVars[firstPart]}.$remainingParts"
         }
 
         val nodeName = when (val first = child.getChild(0)) {
@@ -386,36 +588,57 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             }
 
             is PrimaryExprContext -> {
-                if (first.primaryExpr() != null) {
-                    handleForPrimary(first, isForLocalVar).orEmpty()
-                } else {
-                    val parent = child.parent
-                    if (isForLocalVar && first.text == "fmt" && parent.text.startsWith("fmt.")) {
-                        if (parent is PrimaryExprContext) {
-                            val content = getValueFromPrintf(parent)
-                            localVars.getOrDefault(first.text, content)
-                        } else {
-                            localVars.getOrDefault(first.text, first.text)
-                        }
-                    } else {
-                        localVars.getOrDefault(first.text, first.text)
+                // Recursive case - though this shouldn't happen in new grammar
+                handleForPrimary(first, isForLocalVar).orEmpty()
+            }
+            
+            is GoParser.MethodExprContext -> {
+                // Handle MethodExprContext for the new grammar
+                // MethodExpr: type DOT methodName
+                val methodName = first.IDENTIFIER()?.text ?: ""
+                val typeName = first.type_()?.text ?: ""
+                val fullCall = if (typeName.isNotEmpty()) "$typeName.$methodName" else methodName
+                
+                // For local variable assignment from fmt.Sprintf, etc., extract the value
+                if (isForLocalVar && goPrintFuncs.contains(fullCall)) {
+                    // Get the arguments of the print function
+                    val args = child.arguments()?.firstOrNull()
+                    if (args != null) {
+                        return getValueFromPrintf(child)
                     }
                 }
+                
+                localVars.getOrDefault(typeName, typeName)
             }
 
             else -> {
-                first.text
+                val parent = child.parent
+                if (isForLocalVar && first.text == "fmt" && parent.text.startsWith("fmt.")) {
+                    if (parent is PrimaryExprContext) {
+                        val content = getValueFromPrintf(parent)
+                        localVars.getOrDefault(first.text, content)
+                    } else {
+                        localVars.getOrDefault(first.text, first.text)
+                    }
+                } else {
+                    localVars.getOrDefault(first.text, first.text)
+                }
             }
         }
 
-        if (child.childCount > 1 && child.DOT() != null) {
-            val identifier = child.IDENTIFIER()?.text ?: ""
+        if (child.childCount > 1 && child.DOT() != null && child.DOT().isNotEmpty()) {
+            val identifier = child.IDENTIFIER()?.firstOrNull()?.text ?: ""
             val fullName = "$nodeName.$identifier"
             if (receiverForCall.containsKey(fullName)) {
                 return receiverForCall[fullName]!!
             }
             if (receiverForCall.containsKey(nodeName)) {
                 val baseType = receiverForCall[nodeName]!!
+                // When assigning to a local var, don't append the function name
+                // The local var should store the receiver type, not the full method path
+                if (isForLocalVar) {
+                    return baseType
+                }
                 return "$baseType.$identifier"
             }
 
@@ -430,17 +653,34 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     private fun getValueFromPrintf(parent: RuleContext): String {
-        val child = parent.getChild(1)
-        if (child !is GoParser.ArgumentsContext) {
-            return child.text.removePrefix("(").removeSuffix(")")
+        // In new grammar, arguments can be at different positions
+        // Find the ArgumentsContext regardless of position
+        var argsContext: GoParser.ArgumentsContext? = null
+        for (i in 0 until parent.childCount) {
+            val c = parent.getChild(i)
+            if (c is GoParser.ArgumentsContext) {
+                argsContext = c
+                break
+            }
         }
-
-        val first = child.getChild(1)
+        
+        if (argsContext == null) {
+            // Fallback to old logic
+            val child = parent.getChild(1)
+            if (child !is GoParser.ArgumentsContext) {
+                return child.text.removePrefix("(").removeSuffix(")")
+            }
+            argsContext = child
+        }
+        
+        // ArgumentsContext: ( expressionList? ... )
+        // Child 0 is '(' terminal, child 1 is expressionList if present
+        val first = argsContext.getChild(1)
         if (first is GoParser.ExpressionListContext) {
             return first.getChild(0).text.removePrefix("(").removeSuffix(")")
         }
 
-        return child.text.removePrefix("(").removeSuffix(")")
+        return argsContext.text.removePrefix("(").removeSuffix(")")
     }
 
     override fun enterVarDecl(ctx: GoParser.VarDeclContext?) {
