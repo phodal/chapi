@@ -173,15 +173,13 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         currentNode.Functions += currentFunction
     }
 
-    override fun enterExpression(ctx: JavaParser.ExpressionContext?) {
-        when (val parent = ctx!!.parent) {
-            is JavaParser.StatementContext -> {
-                val firstChild = parent.getChild(0).text
-
-                if (firstChild.lowercase() == "return") {
-                    val isReturnNull = ctx.text == "null"
-                    currentFunction.addExtension("IsReturnNull", isReturnNull.toString())
-                }
+    // Handle return statements - check if expression is in a return statement
+    override fun enterStatement(ctx: JavaParser.StatementContext?) {
+        if (ctx?.RETURN() != null) {
+            val expression = ctx.expression(0)
+            if (expression != null) {
+                val isReturnNull = expression.text == "null"
+                currentFunction.addExtension("IsReturnNull", isReturnNull.toString())
             }
         }
     }

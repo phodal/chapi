@@ -214,21 +214,39 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
 
     private fun buildMethodParameters(params: JavaParser.FormalParametersContext?): List<CodeProperty> {
         var methodParams = listOf<CodeProperty>()
-        if (params!!.getChild(1)::class.simpleName != "FormalParameterListContext") {
-            return methodParams
+        if (params == null) return methodParams
+        
+        // New grammar structure: formalParameters can contain formalParameter directly
+        // and/or formalParameterList
+        val formalParam = params.formalParameter()
+        val formalParamLists = params.formalParameterList()
+        
+        // Process direct formalParameter (if any)
+        if (formalParam != null) {
+            val varDeclId = formalParam.variableDeclaratorId()
+            if (varDeclId != null) {
+                val paramType = formalParam.typeType().text
+                val paramValue = varDeclId.identifier().text
+                localVars[paramValue] = paramType
+                
+                val parameter = CodeProperty(TypeValue = paramValue, TypeType = paramType)
+                methodParams += parameter
+            }
         }
-
-        val parameterList = params.getChild(1) as JavaParser.FormalParameterListContext
-        for (param in parameterList.formalParameter()) {
-            val paramCtx = param as JavaParser.FormalParameterContext
-            val paramType = paramCtx.typeType().text
-            val paramValue = paramCtx.variableDeclaratorId().identifier().text
-            localVars[paramValue] = paramType
-
-            val parameter =
-                CodeProperty(TypeValue = paramValue, TypeType = paramType)
-
-            methodParams += parameter
+        
+        // Process formalParameterList (if any)
+        for (paramList in formalParamLists) {
+            for (param in paramList.formalParameter()) {
+                val varDeclId = param.variableDeclaratorId()
+                if (varDeclId != null) {
+                    val paramType = param.typeType().text
+                    val paramValue = varDeclId.identifier().text
+                    localVars[paramValue] = paramType
+                    
+                    val parameter = CodeProperty(TypeValue = paramValue, TypeType = paramType)
+                    methodParams += parameter
+                }
+            }
         }
 
         return methodParams
@@ -276,9 +294,14 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
     }
 
     private fun buildMethodCallParameters(codeCall: CodeCall, ctx: JavaParser.MethodCallContext) {
-        codeCall.Parameters = ctx.expressionList()?.expression()?.map {
-            CodeProperty(TypeType = "", TypeValue = it.text)
-        } ?: listOf()
+        // Get arguments from the method call
+        val arguments = ctx.arguments()
+        if (arguments != null) {
+            val exprList = arguments.expressionList()
+            codeCall.Parameters = exprList?.expression()?.map {
+                CodeProperty(TypeType = "", TypeValue = it.text)
+            } ?: listOf()
+        }
     }
 
     private fun buildMethodCallLocation(codeCall: CodeCall, ctx: JavaParser.MethodCallContext) {
@@ -506,8 +529,12 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
     }
 
     override fun exitFormalParameter(ctx: JavaParser.FormalParameterContext?) {
-        val paramKey = ctx!!.variableDeclaratorId().identifier().text
-        formalParameters[paramKey] = ctx.typeType().text
+        if (ctx == null) return
+        val varDeclId = ctx.variableDeclaratorId()
+        if (varDeclId != null) {
+            val paramKey = varDeclId.identifier().text
+            formalParameters[paramKey] = ctx.typeType().text
+        }
     }
 
     override fun enterFieldDeclaration(ctx: JavaParser.FieldDeclarationContext?) {
@@ -526,7 +553,14 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
                 continue
             }
 
-            val typeTypeText = typeCtx.identifier(0).text
+            // Get the type identifier from classOrInterfaceType
+            // classOrInterfaceType now wraps classType, which has typeIdentifier
+            val classType = typeCtx.classType()
+            val typeTypeText = if (classType != null && classType.typeIdentifier().isNotEmpty()) {
+                classType.typeIdentifier(0).text
+            } else {
+                typeCtx.text
+            }
             val typeKey = declCtx.variableDeclaratorId().identifier().text
             val typeValue = declCtx.variableInitializer()?.text ?: ""
 
@@ -640,28 +674,41 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         }
     }
 
-    override fun enterExpression(ctx: JavaParser.ExpressionContext?) {
-        if (ctx?.COLONCOLON() != null) {
-            if (ctx.expression(0) == null) {
-                return
-            }
-
-            val text = ctx.expression(0).text
-            val methodName = ctx.identifier().text
-            val targetType = parseTargetType(text)
-
-            val fullType = warpTargetFullType(targetType).targetType
-            val position = buildPosition(ctx)
-            val codeCall = CodeCall(
-                Package = removeTarget(fullType),
-                Type = CallType.LAMBDA,
-                NodeName = targetType!!,
-                FunctionName = methodName,
-                Position = position
-            )
-
-            sendResultToMethodCallMap(codeCall)
+    // Handle method reference expressions (::)
+    override fun enterMethodReferenceExpression(ctx: JavaParser.MethodReferenceExpressionContext?) {
+        if (ctx == null) return
+        
+        // Get the identifier for the method name (if it's not a constructor reference)
+        val identifier = ctx.identifier()
+        if (identifier == null && ctx.NEW() == null) return
+        
+        val methodName = identifier?.text ?: "new"
+        
+        // Get the target type (left side of ::)
+        val expression = ctx.expression()
+        val typeType = ctx.typeType()
+        val classType = ctx.classType()
+        
+        val targetText = when {
+            expression != null -> expression.text
+            typeType != null -> typeType.text
+            classType != null -> classType.text
+            else -> return
         }
+        
+        val targetType = parseTargetType(targetText)
+        val fullType = warpTargetFullType(targetType).targetType
+        val position = buildPosition(ctx)
+        
+        val codeCall = CodeCall(
+            Package = removeTarget(fullType),
+            Type = CallType.LAMBDA,
+            NodeName = targetType ?: "",
+            FunctionName = methodName,
+            Position = position
+        )
+
+        sendResultToMethodCallMap(codeCall)
     }
 
     override fun enterConstructorDeclaration(ctx: JavaParser.ConstructorDeclarationContext?) {

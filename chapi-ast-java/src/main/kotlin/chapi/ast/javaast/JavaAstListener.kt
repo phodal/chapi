@@ -9,8 +9,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 
 open class JavaAstListener : JavaParserBaseListener() {
     fun annotationName(ctx: JavaParser.AnnotationContext): String {
-        val annotationName = ctx.qualifiedName()?.text ?: ""
-        return ctx.altAnnotationQualifiedName()?.text ?: annotationName
+        return ctx.qualifiedName()?.text ?: ""
     }
 
     fun buildAnnotation(ctx: JavaParser.AnnotationContext): CodeAnnotation {
@@ -18,18 +17,22 @@ open class JavaAstListener : JavaParserBaseListener() {
             Name = annotationName(ctx)
         )
 
-        when {
-            ctx.elementValuePairs() != null -> {
-                codeAnnotation.KeyValues = ctx.elementValuePairs()?.elementValuePair()
-                    ?.map {
-                        AnnotationKeyValue(it.identifier().text, it.elementValue().text)
-                    } ?: listOf()
-            }
-
-            ctx.elementValue() != null -> {
-                val value = ctx.elementValue().text
-                codeAnnotation.KeyValues += AnnotationKeyValue(value, value)
-            }
+        // Handle annotation field values (new grammar structure)
+        val fieldValues = ctx.annotationFieldValues()
+        if (fieldValues != null) {
+            codeAnnotation.KeyValues = fieldValues.annotationFieldValue()
+                ?.mapNotNull {
+                    val identifier = it.identifier()
+                    val value = it.annotationValue()
+                    if (identifier != null && value != null) {
+                        AnnotationKeyValue(identifier.text, value.text)
+                    } else if (value != null) {
+                        // Unnamed annotation value
+                        AnnotationKeyValue(value.text, value.text)
+                    } else {
+                        null
+                    }
+                } ?: listOf()
         }
 
         codeAnnotation.Position = buildPosition(ctx)
