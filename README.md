@@ -6,48 +6,53 @@
 [![codecov](https://codecov.io/gh/phodal/chapi/graph/badge.svg?token=sdB5L3xbRv)](https://codecov.io/gh/phodal/chapi)
 [![Maven Central](https://img.shields.io/maven-central/v/com.phodal.chapi/chapi-domain)](https://central.sonatype.com/artifact/com.phodal.chapi/chapi-domain)
 
-> CHAPI (Common Hierarchical Abstract Parser and Information Converter) streamlines code analysis by converting diverse
-> language source code into a unified abstract model, simplifying cross-language development. Chapi
-> 是一个通用层次抽象解析器与信息转换器，它可以将不同编程语言的源代码转换为统一的层次抽象模型。
+> **CHAPI (Common Hierarchical Abstract Parser and Information Converter)** streamlines code analysis by converting
+> source code from different languages into a unified abstract model, making cross-language analysis and tooling
+> easier.
+>
+> **Chapi** 是一个通用层次抽象解析器与信息转换器，它可以将不同编程语言的源代码转换为统一的层次抽象模型，
+> 从而简化跨语言的代码分析与工具构建。
 
-Chapi => Cha Pi => Tea Pi => Tea π => 茶 π. See on in
-refs: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/).
+Chapi => Cha Pi => Tea Pi => Tea π => 茶 π.
+Reference: [Tea if by sea, cha if by land](https://qz.com/1176962/map-how-the-word-tea-spread-over-land-and-sea-to-conquer-the-world/).
 
-Chapi (pronounce /tʃɑpi/) also pronounce XP in Chinese if you always call X in 叉.
+Chapi (pronounced /tʃɑpi/) can also be read as “XP” in Chinese if you pronounce “X” as “叉”.
 
-language stages:
+## Status & language coverage
 
-| Features      | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
-|---------------|------|--------|----|--------|-------|----|----|-------|-----|------|
-| http api decl | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       | ✅   | 🆕   |
-| syntax parse  | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | 🆕  | ✅    |
-| function call | ✅    | ✅      | 🆕 | ✅      | ✅     | 🆕 |    |       |     | ✅    |
-| arch/package  | ✅    |        |    | ✅      | ✅     | 🆕 |    | ✅     | ✅   | 🆕   |
-| real world    | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |
+### Language stages
 
-IDL stages:
+| Feature        | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
+|----------------|------|--------|----|--------|-------|----|----|-------|-----|------|
+| HTTP API decl  | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       | ✅   | 🆕   |
+| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | 🆕  | ✅    |
+| Function calls | ✅    | ✅      | 🆕 | ✅      | ✅     | 🆕 |    |       |     | ✅    |
+| Arch/package   | ✅    |        |    | ✅      | ✅     | 🆕 |    | ✅     | ✅   | 🆕   |
+| Real-world     | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |
 
-| Features      | Protobuf | Thrift | 
-|---------------|----------|--------|
-| syntax parse  | ✅        | ✅      |
-| http api decl | ✅        | ✅      |
-| arch/package  | ✅        |        |
-| real world    | ✅        |        | 
+### IDL stages
 
-- [ArchGuard](https://github.com/archguard/archguard) - ArchGuard is an architecture workbench, also for architecture
-  governance, which can analysis architecture in container, component, code level, create architecture fitness
-  functions,
-  and analysis system dependencies.
-- [UnitGen](https://github.com/unit-mesh/unit-gen) is a code fine-tuning data framework that generates data from your
+| Feature        | Protobuf | Thrift |
+|----------------|----------|--------|
+| Syntax parsing | ✅        | ✅      |
+| HTTP API decl  | ✅        | ✅      |
+| Arch/package   | ✅        |        |
+| Real-world     | ✅        |        |
+
+### Projects using Chapi
+
+- [ArchGuard](https://github.com/archguard/archguard) — An architecture workbench for architecture governance. It can
+  analyze architecture at container/component/code levels, create architecture fitness functions, and inspect system
+  dependencies.
+- [UnitGen](https://github.com/unit-mesh/unit-gen) — A fine-tuning data framework that generates datasets from your
   existing codebase.
-- [ChocolateFactory](https://github.com/unit-mesh/chocolate-factory) is a cutting-edge LLM toolkit designed to empower
-  you in creating your very own AI assistant.
+- [ChocoBuilder](https://github.com/unit-mesh/choco-builder) — An LLM toolkit for building custom AI assistants.
 
-PS: welcome to PR to send your projects
+PS: PRs are welcome — feel free to add your project here.
 
-## Language Information
+## Language information
 
-language versions（tested）:
+Tested language versions:
 
 - Java: 8, 11, 17
 - TypeScript/JavaScript
@@ -55,7 +60,9 @@ language versions（tested）:
 - Rust: v1.60.0
 - Python: 2, 3
 
-```goovy
+Gradle modules (by tier):
+
+```text
 // tier 1 languages
 ":chapi-ast-java",
 ":chapi-ast-typescript",
@@ -80,64 +87,66 @@ language versions（tested）:
 ":chapi-parser-cmake",
 ```
 
-Language Family [wiki](https://en.wikipedia.org/wiki/First-class_function)
+Language families (refs):
 
-Algol Family [https://wiki.c2.com/?AlgolFamily](https://wiki.c2.com/?AlgolFamily)
+- First-class function: https://en.wikipedia.org/wiki/First-class_function
+- Algol family: https://wiki.c2.com/?AlgolFamily
 
-|            | Languages                                     | plan support            |
+| Category   | Languages                                     | Planned support         |
 |------------|-----------------------------------------------|-------------------------|
 | C family   | C#, Java, Go, C, C++, Objective-C, Rust, ...  | C++, C, Java, C#, Rust? |
 | Functional | Scheme, Lisp, Clojure, Scala, ...             | Scala                   |
 | Scripting  | Lua, PHP, JavaScript, Python, Perl, Ruby, ... | Python, JavaScript      |
 | Other      | Fortran, Swift, Matlab, ...                   | Swift?, Fortran?        |
 
-## Specify Rule
+## Parsing / analysis rules
 
-**scan by twice**. In order to success get:
+Chapi scans **twice** to improve cross-file resolution.
 
-- find data struct in same package
+- It helps find data structures in the same package/module.
 
 ### TypeScript
 
-1. PackageName will use resolvePath, package of `src/grammar/blbla.ts` is `@.grammar`
-2. Function in file will use `default` as DataStructure.Name
-3. export default `Object` in file will use `default` as FunctionName, and will belong to `default` DataStructure
+1. `PackageName` uses the resolved path. For example, `src/grammar/blbla.ts` becomes `@.grammar`.
+2. Top-level functions in a file use `default` as `DataStructure.Name`.
+3. `export default Object` uses `default` as `FunctionName` and belongs to the `default` data structure.
 
-### C# issues
+### C# notes
 
-- interpolated_string parse
-  issue：[official grammar](https://github.com/dotnet/roslyn/blob/main/src/Compilers/CSharp/Portable/Generated/CSharp.Generated.g4)
-  ，Antlr issues: [https://github.com/antlr/grammars-v4/issues/1146](https://github.com/antlr/grammars-v4/issues/1146)
-- import analysis support
-    - in C#, import `namespace` can use call in namespace
+- Interpolated string parsing
+    - Official grammar:
+      https://github.com/dotnet/roslyn/blob/main/src/Compilers/CSharp/Portable/Generated/CSharp.Generated.g4
+    - Related Antlr issue:
+      https://github.com/antlr/grammars-v4/issues/1146
+- Import analysis
+    - In C#, importing a `namespace` allows resolving calls inside that namespace.
 
-### C 
+### C
 
-We use [https://github.com/shevek/jcpp](https://github.com/shevek/jcpp) to pre-process C code.
+We use https://github.com/shevek/jcpp to preprocess C code.
 
 ### Kotlin
 
-- need to implementation `warpTargetFullType` to got Class in same package.
+- `warpTargetFullType` is required to resolve classes in the same package.
 
 ## Usage
 
-1. add to ``dependencies``
+Add dependencies:
 
-```
+```groovy
 dependencies {
-    implementation 'com.phodal.chapi:chapi-ast-java:2.3.6'
-    implementation 'com.phodal.chapi:chapi-domain:2.3.6'
+    implementation "com.phodal.chapi:chapi-ast-java:2.3.6"
+    implementation "com.phodal.chapi:chapi-domain:2.3.6"
 }
 ```
 
-### Usage
+Example (Kotlin):
 
-```kotlin
+```text
 import chapi.domain.core.CodeDataStruct
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
-import org.archguard.scanner.core.sourcecode.LanguageSourceCodeAnalyser
 import org.archguard.scanner.core.sourcecode.SourceCodeContext
 import java.io.File
 
@@ -166,13 +175,11 @@ fun analysisByFile(file: File): List<CodeDataStruct> {
         }
     }
 }
-}
-
 ```
 
 ## Examples
 
-examples Java source code:
+Java source:
 
 ```java
 package adapters.outbound.persistence.blog;
@@ -185,7 +192,7 @@ public class BlogPO implements PersistenceObject<Blog> {
 }
 ```
 
-examples output
+Output:
 
 ```json
 {
@@ -240,31 +247,31 @@ examples output
 
 ## Development
 
-Syntax Parse Identify Rules:
+Syntax parsing identification rules:
 
-1. package name
-2. import name
-3. class / data struct
-    1. struct name
-    2. struct parameters
-    3. function name
-    4. return types
-    5. function parameters
-4. function
-    1. function name
-    2. return types
-    3. function parameters
-5. method call
-    1. new instance call
-    2. parameter call
-    3. field call
+1. Package name
+2. Import name
+3. Class / data structure
+    1. Structure name
+    2. Structure parameters
+    3. Function names
+    4. Return types
+    5. Function parameters
+4. Function
+    1. Function name
+    2. Return types
+    3. Function parameters
+5. Method call
+    1. New instance call
+    2. Parameter call
+    3. Field call
 
-### Build Antlr Grammar
+### Build Antlr grammar
 
-1. setup Antlr: `brew install antlr`
-2. run compile: `./scripts/compile-antlr.sh`
+1. Install Antlr: `brew install antlr`
+2. Compile grammars: `./scripts/compile-antlr.sh`
 
-### Data Structures
+### Data structures
 
 ```
 // for multiple project analysis
@@ -295,32 +302,31 @@ code_property
 code_call
 ```
 
-## Development（Chinese Version）
+## Development（中文）
 
-Env：Intellij IDEA、JDK 11+
+环境：IntelliJ IDEA、JDK 11+
 
-1. Clone code：``git clone https://github.com/phodal/chapi``
-
-2. Build：``./gradlew build``
+1. 克隆代码：`git clone https://github.com/phodal/chapi`
+2. 构建：`./gradlew build`
 
 ### 参与开发
 
-为了保证不易出现 bug，项目采用 TDD 的方式进行，即先编写对应的语法测试，然后实现代码。通过尽可能高的测试覆盖率，降低 bug 的出现。
+为了尽可能降低 bug 的出现概率，项目采用 TDD 的方式进行：先编写对应的语法测试，再实现代码。通过尽可能高的测试覆盖率，来降低回归风险。
 
-项目主要由 domain + 各种语言的 AST + application 构建：
+项目主要由 domain + 各语言 AST + application 构建：
 
-- domain，构建统一的代码模型
-- 各语言 AST
-- application，对外暴露的简易 API
+- domain：统一代码模型
+- 各语言 AST：把源码转换为统一的层次抽象模型
+- application：对外暴露的简易 API
 
-每个 AST 项目的入口是 ``xxAnalyser``，返回的是一个 CodeContainer，即代码容器。在非 C# 语言里，等同于 CodeFile，即代码文件。
+每个 AST 项目的入口是 `xxAnalyser`，返回的是一个 `CodeContainer`（代码容器）。在非 C# 语言中，它等同于 `CodeFile`（代码文件）。
 
-CodeContainer 内对应的领域模型如下所示：
+`CodeContainer` 内对应的领域模型如下所示：
 
 ```
 // class-first or function-first
 code_data_struct // 类、struct、interface 等
-code_function    // 函数。如果是头等函数的语言（first-class function”），会用 NodeName = "default" 包在 code_data_struct 模型中
+code_function    // 函数。如果是头等函数语言（first-class function），会用 NodeName = "default" 包在 code_data_struct 模型里
 
 // function or class detail
 code_annotation  // 注解
@@ -336,10 +342,10 @@ code_call        // 函数调用，如 fmt.Println
 
 ### 加入开发
 
-1. 寻找感兴趣的语言 / 添加新的语言 AST
+1. 寻找感兴趣的语言 / 添加新的语言 AST。
 
-通过 TDD
-的方式一点点实现下面的功能（可以考虑按顺序），参照示例见 [JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
+通过 TDD 的方式逐步实现下面这些能力（推荐按顺序），示例可参考
+[JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
 
 1. package name
 2. import name
@@ -361,27 +367,27 @@ code_call        // 函数调用，如 fmt.Println
 
 ### 提交信息格式
 
-用于发布时，使用标准的 [CHANGELOG.md](CHANGELOG.md)
+发布时使用标准的 [CHANGELOG.md](CHANGELOG.md)。
 
-`<type>[Language]: <message>`，示例：`feat(java): <grammars> init python & go grammars Phodal Huang 2020/2/2, 5:01 PM`
+提交信息格式：`<type>[Language]: <message>`
 
-所有的 type 见：
+示例：`feat(java): <grammars> init python & go grammars Phodal Huang 2020/2/2, 5:01 PM`
+
+type 列表：
 
 - build: 影响构建系统或外部依赖关系的更改（示例范围：gulp，broccoli，npm）
-- ci: 更改我们的持续集成文件和脚本（示例范围：Travis，Circle，BrowserStack，SauceLabs）
+- ci: 更改持续集成文件和脚本（示例范围：Travis，Circle，BrowserStack，SauceLabs）
 - docs: 仅文档更改
-- feat: 一个新功能
+- feat: 新功能
 - fix: 修复错误
-- perf: 改进性能的代码更改
-- refactor: 代码更改，既不修复错误也不添加功能
-- style: 不影响代码含义的变化（空白，格式化，缺少分号等）
+- perf: 性能优化
+- refactor: 代码重构（不修复 bug 也不添加功能）
+- style: 不影响代码含义的变化（空白、格式化、缺少分号等）
 - test: 添加缺失测试或更正现有测试
 
-License
----
+## License
 
 [![Phodal's Idea](http://brand.phodal.com/shields/idea-small.svg)](http://ideas.phodal.com/)
 
 @2020 A [Phodal Huang](https://www.phodal.com)'s [Idea](http://github.com/phodal/ideas). This code is distributed under
 the MPL license. See `LICENSE` in this directory.
-
