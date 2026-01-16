@@ -45,51 +45,46 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
             return ""
         }
 
-        val typeContext = typeAnnotation.typeRef() ?: return ""
+        val typeContext = typeAnnotation.type_() ?: return ""
 
         if (typeContext.children == null) {
             return typeContext.text
         }
 
-        return processRef(typeContext)
+        return typeContext.text
     }
 
-    fun processRef(typeRef: TypeScriptParser.TypeRefContext): String {
-        typeRef.conditionalTypeRef().unionTypeExpression().forEach {
-            return it.text
-        }
-
+    fun processRef(typeRef: TypeScriptParser.TypeRefContext?): String? {
+        if (typeRef == null) return null
         return typeRef.text
     }
 
     fun buildMethodParameters(paramListCtx: TypeScriptParser.ParameterListContext?): List<CodeProperty> {
+        if (paramListCtx == null) return listOf()
+        
         var parameters: List<CodeProperty> = listOf()
 
-        val type = paramListCtx!!.getChild(0)
-        when (type.parent) {
-            is TypeScriptParser.OnlyRestParameterContext -> {
-                val restCtx = paramListCtx as TypeScriptParser.OnlyRestParameterContext
-                val restParameters = this.buildRestParameter(restCtx.restParameter())
-                parameters += restParameters
+        // Handle rest-only parameter case
+        if (paramListCtx.restParameter() != null && paramListCtx.parameter().isEmpty()) {
+            val restParameters = this.buildRestParameter(paramListCtx.restParameter())
+            parameters += restParameters
+            return parameters
+        }
+
+        // Handle normal parameters
+        paramListCtx.parameter().forEach {
+            if (it.requiredParameter() != null) {
+                parameters += this.buildRequireParameter(it.requiredParameter())
             }
-
-            is TypeScriptParser.NormalParameterContext -> {
-                val normalParam = paramListCtx as TypeScriptParser.NormalParameterContext
-
-                normalParam.parameter().forEach {
-                    if (it.requiredParameter() != null) {
-                        parameters += this.buildRequireParameter(it.requiredParameter())
-                    }
-                    if (it.optionalParameter() != null) {
-                        parameters += this.buildOptionalParameter(it.optionalParameter())
-                    }
-                }
-
-                if (normalParam.restParameter() != null) {
-                    val restParameters = this.buildRestParameter(paramListCtx.restParameter())
-                    parameters += restParameters
-                }
+            if (it.optionalParameter() != null) {
+                parameters += this.buildOptionalParameter(it.optionalParameter())
             }
+        }
+
+        // Handle trailing rest parameter
+        if (paramListCtx.restParameter() != null) {
+            val restParameters = this.buildRestParameter(paramListCtx.restParameter())
+            parameters += restParameters
         }
 
         return parameters
@@ -137,12 +132,12 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         val memberExpression = decorator.decoratorMemberExpression()
         val callExpression = decorator.decoratorCallExpression()
 
-        if (memberExpression?.Identifier() != null) {
-            annotation.Name = memberExpression.Identifier().text
+        if (memberExpression?.identifier() != null) {
+            annotation.Name = memberExpression.identifier().text
         }
         if (callExpression != null) {
             val member = callExpression.decoratorMemberExpression()
-            annotation.Name = member.Identifier().text
+            annotation.Name = member.identifier()?.text ?: ""
         }
 
         return annotation

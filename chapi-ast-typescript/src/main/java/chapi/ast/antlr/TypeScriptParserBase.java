@@ -64,7 +64,42 @@ public abstract class TypeScriptParserBase extends Parser
 
     protected boolean notOpenBraceAndNotFunction() {
         int nextTokenType = _input.LT(1).getType();
-        return nextTokenType != TypeScriptParser.OpenBrace && nextTokenType != TypeScriptParser.Function;
+        return nextTokenType != TypeScriptParser.OpenBrace && nextTokenType != TypeScriptParser.Function_;
+    }
+
+    protected boolean notOpenBraceAndNotFunctionAndNotInterface() {
+        int nextTokenType = _input.LT(1).getType();
+        return nextTokenType != TypeScriptParser.OpenBrace && 
+               nextTokenType != TypeScriptParser.Function_ &&
+               nextTokenType != TypeScriptParser.Interface;
+    }
+
+    protected boolean notOpenBraceAndNotFunctionAndNotInterfaceAndNotReturn() {
+        int nextTokenType = _input.LT(1).getType();
+        return nextTokenType != TypeScriptParser.OpenBrace &&
+               nextTokenType != TypeScriptParser.Function_ &&
+               nextTokenType != TypeScriptParser.Interface &&
+               nextTokenType != TypeScriptParser.Return;
+    }
+
+    protected boolean notOpenBraceAndNotStatementKeyword() {
+        int t = _input.LT(1).getType();
+        return t != TypeScriptParser.OpenBrace &&
+               t != TypeScriptParser.Function_ &&
+               t != TypeScriptParser.Interface &&
+               t != TypeScriptParser.Return &&
+               t != TypeScriptParser.Try &&
+               t != TypeScriptParser.Throw &&
+               t != TypeScriptParser.If &&
+               t != TypeScriptParser.For &&
+               t != TypeScriptParser.While &&
+               t != TypeScriptParser.Do &&
+               t != TypeScriptParser.Switch &&
+               t != TypeScriptParser.Break &&
+               t != TypeScriptParser.Continue &&
+               t != TypeScriptParser.Class &&
+               t != TypeScriptParser.Import &&
+               t != TypeScriptParser.Export;
     }
 
     protected boolean closeBrace() {

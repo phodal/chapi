@@ -127,6 +127,11 @@ public abstract class TypeScriptLexerBase extends Lexer
         this.templateDepth--;
     }
 
+    protected void StartTemplateString() {
+        // Called when starting a template expression ${...}
+        // This helps track that we're in a template context
+    }
+
     /**
      * Returns {@code true} if the lexer can match a regex literal.
      */
