@@ -6,6 +6,11 @@ import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
+    // Track local variables for type resolution
+    private var localVars = mutableMapOf<String, String>()
+    // Track class fields for type resolution
+    private var fieldsMap = mutableMapOf<String, String>()
+    
     private fun handleClassMember(memberCtx: CSharpParser.Class_member_declarationContext?) {
         val memberDeclaration = memberCtx!!.common_member_declaration() ?: return
         val firstChild = memberDeclaration.getChild(0) ?: return
@@ -89,17 +94,13 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
         buildForMethodDecl(ctx)
     }
 
-    override fun exitConstructor_declaration(ctx: CSharpParser.Constructor_declarationContext?) {
-        currentStruct.Functions += currentFunction
-        currentFunction = CodeFunction()
-    }
-
     override fun enterTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
         buildForMethodDecl(ctx)
     }
 
     override fun exitTyped_member_declaration(ctx: CSharpParser.Typed_member_declarationContext?) {
         if (currentFunction.Name.isNotEmpty()) {
+            localVars.clear()
             currentStruct.Functions += currentFunction
         }
 
@@ -108,11 +109,6 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
 
     override fun enterMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
         buildForMethodDecl(ctx)
-    }
-
-    override fun exitMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
-        currentStruct.Functions += currentFunction
-        currentFunction = CodeFunction()
     }
 
     private fun buildForMethodDecl(ctx: ParserRuleContext?) {
@@ -172,7 +168,29 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
     }
 
     override fun enterField_declaration(ctx: CSharpParser.Field_declarationContext?) {
-        println(ctx!!.text)
+        val variableDeclarators = ctx?.variable_declarators() ?: return
+        
+        // Get the type from the parent typed_member_declaration
+        val parent = ctx.parent
+        if (parent is CSharpParser.Typed_member_declarationContext) {
+            val typeText = parent.type_()?.text ?: ""
+            
+            variableDeclarators.variable_declarator().forEach { varDecl ->
+                val fieldName = varDecl.identifier()?.text ?: ""
+                val fieldValue = varDecl.variable_initializer()?.text ?: ""
+                
+                if (fieldName.isNotEmpty()) {
+                    fieldsMap[fieldName] = typeText
+                    
+                    val field = CodeField(
+                        TypeType = typeText,
+                        TypeValue = fieldValue,
+                        TypeKey = fieldName
+                    )
+                    currentStruct.Fields += field
+                }
+            }
+        }
     }
 
     // call from method invocation parent will be easy to search for method call
@@ -191,32 +209,90 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
         var ident = ""
         var member = ""
         var params: List<CodeProperty> = listOf()
+        val memberAccessChain = mutableListOf<String>()
+        var isThisAccess = false
+        
         primaryExpr.children.forEach {
             when (it) {
-                // todo: merge to primary expression
                 is CSharpParser.SimpleNameExpressionContext -> {
                     ident = it.identifier().text
                 }
 
+                is CSharpParser.ThisReferenceExpressionContext -> {
+                    isThisAccess = true
+                    ident = "this"
+                }
+
                 is CSharpParser.Member_accessContext -> {
-                    member = it.identifier().text
+                    val memberName = it.identifier()?.text ?: ""
+                    if (memberName.isNotEmpty()) {
+                        memberAccessChain.add(memberName)
+                    }
                 }
 
                 is CSharpParser.Method_invocationContext -> {
-                    // todo: parse parameters
                     it.argument_list()?.let { argumentList ->
                         params = parseParameters(argumentList)
                     }
                 }
-
-                else -> {
-                    println(it.javaClass.simpleName)
-                }
             }
         }
 
-        val codeCall = CodeCall(Package = "", NodeName = ident, FunctionName = member, Parameters = params)
+        // Determine function name and node name from the chain
+        if (memberAccessChain.isNotEmpty()) {
+            member = memberAccessChain.last()
+            
+            // Build node name from identifier and intermediate members
+            val nodeNameParts = mutableListOf<String>()
+            if (isThisAccess) {
+                // For this.field.Method(), resolve field type if possible
+                if (memberAccessChain.size > 1) {
+                    val fieldName = memberAccessChain.first()
+                    val resolvedType = fieldsMap[fieldName] ?: fieldName
+                    nodeNameParts.add(resolvedType)
+                    nodeNameParts.addAll(memberAccessChain.subList(1, memberAccessChain.size - 1))
+                }
+            } else if (ident.isNotEmpty()) {
+                nodeNameParts.add(ident)
+                if (memberAccessChain.size > 1) {
+                    nodeNameParts.addAll(memberAccessChain.subList(0, memberAccessChain.size - 1))
+                }
+            }
+            ident = nodeNameParts.joinToString(".")
+        } else if (ident.isNotEmpty() && member.isEmpty()) {
+            // Simple function call without member access
+            member = ident
+            ident = ""
+        }
+
+        // Resolve package from imports if available
+        val resolvedPackage = resolvePackage(ident)
+        
+        val codeCall = CodeCall(
+            Package = resolvedPackage,
+            NodeName = ident,
+            FunctionName = member,
+            Parameters = params
+        )
         currentFunction.FunctionCalls += codeCall
+    }
+    
+    private fun resolvePackage(nodeName: String): String {
+        if (nodeName.isEmpty()) return ""
+        
+        // Check if nodeName matches any import
+        codeContainer.Imports.forEach { import ->
+            if (import.Source.endsWith(".$nodeName") || import.Source == nodeName) {
+                return import.Source
+            }
+        }
+        
+        // Check if it's in the same namespace
+        if (currentNamespace.isNotEmpty()) {
+            return "$currentNamespace.$nodeName"
+        }
+        
+        return ""
     }
 
     private fun parseParameters(argumentList: CSharpParser.Argument_listContext): List<CodeProperty> {
@@ -226,5 +302,82 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
                 TypeValue = it.expression().text
             )
         }
+    }
+    
+    // Parse local variable declarations
+    override fun enterLocal_variable_declaration(ctx: CSharpParser.Local_variable_declarationContext?) {
+        val localVarType = ctx?.local_variable_type() ?: return
+        val typeText = localVarType.text
+        
+        ctx.local_variable_declarator().forEach { varDecl ->
+            val varName = varDecl.identifier()?.text ?: ""
+            if (varName.isNotEmpty()) {
+                // For 'var' keyword, try to infer type from initializer
+                val actualType = if (typeText == "var") {
+                    inferTypeFromInitializer(varDecl.local_variable_initializer()) ?: "var"
+                } else {
+                    typeText
+                }
+                localVars[varName] = actualType
+                
+                // Add to function's local variables
+                currentFunction.LocalVariables += CodeProperty(
+                    TypeValue = varName,
+                    TypeType = actualType
+                )
+            }
+        }
+    }
+    
+    private fun inferTypeFromInitializer(initCtx: CSharpParser.Local_variable_initializerContext?): String? {
+        initCtx ?: return null
+        
+        // Try to infer from 'new Type()' expressions
+        val expression = initCtx.expression()
+        if (expression != null) {
+            val text = expression.text
+            if (text.startsWith("new")) {
+                // Extract type name from 'new TypeName(...)'
+                val match = Regex("new\\s*([A-Za-z_][A-Za-z0-9_<>]*)").find(text)
+                return match?.groupValues?.get(1)
+            }
+        }
+        
+        return null
+    }
+    
+    // Clear local variables when exiting a function
+    override fun exitMethod_declaration(ctx: CSharpParser.Method_declarationContext?) {
+        localVars.clear()
+        currentStruct.Functions += currentFunction
+        currentFunction = CodeFunction()
+    }
+    
+    override fun exitConstructor_declaration(ctx: CSharpParser.Constructor_declarationContext?) {
+        localVars.clear()
+        currentStruct.Functions += currentFunction
+        currentFunction = CodeFunction()
+    }
+    
+    // Parse object creation expressions for type tracking
+    // ObjectCreationExpressionContext contains NEW type_ and object_creation_expression
+    override fun enterObjectCreationExpression(ctx: CSharpParser.ObjectCreationExpressionContext?) {
+        if (ctx == null) return
+        
+        val typeText = ctx.type_()?.text ?: return
+        
+        // Get the object_creation_expression which contains arguments
+        val objCreation = ctx.object_creation_expression()
+        val params = objCreation?.argument_list()?.let { parseParameters(it) } ?: listOf()
+        
+        val codeCall = CodeCall(
+            Package = resolvePackage(typeText),
+            NodeName = typeText,
+            FunctionName = "<init>",
+            Type = CallType.CREATOR,
+            Parameters = params
+        )
+        
+        currentFunction.FunctionCalls += codeCall
     }
 }

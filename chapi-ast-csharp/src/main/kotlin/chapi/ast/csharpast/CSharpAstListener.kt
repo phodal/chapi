@@ -93,17 +93,26 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
         val codeDataStruct = CodeDataStruct(
             NodeName = className,
             Package = currentNamespace,
-            Position = buildPosition(ctx)
+            Position = buildPosition(ctx),
+            Type = DataStructType.CLASS
         )
 
-        currentStruct = codeDataStruct;
-//
-//        val classMemberDeclarations = ctx.class_body().class_member_declarations()
-//        if (classMemberDeclarations != null) {
-//            for (classMemberDecl in classMemberDeclarations.class_member_declaration()) {
-//                this.handleClassMember(classMemberDecl)
-//            }
-//        }
+        currentStruct = codeDataStruct
+
+        // Parse inheritance (class_base: ':' class_type (','  namespace_or_type_name)*)
+        val classBase = ctx.class_base()
+        if (classBase != null) {
+            // First type after ':' is either base class or first interface
+            val classType = classBase.class_type()
+            if (classType != null) {
+                currentStruct.Extend = classType.text
+            }
+            
+            // Additional types are interfaces
+            classBase.namespace_or_type_name().forEach { nsOrType ->
+                currentStruct.Implements += nsOrType.text
+            }
+        }
 
         val parent = ctx.parent
         when (parent.javaClass.simpleName) {
