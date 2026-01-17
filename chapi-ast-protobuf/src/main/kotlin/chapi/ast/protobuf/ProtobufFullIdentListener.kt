@@ -6,11 +6,16 @@ import chapi.domain.core.*
 import org.antlr.v4.runtime.ParserRuleContext
 
 class ProtobufFullIdentListener(var fileName: String) : Protobuf3BaseListener() {
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "protobuf",
+        Kind = ContainerKind.IDL
+    )
 
     override fun enterPackageStatement(ctx: Protobuf3Parser.PackageStatementContext) {
         val packageName = ctx.fullIdent().text
         codeContainer.PackageName = packageName
+        codeContainer.DeclaredPackage = packageName
     }
 
     private fun buildPosition(ctx: ParserRuleContext): CodePosition {

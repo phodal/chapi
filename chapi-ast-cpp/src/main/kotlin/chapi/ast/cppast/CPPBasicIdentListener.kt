@@ -5,7 +5,11 @@ import chapi.ast.antlr.CPP14ParserBaseListener
 import chapi.domain.core.*
 
 class CPPBasicIdentListener(fileName: String, includes: MutableList<String>) : CPP14ParserBaseListener() {
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "cpp",
+        Kind = ContainerKind.SOURCE_FILE
+    )
     /// for example, Friend function, global function (`main`), etc.
     private var defaultNode = CodeDataStruct()
     private var currentFunction: CodeFunction? = null
@@ -30,7 +34,10 @@ class CPPBasicIdentListener(fileName: String, includes: MutableList<String>) : C
 
     override fun enterNamespaceDefinition(ctx: CPP14Parser.NamespaceDefinitionContext?) {
         ctx?.Identifier()?.let {
-            codeContainer.PackageName = it.text
+            val nsName = it.text
+            codeContainer.PackageName = nsName
+            codeContainer.DeclaredPackage = nsName
+            codeContainer.NamespacePath = codeContainer.NamespacePath + nsName
         }
     }
 

@@ -8,7 +8,11 @@ open class CFullIdentListener(fileName: String, includes: MutableList<String>) :
     private val defaultDataStruct = CodeDataStruct(NodeName = "default")
     private var currentFunction = CodeFunction()
     private var structMap = mutableMapOf<String, CodeDataStruct>()
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "c",
+        Kind = ContainerKind.SOURCE_FILE
+    )
 
     init {
         includes.forEach {

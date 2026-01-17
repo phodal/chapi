@@ -13,7 +13,11 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl
  * core logic, please goto [GoFullIdentListener.enterExpression] to see how to use it
  */
 class GoFullIdentListener(var fileName: String) : GoAstListener() {
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "go",
+        Kind = ContainerKind.SOURCE_FILE
+    )
 
     private var defaultNode = CodeDataStruct()
     private var structMap = mutableMapOf<String, CodeDataStruct>()
@@ -31,7 +35,9 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     }
 
     override fun enterPackageClause(ctx: GoParser.PackageClauseContext?) {
-        codeContainer.PackageName = ctx?.packageName()?.identifier()?.IDENTIFIER()?.text ?: ""
+        val packageName = ctx?.packageName()?.identifier()?.IDENTIFIER()?.text ?: ""
+        codeContainer.PackageName = packageName
+        codeContainer.DeclaredPackage = packageName
     }
 
     override fun enterImportSpec(ctx: GoParser.ImportSpecContext?) {

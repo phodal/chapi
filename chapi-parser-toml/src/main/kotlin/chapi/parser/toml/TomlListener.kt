@@ -2,11 +2,16 @@ package chapi.parser.toml
 
 import chapi.domain.core.CodeContainer
 import chapi.domain.core.CodeField
+import chapi.domain.core.ContainerKind
 import kotlin.io.path.Path
 
 class TomlListener(val filePath: String) : TomlParserBaseListener() {
     private val fileName = Path(filePath).fileName.toString()
-    private val rootContainer = CodeContainer(FullName = fileName)
+    private val rootContainer = CodeContainer(
+        FullName = fileName,
+        Language = "toml",
+        Kind = ContainerKind.CONFIG
+    )
     private var containerMap = mutableMapOf<String, CodeContainer>()
 
     private var currentTableName = ""
@@ -16,7 +21,12 @@ class TomlListener(val filePath: String) : TomlParserBaseListener() {
         if (currentTableName == "") {
             rootContainer.Fields += field
         } else {
-            containerMap.getOrDefault(currentTableName, CodeContainer(FullName = fileName, PackageName = currentTableName)).also {
+            containerMap.getOrDefault(currentTableName, CodeContainer(
+                FullName = fileName,
+                PackageName = currentTableName,
+                Language = "toml",
+                Kind = ContainerKind.CONFIG
+            )).also {
                 it.Fields += field
                 containerMap[currentTableName] = it
             }

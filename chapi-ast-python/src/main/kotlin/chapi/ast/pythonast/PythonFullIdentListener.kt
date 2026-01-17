@@ -5,7 +5,12 @@ import chapi.domain.core.*
 
 class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
     private var hasEnterClass = false
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "python",
+        Kind = ContainerKind.MODULE,
+        ResolvedModulePath = fileName.substringBeforeLast('.').replace('/', '.').replace('\\', '.')
+    )
 
     private var currentNode: CodeDataStruct = CodeDataStruct()
     private var defaultNode: CodeDataStruct = CodeDataStruct(NodeName = "default")

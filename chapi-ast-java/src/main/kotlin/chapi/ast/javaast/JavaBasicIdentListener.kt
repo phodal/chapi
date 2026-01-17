@@ -7,7 +7,11 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var isOverrideMethod: Boolean = false
     private var hasEnterClass: Boolean = false
     private var codeContainer: CodeContainer =
-        CodeContainer(FullName = fileName)
+        CodeContainer(
+            FullName = fileName,
+            Language = "java",
+            Kind = ContainerKind.SOURCE_FILE
+        )
     private var classNodes: List<CodeDataStruct> = listOf()
     private var imports: List<CodeImport> = listOf()
 
@@ -30,7 +34,9 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     }
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
-        codeContainer.PackageName = ctx?.qualifiedName()!!.text
+        val packageName = ctx?.qualifiedName()!!.text
+        codeContainer.PackageName = packageName
+        codeContainer.DeclaredPackage = packageName
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
