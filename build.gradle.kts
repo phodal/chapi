@@ -1,3 +1,7 @@
+import java.time.Duration
+import org.w3c.dom.Element
+import javax.xml.parsers.DocumentBuilderFactory
+
 plugins {
     base
 
@@ -93,8 +97,9 @@ subprojects {
 
         repositories {
             maven {
-                val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                // Updated for new Sonatype Central Portal (OSSRH sunset on June 30, 2025)
+                val releasesRepoUrl = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+                val snapshotsRepoUrl = uri("https://ossrh-staging-api.central.sonatype.com/content/repositories/snapshots/")
                 url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
 
                 credentials {
@@ -121,8 +126,13 @@ subprojects {
         withSourcesJar()
     }
 
-    // Ensure sourcesJar task depends on ANTLR grammar generation
+    // Ensure sourcesJar and kotlinSourcesJar tasks depend on ANTLR grammar generation
     tasks.named("sourcesJar") {
+        dependsOn(tasks.withType<AntlrTask>())
+    }
+
+    // Also ensure kotlinSourcesJar depends on ANTLR tasks (if it exists)
+    tasks.matching { it.name == "kotlinSourcesJar" }.configureEach {
         dependsOn(tasks.withType<AntlrTask>())
     }
 
@@ -180,4 +190,63 @@ reporting {
 
 tasks.check {
     dependsOn(tasks.named<JacocoReport>("jacocoRootReport"))
+}
+
+// Helper function to read Maven settings.xml
+fun getMavenCredentials(): Pair<String?, String?> {
+    val settingsFile = file("${System.getProperty("user.home")}/.m2/settings.xml")
+    if (!settingsFile.exists()) {
+        return Pair(null, null)
+    }
+
+    try {
+        val factory = DocumentBuilderFactory.newInstance()
+        val builder = factory.newDocumentBuilder()
+        val doc = builder.parse(settingsFile)
+        val servers = doc.getElementsByTagName("server")
+
+        for (i in 0 until servers.length) {
+            val server = servers.item(i) as Element
+            val username = server.getElementsByTagName("username").item(0)?.textContent
+            val password = server.getElementsByTagName("password").item(0)?.textContent
+
+            if (username != null && password != null) {
+                return Pair(username, password)
+            }
+        }
+    } catch (e: Exception) {
+        logger.warn("Failed to read Maven settings.xml: ${e.message}")
+    }
+
+    return Pair(null, null)
+}
+
+val (mavenUsername, mavenPassword) = getMavenCredentials()
+
+// Configure Nexus Publishing for new Sonatype Central Portal
+// See: https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuration
+nexusPublishing {
+    repositories {
+        sonatype {
+            // New Central Portal API endpoints (required for accounts created after Feb 2021)
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+
+            // Credentials: try gradle.properties, then environment variables, then Maven settings.xml
+            username.set(
+                project.findProperty("sonatypeUsername")?.toString()
+                    ?: System.getenv("MAVEN_USERNAME")
+                    ?: mavenUsername
+            )
+            password.set(
+                project.findProperty("sonatypePassword")?.toString()
+                    ?: System.getenv("MAVEN_PASSWORD")
+                    ?: mavenPassword
+            )
+        }
+    }
+
+    // Increase timeout for publishing operations
+    connectTimeout.set(Duration.ofMinutes(3))
+    clientTimeout.set(Duration.ofMinutes(3))
 }
