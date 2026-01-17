@@ -71,14 +71,30 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     override fun enterUseDeclaration(ctx: RustParser.UseDeclarationContext?) {
         val importString: List<List<String>> = buildToPath(ctx)
+        
+        // Check for glob import (use x::*)
+        val isGlob = ctx?.useTree()?.text?.endsWith("*") == true
 
         importString.forEach { path ->
+            val kind = when {
+                isGlob -> ImportKind.WILDCARD
+                path.first() == "crate" -> ImportKind.RELATIVE
+                else -> ImportKind.NAMED
+            }
+            
             imports.add(
                 CodeImport(
                     Source = path.joinToString("::"),
                     UsageName = path,
                     Scope = if (path.first() == "crate") "crate" else "cargo",
-                    AsName = path.last()
+                    AsName = path.last(),
+                    // New structured fields
+                    Kind = kind,
+                    PathSegments = path,
+                    Specifiers = listOf(ImportSpecifier(
+                        OriginalName = path.last(),
+                        LocalName = path.last()
+                    ))
                 )
             )
         }

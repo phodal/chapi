@@ -19,40 +19,88 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         val dotNames = ctx!!.dotted_as_names().dotted_as_name()
         val firstNameCtx = dotNames[0]
 
-        val codeImport = CodeImport(Source = firstNameCtx.dotted_name().text)
+        val codeImport = CodeImport(
+            Source = firstNameCtx.dotted_name().text,
+            Kind = ImportKind.NAMED
+        )
+        
+        val specifiers = mutableListOf<ImportSpecifier>()
+        
         if (firstNameCtx.name() != null) {
-            codeImport.UsageName += firstNameCtx.name().text
+            val alias = firstNameCtx.name().text
+            codeImport.UsageName += alias
+            codeImport.AsName = alias
+            specifiers += ImportSpecifier(
+                OriginalName = firstNameCtx.dotted_name().text,
+                LocalName = alias
+            )
+        } else {
+            val moduleName = firstNameCtx.dotted_name().text
+            specifiers += ImportSpecifier(
+                OriginalName = moduleName,
+                LocalName = moduleName.substringAfterLast('.')
+            )
         }
 
         for (i in 1 until dotNames.size) {
-            codeImport.UsageName += dotNames[i].text
+            val nameCtx = dotNames[i]
+            codeImport.UsageName += nameCtx.text
+            val originalName = nameCtx.dotted_name().text
+            val localName = nameCtx.name()?.text ?: originalName.substringAfterLast('.')
+            specifiers += ImportSpecifier(OriginalName = originalName, LocalName = localName)
         }
 
+        codeImport.Specifiers = specifiers
+        codeImport.PathSegments = firstNameCtx.dotted_name().text.split(".")
         codeContainer.Imports += codeImport
     }
 
     override fun enterFrom_stmt(ctx: PythonParser.From_stmtContext?) {
         var sourceName = ""
+        var isRelative = false
+        
         if (ctx?.dotted_name() != null) {
             if (ctx.import_dot_ellipsis().size > 0) {
                 sourceName = ctx.getChild(1).text
+                isRelative = sourceName.startsWith(".")
             }
             sourceName += ctx.dotted_name().text
         } else {
             sourceName = ctx?.getChild(1)?.text ?: ""
+            isRelative = sourceName.startsWith(".")
         }
 
-        val codeImport = CodeImport(Source = sourceName)
+        val specifiers = mutableListOf<ImportSpecifier>()
+        
+        // Check for wildcard import: from x import *
+        val isWildcard = ctx?.STAR() != null
+        
+        val kind = when {
+            isWildcard -> ImportKind.WILDCARD
+            isRelative -> ImportKind.RELATIVE
+            else -> ImportKind.NAMED
+        }
+        
+        val codeImport = CodeImport(
+            Source = sourceName,
+            Kind = kind
+        )
 
         ctx?.import_as_names()?.import_as_name()?.forEach { nameContext ->
-            val usageName = nameContext.name()[0].text
-            codeImport.UsageName += usageName
+            val originalName = nameContext.name()[0].text
+            val localName = nameContext.name().getOrNull(1)?.text ?: originalName
+            
+            codeImport.UsageName += originalName
 
-            nameContext.AS()?.let {
-                codeImport.AsName = nameContext.name().getOrNull(1)?.text ?: ""
+            if (nameContext.AS() != null) {
+                codeImport.AsName = localName
             }
+            
+            specifiers += ImportSpecifier(OriginalName = originalName, LocalName = localName)
         }
 
+        codeImport.Specifiers = specifiers
+        codeImport.PathSegments = sourceName.trimStart('.').split(".")
         codeContainer.Imports += codeImport
     }
 

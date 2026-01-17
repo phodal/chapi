@@ -441,14 +441,27 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         val codeImport = CodeImport(
             Source = imp
         )
+        val specifiers = mutableListOf<ImportSpecifier>()
 
         if (ctx.moduleItems() != null) {
+            codeImport.Kind = ImportKind.NAMED
             for (nameContext in ctx.moduleItems().aliasName()) {
                 if (nameContext.identifierName().isNotEmpty()) {
-                    codeImport.UsageName += nameContext.identifierName()[0].text
-                    if (nameContext.As() != null) {
-                        codeImport.AsName += nameContext.identifierName()[1].text
+                    val originalName = nameContext.identifierName()[0].text
+                    val localName = if (nameContext.As() != null) {
+                        nameContext.identifierName()[1].text
+                    } else {
+                        originalName
                     }
+                    
+                    // Legacy fields
+                    codeImport.UsageName += originalName
+                    if (nameContext.As() != null) {
+                        codeImport.AsName += localName
+                    }
+                    
+                    // New structured field
+                    specifiers += ImportSpecifier(OriginalName = originalName, LocalName = localName)
                 }
             }
         }
@@ -457,12 +470,18 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         if (importNamespace != null) {
             val isImportAll = importNamespace.Multiply() != null
             if (isImportAll) {
+                codeImport.Kind = ImportKind.NAMESPACE
                 codeImport.UsageName += "*"
                 if (importNamespace.As() != null) {
-                    codeImport.AsName += importNamespace.identifierName()[0].text
+                    val nsName = importNamespace.identifierName()[0].text
+                    codeImport.AsName += nsName
+                    codeImport.NamespaceName = nsName
                 }
             } else {
-                codeImport.UsageName += importNamespace.identifierName()[0].text
+                codeImport.Kind = ImportKind.DEFAULT
+                val defaultName = importNamespace.identifierName()[0].text
+                codeImport.UsageName += defaultName
+                codeImport.DefaultName = defaultName
                 if (importNamespace.As() != null) {
                     codeImport.AsName += importNamespace.identifierName()[1].text
                 }
@@ -477,6 +496,7 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
             codeImport.UsageName += ctx.Lodash().text
         }
 
+        codeImport.Specifiers = specifiers
         codeContainer.Imports += codeImport
     }
 
@@ -489,19 +509,31 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
             ?: ctx.StringLiteral()?.text 
             ?: return
         val codeImport = CodeImport(Source = unQuote(source))
+        val specifiers = mutableListOf<ImportSpecifier>()
 
         // Handle module items: import { A, B } from 'module'
         if (ctx.importModuleItems() != null) {
+            codeImport.Kind = ImportKind.NAMED
             for (aliasName in ctx.importModuleItems().importAliasName()) {
                 val exportName = aliasName.moduleExportName()
                 if (exportName != null) {
-                    codeImport.UsageName += exportName.identifierName()?.text 
+                    val originalName = exportName.identifierName()?.text 
                         ?: exportName.StringLiteral()?.text?.let { unQuote(it) } 
                         ?: ""
-                    // Handle 'as' alias
-                    if (aliasName.As() != null && aliasName.importedBinding() != null) {
-                        codeImport.AsName += aliasName.importedBinding().text
+                    val localName = if (aliasName.As() != null && aliasName.importedBinding() != null) {
+                        aliasName.importedBinding().text
+                    } else {
+                        originalName
                     }
+                    
+                    // Legacy fields
+                    codeImport.UsageName += originalName
+                    if (aliasName.As() != null && aliasName.importedBinding() != null) {
+                        codeImport.AsName += localName
+                    }
+                    
+                    // New structured field
+                    specifiers += ImportSpecifier(OriginalName = originalName, LocalName = localName)
                 }
             }
         }
@@ -511,12 +543,18 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         if (importNamespace != null) {
             val isImportAll = importNamespace.Multiply() != null
             if (isImportAll) {
+                codeImport.Kind = ImportKind.NAMESPACE
                 codeImport.UsageName += "*"
                 if (importNamespace.As() != null && importNamespace.identifierName().isNotEmpty()) {
-                    codeImport.AsName += importNamespace.identifierName()[0].text
+                    val nsName = importNamespace.identifierName()[0].text
+                    codeImport.AsName += nsName
+                    codeImport.NamespaceName = nsName
                 }
             } else if (importNamespace.identifierName().isNotEmpty()) {
-                codeImport.UsageName += importNamespace.identifierName()[0].text
+                codeImport.Kind = ImportKind.DEFAULT
+                val defName = importNamespace.identifierName()[0].text
+                codeImport.UsageName += defName
+                codeImport.DefaultName = defName
                 if (importNamespace.As() != null && importNamespace.identifierName().size > 1) {
                     codeImport.AsName += importNamespace.identifierName()[1].text
                 }
@@ -528,11 +566,18 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         if (importDefault != null && importDefault.aliasName() != null) {
             val defaultName = importDefault.aliasName().identifierName()
             if (defaultName.isNotEmpty()) {
+                val defName = defaultName[0].text
                 // Insert default import at the beginning
-                codeImport.UsageName = listOf(defaultName[0].text) + codeImport.UsageName
+                codeImport.UsageName = listOf(defName) + codeImport.UsageName
+                codeImport.DefaultName = defName
+                // If we only have a default import, set kind to DEFAULT
+                if (codeImport.Kind == ImportKind.UNKNOWN) {
+                    codeImport.Kind = ImportKind.DEFAULT
+                }
             }
         }
 
+        codeImport.Specifiers = specifiers
         codeContainer.Imports += codeImport
     }
 
@@ -561,7 +606,8 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
 
     override fun enterImportAll(ctx: TypeScriptParser.ImportAllContext?) {
         codeContainer.Imports += CodeImport(
-            Source = unQuote(ctx!!.StringLiteral().text)
+            Source = unQuote(ctx!!.StringLiteral().text),
+            Kind = ImportKind.SIDE_EFFECT
         )
     }
 
@@ -1288,18 +1334,57 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         // Get the exported expression/name
         val name = ctx?.singleExpression()?.text
         if (name != null) {
-            currentNode.Exports += CodeExport(name)
-            defaultNode.Exports += CodeExport(name)
+            val export = CodeExport(
+                Name = name,
+                Kind = ExportKind.DEFAULT
+            )
+            currentNode.Exports += export
+            defaultNode.Exports += export
         }
     }
 
     override fun enterExportDeclaration(ctx: TypeScriptParser.ExportDeclarationContext?) {
         // Handle exports like: export { foo, bar } or export { foo } from 'module'
-        ctx?.exportFromBlock()?.exportModuleItems()?.exportAliasName()?.forEach {
-            val name = it.moduleExportName(0)?.text ?: ""
-            if (name.isNotBlank()) {
-                currentNode.Exports += CodeExport(name)
-                defaultNode.Exports += CodeExport(name)
+        val exportFromBlock = ctx?.exportFromBlock() ?: return
+        val specifiers = mutableListOf<ExportSpecifier>()
+        
+        // Check if this is a re-export (has 'from' clause)
+        val fromSource = exportFromBlock.importFrom()?.StringLiteral()?.text?.let { unQuote(it) } ?: ""
+        val isReExport = fromSource.isNotBlank()
+        
+        // Handle export * from 'module' (via importNamespace with Multiply)
+        val importNamespace = exportFromBlock.importNamespace()
+        if (importNamespace?.Multiply() != null) {
+            val export = CodeExport(
+                Name = "*",
+                Kind = ExportKind.RE_EXPORT_ALL,
+                FromSource = fromSource
+            )
+            currentNode.Exports += export
+            defaultNode.Exports += export
+            return
+        }
+        
+        exportFromBlock.exportModuleItems()?.exportAliasName()?.forEach {
+            val localName = it.moduleExportName(0)?.text ?: ""
+            val exportedName = if (it.moduleExportName().size > 1) {
+                it.moduleExportName(1)?.text ?: localName
+            } else {
+                localName
+            }
+            
+            if (localName.isNotBlank()) {
+                specifiers += ExportSpecifier(LocalName = localName, ExportedName = exportedName)
+                
+                // Legacy: add individual CodeExport for each name
+                val export = CodeExport(
+                    Name = exportedName,
+                    Kind = if (isReExport) ExportKind.RE_EXPORT_NAMED else ExportKind.NAMED,
+                    FromSource = fromSource,
+                    Specifiers = listOf(ExportSpecifier(LocalName = localName, ExportedName = exportedName))
+                )
+                currentNode.Exports += export
+                defaultNode.Exports += export
             }
         }
     }

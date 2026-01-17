@@ -19,15 +19,35 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var currentFunction = CodeFunction(IsConstructor = false)
 
     override fun enterImportDeclaration(ctx: JavaParser.ImportDeclarationContext?) {
-        val codeImport = CodeImport(Source = ctx!!.qualifiedName()!!.text)
+        val fullSource = ctx!!.qualifiedName()!!.text
+        val isStatic = ctx.STATIC() != null
+        val isWildcard = ctx.MUL() != null
+        
+        val codeImport = CodeImport(Source = fullSource)
 
-        if (ctx.STATIC() != null) {
-            val sourceSplit = codeImport.Source.split(".")
+        if (isStatic) {
+            val sourceSplit = fullSource.split(".")
             codeImport.UsageName = listOf(sourceSplit.last())
-
-            val split = sourceSplit.dropLast(1)
-            codeImport.Source = split.joinToString(".")
+            codeImport.Source = sourceSplit.dropLast(1).joinToString(".")
+            codeImport.Kind = ImportKind.STATIC
+            codeImport.Scope = "static"
+            codeImport.Specifiers = listOf(ImportSpecifier(
+                OriginalName = sourceSplit.last(),
+                LocalName = sourceSplit.last()
+            ))
+        } else if (isWildcard) {
+            codeImport.Kind = ImportKind.WILDCARD
+            codeImport.UsageName = listOf("*")
+        } else {
+            codeImport.Kind = ImportKind.NAMED
+            val className = fullSource.substringAfterLast('.')
+            codeImport.Specifiers = listOf(ImportSpecifier(
+                OriginalName = className,
+                LocalName = className
+            ))
         }
+        
+        codeImport.PathSegments = fullSource.split(".")
 
         imports += codeImport
         codeContainer.Imports += codeImport

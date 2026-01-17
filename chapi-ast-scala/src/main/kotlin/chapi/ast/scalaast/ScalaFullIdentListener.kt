@@ -34,14 +34,21 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
 
             if (importSelectors != null) {
                 // Handle import with selectors: import org.apache.spark.sql.{DataFrame, Row, functions}
+                val specifiers = mutableListOf<ImportSpecifier>()
+                
                 importSelectors.importSelector().forEach { selector ->
                     val selectorName = selector.Id(0)?.text ?: "_"
                     val asName = if (selector.Id().size > 1) selector.Id(1).text else selectorName
 
                     if (selectorName != "_") {
+                        specifiers += ImportSpecifier(OriginalName = selectorName, LocalName = asName)
+                        
                         val codeImport = CodeImport(
                             Source = "$importSource.$selectorName",
-                            AsName = asName
+                            AsName = asName,
+                            Kind = ImportKind.NAMED,
+                            Specifiers = listOf(ImportSpecifier(OriginalName = selectorName, LocalName = asName)),
+                            PathSegments = "$importSource.$selectorName".split(".")
                         )
                         imports.add(codeImport)
                         codeContainer.Imports += codeImport
@@ -52,7 +59,9 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
                 if (importSelectors.text.endsWith("_") || importSelectors.children?.any { it.text == "_" } == true) {
                     val codeImport = CodeImport(
                         Source = "$importSource.*",
-                        AsName = "*"
+                        AsName = "*",
+                        Kind = ImportKind.WILDCARD,
+                        PathSegments = importSource.split(".")
                     )
                     imports.add(codeImport)
                     codeContainer.Imports += codeImport
@@ -60,15 +69,16 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
             } else {
                 // Simple import: import xxx.yyy.zzz.ClassName or import xxx.yyy.zzz._
                 val lastPart = importExpr.getChild(importExpr.childCount - 1)
+                val isWildcard = lastPart?.text == "_"
                 val asName = when {
-                    lastPart?.text == "_" -> "*"
+                    isWildcard -> "*"
                     importExpr.Id() != null -> importExpr.Id().text
                     else -> importSource.substringAfterLast('.')
                 }
 
                 val source = if (importExpr.Id() != null) {
                     "$importSource.${importExpr.Id().text}"
-                } else if (lastPart?.text == "_") {
+                } else if (isWildcard) {
                     "$importSource.*"
                 } else {
                     importSource
@@ -76,8 +86,18 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
 
                 val codeImport = CodeImport(
                     Source = source,
-                    AsName = asName
+                    AsName = asName,
+                    Kind = if (isWildcard) ImportKind.WILDCARD else ImportKind.NAMED,
+                    PathSegments = source.replace(".*", "").split(".")
                 )
+                
+                if (!isWildcard) {
+                    codeImport.Specifiers = listOf(ImportSpecifier(
+                        OriginalName = asName,
+                        LocalName = asName
+                    ))
+                }
+                
                 imports.add(codeImport)
                 codeContainer.Imports += codeImport
             }
