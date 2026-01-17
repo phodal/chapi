@@ -2,7 +2,7 @@ plugins {
     id("antlr")
     java
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("plugin.serialization") version "1.9.24"
 
     `jacoco-conventions`
 }
@@ -18,7 +18,7 @@ dependencies {
     // project deps
     implementation(project(":chapi-domain"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
@@ -28,26 +28,26 @@ dependencies {
     // https://mvnrepository.com/artifact/org.anarres/jcpp
 
     // JUnit 5
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
-    testRuntimeOnly("org.junit.platform:junit-platform-console:1.6.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-console:1.10.2")
 
     implementation("org.antlr:antlr4:4.13.2")
     implementation("org.antlr:antlr4-runtime:4.13.2")
 
     // coroutines
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation("org.anarres:jcpp:1.4.14")
 }
 
 sourceSets.main {
-    java.srcDirs("${project.buildDir}/generated-src")
+    java.srcDirs("${project.layout.buildDirectory.get().asFile}/generated-src")
 }
 
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
     arguments = arguments + listOf("-package", "chapi.ast.antlr") + listOf("-visitor", "-long-messages")
-    outputDirectory  = file("${project.buildDir}/generated-src/chapi/ast/antlr")
+    outputDirectory = file("${project.layout.buildDirectory.get().asFile}/generated-src/chapi/ast/antlr")
 }
 
 tasks.withType<AntlrTask> {

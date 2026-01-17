@@ -1,10 +1,10 @@
 plugins {
     base
 
-    val kotlinVersion = "1.9.0"
+    val kotlinVersion = "1.9.24"
     kotlin("jvm") version kotlinVersion apply false
 
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("plugin.serialization") version kotlinVersion apply false
 
     id("java-library")
     id("maven-publish")
@@ -13,14 +13,14 @@ plugins {
 
     java
     id("jacoco-report-aggregation")
-    id("com.github.kt3k.coveralls") version "2.9.0"
+    id("com.github.kt3k.coveralls") version "2.12.2"
 
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 }
 
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.12"
 }
 
 allprojects {
@@ -46,6 +46,12 @@ subprojects {
     apply(plugin = "signing")
     apply(plugin = "publishing")
     apply(plugin = "jacoco")
+
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
 
     publishing {
         publications {
@@ -113,6 +119,11 @@ subprojects {
     java {
         withJavadocJar()
         withSourcesJar()
+    }
+
+    // Ensure sourcesJar task depends on ANTLR grammar generation
+    tasks.named("sourcesJar") {
+        dependsOn(tasks.withType<AntlrTask>())
     }
 
     tasks.test {
