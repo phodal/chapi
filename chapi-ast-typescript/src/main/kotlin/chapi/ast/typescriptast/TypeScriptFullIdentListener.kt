@@ -22,7 +22,13 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
 
     private var nodeMap = mutableMapOf<String, CodeDataStruct>()
     private var codeContainer: CodeContainer =
-        CodeContainer(FullName = node.filePath, PackageName = node.resolvePackage())
+        CodeContainer(
+            FullName = node.filePath,
+            PackageName = node.resolvePackage(),
+            Language = "typescript",
+            Kind = ContainerKind.MODULE,
+            ResolvedModulePath = node.resolvePackage()
+        )
 
     private var currentNode = CodeDataStruct()
     private var defaultNode = CodeDataStruct()
@@ -36,9 +42,15 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
 
     override fun enterNamespaceDeclaration(ctx: TypeScriptParser.NamespaceDeclarationContext?) {
         this.namespaceName = ctx!!.namespaceName().text
+        // Update namespace path for structured semantics
+        codeContainer.NamespacePath = codeContainer.NamespacePath + this.namespaceName
     }
 
     override fun exitNamespaceDeclaration(ctx: TypeScriptParser.NamespaceDeclarationContext?) {
+        // Pop from namespace path when exiting
+        if (codeContainer.NamespacePath.isNotEmpty()) {
+            codeContainer.NamespacePath = codeContainer.NamespacePath.dropLast(1)
+        }
         this.namespaceName = ""
     }
 

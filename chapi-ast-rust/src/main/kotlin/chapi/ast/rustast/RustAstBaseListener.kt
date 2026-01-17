@@ -14,7 +14,13 @@ import java.io.File
 
 open class RustAstBaseListener(private val fileName: String) : RustParserBaseListener() {
     private val packageName: String = calculatePackageName(fileName)
-    private val codeContainer: CodeContainer = CodeContainer(FullName = fileName, PackageName = packageName)
+    private val codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        PackageName = packageName,
+        Language = "rust",
+        Kind = ContainerKind.MODULE,
+        ResolvedModulePath = packageName
+    )
     private val imports: MutableList<CodeImport> = mutableListOf()
     private var currentNode: CodeDataStruct = CodeDataStruct()
     protected open var currentFunction: CodeFunction = CodeFunction()

@@ -42,10 +42,16 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
     private var currentType: DataStructType = DataStructType.EMPTY
 
     private var codeContainer: CodeContainer =
-        CodeContainer(FullName = fileName)
+        CodeContainer(
+            FullName = fileName,
+            Language = "java",
+            Kind = ContainerKind.SOURCE_FILE
+        )
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
-        codeContainer.PackageName = ctx!!.qualifiedName()!!.text
+        val packageName = ctx!!.qualifiedName()!!.text
+        codeContainer.PackageName = packageName
+        codeContainer.DeclaredPackage = packageName
     }
 
     override fun enterImportDeclaration(ctx: JavaParser.ImportDeclarationContext?) {

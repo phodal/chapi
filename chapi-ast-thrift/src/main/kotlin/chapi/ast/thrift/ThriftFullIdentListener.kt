@@ -6,12 +6,17 @@ import chapi.domain.core.*
 import org.antlr.v4.runtime.ParserRuleContext
 
 class ThriftFullIdentListener(fileName: String) : ThriftBaseListener() {
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "thrift",
+        Kind = ContainerKind.IDL
+    )
 
     override fun enterNamespace_(ctx: ThriftParser.Namespace_Context?) {
         val prefix = ctx!!.children[0].text
         val namespace = ctx.text.removePrefix(prefix).trim()
         codeContainer.PackageName = namespace
+        codeContainer.DeclaredPackage = namespace
     }
 
     private fun buildPosition(ctx: ParserRuleContext): CodePosition {

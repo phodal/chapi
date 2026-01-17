@@ -10,8 +10,13 @@ typealias PackageName = String
 
 open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListener() {
     protected var currentNamespace: String = ""
+    protected var namespaceStack: MutableList<String> = mutableListOf()
     protected var currentStruct: CodeDataStruct = CodeDataStruct();
-    protected var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    protected var codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "csharp",
+        Kind = ContainerKind.SOURCE_FILE
+    )
     protected var currentContainer: CodeContainer = codeContainer
     protected var containerStack: Stack<CodeContainer> = Stack()
     protected var currentPackage: CodePackage = CodePackage()
@@ -59,9 +64,16 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
             if (namespaceDeclaration.qualified_identifier() != null) {
                 val nsName = ctx.namespace_declaration().qualified_identifier().text
                 currentNamespace = nsName
+                // Update namespace stack for nested namespaces
+                namespaceStack.add(nsName)
+                
                 val container = CodeContainer(
                     FullName = fileName,
-                    PackageName = nsName
+                    PackageName = nsName,
+                    Language = "csharp",
+                    Kind = ContainerKind.NAMESPACE,
+                    DeclaredPackage = nsName,
+                    NamespacePath = nsName.split(".")
                 )
 
                 pushContainer(container)
@@ -86,6 +98,10 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
 
     override fun exitNamespace_declaration(ctx: CSharpParser.Namespace_declarationContext?) {
         containerStack.pop()
+        if (namespaceStack.isNotEmpty()) {
+            namespaceStack.removeAt(namespaceStack.size - 1)
+        }
+        currentNamespace = namespaceStack.lastOrNull() ?: ""
     }
 
     override fun enterClass_definition(ctx: CSharpParser.Class_definitionContext?) {

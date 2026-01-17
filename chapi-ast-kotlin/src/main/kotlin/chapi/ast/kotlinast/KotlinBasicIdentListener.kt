@@ -10,6 +10,7 @@ import chapi.domain.core.CodeFunction
 import chapi.domain.core.CodeImport
 import chapi.domain.core.CodePosition
 import chapi.domain.core.CodeProperty
+import chapi.domain.core.ContainerKind
 import chapi.domain.core.DataStructType
 import org.antlr.v4.runtime.ParserRuleContext
 import java.util.concurrent.atomic.AtomicInteger
@@ -33,7 +34,11 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
 
     /** inner storage */
 
-    protected val codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    protected val codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "kotlin",
+        Kind = ContainerKind.SOURCE_FILE
+    )
     protected val classes: MutableList<CodeDataStruct> = mutableListOf()
     protected val imports: MutableList<CodeImport> = mutableListOf()
     protected var currentNode: CodeDataStruct = CodeDataStruct()
@@ -70,7 +75,9 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
     override fun enterPackageHeader(ctx: KotlinParser.PackageHeaderContext) {
         if (ctx.childCount == 0) return
 
-        codeContainer.PackageName = ctx.identifier().text
+        val packageName = ctx.identifier().text
+        codeContainer.PackageName = packageName
+        codeContainer.DeclaredPackage = packageName
     }
 
     override fun enterImportList(ctx: KotlinParser.ImportListContext) {

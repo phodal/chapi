@@ -9,7 +9,11 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
     private val structStack: Stack<CodeDataStruct> = Stack()
     private var currentDataStruct: CodeDataStruct = CodeDataStruct()
     private var currentFunction: CodeFunction = CodeFunction()
-    private var codeContainer: CodeContainer = CodeContainer(FullName = fileName)
+    private var codeContainer: CodeContainer = CodeContainer(
+        FullName = fileName,
+        Language = "scala",
+        Kind = ContainerKind.SOURCE_FILE
+    )
 
     private val imports: MutableList<CodeImport> = mutableListOf()
     private var localVars: MutableMap<String, String> = mutableMapOf()
@@ -20,6 +24,7 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
     override fun enterPackageDecl(ctx: ScalaParser.PackageDeclContext?) {
         val packageName = ctx!!.qualId().text
         codeContainer.PackageName = packageName
+        codeContainer.DeclaredPackage = packageName
     }
 
     override fun enterImport_(ctx: ScalaParser.Import_Context?) {
