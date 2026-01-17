@@ -44,11 +44,34 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
         val originSource = ctx!!.importPath().text
         val sourceName = originSource.replace("\"", "")
 
+        val packageAlias = ctx.packageName()?.identifier()?.IDENTIFIER()?.text
+        val hasDot = ctx.DOT() != null
+        
+        // Determine import kind
+        val kind = when {
+            hasDot -> ImportKind.DOT  // import . "pkg" - imports into current namespace
+            packageAlias == "_" -> ImportKind.SIDE_EFFECT  // import _ "pkg" - blank import
+            packageAlias != null -> ImportKind.NAMED  // import alias "pkg"
+            else -> ImportKind.NAMED  // import "pkg"
+        }
+
         val codeImport = CodeImport(
             Source = sourceName,
-            AsName = ctx.DOT()?.text ?: "",
-            UsageName = listOf(ctx.packageName()?.identifier()?.IDENTIFIER()?.text ?: "")
+            AsName = ctx.DOT()?.text ?: packageAlias ?: "",
+            UsageName = listOf(packageAlias ?: sourceName.substringAfterLast('/')),
+            Kind = kind,
+            PathSegments = sourceName.split("/")
         )
+        
+        // Add specifier for the imported package
+        if (kind == ImportKind.NAMED) {
+            val originalName = sourceName.substringAfterLast('/')
+            val localName = packageAlias ?: originalName
+            codeImport.Specifiers = listOf(ImportSpecifier(
+                OriginalName = originalName,
+                LocalName = localName
+            ))
+        }
 
         codeContainer.Imports += codeImport
     }
