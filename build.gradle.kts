@@ -111,12 +111,21 @@ subprojects {
     }
 
     signing {
-        // Only sign if signing credentials are available
-        val signingKeyId = project.findProperty("signing.keyId") as String? ?: System.getenv("GPG_KEY_ID")
-        val signingPassword = project.findProperty("signing.password") as String? ?: System.getenv("GPG_PASSPHRASE")
-        val signingKey = project.findProperty("signing.secretKeyRingFile") as String? ?: System.getenv("GPG_SECRET_KEY_RING_FILE")
+        // Use GPG agent for signing (more secure, no password in config files)
+        val signingKeyName = project.findProperty("signing.gnupg.keyName") as String? ?: System.getenv("GPG_KEY_NAME")
 
-        isRequired = signingKeyId != null && signingPassword != null && signingKey != null
+        if (signingKeyName != null) {
+            // Use GPG agent
+            useGpgCmd()
+            isRequired = true
+        } else {
+            // Fallback to traditional signing if GPG agent is not configured
+            val signingKeyId = project.findProperty("signing.keyId") as String? ?: System.getenv("GPG_KEY_ID")
+            val signingPassword = project.findProperty("signing.password") as String? ?: System.getenv("GPG_PASSPHRASE")
+            val signingKey = project.findProperty("signing.secretKeyRingFile") as String? ?: System.getenv("GPG_SECRET_KEY_RING_FILE")
+
+            isRequired = signingKeyId != null && signingPassword != null && signingKey != null
+        }
 
         sign(publishing.publications["mavenJava"])
     }
