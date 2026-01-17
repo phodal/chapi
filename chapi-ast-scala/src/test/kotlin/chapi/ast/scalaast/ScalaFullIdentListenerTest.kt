@@ -349,6 +349,122 @@ class Factory {
     }
 
     @Nested
+    inner class AnnotationAndHttpApi {
+        @Test
+        internal fun shouldParseClassAnnotations() {
+            val code = """
+package controller
+
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestMapping
+
+@Controller
+@RequestMapping("/api/users")
+class UserController {
+  def getUsers(): List[User] = List.empty
+}
+"""
+            val container = ScalaAnalyser().analysis(code, "controller.scala")
+            val userController = container.DataStructures[0]
+            
+            assertEquals("UserController", userController.NodeName)
+            assertTrue(userController.Annotations.any { it.Name == "Controller" })
+            assertTrue(userController.Annotations.any { it.Name == "RequestMapping" })
+        }
+        
+        @Test
+        internal fun shouldParseMethodAnnotations() {
+            val code = """
+object ProductController {
+  def getProducts(): Unit = {
+    println("test")
+  }
+}
+"""
+            val container = ScalaAnalyser().analysis(code, "controller.scala")
+            val controller = container.DataStructures[0]
+            
+            assertEquals("ProductController", controller.NodeName)
+            // Functions defined in object body should be parsed
+            assertTrue(controller.Functions.isNotEmpty(), "Expected at least one function")
+            assertEquals("getProducts", controller.Functions[0].Name)
+        }
+        
+        @Test
+        internal fun shouldParseAnnotationWithParameters() {
+            val code = """
+@Path("/api/orders")
+class OrderController {
+  def getOrder(orderId: Long): Unit = {}
+}
+"""
+            val container = ScalaAnalyser().analysis(code, "controller.scala")
+            val controller = container.DataStructures[0]
+            
+            assertEquals("OrderController", controller.NodeName)
+            
+            // Class annotations
+            assertTrue(controller.Annotations.any { it.Name == "Path" }, "Class should have @Path annotation")
+        }
+        
+        @Test
+        internal fun shouldParsePlayFrameworkController() {
+            val code = """
+package controllers
+
+import javax.inject._
+import play.api.mvc._
+
+@Singleton
+class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+
+  def index() = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.index())
+  }
+
+  def explore() = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.explore())
+  }
+}
+"""
+            val container = ScalaAnalyser().analysis(code, "HomeController.scala")
+            val controller = container.DataStructures[0]
+            
+            assertEquals("HomeController", controller.NodeName)
+            assertTrue(controller.Annotations.any { it.Name == "Singleton" })
+            assertTrue(controller.Extend.contains("AbstractController"))
+        }
+        
+        @Test
+        internal fun shouldParseAkkaHttpRoutes() {
+            val code = """
+package routes
+
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
+
+object UserRoutes {
+  val route: Route = pathPrefix("users") {
+    pathEnd {
+      get {
+        complete("All users")
+      } ~
+      post {
+        complete("Create user")
+      }
+    }
+  }
+}
+"""
+            val container = ScalaAnalyser().analysis(code, "UserRoutes.scala")
+            val routes = container.DataStructures[0]
+            
+            assertEquals("UserRoutes", routes.NodeName)
+            assertEquals(DataStructType.OBJECT, routes.Type)
+        }
+    }
+    
+    @Nested
     inner class RealWorldExamples {
         @Test
         internal fun shouldParseSparkTransformation() {
