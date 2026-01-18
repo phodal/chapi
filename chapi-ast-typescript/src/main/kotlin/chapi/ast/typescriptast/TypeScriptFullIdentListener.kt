@@ -272,6 +272,7 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                     }
                     if (childCtx.typeAnnotation() != null) {
                         codeField.TypeType = this.buildTypeAnnotation(childCtx.typeAnnotation())!!
+                        codeField.TypeRef = TypeScriptTypeRefBuilder.build(childCtx.typeAnnotation())
                     }
 
                     currentNode.Fields += codeField
@@ -285,6 +286,7 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
 
                     if (callSignCtx.typeRef() != null) {
                         codeFunction.ReturnType = processRef(callSignCtx.typeRef()) ?: ""
+                        codeFunction.ReturnTypeRef = TypeScriptTypeRefBuilder.buildFromTypeRef(callSignCtx.typeRef())
                     }
 
                     codeFunction.FilePath = filePath
@@ -410,8 +412,11 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         val typeType = buildTypeAnnotation(annotation)
         val typeValue = signCtx.propertyName().text
 
-
-        val codeField = CodeField(TypeType = typeType, TypeValue = typeValue)
+        val codeField = CodeField(
+            TypeType = typeType, 
+            TypeValue = typeValue,
+            TypeRef = TypeScriptTypeRefBuilder.build(annotation)
+        )
         currentNode.Fields += codeField
 
 //        val isArrowFunc = annotation.typeRef() != null
@@ -1105,12 +1110,16 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
 
     private fun buildReturnTypeByType(typeAnnotationContext: TypeScriptParser.TypeAnnotationContext?): CodeProperty =
         CodeProperty(
-            TypeType = buildTypeAnnotation(typeAnnotationContext) ?: "", TypeValue = ""
+            TypeType = buildTypeAnnotation(typeAnnotationContext) ?: "", 
+            TypeValue = "",
+            TypeRef = TypeScriptTypeRefBuilder.build(typeAnnotationContext)
         )
 
     private fun buildReturnTypeByTypeRef(typeRefContext: TypeScriptParser.TypeRefContext): CodeProperty =
         CodeProperty(
-            TypeType = processRef(typeRefContext) ?: "", TypeValue = ""
+            TypeType = processRef(typeRefContext) ?: "", 
+            TypeValue = "",
+            TypeRef = TypeScriptTypeRefBuilder.buildFromTypeRef(typeRefContext)
         )
 
     override fun enterExpressionStatement(ctx: TypeScriptParser.ExpressionStatementContext?) {

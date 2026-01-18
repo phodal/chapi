@@ -5,6 +5,7 @@ import chapi.ast.antlr.TypeScriptParserBaseListener
 import chapi.domain.core.CodeAnnotation
 import chapi.domain.core.CodePosition
 import chapi.domain.core.CodeProperty
+import chapi.domain.core.CodeTypeRef
 import org.antlr.v4.runtime.ParserRuleContext
 
 open class TypeScriptAstListener : TypeScriptParserBaseListener() {
@@ -14,12 +15,13 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
         var parameters: List<CodeProperty> = listOf()
         for (argCtx in formalParameterListContext!!.formalParameterArg()) {
             val typeType = this.buildTypeAnnotation(argCtx.typeAnnotation())
+            val typeRef = TypeScriptTypeRefBuilder.build(argCtx.typeAnnotation())
             var typeValue = argCtx.text
             if (argCtx.identifierName() != null) {
                 typeValue = argCtx.identifierName().text
             }
 
-            val parameter = CodeProperty(TypeValue = typeValue, TypeType = typeType)
+            val parameter = CodeProperty(TypeValue = typeValue, TypeType = typeType, TypeRef = typeRef)
 
             if (argCtx.accessibilityModifier() != null) {
                 parameter.Modifiers += argCtx.accessibilityModifier().text
@@ -92,37 +94,46 @@ open class TypeScriptAstListener : TypeScriptParserBaseListener() {
 
     private fun buildRestParameter(restCtx: TypeScriptParser.RestParameterContext?): CodeProperty {
         var paramType = ""
+        var typeRef: CodeTypeRef? = null
         if (restCtx!!.typeAnnotation() != null) {
             paramType = buildTypeAnnotation(restCtx.typeAnnotation())
+            typeRef = TypeScriptTypeRefBuilder.build(restCtx.typeAnnotation())
         }
 
         return CodeProperty(
             TypeValue = restCtx.text,
-            TypeType = paramType
+            TypeType = paramType,
+            TypeRef = typeRef
         )
     }
 
     private fun buildOptionalParameter(paramCtx: TypeScriptParser.OptionalParameterContext): CodeProperty {
         var paramType = ""
+        var typeRef: CodeTypeRef? = null
         if (paramCtx.typeAnnotation() != null) {
             paramType = buildTypeAnnotation(paramCtx.typeAnnotation())
+            typeRef = TypeScriptTypeRefBuilder.build(paramCtx.typeAnnotation())
         }
 
         return CodeProperty(
             TypeValue = paramCtx.identifierOrPattern().text,
-            TypeType = paramType
+            TypeType = paramType,
+            TypeRef = typeRef
         )
     }
 
     private fun buildRequireParameter(paramCtx: TypeScriptParser.RequiredParameterContext): CodeProperty {
         var paramType = ""
+        var typeRef: CodeTypeRef? = null
         if (paramCtx.typeAnnotation() != null) {
             paramType = buildTypeAnnotation(paramCtx.typeAnnotation())
+            typeRef = TypeScriptTypeRefBuilder.build(paramCtx.typeAnnotation())
         }
 
         return CodeProperty(
             TypeValue = paramCtx.identifierOrPattern().text,
-            TypeType = paramType
+            TypeType = paramType,
+            TypeRef = typeRef
         )
     }
 

@@ -169,6 +169,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 TypeType = lookupType(it.type_()),
                 Annotations = buildAttribute(it.outerAttribute()),
                 TypeValue = it.identifier()?.text ?: "",
+                TypeRef = RustTypeRefBuilder.build(it.type_())
             )
         } ?: emptyList()
     }
@@ -308,10 +309,12 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     private fun buildEnumFields(enumItems: RustParser.EnumItemsContext?): List<CodeField> {
         return enumItems?.enumItem()?.map {
+            val tupleType = it.enumItemTuple()?.text ?: ""
             CodeField(
-                TypeType = it.enumItemTuple()?.text ?: "",
+                TypeType = tupleType,
                 Annotations = buildAttribute(it.outerAttribute()),
                 TypeValue = it.identifier()?.text ?: "",
+                TypeRef = if (tupleType.isNotEmpty()) RustTypeRefBuilder.buildFromString(tupleType) else null
             )
         } ?: emptyList()
     }
@@ -397,6 +400,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 CodeProperty(
                     TypeType = lookupType(it),
                     TypeValue = it.text,
+                    TypeRef = RustTypeRefBuilder.build(it)
                 )
             }
         }.flatten()
@@ -410,6 +414,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
             CodeProperty(
                 TypeValue = functionParamPattern?.pattern()?.text ?: "",
                 TypeType = functionParamPattern?.type_()?.text ?: "",
+                TypeRef = RustTypeRefBuilder.build(functionParamPattern?.type_())
             )
         }
     }

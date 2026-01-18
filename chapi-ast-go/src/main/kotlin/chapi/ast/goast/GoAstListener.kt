@@ -23,11 +23,19 @@ open class GoAstListener : GoParserBaseListener() {
 
         signatureContext?.result()?.let { result ->
             result.parameters()?.parameterDecl()?.forEach {
-                returns += CodeProperty(TypeType = it.text, TypeValue = "")
+                returns += CodeProperty(
+                    TypeType = it.text, 
+                    TypeValue = "",
+                    TypeRef = GoTypeRefBuilder.build(it.type_())
+                )
             }
 
             if (result.type_() != null) {
-                returns += CodeProperty(TypeType = result.type_().text, TypeValue = "")
+                returns += CodeProperty(
+                    TypeType = result.type_().text, 
+                    TypeValue = "",
+                    TypeRef = GoTypeRefBuilder.build(result.type_())
+                )
             }
         }
 
