@@ -47,6 +47,19 @@ data class CodeFunction(
     var Type: FunctionType = FunctionType.Function,
     @Since("2.1.4")
     var Content: String = "",
+    /**
+     * Structured return type reference providing detailed type information for cross-language analysis.
+     * This complements the string-based [ReturnType] field with a structured representation
+     * that supports generics, unions, intersections, and other complex type constructs.
+     *
+     * For functions with multiple return types (e.g., Go, Rust's Result), use this in conjunction
+     * with [MultipleReturns] where each property can have its own [CodeProperty.TypeRef].
+     *
+     * @see CodeTypeRef for detailed documentation on the structured type system
+     * @since 2.3.0
+     */
+    @Since("2.3.0")
+    var ReturnTypeRef: CodeTypeRef? = null,
     // a experimental api for code analysis, please carefully use it.
 //    @property:ExperimentalStdlibApi val expression: Expression? = null,
 ) {

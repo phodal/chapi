@@ -25,4 +25,14 @@ data class CodeField(
     /// import 2.2.3 for Toml
     @Since("2.2.3")
     var ArrayValue: List<CodeField> = listOf(),
+    /**
+     * Structured type reference providing detailed type information for cross-language analysis.
+     * This complements the string-based [TypeType] field with a structured representation
+     * that supports generics, unions, intersections, pointers, and other complex type constructs.
+     *
+     * @see CodeTypeRef for detailed documentation on the structured type system
+     * @since 2.3.0
+     */
+    @Since("2.3.0")
+    var TypeRef: CodeTypeRef? = null,
 )
