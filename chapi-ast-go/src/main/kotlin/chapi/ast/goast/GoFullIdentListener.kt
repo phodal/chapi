@@ -144,11 +144,13 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     fun buildParameters(parametersCtx: GoParser.ParametersContext?): List<CodeProperty> {
         return parametersCtx?.parameterDecl()?.map {
             val (ident, typetype) = processingType(it)
+            val typeRef = GoTypeRefBuilder.build(it.type_())
 
             localVars[ident] = typetype
             CodeProperty(
                 TypeValue = ident,
-                TypeType = typetype
+                TypeType = typetype,
+                TypeRef = typeRef
             )
         } ?: listOf()
     }
@@ -237,7 +239,8 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             .map { field ->
                 CodeField(
                     TypeType = field.type_()?.text ?: "",
-                    TypeValue = field.identifierList()?.text ?: ""
+                    TypeValue = field.identifierList()?.text ?: "",
+                    TypeRef = GoTypeRefBuilder.build(field.type_())
                 )
             }
     }

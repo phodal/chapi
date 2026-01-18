@@ -264,7 +264,11 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
                 val paramValue = varDeclId.identifier().text
                 localVars[paramValue] = paramType
                 
-                val parameter = CodeProperty(TypeValue = paramValue, TypeType = paramType)
+                val parameter = CodeProperty(
+                    TypeValue = paramValue, 
+                    TypeType = paramType,
+                    TypeRef = JavaTypeRefBuilder.build(formalParam.typeType())
+                )
                 methodParams += parameter
             }
         }
@@ -278,7 +282,11 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
                     val paramValue = varDeclId.identifier().text
                     localVars[paramValue] = paramType
                     
-                    val parameter = CodeProperty(TypeValue = paramValue, TypeType = paramType)
+                    val parameter = CodeProperty(
+                        TypeValue = paramValue, 
+                        TypeType = paramType,
+                        TypeRef = JavaTypeRefBuilder.build(param.typeType())
+                    )
                     methodParams += parameter
                 }
             }
@@ -601,12 +609,18 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
 
             fieldsMap[typeKey] = typeTypeText
 
+            // Build TypeRef from the field's typeType context
+            val fieldTypeCtx = (typeType as? JavaParser.TypeTypeContext)
+            val typeRef = fieldTypeCtx?.let { JavaTypeRefBuilder.build(it) }
+                ?: JavaTypeRefBuilder.buildFromString(typeTypeText)
+            
             val field = CodeField(
                 typeTypeText,
                 typeValue,
                 typeKey,
                 Modifiers = listOf(),
-                Annotations = this.currentAnnotations
+                Annotations = this.currentAnnotations,
+                TypeRef = typeRef
             )
             fields += field
 
