@@ -230,7 +230,8 @@ open class CSharpAstListener(open val fileName: String) : CSharpParserBaseListen
                 if (argDeclCtx != null) {
                     val parameter = CodeProperty(
                         TypeType = argDeclCtx.type_().text,
-                        TypeValue = argDeclCtx.identifier().text
+                        TypeValue = argDeclCtx.identifier().text,
+                        TypeRef = CSharpTypeRefBuilder.build(argDeclCtx.type_())
                     )
 
                     parameters += parameter
