@@ -78,10 +78,15 @@ class CPPBasicIdentListener(fileName: String, includes: MutableList<String>) : C
     private fun buildParameters(parameterDeclaration: CPP14Parser.ParameterDeclarationClauseContext): List<CodeProperty> {
         return parameterDeclaration.parameterDeclarationList()?.let { listContext ->
             listContext.parameterDeclaration().map {
-                val type = it.declSpecifierSeq().declSpecifier().firstOrNull()?.typeSpecifier()?.text
+                val typeSpec = it.declSpecifierSeq().declSpecifier().firstOrNull()?.typeSpecifier()
+                val type = typeSpec?.text
                 val name = it.declarator()?.text
 
-                CodeProperty(TypeValue = name ?: "", TypeType = type ?: "")
+                CodeProperty(
+                    TypeValue = name ?: "", 
+                    TypeType = type ?: "",
+                    TypeRef = CPPTypeRefBuilder.build(typeSpec)
+                )
             }
         } ?: listOf()
     }
@@ -109,12 +114,18 @@ class CPPBasicIdentListener(fileName: String, includes: MutableList<String>) : C
         }
 
         val fields = ctx?.memberSpecification()?.memberdeclaration()?.map {
-            val type = it?.declSpecifierSeq()?.declSpecifier()?.firstOrNull()?.typeSpecifier()?.text
+            val typeSpec = it?.declSpecifierSeq()?.declSpecifier()?.firstOrNull()?.typeSpecifier()
+            val type = typeSpec?.text
 
             it.memberDeclaratorList()?.memberDeclarator()?.map { memberDeclarator ->
                 val name = memberDeclarator.declarator()?.text
 
-                CodeField(TypeKey = name ?: "", TypeType = type ?: "", TypeValue = type ?: "")
+                CodeField(
+                    TypeKey = name ?: "", 
+                    TypeType = type ?: "", 
+                    TypeValue = type ?: "",
+                    TypeRef = CPPTypeRefBuilder.build(typeSpec)
+                )
             } ?: listOf()
         }?.flatten() ?: listOf()
 

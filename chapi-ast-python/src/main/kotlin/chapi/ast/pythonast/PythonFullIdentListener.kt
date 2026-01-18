@@ -158,6 +158,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         // Extract return type annotation if present (ARROW test)
         if (ctx.ARROW() != null && ctx.test() != null) {
             currentFunction.ReturnType = ctx.test().text
+            currentFunction.ReturnTypeRef = PythonTypeRefBuilder.build(ctx.test())
         }
 
         // Mark that we're inside a function and clear local vars
