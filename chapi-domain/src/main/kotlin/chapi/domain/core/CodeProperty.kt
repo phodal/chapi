@@ -16,4 +16,7 @@ data class CodeProperty(
      * in Golang, we also use it to save fmt.Print series values, like `fmt.Println("hello", "world")`
      */
     var Parameters: List<CodeProperty> = listOf(),
+    /** Structured type reference for cross-language type analysis. @since 2.3.0 */
+    @Since("2.3.0")
+    var TypeRef: CodeTypeRef? = null,
 )
