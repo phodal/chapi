@@ -25,4 +25,7 @@ data class CodeField(
     /// import 2.2.3 for Toml
     @Since("2.2.3")
     var ArrayValue: List<CodeField> = listOf(),
+    /** Structured type reference for cross-language type analysis. @since 2.3.0 */
+    @Since("2.3.0")
+    var TypeRef: CodeTypeRef? = null,
 )

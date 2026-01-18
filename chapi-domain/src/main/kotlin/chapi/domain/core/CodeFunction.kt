@@ -47,6 +47,9 @@ data class CodeFunction(
     var Type: FunctionType = FunctionType.Function,
     @Since("2.1.4")
     var Content: String = "",
+    /** Structured return type reference for cross-language type analysis. @since 2.3.0 */
+    @Since("2.3.0")
+    var ReturnTypeRef: CodeTypeRef? = null,
     // a experimental api for code analysis, please carefully use it.
 //    @property:ExperimentalStdlibApi val expression: Expression? = null,
 ) {
