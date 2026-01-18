@@ -37,14 +37,25 @@ object RustTypeRefBuilder {
             return build(it.type_()) ?: CodeTypeRef(raw = raw, kind = TypeRefKind.UNKNOWN)
         }
 
-        // ImplTraitTypeOneBound
-        ctx.implTraitTypeOneBound()?.let { return buildImplTraitOneBound(it, raw) }
-
-        // TraitObjectTypeOneBound
-        ctx.traitObjectTypeOneBound()?.let { return buildTraitObjectOneBound(it, raw) }
-
         // TypePath - most common case
         ctx.typePath()?.let { return buildTypePath(it, raw) }
+
+        // ImplTraitTypeOneBound - only matches impl Trait
+        ctx.implTraitTypeOneBound()?.let { return buildImplTraitOneBound(it, raw) }
+
+        // TraitObjectTypeOneBound - this is often how simple types are parsed!
+        // 'dyn'? traitBound, where traitBound eventually contains typePath
+        ctx.traitObjectTypeOneBound()?.let { traitObj ->
+            // If it has explicit 'dyn' keyword, treat as trait object
+            if (raw.startsWith("dyn ")) {
+                return buildTraitObjectOneBound(traitObj, raw)
+            }
+            // Otherwise, extract the typePath from traitBound
+            val typePath = traitObj.traitBound()?.typePath()
+            if (typePath != null) {
+                return buildTypePath(typePath, raw)
+            }
+        }
 
         // TupleType
         ctx.tupleType()?.let { return buildTupleType(it, raw) }
