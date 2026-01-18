@@ -255,6 +255,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             TypeKey = it.simpleIdentifier().text,
             Annotations = annotations,
             Modifiers = it.modifiers().getModifiers() + listOfNotNull(it.VAL()?.text, it.VAR()?.text),
+            TypeRef = KotlinTypeRefBuilder.build(it.type())
         )
     }
 
@@ -269,6 +270,7 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
             TypeKey = it.variableDeclaration().simpleIdentifier().text,
             Annotations = annotations,
             Modifiers = it.modifiers().getModifiers() + listOfNotNull(it.VAL()?.text, it.VAR()?.text),
+            TypeRef = KotlinTypeRefBuilder.build(it.variableDeclaration().type())
         )
     }
 
@@ -276,13 +278,18 @@ open class KotlinBasicIdentListener(private val fileName: String) : KotlinAstLis
         this?.modifier()?.map { it.text }?.toList() ?: emptyList()
 
     private fun buildProperty(it: KotlinParser.ClassParameterContext): CodeProperty =
-        CodeProperty(TypeValue = it.simpleIdentifier().text, TypeType = getTypeFullName(it.type().text))
+        CodeProperty(
+            TypeValue = it.simpleIdentifier().text, 
+            TypeType = getTypeFullName(it.type().text),
+            TypeRef = KotlinTypeRefBuilder.build(it.type())
+        )
 
     protected fun buildProperty(it: KotlinParser.FunctionValueParameterContext): CodeProperty =
         CodeProperty(
             TypeValue = it.parameter().simpleIdentifier().text,
             TypeType = getTypeFullName(it.parameter().type().text),
             Annotations = it.parameterModifiers().getAnnotations(),
+            TypeRef = KotlinTypeRefBuilder.build(it.parameter().type())
         )
 
     private fun KotlinParser.ParameterModifiersContext?.getAnnotations(): List<CodeAnnotation> =

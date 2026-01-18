@@ -148,6 +148,7 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
     private fun createField(typeValue: String, typeContext: CSharpParser.Type_Context): CodeField {
         val field = CodeField(TypeValue = typeValue)
         field.TypeType = typeContext.text
+        field.TypeRef = CSharpTypeRefBuilder.build(typeContext)
 
         when (val child = typeContext.base_type().getChild(0)) {
             is CSharpParser.Class_typeContext -> {
@@ -173,7 +174,8 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
         // Get the type from the parent typed_member_declaration
         val parent = ctx.parent
         if (parent is CSharpParser.Typed_member_declarationContext) {
-            val typeText = parent.type_()?.text ?: ""
+            val typeCtx = parent.type_()
+            val typeText = typeCtx?.text ?: ""
             
             variableDeclarators.variable_declarator().forEach { varDecl ->
                 val fieldName = varDecl.identifier()?.text ?: ""
@@ -185,7 +187,8 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
                     val field = CodeField(
                         TypeType = typeText,
                         TypeValue = fieldValue,
-                        TypeKey = fieldName
+                        TypeKey = fieldName,
+                        TypeRef = CSharpTypeRefBuilder.build(typeCtx)
                     )
                     currentStruct.Fields += field
                 }
