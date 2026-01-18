@@ -41,6 +41,12 @@ class CPPBasicIdentListener(fileName: String, includes: MutableList<String>) : C
         }
     }
 
+    override fun exitNamespaceDefinition(ctx: CPP14Parser.NamespaceDefinitionContext?) {
+        if (codeContainer.NamespacePath.isNotEmpty()) {
+            codeContainer.NamespacePath = codeContainer.NamespacePath.dropLast(1)
+        }
+    }
+
     override fun enterFunctionDefinition(ctx: CPP14Parser.FunctionDefinitionContext?) {
         val method = CodeFunction()
 

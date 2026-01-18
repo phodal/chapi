@@ -71,14 +71,14 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
 
     override fun enterUseDeclaration(ctx: RustParser.UseDeclarationContext?) {
         val importString: List<List<String>> = buildToPath(ctx)
-        
-        // Check for glob import (use x::*)
-        val isGlob = ctx?.useTree()?.text?.endsWith("*") == true
 
         importString.forEach { path ->
+            // Check for glob import on this specific path
+            val isGlobPath = path.lastOrNull() == "*"
+            val head = path.firstOrNull()
             val kind = when {
-                isGlob -> ImportKind.WILDCARD
-                path.first() == "crate" -> ImportKind.RELATIVE
+                isGlobPath -> ImportKind.WILDCARD
+                head == "crate" || head == "self" || head == "super" -> ImportKind.RELATIVE
                 else -> ImportKind.NAMED
             }
             
@@ -86,7 +86,7 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
                 CodeImport(
                     Source = path.joinToString("::"),
                     UsageName = path,
-                    Scope = if (path.first() == "crate") "crate" else "cargo",
+                    Scope = if (head == "crate" || head == "self" || head == "super") "crate" else "cargo",
                     AsName = path.last(),
                     // New structured fields
                     Kind = kind,

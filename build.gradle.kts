@@ -99,7 +99,7 @@ subprojects {
             maven {
                 // Updated for new Sonatype Central Portal (OSSRH sunset on June 30, 2025)
                 val releasesRepoUrl = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
-                val snapshotsRepoUrl = uri("https://ossrh-staging-api.central.sonatype.com/content/repositories/snapshots/")
+                val snapshotsRepoUrl = uri("https://central.sonatype.com/repository/maven-snapshots/")
                 url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
 
                 credentials {
@@ -213,9 +213,14 @@ fun getMavenCredentials(): Pair<String?, String?> {
         val builder = factory.newDocumentBuilder()
         val doc = builder.parse(settingsFile)
         val servers = doc.getElementsByTagName("server")
+        val targetServerIds = setOf("ossrh", "central", "sonatype-nexus-staging")
 
         for (i in 0 until servers.length) {
             val server = servers.item(i) as Element
+            val serverId = server.getElementsByTagName("id").item(0)?.textContent
+            if (serverId == null || serverId !in targetServerIds) {
+                continue
+            }
             val username = server.getElementsByTagName("username").item(0)?.textContent
             val password = server.getElementsByTagName("password").item(0)?.textContent
 

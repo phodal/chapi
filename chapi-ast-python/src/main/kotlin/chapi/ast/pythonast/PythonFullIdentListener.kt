@@ -9,7 +9,7 @@ class PythonFullIdentListener(var fileName: String) : PythonAstBaseListener() {
         FullName = fileName,
         Language = "python",
         Kind = ContainerKind.MODULE,
-        ResolvedModulePath = fileName.substringBeforeLast('.').replace('/', '.').replace('\\', '.')
+        ResolvedModulePath = fileName.substringBeforeLast('/').substringBeforeLast('\\').replace('/', '.').replace('\\', '.')
     )
 
     private var currentNode: CodeDataStruct = CodeDataStruct()

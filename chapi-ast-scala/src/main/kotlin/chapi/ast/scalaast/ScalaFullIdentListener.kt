@@ -92,8 +92,9 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
                 )
                 
                 if (!isWildcard) {
+                    val originalName = if (importExpr.Id() != null) importExpr.Id().text else importSource.substringAfterLast('.')
                     codeImport.Specifiers = listOf(ImportSpecifier(
-                        OriginalName = asName,
+                        OriginalName = originalName,
                         LocalName = asName
                     ))
                 }

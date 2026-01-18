@@ -25,7 +25,14 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         
         val codeImport = CodeImport(Source = fullSource)
 
-        if (isStatic) {
+        if (isStatic && isWildcard) {
+            // Static wildcard import: import static pkg.Class.*;
+            codeImport.Kind = ImportKind.STATIC
+            codeImport.Scope = "static"
+            codeImport.UsageName = listOf("*")
+            // Source remains as fullSource for static wildcard imports
+        } else if (isStatic) {
+            // Single static member import: import static pkg.Class.member;
             val sourceSplit = fullSource.split(".")
             codeImport.UsageName = listOf(sourceSplit.last())
             codeImport.Source = sourceSplit.dropLast(1).joinToString(".")
@@ -39,8 +46,10 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
             codeImport.Kind = ImportKind.WILDCARD
             codeImport.UsageName = listOf("*")
         } else {
+            // Named import: import pkg.Class;
             codeImport.Kind = ImportKind.NAMED
             val className = fullSource.substringAfterLast('.')
+            codeImport.UsageName = listOf(className)
             codeImport.Specifiers = listOf(ImportSpecifier(
                 OriginalName = className,
                 LocalName = className
