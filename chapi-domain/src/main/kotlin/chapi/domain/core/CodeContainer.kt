@@ -131,6 +131,31 @@ data class CodeContainer(
      */
     @Since("2.4.0")
     var NamespacePath: List<String> = listOf(),
+
+    /**
+     * Top-level/file-scope declarations that don't belong to any class or struct.
+     *
+     * This provides a structured way to represent file-level declarations, replacing
+     * the previous convention of using `CodeDataStruct(NodeName="default")`.
+     *
+     * Examples:
+     * - TypeScript: top-level functions, variables, exports
+     * - Python: module-level functions, variables
+     * - Go: package-level functions, variables
+     * - Rust: free functions, constants, static items
+     * - C/C++: global functions, variables
+     *
+     * **Migration from `default` node:**
+     *
+     * Parsers should fill this field for top-level declarations, while
+     * `DataStructures` should only contain actual class/struct/interface definitions.
+     * The `default` node pattern is deprecated but still supported for backward
+     * compatibility.
+     *
+     * @see TopLevelScope
+     */
+    @Since("2.4.0")
+    var TopLevel: TopLevelScope? = null,
 ) {
     fun buildSourceCode(codeLines: List<String>) {
         this.DataStructures.map { ds ->
@@ -149,5 +174,84 @@ data class CodeContainer(
                 it.Content = contentByPosition(codeLines, it.Position)
             }
         }
+    }
+
+    /**
+     * Returns all top-level functions, combining both [TopLevel] and legacy `default` node.
+     *
+     * This method provides backward compatibility by checking both:
+     * 1. The new [TopLevel.Functions] field (preferred)
+     * 2. Functions from `DataStructures` where `NodeName == "default"` (legacy)
+     */
+    fun getTopLevelFunctions(): List<CodeFunction> {
+        val fromTopLevel = TopLevel?.Functions ?: emptyList()
+        val fromDefault = DataStructures
+            .filter { it.NodeName == "default" || it.NodeName.isEmpty() }
+            .flatMap { it.Functions }
+        return fromTopLevel + fromDefault
+    }
+
+    /**
+     * Returns all top-level fields, combining both [TopLevel] and legacy `default` node.
+     *
+     * This method provides backward compatibility by checking both:
+     * 1. The new [TopLevel.Fields] field (preferred)
+     * 2. Fields from `DataStructures` where `NodeName == "default"` (legacy)
+     * 3. Container-level [Fields] (for Toml and similar)
+     */
+    fun getTopLevelFields(): List<CodeField> {
+        val fromTopLevel = TopLevel?.Fields ?: emptyList()
+        val fromDefault = DataStructures
+            .filter { it.NodeName == "default" || it.NodeName.isEmpty() }
+            .flatMap { it.Fields }
+        return fromTopLevel + fromDefault + Fields
+    }
+
+    /**
+     * Returns all exports, combining both [TopLevel] and legacy sources.
+     */
+    fun getTopLevelExports(): List<CodeExport> {
+        return TopLevel?.Exports ?: emptyList()
+    }
+
+    /**
+     * Checks if this container has any top-level declarations.
+     */
+    fun hasTopLevelDeclarations(): Boolean {
+        return TopLevel?.isNotEmpty() == true ||
+               DataStructures.any { it.NodeName == "default" || it.NodeName.isEmpty() }
+    }
+
+    /**
+     * Returns only actual class/struct/interface definitions, excluding `default` nodes.
+     */
+    fun getActualDataStructures(): List<CodeDataStruct> {
+        return DataStructures.filter { it.NodeName != "default" && it.NodeName.isNotEmpty() }
+    }
+
+    /**
+     * Migrates legacy `default` node content to [TopLevel].
+     *
+     * This is a helper method for parsers transitioning from the `default` node pattern.
+     * It extracts functions, fields from `default` nodes and populates [TopLevel].
+     *
+     * @return this container with [TopLevel] populated and `default` nodes removed
+     */
+    fun migrateDefaultNodesToTopLevel(): CodeContainer {
+        val defaultNodes = DataStructures.filter { it.NodeName == "default" || it.NodeName.isEmpty() }
+        if (defaultNodes.isEmpty()) return this
+
+        val functions = defaultNodes.flatMap { it.Functions }
+        val fields = defaultNodes.flatMap { it.Fields }
+
+        this.TopLevel = TopLevelScope(
+            Functions = (TopLevel?.Functions ?: emptyList()) + functions,
+            Fields = (TopLevel?.Fields ?: emptyList()) + fields,
+            Exports = TopLevel?.Exports ?: emptyList(),
+            TypeAliases = TopLevel?.TypeAliases ?: emptyList()
+        )
+
+        this.DataStructures = DataStructures.filter { it.NodeName != "default" && it.NodeName.isNotEmpty() }
+        return this
     }
 }
