@@ -75,6 +75,43 @@ data class CodeDataStruct(
             this.NodeName.lowercase().contains("utils")
     }
 
+    /**
+     * Returns true if this DataStruct is a legacy top-level container.
+     *
+     * Legacy top-level containers were used before [TopLevelScope] to hold
+     * file-level/module-level declarations that don't belong to any class.
+     *
+     * A DataStruct is considered a legacy top-level container if:
+     * - NodeName is "default" (common in TypeScript/JavaScript, Python)
+     * - NodeName is empty (some parsers leave it blank for top-level)
+     * - Type is DEFAULT
+     * - NodeName starts with lowercase (heuristic for Rust module files like "main", "lib")
+     *
+     * @since 2.4.0
+     * @see TopLevelScope
+     */
+    @Since("2.4.0")
+    fun isLegacyTopLevelContainer(): Boolean {
+        // Explicit "default" name or empty name
+        if (NodeName == "default" || NodeName.isEmpty()) {
+            return true
+        }
+
+        // Type is explicitly DEFAULT
+        if (Type == DataStructType.DEFAULT) {
+            return true
+        }
+
+        // Heuristic: Rust/Go module files often start with lowercase (e.g., "main", "file_mod")
+        // while actual classes/structs start with uppercase
+        val firstChar = NodeName.firstOrNull()
+        if (firstChar != null && firstChar.isLowerCase() && Type == DataStructType.OBJECT) {
+            return true
+        }
+
+        return false
+    }
+
     fun setMethodsFromMap(methodMap: MutableMap<String, CodeFunction>) {
         this.Functions = methodMap.values.toList()
     }

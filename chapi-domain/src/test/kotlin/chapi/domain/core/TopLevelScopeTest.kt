@@ -16,6 +16,17 @@ internal class TopLevelScopeTest {
     }
 
     @Test
+    fun `TopLevelScope with only Extension should not be empty`() {
+        val scope = TopLevelScope(
+            Extension = mapOf("__all__" to "[\"foo\", \"bar\"]")
+        )
+        assertFalse(scope.isEmpty())
+        assertTrue(scope.isNotEmpty())
+        // declarationCount doesn't include Extension
+        assertEquals(0, scope.declarationCount())
+    }
+
+    @Test
     fun `TopLevelScope with functions should not be empty`() {
         val scope = TopLevelScope(
             Functions = listOf(
@@ -418,6 +429,60 @@ internal class TopLevelScopeTest {
         assertNotNull(container.TopLevel)
         assertEquals(1, container.DataStructures.size)
         assertEquals("RealClass", container.DataStructures[0].NodeName)
+    }
+
+    // ==================== CodeDataStruct.isLegacyTopLevelContainer Tests ====================
+
+    @Test
+    fun `isLegacyTopLevelContainer should detect default node`() {
+        val defaultNode = CodeDataStruct(NodeName = "default")
+        assertTrue(defaultNode.isLegacyTopLevelContainer())
+    }
+
+    @Test
+    fun `isLegacyTopLevelContainer should detect empty node name`() {
+        val emptyNode = CodeDataStruct(NodeName = "")
+        assertTrue(emptyNode.isLegacyTopLevelContainer())
+    }
+
+    @Test
+    fun `isLegacyTopLevelContainer should detect DEFAULT type`() {
+        val defaultTypeNode = CodeDataStruct(
+            NodeName = "something",
+            Type = DataStructType.DEFAULT
+        )
+        assertTrue(defaultTypeNode.isLegacyTopLevelContainer())
+    }
+
+    @Test
+    fun `isLegacyTopLevelContainer should detect lowercase OBJECT nodes`() {
+        // Rust module files like "main.rs" create OBJECT nodes with lowercase names
+        val rustMainNode = CodeDataStruct(
+            NodeName = "main",
+            Type = DataStructType.OBJECT
+        )
+        assertTrue(rustMainNode.isLegacyTopLevelContainer())
+    }
+
+    @Test
+    fun `isLegacyTopLevelContainer should not flag actual classes`() {
+        val actualClass = CodeDataStruct(
+            NodeName = "UserService",
+            Type = DataStructType.CLASS
+        )
+        assertFalse(actualClass.isLegacyTopLevelContainer())
+
+        val actualInterface = CodeDataStruct(
+            NodeName = "Repository",
+            Type = DataStructType.INTERFACE
+        )
+        assertFalse(actualInterface.isLegacyTopLevelContainer())
+
+        val actualStruct = CodeDataStruct(
+            NodeName = "Config",
+            Type = DataStructType.STRUCT
+        )
+        assertFalse(actualStruct.isLegacyTopLevelContainer())
     }
 
     // ==================== Backward Compatibility Tests ====================

@@ -152,13 +152,14 @@ data class TopLevelScope(
     var Extension: Map<String, String> = mapOf(),
 ) {
     /**
-     * Returns true if this scope has any declarations.
+     * Returns true if this scope has no declarations.
      */
-    fun isEmpty(): Boolean = Functions.isEmpty() && Fields.isEmpty() && 
-                             Exports.isEmpty() && TypeAliases.isEmpty()
+    fun isEmpty(): Boolean = Functions.isEmpty() && Fields.isEmpty() &&
+                             Exports.isEmpty() && TypeAliases.isEmpty() &&
+                             Extension.isEmpty()
 
     /**
-     * Returns true if this scope has any declarations.
+     * Returns true if this scope has any declarations (i.e., is not empty).
      */
     fun isNotEmpty(): Boolean = !isEmpty()
 
