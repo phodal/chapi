@@ -177,32 +177,36 @@ data class CodeContainer(
     }
 
     /**
-     * Returns all top-level functions, combining both [TopLevel] and legacy `default` node.
+     * Returns all top-level functions, combining both [TopLevel] and legacy containers.
      *
      * This method provides backward compatibility by checking both:
      * 1. The new [TopLevel.Functions] field (preferred)
-     * 2. Functions from `DataStructures` where `NodeName == "default"` (legacy)
+     * 2. Functions from legacy/synthetic `DataStructures` acting as top-level containers
+     *
+     * @see CodeDataStruct.isLegacyTopLevelContainer
      */
     fun getTopLevelFunctions(): List<CodeFunction> {
         val fromTopLevel = TopLevel?.Functions ?: emptyList()
         val fromDefault = DataStructures
-            .filter { it.NodeName == "default" || it.NodeName.isEmpty() }
+            .filter { it.isLegacyTopLevelContainer() }
             .flatMap { it.Functions }
         return fromTopLevel + fromDefault
     }
 
     /**
-     * Returns all top-level fields, combining both [TopLevel] and legacy `default` node.
+     * Returns all top-level fields, combining both [TopLevel] and legacy containers.
      *
      * This method provides backward compatibility by checking both:
      * 1. The new [TopLevel.Fields] field (preferred)
-     * 2. Fields from `DataStructures` where `NodeName == "default"` (legacy)
+     * 2. Fields from legacy/synthetic `DataStructures` acting as top-level containers
      * 3. Container-level [Fields] (for Toml and similar)
+     *
+     * @see CodeDataStruct.isLegacyTopLevelContainer
      */
     fun getTopLevelFields(): List<CodeField> {
         val fromTopLevel = TopLevel?.Fields ?: emptyList()
         val fromDefault = DataStructures
-            .filter { it.NodeName == "default" || it.NodeName.isEmpty() }
+            .filter { it.isLegacyTopLevelContainer() }
             .flatMap { it.Fields }
         return fromTopLevel + fromDefault + Fields
     }
@@ -216,29 +220,34 @@ data class CodeContainer(
 
     /**
      * Checks if this container has any top-level declarations.
+     *
+     * @see CodeDataStruct.isLegacyTopLevelContainer
      */
     fun hasTopLevelDeclarations(): Boolean {
         return TopLevel?.isNotEmpty() == true ||
-               DataStructures.any { it.NodeName == "default" || it.NodeName.isEmpty() }
+               DataStructures.any { it.isLegacyTopLevelContainer() }
     }
 
     /**
-     * Returns only actual class/struct/interface definitions, excluding `default` nodes.
+     * Returns only actual class/struct/interface definitions, excluding legacy top-level containers.
+     *
+     * @see CodeDataStruct.isLegacyTopLevelContainer
      */
     fun getActualDataStructures(): List<CodeDataStruct> {
-        return DataStructures.filter { it.NodeName != "default" && it.NodeName.isNotEmpty() }
+        return DataStructures.filter { !it.isLegacyTopLevelContainer() }
     }
 
     /**
-     * Migrates legacy `default` node content to [TopLevel].
+     * Migrates legacy top-level container content to [TopLevel].
      *
-     * This is a helper method for parsers transitioning from the `default` node pattern.
-     * It extracts functions, fields from `default` nodes and populates [TopLevel].
+     * This is a helper method for parsers transitioning from the legacy pattern.
+     * It extracts functions, fields from legacy containers and populates [TopLevel].
      *
-     * @return this container with [TopLevel] populated and `default` nodes removed
+     * @return this container with [TopLevel] populated and legacy containers removed
+     * @see CodeDataStruct.isLegacyTopLevelContainer
      */
     fun migrateDefaultNodesToTopLevel(): CodeContainer {
-        val defaultNodes = DataStructures.filter { it.NodeName == "default" || it.NodeName.isEmpty() }
+        val defaultNodes = DataStructures.filter { it.isLegacyTopLevelContainer() }
         if (defaultNodes.isEmpty()) return this
 
         val functions = defaultNodes.flatMap { it.Functions }
@@ -251,7 +260,7 @@ data class CodeContainer(
             TypeAliases = TopLevel?.TypeAliases ?: emptyList()
         )
 
-        this.DataStructures = DataStructures.filter { it.NodeName != "default" && it.NodeName.isNotEmpty() }
+        this.DataStructures = DataStructures.filter { !it.isLegacyTopLevelContainer() }
         return this
     }
 }
