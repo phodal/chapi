@@ -873,9 +873,21 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
             }
 
             is TypeScriptParser.OptionalCallExpressionContext -> {
-                // Optional call: foo?.()
-                // We don't currently model it as a call, but we must traverse the target.
-                parseSingleExpression(ctx.singleExpression())
+                // Optional call: foo?.() or obj?.method?.()
+                val targetExpr = ctx.singleExpression()
+                parseSingleExpression(targetExpr)
+                
+                // Create a CodeCall with IsOptionalChain = true
+                val callInfo = extractCallInfo(targetExpr)
+                val callee = targetExpr?.text?.substringAfterLast(".")?.substringBefore("(") ?: ""
+                
+                currentFunc.FunctionCalls += CodeCall(
+                    Type = CallType.FUNCTION,
+                    FunctionName = callee,
+                    Callee = callee,
+                    ReceiverExpr = callInfo.receiverExpr,
+                    IsOptionalChain = true
+                )
             }
 
             is ParenthesizedExpressionContext -> {
@@ -904,13 +916,34 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         if (callee is TypeScriptParser.MemberDotExpressionContext) {
             val rawFn = buildCallChain(callee).ifBlank { callee.text }
             val fn = normalizeMemberCallName(rawFn)
-            currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", fn, args)
+            
+            // Extract structured call info
+            val callInfo = extractCallInfo(callee)
+            
+            currentFunc.FunctionCalls += CodeCall(
+                Package = "",
+                Type = CallType.FUNCTION,
+                NodeName = "",
+                FunctionName = fn,
+                Parameters = args,
+                // New structured fields
+                ReceiverExpr = callInfo.receiverExpr,
+                Callee = callInfo.callee,
+                Chain = callInfo.chain
+            )
             return
         }
 
         val calleeText = callee.text
         currentExprIdent = if (varName.isNotBlank()) varName else calleeText
-        currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, args)
+        currentFunc.FunctionCalls += CodeCall(
+            Package = "",
+            Type = CallType.FUNCTION,
+            NodeName = "",
+            FunctionName = currentExprIdent,
+            Parameters = args,
+            Callee = currentExprIdent
+        )
     }
 
     private fun normalizeMemberCallName(name: String): String {
@@ -971,6 +1004,80 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                 expr.text.substringBefore('(').substringBefore('.')
             }
         }
+    }
+
+    /**
+     * Data class to hold extracted call information for structured CodeCall fields.
+     */
+    private data class CallInfo(
+        val receiverExpr: String = "",
+        val callee: String = "",
+        val chain: List<String> = listOf(),
+        val isOptionalChain: Boolean = false
+    )
+
+    /**
+     * Extracts structured call information from a member expression.
+     *
+     * For `axios.get('/api').then(fn).catch(err)`:
+     * - receiverExpr = "axios.get('/api').then(fn)"
+     * - callee = "catch"
+     * - chain = ["get", "then", "catch"]
+     */
+    private fun extractCallInfo(expr: TypeScriptParser.SingleExpressionContext?): CallInfo {
+        if (expr == null) return CallInfo()
+        
+        val chain = mutableListOf<String>()
+        var isOptional = false
+        
+        // Build chain from the expression
+        fun collectChain(e: TypeScriptParser.SingleExpressionContext?) {
+            when (e) {
+                is TypeScriptParser.MemberDotExpressionContext -> {
+                    collectChain(e.singleExpression())
+                    chain.add(e.identifierName().text)
+                }
+                is TypeScriptParser.OptionalChainExpressionContext -> {
+                    // foo?.bar
+                    isOptional = true
+                    if (e.singleExpression().size >= 2) {
+                        collectChain(e.singleExpression(0))
+                        // The second singleExpression is the property being accessed
+                        val propExpr = e.singleExpression(1)
+                        if (propExpr is IdentifierExpressionContext) {
+                            chain.add(propExpr.identifierName().text)
+                        }
+                    }
+                }
+                is TypeScriptParser.ArgumentsExpressionContext -> {
+                    collectChain(e.singleExpression())
+                }
+                is TypeScriptParser.OptionalCallExpressionContext -> {
+                    isOptional = true
+                    collectChain(e.singleExpression())
+                }
+            }
+        }
+        
+        collectChain(expr)
+        
+        val callee = chain.lastOrNull() ?: ""
+        
+        // Extract receiver expression (everything before the last method call)
+        val receiverExpr = when (expr) {
+            is TypeScriptParser.MemberDotExpressionContext -> {
+                // Get text of the receiver (left side of the dot)
+                expr.singleExpression()?.text ?: ""
+            }
+            else -> ""
+        }
+        
+        return CallInfo(
+            receiverExpr = receiverExpr,
+            callee = callee,
+            chain = chain,
+            isOptionalChain = isOptional
+        )
     }
 
     private fun parseArguments(argument: TypeScriptParser.ArgumentsExpressionContext): List<CodeProperty> {
@@ -1128,11 +1235,19 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
             when (singleExprCtx) {
                 is TypeScriptParser.ArgumentsExpressionContext -> {
+                    val funcName = buildFunctionName(singleExprCtx)
+                    val nodeName = wrapTargetType(singleExprCtx)
+                    val callInfo = extractCallInfo(singleExprCtx.singleExpression())
+                    
                     currentFunc.FunctionCalls += CodeCall(
                         Parameters = processArgumentList(singleExprCtx.arguments()?.argumentList()),
-                        FunctionName = buildFunctionName(singleExprCtx),
-                        NodeName = wrapTargetType(singleExprCtx),
-                        Position = buildPosition(ctx)
+                        FunctionName = funcName,
+                        NodeName = nodeName,
+                        Position = buildPosition(ctx),
+                        // New structured fields
+                        Callee = callInfo.callee.ifBlank { funcName },
+                        ReceiverExpr = callInfo.receiverExpr.ifBlank { nodeName },
+                        Chain = callInfo.chain
                     )
                 }
 
@@ -1141,11 +1256,13 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                         is ParenthesizedExpressionContext -> parseParenthesizedExpression(child)
                         else -> listOf()
                     }
+                    val funcName = singleExprCtx.identifierName().text
                     currentFunc.FunctionCalls += CodeCall(
                         Parameters = params,
-                        FunctionName = singleExprCtx.identifierName().text,
+                        FunctionName = funcName,
                         NodeName = "",
-                        Position = buildPosition(ctx)
+                        Position = buildPosition(ctx),
+                        Callee = funcName
                     )
                 }
 

@@ -403,7 +403,10 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
                 Package = callInfo.packageName,
                 Parameters = parameters,
                 Position = buildPosition(ctx),
-                Type = callInfo.callType
+                Type = callInfo.callType,
+                // New structured fields
+                ReceiverExpr = callInfo.nodeName,
+                Callee = callInfo.functionName
             )
 
             currentFunction.FunctionCalls += codeCall
@@ -437,7 +440,10 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
                 FunctionName = methodName,
                 Package = callInfo.packageName,
                 Position = buildPosition(ctx),
-                Type = callInfo.callType
+                Type = callInfo.callType,
+                // New structured fields
+                ReceiverExpr = receiverText,
+                Callee = methodName
             )
 
             currentFunction.FunctionCalls += codeCall
@@ -468,7 +474,10 @@ class ScalaFullIdentListener(var fileName: String) : ScalaAstBaseListener() {
                     Package = resolvePackageForType(className),
                     Parameters = parameters,
                     Position = buildPosition(ctx),
-                    Type = CallType.CREATOR
+                    Type = CallType.CREATOR,
+                    // New structured fields
+                    ReceiverExpr = className,
+                    Callee = "<init>"
                 )
 
                 currentFunction.FunctionCalls += codeCall

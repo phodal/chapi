@@ -275,7 +275,10 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
             Package = resolvedPackage,
             NodeName = ident,
             FunctionName = member,
-            Parameters = params
+            Parameters = params,
+            // New structured fields
+            ReceiverExpr = ident,
+            Callee = member
         )
         currentFunction.FunctionCalls += codeCall
     }
@@ -378,7 +381,10 @@ class CSharpFullIdentListener(fileName: String) : CSharpAstListener(fileName) {
             NodeName = typeText,
             FunctionName = "<init>",
             Type = CallType.CREATOR,
-            Parameters = params
+            Parameters = params,
+            // New structured fields
+            ReceiverExpr = typeText,
+            Callee = "<init>"
         )
         
         currentFunction.FunctionCalls += codeCall

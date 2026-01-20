@@ -200,7 +200,10 @@ open class KotlinFullIdentListener(val fileName: String) : KotlinBasicIdentListe
                                 NodeName = lastNodeName,
                                 FunctionName = lastIdentifier,
                                 Parameters = parameters,
-                                Position = ctx.getPosition()
+                                Position = ctx.getPosition(),
+                                // New structured fields
+                                ReceiverExpr = lastNodeName,
+                                Callee = lastIdentifier
                             ).refineIfExistsCreator()
                             calls += call
 
@@ -223,7 +226,10 @@ open class KotlinFullIdentListener(val fileName: String) : KotlinBasicIdentListe
                                     FunctionName = navigationName,
                                     Parameters = parameters,
                                     Package = lastPackage,
-                                    Position = ctx.getPosition()
+                                    Position = ctx.getPosition(),
+                                    // New structured fields
+                                    ReceiverExpr = lastIdentifier,
+                                    Callee = navigationName
                                 ).refineIfExistsCreator()
                                 lastPackage = call.Package
                                 lastNodeName = call.NodeName

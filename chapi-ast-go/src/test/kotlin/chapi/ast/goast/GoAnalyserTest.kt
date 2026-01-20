@@ -30,7 +30,9 @@ func main() {
                         CodeCall(
                             NodeName = "fmt",
                             FunctionName = "Println",
-                            Parameters = listOf(CodeProperty(TypeValue = "hello world", TypeType = "string"))
+                            Parameters = listOf(CodeProperty(TypeValue = "hello world", TypeType = "string")),
+                            // New structured field
+                            Callee = "Println"
                         )
                     ),
                 )

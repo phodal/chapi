@@ -219,7 +219,10 @@ open class PythonAstBaseListener : PythonParserBaseListener() {
                 NodeName = nodeName,
                 FunctionName = caller,
                 Parameters = parameters,
-                Position = buildPosition(trailerContext)
+                Position = buildPosition(trailerContext),
+                // New structured fields
+                ReceiverExpr = nodeName,
+                Callee = caller
             )
         }
 

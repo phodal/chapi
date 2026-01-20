@@ -407,6 +407,9 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         codeCall.Package = packageName
         codeCall.FunctionName = methodName
         codeCall.NodeName = targetTypeStr ?: ""
+        // New structured fields
+        codeCall.ReceiverExpr = targetTypeStr ?: ""
+        codeCall.Callee = methodName
     }
 
     private fun handleEmptyFullType(
@@ -638,7 +641,9 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
                 Package = removeTarget(target),
                 Type = CallType.FIELD,
                 NodeName = typeType,
-                Position = position
+                Position = position,
+                // New structured fields
+                ReceiverExpr = typeType
             )
 
             currentNode.FunctionCalls += methodCall
@@ -754,7 +759,10 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
             Type = CallType.LAMBDA,
             NodeName = targetType ?: "",
             FunctionName = methodName,
-            Position = position
+            Position = position,
+            // New structured fields
+            ReceiverExpr = targetText,
+            Callee = methodName
         )
 
         sendResultToMethodCallMap(codeCall)

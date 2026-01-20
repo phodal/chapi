@@ -455,10 +455,21 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private fun codeCallFromExprListWithPath(child: ParseTree, arguments: GoParser.ArgumentsContext, functionName: String, targetPath: String): List<CodeCall> {
         val calls = mutableListOf<CodeCall>()
 
-        val currentCall = CodeCall(NodeName = targetPath).apply {
-            Parameters = parseArguments(arguments)
-            FunctionName = functionName
+        // Extract receiver from target path (everything before the last dot)
+        val receiverExpr = if (targetPath.contains(".")) {
+            targetPath.substringBeforeLast(".")
+        } else {
+            ""
         }
+
+        val currentCall = CodeCall(
+            NodeName = targetPath,
+            FunctionName = functionName,
+            Parameters = parseArguments(arguments),
+            // New structured fields
+            ReceiverExpr = receiverExpr,
+            Callee = functionName
+        )
 
         // Resolve local variables and receivers in the target path
         if (targetPath.isNotEmpty()) {
@@ -482,6 +493,9 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                 }
                 currentCall.NodeName = resolvedPath
                 currentCall.Package = wrapTarget(resolvedPath)
+                
+                // Set ReceiverType if we can resolve it
+                currentCall.ReceiverType = CodeTypeRef.simple(resolvedFirst)
             } else {
                 currentCall.Package = wrapTarget(targetPath)
             }
@@ -494,10 +508,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
     private fun codeCallFromExprList(child: ParseTree, arguments: GoParser.ArgumentsContext, functionName: String = ""): List<CodeCall> {
         val calls = mutableListOf<CodeCall>()
 
-        val currentCall = CodeCall(NodeName = child.text).apply {
-            Parameters = parseArguments(arguments)
-            Package = wrapTarget(NodeName)
-        }
+        val childText = child.text
+        val currentCall = CodeCall(
+            NodeName = childText,
+            Parameters = parseArguments(arguments),
+            Package = wrapTarget(childText)
+        )
 
         when (child) {
             is PrimaryExprContext -> {
@@ -508,6 +524,10 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                     currentCall.NodeName = nodeName
                     currentCall.FunctionName = functionName
                     currentCall.Package = wrapTarget(nodeName)
+                    
+                    // New structured fields
+                    currentCall.ReceiverExpr = nodeName
+                    currentCall.Callee = functionName
                 } else {
                     // Old logic for compatibility
                     when (child.getChild(1)) {
@@ -521,15 +541,21 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
                             val nodeName = handleForPrimary(child).orEmpty()
 
                             // if nodeName ends with $.functionName, the functionName should be remove
+                            val receiverExpr: String
                             if (nodeName.endsWith(".$funcName")) {
-                                currentCall.NodeName = nodeName.substring(0, nodeName.length - funcName.length - 1)
+                                receiverExpr = nodeName.substring(0, nodeName.length - funcName.length - 1)
+                                currentCall.NodeName = receiverExpr
                             } else {
+                                receiverExpr = nodeName
                                 currentCall.NodeName = nodeName
                             }
 
                             currentCall.apply {
-                                FunctionName = child.getChild(2).text
+                                FunctionName = funcName
                                 Package = wrapTarget(nodeName)
+                                // New structured fields
+                                ReceiverExpr = receiverExpr
+                                Callee = funcName
                             }
                         }
                     }
@@ -538,9 +564,12 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
 
             is GoParser.OperandContext -> {
                 // Direct operand call (e.g., function())
-                currentCall.NodeName = child.text
-                currentCall.FunctionName = if (functionName.isNotEmpty()) functionName else child.text
-                currentCall.Package = wrapTarget(child.text)
+                val callee = if (functionName.isNotEmpty()) functionName else childText
+                currentCall.NodeName = childText
+                currentCall.FunctionName = callee
+                currentCall.Package = wrapTarget(childText)
+                // New structured fields
+                currentCall.Callee = callee
             }
         }
 
