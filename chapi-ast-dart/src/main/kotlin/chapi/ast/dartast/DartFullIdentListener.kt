@@ -15,22 +15,23 @@ open class DartFullIdentListener(filePath: String) : DartBasicIdentListener(file
 
     override fun enterMethodSignature(ctx: Dart2Parser.MethodSignatureContext?) {
         super.enterMethodSignature(ctx)
+        // Don't set isInFunction here - wait for function body
+    }
+
+    override fun exitMethodSignature(ctx: Dart2Parser.MethodSignatureContext?) {
+        super.exitMethodSignature(ctx)
+    }
+
+    override fun enterFunctionBody(ctx: Dart2Parser.FunctionBodyContext?) {
         isInFunction = true
         currentFunctionCalls.clear()
         localVariables.clear()
     }
 
-    override fun exitMethodSignature(ctx: Dart2Parser.MethodSignatureContext?) {
-        super.exitMethodSignature(ctx)
-        isInFunction = false
-    }
-
-    override fun enterFunctionBody(ctx: Dart2Parser.FunctionBodyContext?) {
-        // Reset for function body processing
-    }
-
     override fun exitFunctionBody(ctx: Dart2Parser.FunctionBodyContext?) {
-        // Attach collected function calls
+        // Function calls collected during body processing are stored in currentFunctionCalls
+        // They can be attached to the current function if needed
+        isInFunction = false
     }
 
     // Handle class member declarations for fields
@@ -72,65 +73,32 @@ open class DartFullIdentListener(filePath: String) : DartBasicIdentListener(file
             ?: "var"
     }
 
-    private fun addFieldToCurrentClass(
+    /**
+     * Add a field to the current class being parsed.
+     * Creates a CodeField and adds it to the current node's fields.
+     */
+    protected fun addFieldToCurrentClass(
         name: String,
         type: String,
         isStatic: Boolean = false,
         isFinal: Boolean = false,
         isLate: Boolean = false
     ) {
-        // This will be handled by the parent class's current node
-    }
+        if (!hasEnterClass) return
 
-    // Handle function calls in expressions
-    override fun enterArgumentPart(ctx: Dart2Parser.ArgumentPartContext?) {
-        if (!isInFunction) return
+        val modifiers = mutableListOf<String>()
+        if (isStatic) modifiers.add("static")
+        if (isFinal) modifiers.add("final")
+        if (isLate) modifiers.add("late")
 
-        // Extract function call information from the parent context
-        val parent = ctx?.parent
-        if (parent is Dart2Parser.SelectorContext || parent is Dart2Parser.PostfixExpressionContext) {
-            // Function call detected
-            extractFunctionCall(ctx)
-        }
-    }
+        val field = CodeField(
+            TypeKey = name,
+            TypeType = type,
+            TypeValue = "",
+            Modifiers = modifiers
+        )
 
-    private fun extractFunctionCall(ctx: Dart2Parser.ArgumentPartContext) {
-        // Build function call from context
-        val call = CodeCall()
-        call.Position = buildPosition(ctx)
-
-        // Parse arguments
-        ctx.arguments()?.argumentList()?.let { argList ->
-            call.Parameters = parseCallArguments(argList)
-        }
-
-        currentFunctionCalls.add(call)
-    }
-
-    private fun parseCallArguments(ctx: Dart2Parser.ArgumentListContext): List<CodeProperty> {
-        val params = mutableListOf<CodeProperty>()
-
-        // Expression list
-        ctx.expressionList()?.expr()?.forEach { expr ->
-            params.add(CodeProperty(TypeType = "dynamic", TypeValue = expr.text))
-        }
-
-        // Named arguments
-        ctx.namedArgument()?.forEach { named ->
-            val name = named.label()?.identifier()?.text ?: ""
-            val value = named.expr()?.text ?: ""
-            params.add(CodeProperty(TypeType = value, TypeValue = name))
-        }
-
-        return params
-    }
-
-    // Handle primary expressions (identifiers, literals, etc.)
-    override fun enterPrimary(ctx: Dart2Parser.PrimaryContext?) {
-        // Track identifiers for variable resolution
-        ctx?.identifier()?.let { id ->
-            // Could be a variable reference or function call
-        }
+        currentNode.Fields += field
     }
 
     // Handle new expressions
@@ -208,6 +176,13 @@ open class DartFullIdentListener(filePath: String) : DartBasicIdentListener(file
         var currentTarget = primary.text
 
         for (selector in selectors) {
+            // First update target if there's an identifier selector
+            selector.assignableSelector()?.let { assignable ->
+                assignable.identifier()?.let { id ->
+                    currentTarget = "$currentTarget.${id.text}"
+                }
+            }
+
             // Check if this selector includes arguments (function call)
             selector.argumentPart()?.let { argPart ->
                 val call = CodeCall(
@@ -222,14 +197,25 @@ open class DartFullIdentListener(filePath: String) : DartBasicIdentListener(file
 
                 currentFunctionCalls.add(call)
             }
-
-            // Update target for chained calls
-            selector.assignableSelector()?.let { assignable ->
-                assignable.identifier()?.let { id ->
-                    currentTarget = "$currentTarget.${id.text}"
-                }
-            }
         }
+    }
+
+    private fun parseCallArguments(ctx: Dart2Parser.ArgumentListContext): List<CodeProperty> {
+        val params = mutableListOf<CodeProperty>()
+
+        // Expression list
+        ctx.expressionList()?.expr()?.forEach { expr ->
+            params.add(CodeProperty(TypeType = "dynamic", TypeValue = expr.text))
+        }
+
+        // Named arguments
+        ctx.namedArgument()?.forEach { named ->
+            val name = named.label()?.identifier()?.text ?: ""
+            val value = named.expr()?.text ?: ""
+            params.add(CodeProperty(TypeType = value, TypeValue = name))
+        }
+
+        return params
     }
 
     // Handle local variable declarations
@@ -268,11 +254,6 @@ open class DartFullIdentListener(filePath: String) : DartBasicIdentListener(file
         }
     }
 
-    // Handle await expressions
-    override fun enterAwaitExpression(ctx: Dart2Parser.AwaitExpressionContext?) {
-        // Mark that we're in an async context
-    }
-
     // Handle throw expressions
     override fun enterThrowExpression(ctx: Dart2Parser.ThrowExpressionContext?) {
         if (!isInFunction) return
@@ -299,4 +280,9 @@ open class DartFullIdentListener(filePath: String) : DartBasicIdentListener(file
             currentFunctionCalls.add(call)
         }
     }
+
+    /**
+     * Get the function calls collected during parsing.
+     */
+    fun getFunctionCalls(): List<CodeCall> = currentFunctionCalls.toList()
 }

@@ -8,7 +8,7 @@
  * This grammar is generated from the CFG contained in:
  * https://github.com/dart-lang/language/blob/70eb85cf9a6606a9da0de824a5d55fd06de1287f/specification/dartLangSpec.tex
  *
- * The bash script used to scrape and the refactor the gramamr is here:
+ * The bash script used to scrape and the refactor the grammar is here:
  * https://github.com/kaby76/ScrapeDartSpec/blob/master/refactor.sh
  *
  * Note: the CFG in the Specification is in development, and is for approximately
@@ -484,7 +484,6 @@ identifier
     | SET_
     | STATIC_
     | TYPEDEF_
-    | FUNCTION_
     | ASYNC_
     | HIDE_
     | OF_
@@ -493,8 +492,9 @@ identifier
     | SYNC_
     | AWAIT_
     | YIELD_
-    | DYNAMIC_
     | NATIVE_
+    | BASE_
+    | SEALED_
     ;
 
 identifierList
@@ -1052,6 +1052,8 @@ typeIdentifier
     | DYNAMIC_
     | NATIVE_
     | FUNCTION_
+    | BASE_
+    | SEALED_
     ;
 
 typeList

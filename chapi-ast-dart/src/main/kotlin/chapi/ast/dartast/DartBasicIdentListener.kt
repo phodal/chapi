@@ -16,9 +16,9 @@ open class DartBasicIdentListener(private val filePath: String) : DartAstListene
     )
 
     private var classNodes: MutableList<CodeDataStruct> = mutableListOf()
-    private var currentNode: CodeDataStruct = CodeDataStruct()
+    protected var currentNode: CodeDataStruct = CodeDataStruct()
     private var currentFunction: CodeFunction = CodeFunction()
-    private var hasEnterClass: Boolean = false
+    protected var hasEnterClass: Boolean = false
 
     // Track library name if specified
     override fun enterLibraryName(ctx: Dart2Parser.LibraryNameContext?) {
@@ -66,11 +66,28 @@ open class DartBasicIdentListener(private val filePath: String) : DartAstListene
     override fun enterLibraryExport(ctx: Dart2Parser.LibraryExportContext?) {
         val uri = ctx?.configurableUri()?.uri()?.stringLiteral()?.text?.trim('"', '\'') ?: return
 
-        // Create an export entry
-        val codeExport = CodeExport(Name = uri)
-        codeContainer.DataStructures.find { it.NodeName == "default" }?.Exports?.let {
-            // Add to default struct if exists
+        // Create an export entry and store in TopLevel scope
+        val codeExport = CodeExport(
+            Name = uri,
+            FromSource = uri,
+            Kind = ExportKind.RE_EXPORT_ALL
+        )
+        
+        // Handle show/hide combinators for exports
+        ctx.combinator()?.forEach { combinator ->
+            val identifiers = combinator.identifierList()?.identifier()?.map { it.text } ?: return@forEach
+            if (combinator.SHOW_() != null) {
+                codeExport.Kind = ExportKind.RE_EXPORT_NAMED
+                codeExport.Specifiers = identifiers.map { name ->
+                    ExportSpecifier(LocalName = name, ExportedName = name)
+                }
+            }
         }
+
+        ensureTopLevelScope()
+        codeContainer.TopLevel = codeContainer.TopLevel?.copy(
+            Exports = (codeContainer.TopLevel?.Exports ?: emptyList()) + codeExport
+        )
     }
 
     // Handle class declaration

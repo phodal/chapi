@@ -35,7 +35,8 @@ dependencies {
 }
 
 sourceSets.main {
-    java.srcDirs("${project.layout.buildDirectory.get().asFile}/generated-src")
+    // Append generated-src to existing source directories (don't replace src/main/java)
+    java.srcDir("${project.layout.buildDirectory.get().asFile}/generated-src")
 }
 
 tasks.generateGrammarSource {
