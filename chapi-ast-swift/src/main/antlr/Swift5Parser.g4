@@ -1468,7 +1468,7 @@ element_name
 
 // Function Type
 function_type
-    : attributes? function_type_argument_clause THROWS? arrow_operator type
+    : attributes? function_type_argument_clause (THROWS (LPAREN type RPAREN)?)? arrow_operator type
     ;
 
 function_type_argument_clause

@@ -161,18 +161,15 @@ class SwiftFullIdentListener(private val filePath: String) : Swift5ParserBaseLis
     private fun extractClassModifiers(ctx: Swift5Parser.Class_declarationContext): List<String> {
         val modifiers = mutableListOf<String>()
         
-        // Parse from context text to extract modifiers
-        // The grammar is: attributes? (access_level_modifier? FINAL? | FINAL access_level_modifier?) CLASS
-        val text = ctx.text
-        val classKeywordIndex = text.indexOf("class")
-        if (classKeywordIndex > 0) {
-            val prefix = text.substring(0, classKeywordIndex).lowercase()
-            if (prefix.contains("public")) modifiers.add("public")
-            if (prefix.contains("private")) modifiers.add("private")
-            if (prefix.contains("internal")) modifiers.add("internal")
-            if (prefix.contains("fileprivate")) modifiers.add("fileprivate")
-            if (prefix.contains("open")) modifiers.add("open")
-            if (prefix.contains("final")) modifiers.add("final")
+        // Use parse-tree tokens instead of substring matching to avoid issues
+        // like "fileprivate" matching both "fileprivate" and "private"
+        ctx.access_level_modifier()
+            ?.let { buildAccessLevelModifier(it) }
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { modifiers.add(it) }
+        
+        if (ctx.FINAL() != null) {
+            modifiers.add("final")
         }
         
         return modifiers
@@ -638,7 +635,13 @@ class SwiftFullIdentListener(private val filePath: String) : Swift5ParserBaseLis
         val postfixExpr = ctx.parent as? Swift5Parser.Postfix_expressionContext ?: return
         val primaryExpr = postfixExpr.primary_expression()
         
-        val functionName = primaryExpr?.unqualified_name()?.identifier()?.text ?: primaryExpr?.text ?: return
+        // For member calls like foo.bar(), extract "bar" from explicit_member_suffix
+        // instead of "foo" from primary_expression
+        val lastMember = postfixExpr.explicit_member_suffix().lastOrNull()
+        val functionName = lastMember?.identifier()?.text
+            ?: primaryExpr?.unqualified_name()?.identifier()?.text
+            ?: primaryExpr?.text
+            ?: return
         
         val call = CodeCall(
             FunctionName = functionName,

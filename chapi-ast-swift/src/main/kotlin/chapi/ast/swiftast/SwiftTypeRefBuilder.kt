@@ -31,12 +31,13 @@ object SwiftTypeRefBuilder {
         val trimmed = typeText.trim()
         
         // Handle optional types (suffix ? or !)
-        if (trimmed.endsWith("?") && !trimmed.startsWith("(")) {
+        // This correctly handles parenthesized optionals like (Int, String)? and ((Int)->Void)?
+        if (trimmed.endsWith("?")) {
             val baseType = parseType(trimmed.dropLast(1))
             return CodeTypeRef.nullable(baseType)
         }
         
-        if (trimmed.endsWith("!") && !trimmed.startsWith("(")) {
+        if (trimmed.endsWith("!")) {
             val baseType = parseType(trimmed.dropLast(1))
             return baseType.copy(
                 raw = trimmed,
@@ -44,21 +45,19 @@ object SwiftTypeRefBuilder {
             )
         }
         
-        // Handle array literal syntax [Type]
-        if (trimmed.startsWith("[") && trimmed.endsWith("]") && !trimmed.contains(":")) {
-            val innerType = trimmed.drop(1).dropLast(1).trim()
-            val elementType = parseType(innerType)
-            return CodeTypeRef.array(elementType)
-        }
-        
-        // Handle dictionary literal syntax [Key: Value]
-        if (trimmed.startsWith("[") && trimmed.endsWith("]") && trimmed.contains(":")) {
+        // Handle array literal syntax [Type] or dictionary literal syntax [Key: Value]
+        if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
             val inner = trimmed.drop(1).dropLast(1).trim()
             val colonIndex = findTopLevelColon(inner)
-            if (colonIndex > 0) {
+            if (colonIndex >= 0) {
+                // Dictionary type [Key: Value]
                 val keyType = parseType(inner.substring(0, colonIndex).trim())
                 val valueType = parseType(inner.substring(colonIndex + 1).trim())
                 return CodeTypeRef.map(keyType, valueType)
+            } else {
+                // Array type [Type]
+                val elementType = parseType(inner)
+                return CodeTypeRef.array(elementType)
             }
         }
         
@@ -97,13 +96,11 @@ object SwiftTypeRefBuilder {
             return CodeTypeRef.function(paramTypes, returnType)
         }
         
-        // Handle protocol composition Type1 & Type2
-        if (trimmed.contains("&")) {
-            val parts = trimmed.split("&").map { it.trim() }
-            if (parts.size > 1) {
-                val types = parts.map { parseType(it) }
-                return CodeTypeRef.intersection(*types.toTypedArray())
-            }
+        // Handle protocol composition Type1 & Type2 (top-level only)
+        val compositionParts = splitByTopLevelAmpersand(trimmed)
+        if (compositionParts.size > 1) {
+            val types = compositionParts.map { parseType(it) }
+            return CodeTypeRef.intersection(*types.toTypedArray())
         }
         
         // Handle opaque types: some Protocol
@@ -184,6 +181,21 @@ object SwiftTypeRefBuilder {
      * Split by comma at the top level (not inside brackets or generics)
      */
     private fun splitByTopLevelComma(text: String): List<String> {
+        return splitByTopLevelDelimiter(text, ',')
+    }
+    
+    /**
+     * Split by ampersand at the top level (not inside brackets or generics)
+     * Used for protocol composition types like "Foo<Bar & Baz> & Qux"
+     */
+    private fun splitByTopLevelAmpersand(text: String): List<String> {
+        return splitByTopLevelDelimiter(text, '&')
+    }
+    
+    /**
+     * Split by a delimiter at the top level (not inside brackets or generics)
+     */
+    private fun splitByTopLevelDelimiter(text: String, delimiter: Char): List<String> {
         val result = mutableListOf<String>()
         var depth = 0
         var start = 0
@@ -192,7 +204,7 @@ object SwiftTypeRefBuilder {
             when (text[i]) {
                 '[', '(', '<' -> depth++
                 ']', ')', '>' -> depth--
-                ',' -> {
+                delimiter -> {
                     if (depth == 0) {
                         result.add(text.substring(start, i).trim())
                         start = i + 1

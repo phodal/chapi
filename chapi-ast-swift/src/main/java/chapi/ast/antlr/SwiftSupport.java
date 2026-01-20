@@ -110,9 +110,7 @@ public abstract class SwiftSupport extends Parser
         operatorHead.set(0x3001, 0x3003 + 1);
 
         // operator-head → U+3008–U+3030
-        operatorHead.set(0x3008, 0x3020 + 1);
-
-        operatorHead.set(0x3030);
+        operatorHead.set(0x3008, 0x3030 + 1);
 
         // operator-character → operator-head­
         operatorCharacter = (BitSet) operatorHead.clone();
@@ -247,6 +245,7 @@ public abstract class SwiftSupport extends Parser
         if (stop == -1) return false;
 
         int start = tokens.index();
+        if (start == 0) return false; // Guard against index out of bounds
         Token currentToken = tokens.get(start);
         Token prevToken = tokens.get(start - 1); // includes hidden-channel tokens
         Token nextToken = tokens.get(stop + 1);
@@ -281,6 +280,7 @@ public abstract class SwiftSupport extends Parser
         if (stop == -1) return false;
 
         int start = tokens.index();
+        if (start == 0) return true; // At beginning, treat as prefix
         Token prevToken = tokens.get(start - 1); // includes hidden-channel tokens
         Token nextToken = tokens.get(stop + 1);
         boolean prevIsWS = isLeftOperatorWS(prevToken);
@@ -306,6 +306,7 @@ public abstract class SwiftSupport extends Parser
         if (stop == -1) return false;
 
         int start = tokens.index();
+        if (start == 0) return false; // At beginning, cannot be postfix
         Token prevToken = tokens.get(start - 1); // includes hidden-channel tokens
         Token nextToken = tokens.get(stop + 1);
         boolean prevIsWS = isLeftOperatorWS(prevToken);
