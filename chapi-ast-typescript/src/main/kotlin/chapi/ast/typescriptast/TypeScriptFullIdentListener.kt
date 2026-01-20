@@ -877,7 +877,7 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                 val targetExpr = ctx.singleExpression()
                 parseSingleExpression(targetExpr)
                 
-                // Create a CodeCall with IsOptionalChain = true
+                // Create a CodeCall with IsOptional = true
                 val callInfo = extractCallInfo(targetExpr)
                 val callee = targetExpr?.text?.substringAfterLast(".")?.substringBefore("(") ?: ""
                 
@@ -886,7 +886,7 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                     FunctionName = callee,
                     Callee = callee,
                     ReceiverExpr = callInfo.receiverExpr,
-                    IsOptionalChain = true
+                    IsOptional = true
                 )
             }
 
@@ -929,7 +929,8 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                 // New structured fields
                 ReceiverExpr = callInfo.receiverExpr,
                 Callee = callInfo.callee,
-                Chain = callInfo.chain
+                Chain = callInfo.chain,
+                IsOptional = callInfo.isOptionalChain
             )
             return
         }
@@ -1247,7 +1248,8 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
                         // New structured fields
                         Callee = callInfo.callee.ifBlank { funcName },
                         ReceiverExpr = callInfo.receiverExpr.ifBlank { nodeName },
-                        Chain = callInfo.chain
+                        Chain = callInfo.chain,
+                        IsOptional = callInfo.isOptionalChain
                     )
                 }
 
