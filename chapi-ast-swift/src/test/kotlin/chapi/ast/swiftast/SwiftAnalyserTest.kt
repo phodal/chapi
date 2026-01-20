@@ -394,6 +394,158 @@ class SwiftAnalyserTest {
     }
 }
 
+// ==================== Swift 6 Features Tests ====================
+
+class Swift6FeaturesTest {
+    
+    @Test
+    fun shouldParseTypedThrows() {
+        val code = """
+            enum NetworkError: Error {
+                case timeout
+                case notFound
+            }
+            
+            func fetchData() throws(NetworkError) -> Data {
+                throw .timeout
+            }
+            
+            func process() throws -> String {
+                return ""
+            }
+        """.trimIndent()
+        
+        val container = SwiftAnalyser().analysis(code, "typed_throws.swift")
+        
+        val topLevel = container.TopLevel
+        assertNotNull(topLevel)
+        
+        val fetchData = topLevel.Functions.find { it.Name == "fetchData" }
+        assertNotNull(fetchData)
+        assertTrue(fetchData.Modifiers.any { it.contains("throws(NetworkError)") })
+        
+        val process = topLevel.Functions.find { it.Name == "process" }
+        assertNotNull(process)
+        assertTrue(process.Modifiers.contains("throws"))
+    }
+    
+    @Test
+    fun shouldParseAsyncFunctions() {
+        val code = """
+            func fetchUser() async -> User {
+                return User()
+            }
+            
+            func fetchWithError() async throws -> Data {
+                return Data()
+            }
+        """.trimIndent()
+        
+        val container = SwiftAnalyser().analysis(code, "async.swift")
+        
+        val topLevel = container.TopLevel
+        assertNotNull(topLevel)
+        
+        val fetchUser = topLevel.Functions.find { it.Name == "fetchUser" }
+        assertNotNull(fetchUser)
+        assertTrue(fetchUser.Modifiers.contains("async"))
+        
+        val fetchWithError = topLevel.Functions.find { it.Name == "fetchWithError" }
+        assertNotNull(fetchWithError)
+        assertTrue(fetchWithError.Modifiers.contains("async"))
+        assertTrue(fetchWithError.Modifiers.contains("throws"))
+    }
+    
+    @Test
+    fun shouldParseActorDeclaration() {
+        val code = """
+            actor BankAccount {
+                var balance: Double = 0.0
+                
+                func deposit(amount: Double) {
+                    balance += amount
+                }
+            }
+            
+            distributed actor GamePlayer {
+                var score: Int = 0
+            }
+        """.trimIndent()
+        
+        val container = SwiftAnalyser().analysis(code, "actor.swift")
+        
+        val bankAccount = container.DataStructures.find { it.NodeName == "BankAccount" }
+        assertNotNull(bankAccount)
+        assertTrue(bankAccount.Functions.any { it.Name == "deposit" })
+        assertTrue(bankAccount.Fields.any { it.TypeKey == "balance" })
+        
+        val gamePlayer = container.DataStructures.find { it.NodeName == "GamePlayer" }
+        assertNotNull(gamePlayer)
+        assertTrue(gamePlayer.Annotations.any { it.Name == "distributed" })
+    }
+    
+    @Test
+    fun shouldParseOwnershipModifiers() {
+        val code = """
+            struct FileHandle: ~Copyable {
+                func read() -> Data { return Data() }
+            }
+            
+            func process(consuming handle: FileHandle) {
+                // handle is consumed
+            }
+            
+            func inspect(borrowing handle: FileHandle) {
+                // handle is borrowed
+            }
+        """.trimIndent()
+        
+        val container = SwiftAnalyser().analysis(code, "ownership.swift")
+        
+        val fileHandle = container.DataStructures.find { it.NodeName == "FileHandle" }
+        assertNotNull(fileHandle)
+        // Check for ~Copyable in inheritance
+        assertTrue(fileHandle.Implements.any { it.contains("Copyable") })
+        
+        val topLevel = container.TopLevel
+        assertNotNull(topLevel)
+        
+        val processFunc = topLevel.Functions.find { it.Name == "process" }
+        assertNotNull(processFunc)
+        val consumingParam = processFunc.Parameters.find { it.TypeValue == "handle" }
+        assertNotNull(consumingParam)
+        assertTrue(consumingParam.Modifiers.contains("consuming"))
+        
+        val inspectFunc = topLevel.Functions.find { it.Name == "inspect" }
+        assertNotNull(inspectFunc)
+        val borrowingParam = inspectFunc.Parameters.find { it.TypeValue == "handle" }
+        assertNotNull(borrowingParam)
+        assertTrue(borrowingParam.Modifiers.contains("borrowing"))
+    }
+    
+    @Test
+    fun shouldParseNonisolatedModifier() {
+        val code = """
+            actor DataStore {
+                nonisolated let id: String = "store"
+                
+                nonisolated func description() -> String {
+                    return id
+                }
+            }
+        """.trimIndent()
+        
+        val container = SwiftAnalyser().analysis(code, "nonisolated.swift")
+        
+        val dataStore = container.DataStructures.find { it.NodeName == "DataStore" }
+        assertNotNull(dataStore)
+        
+        val descFunc = dataStore.Functions.find { it.Name == "description" }
+        assertNotNull(descFunc)
+        assertTrue(descFunc.Modifiers.contains("nonisolated"))
+    }
+}
+
 class SwiftTypeRefBuilderTest {
     
     @Test

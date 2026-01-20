@@ -25,9 +25,9 @@ Chapi (pronounced /tʃɑpi/) can also be read as “XP” in Chinese if you pron
 | Feature        | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust | Swift |
 |----------------|------|--------|----|--------|-------|----|----|-------|-----|------|-------|
 | HTTP API decl  | ✅    | 🆕     | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | 🆕  | ✅    |       |
-| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  | ✅     | ✅   | ✅    | 🆕    |
-| Function calls | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  |       |     | ✅    |       |
-| Arch/package   | ✅    |        | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | ✅   | ✅    |       |
+| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  | ✅     | ✅   | ✅    | ✅     |
+| Function calls | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  |       |     | ✅    | ✅     |
+| Arch/package   | ✅    |        | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | ✅   | ✅    | ✅     |
 | Real-world     | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |       |
 
 ### IDL stages
@@ -59,6 +59,7 @@ Tested language versions:
 - Kotlin
 - Rust: v1.60.0
 - Python: 2, 3
+- Swift: 5, 6 (with typed throws, async/await, actors, ownership modifiers)
 
 Gradle modules (by tier):
 

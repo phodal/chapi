@@ -182,6 +182,47 @@ class SwiftFullIdentListener(private val filePath: String) : Swift5ParserBaseLis
         finishDataStruct()
     }
 
+    // ==================== Actor Declaration (Swift 5.5+) ====================
+
+    override fun enterActor_declaration(ctx: Swift5Parser.Actor_declarationContext) {
+        val name = ctx.actor_name()?.text ?: return
+        
+        // Extract attributes and modifiers
+        val annotations = buildAnnotationsFromAttributes(ctx.attributes())
+        val accessModifier = buildAccessLevelModifier(ctx.access_level_modifier())
+        val modifiers = mutableListOf<String>()
+        
+        if (accessModifier.isNotEmpty()) {
+            modifiers.add(accessModifier)
+        }
+        
+        // Check for distributed modifier
+        if (ctx.DISTRIBUTED() != null) {
+            modifiers.add("distributed")
+        }
+        
+        val modifierAnnotations = modifiers.map { CodeAnnotation(Name = it) }
+        
+        val actorStruct = CodeDataStruct(
+            NodeName = name,
+            Type = DataStructType.CLASS, // Actor is similar to class
+            FilePath = filePath,
+            Position = ctx.toPosition(),
+            Annotations = annotations + modifierAnnotations
+        )
+        
+        // Parse inheritance
+        ctx.type_inheritance_clause()?.let { inheritanceCtx ->
+            actorStruct.Implements = buildInheritanceList(inheritanceCtx)
+        }
+        
+        stack.addLast(actorStruct)
+    }
+    
+    override fun exitActor_declaration(ctx: Swift5Parser.Actor_declarationContext) {
+        finishDataStruct()
+    }
+
     // ==================== Enum Declaration ====================
 
     override fun enterEnum_declaration(ctx: Swift5Parser.Enum_declarationContext) {
@@ -332,7 +373,7 @@ class SwiftFullIdentListener(private val filePath: String) : Swift5ParserBaseLis
         // Extract attributes and modifiers from function_head
         val functionHead = ctx.function_head()
         val annotations = buildAnnotationsFromAttributes(functionHead?.attributes())
-        val modifiers = buildModifiersFromDeclarationModifiers(functionHead?.declaration_modifiers())
+        val modifiers = buildModifiersFromDeclarationModifiers(functionHead?.declaration_modifiers()).toMutableList()
 
         val function = CodeFunction(
             Name = name,
@@ -348,13 +389,23 @@ class SwiftFullIdentListener(private val filePath: String) : Swift5ParserBaseLis
             function.Parameters += buildParameter(paramCtx)
         }
         
-        // Check for throws/rethrows
-        ctx.function_signature()?.let { sig ->
-            if (sig.THROWS() != null) {
-                function.Modifiers = function.Modifiers + "throws"
-            }
-            if (sig.RETHROWS() != null) {
+        // Check for async (Swift 5.5+)
+        ctx.function_signature()?.async_clause()?.let {
+            function.Modifiers = function.Modifiers + "async"
+        }
+        
+        // Check for throws/rethrows with typed throws support (Swift 6)
+        ctx.function_signature()?.throw_clause()?.let { throwClause ->
+            if (throwClause.RETHROWS() != null) {
                 function.Modifiers = function.Modifiers + "rethrows"
+            } else if (throwClause.THROWS() != null) {
+                // Check for typed throws: throws(ErrorType)
+                val errorType = throwClause.type()?.text
+                if (errorType != null) {
+                    function.Modifiers = function.Modifiers + "throws($errorType)"
+                } else {
+                    function.Modifiers = function.Modifiers + "throws"
+                }
             }
         }
         
@@ -621,6 +672,17 @@ class SwiftFullIdentListener(private val filePath: String) : Swift5ParserBaseLis
         // Build annotations from parameter attributes
         val annotations = ctx.attributes()?.attribute()?.map { buildAnnotation(it) } ?: listOf()
         
+        // Check for ownership modifier (Swift 6: consuming, borrowing, inout)
+        val modifiers = mutableListOf<String>()
+        ctx.ownership_modifier()?.let { ownershipCtx ->
+            when {
+                ownershipCtx.CONSUMING() != null -> modifiers.add("consuming")
+                ownershipCtx.BORROWING() != null -> modifiers.add("borrowing")
+                ownershipCtx.INOUT() != null -> modifiers.add("inout")
+                else -> { /* no modifier */ }
+            }
+        }
+        
         return CodeProperty(
             TypeValue = if (externalName.isNotEmpty() && externalName != localName) {
                 "$externalName $localName"
@@ -630,12 +692,22 @@ class SwiftFullIdentListener(private val filePath: String) : Swift5ParserBaseLis
             TypeType = typeAnnotation,
             DefaultValue = defaultValue,
             Annotations = annotations,
+            Modifiers = modifiers,
             TypeRef = if (typeAnnotation.isNotEmpty()) SwiftTypeRefBuilder.build(typeAnnotation) else null
         )
     }
     
     private fun buildInheritanceList(ctx: Swift5Parser.Type_inheritance_clauseContext): List<String> {
-        return ctx.type_inheritance_list()?.type_identifier()?.mapNotNull { it.text } ?: listOf()
+        // Swift 6: support ~Copyable syntax in inheritance
+        return ctx.type_inheritance_list()?.type_inheritance_item()?.mapNotNull { item ->
+            val typeText = item.type_identifier()?.text ?: return@mapNotNull null
+            // Check if it's a noncopyable type (~Copyable)
+            if (item.TILDE() != null) {
+                "~$typeText"
+            } else {
+                typeText
+            }
+        } ?: listOf()
     }
     
     private fun addFieldToCurrentScope(field: CodeField) {
