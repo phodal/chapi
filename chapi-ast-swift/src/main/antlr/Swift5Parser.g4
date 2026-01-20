@@ -1,6 +1,8 @@
 // $antlr-format alignTrailingComments true, columnLimit 150, minEmptyLines 1, maxEmptyLinesToKeep 1, reflowComments false, useTab false
 // $antlr-format allowShortRulesOnASingleLine false, allowShortBlocksOnASingleLine true, alignSemicolons hanging, alignColons hanging
 
+// Swift 6 Parser (upgraded from Swift 5)
+// Supports: typed throws, noncopyable types, ownership modifiers, macros, trailing commas
 parser grammar Swift5Parser;
 
 // Insert here @header for C++ parser.
@@ -418,6 +420,7 @@ declaration
         | enum_declaration
         | struct_declaration
         | class_declaration
+        | actor_declaration        // Swift 5.5+
         | protocol_declaration
         | initializer_declaration
         | deinitializer_declaration
@@ -425,6 +428,7 @@ declaration
         | subscript_declaration
         | operator_declaration
         | precedence_group_declaration
+        | macro_declaration        // Swift 5.9+
     ) SEMI?
     ;
 
@@ -579,7 +583,18 @@ function_name
     ;
 
 function_signature
-    : parameter_clause (THROWS? | RETHROWS) function_result?
+    : parameter_clause async_clause? throw_clause? function_result?
+    ;
+
+// Swift 6: async clause
+async_clause
+    : ASYNC
+    ;
+
+// Swift 6: typed throws - throws(ErrorType)
+throw_clause
+    : THROWS (LPAREN type RPAREN)?
+    | RETHROWS
     ;
 
 function_result
@@ -599,10 +614,17 @@ parameter_list
     ;
 
 parameter
-    : attributes? external_parameter_name? local_parameter_name type_annotation (
+    : attributes? ownership_modifier? external_parameter_name? local_parameter_name type_annotation (
         default_argument_clause?
         | range_operator
     )
+    ;
+
+// Swift 6: ownership modifiers for parameters
+ownership_modifier
+    : CONSUMING
+    | BORROWING
+    | INOUT
     ;
 
 external_parameter_name
@@ -734,6 +756,28 @@ class_members
     ;
 
 class_member
+    : declaration
+    | compiler_control_statement
+    ;
+
+// Actor Declaration (Swift 5.5+)
+actor_declaration
+    : attributes? access_level_modifier? DISTRIBUTED? ACTOR actor_name generic_parameter_clause? type_inheritance_clause? generic_where_clause? actor_body
+    ;
+
+actor_name
+    : identifier
+    ;
+
+actor_body
+    : LCURLY actor_members RCURLY
+    ;
+
+actor_members
+    : actor_member*
+    ;
+
+actor_member
     : declaration
     | compiler_control_statement
     ;
@@ -926,6 +970,12 @@ declaration_modifier
     | WEAK
     | access_level_modifier
     | mutation_modifier
+    // Swift 6 new modifiers
+    | NONISOLATED
+    | ISOLATED
+    | CONSUMING
+    | BORROWING
+    | DISTRIBUTED
     ;
 
 declaration_modifiers
@@ -1478,7 +1528,12 @@ type_inheritance_clause
     ;
 
 type_inheritance_list
-    : type_identifier (COMMA type_identifier)*
+    : type_inheritance_item (COMMA type_inheritance_item)*
+    ;
+
+// Swift 6: support ~Copyable (noncopyable) in inheritance
+type_inheritance_item
+    : TILDE? type_identifier
     ;
 
 // Identifiers
@@ -1571,6 +1626,16 @@ identifier
         | OPERATOR
         | DO
         | CATCH
+        // Swift 6 keywords that can also be identifiers
+        | ASYNC
+        | AWAIT
+        | ACTOR
+        | NONISOLATED
+        | ISOLATED
+        | CONSUMING
+        | BORROWING
+        | SENDING
+        | MACRO
     )
     | Identifier
     | BACKTICK (keyword | Identifier | DOLLAR) BACKTICK
@@ -1818,4 +1883,41 @@ interpolated_string_literal
         Quoted_multi_line_text
         | Interpolation_multi_line (expression | tuple_element COMMA tuple_element_list) RPAREN
     )* Multi_line_string_close
+    ;
+
+// ==================== Swift 5.9+ Macro Declarations ====================
+
+// Macro Declaration
+macro_declaration
+    : attributes? access_level_modifier? MACRO macro_name generic_parameter_clause? macro_signature generic_where_clause? macro_definition?
+    ;
+
+macro_name
+    : identifier
+    ;
+
+macro_signature
+    : parameter_clause (arrow_operator type)?
+    ;
+
+macro_definition
+    : EQUAL macro_expansion_expression
+    ;
+
+macro_expansion_expression
+    : HASH_EXTERNAL_MACRO LPAREN macro_arguments RPAREN
+    | HASH identifier LPAREN macro_arguments? RPAREN
+    ;
+
+macro_arguments
+    : macro_argument (COMMA macro_argument)*
+    ;
+
+macro_argument
+    : (identifier COLON)? expression
+    ;
+
+// Freestanding macro expression (used in expressions)
+freestanding_macro_expression
+    : HASH identifier generic_argument_clause? (LPAREN macro_arguments? RPAREN)? trailing_closures?
     ;

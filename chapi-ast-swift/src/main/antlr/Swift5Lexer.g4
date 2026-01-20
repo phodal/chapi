@@ -2,6 +2,7 @@
 // $antlr-format allowShortRulesOnASingleLine true, allowShortBlocksOnASingleLine true, minEmptyLines 0, alignSemicolons ownLine
 // $antlr-format alignColons trailing, singleLineOverrulesHangingColon true, alignLexerCommands true, alignLabels true, alignTrailers true
 
+// Swift 6 Lexer (upgraded from Swift 5)
 lexer grammar Swift5Lexer;
 // Insert here @header for C++ lexer.
 
@@ -48,6 +49,8 @@ RETURN             : 'return';
 THROW              : 'throw';
 THROWS             : 'throws';
 RETHROWS           : 'rethrows';
+ASYNC              : 'async';
+AWAIT              : 'await';
 INDIRECT           : 'indirect';
 INIT               : 'init';
 DEINIT             : 'deinit';
@@ -87,6 +90,26 @@ UNSAFE             : 'unsafe';
 MUTATING           : 'mutating';
 NONMUTATING        : 'nonmutating';
 FILE_PRIVATE       : 'fileprivate';
+
+// Swift 6 new keywords
+CONSUMING          : 'consuming';
+BORROWING          : 'borrowing';
+NONISOLATED        : 'nonisolated';
+ISOLATED           : 'isolated';
+SENDING            : 'sending';
+PACKAGE            : 'package';
+DISCARD            : 'discard';
+COPY               : 'copy';
+CONSUME            : 'consume';
+
+// Macro-related (Swift 5.9+)
+MACRO              : 'macro';
+FREESTANDING       : 'freestanding';
+ATTACHED           : 'attached';
+
+// Distributed actor (Swift 5.5+)
+DISTRIBUTED        : 'distributed';
+ACTOR              : 'actor';
 IS                 : 'is';
 TRY                : 'try';
 SUPER              : 'super';
@@ -148,6 +171,10 @@ HASH_KEYPATH       : '#keyPath';
 HASH_COLOR_LITERAL : '#colorLiteral';
 HASH_FILE_LITERAL  : '#fileLiteral';
 HASH_IMAGE_LITERAL : '#imageLiteral';
+
+// Swift 6 macro-related hash keywords
+HASH_EXTERNAL_MACRO: '#externalMacro';
+
 GETTER             : 'getter';
 SETTER             : 'setter';
 
