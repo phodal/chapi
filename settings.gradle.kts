@@ -23,6 +23,7 @@ include(
     ":chapi-ast-c",
     ":chapi-ast-cpp",
     ":chapi-ast-swift",
+    ":chapi-ast-dart",
 
     // others
     ":chapi-parser-toml",
