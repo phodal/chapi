@@ -24,10 +24,10 @@ Chapi (pronounced /tʃɑpi/) can also be read as “XP” in Chinese if you pron
 
 | Feature        | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
 |----------------|------|--------|----|--------|-------|----|----|-------|-----|------|
-| HTTP API decl  | ✅    | 🆕     | 🆕 | ✅      | ✅     | 🆕 | 🆕 |       | ✅   | 🆕   |
-| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | 🆕 | ✅     | 🆕  | ✅    |
-| Function calls | ✅    | ✅      | 🆕 | ✅      | ✅     | 🆕 |    |       |     | ✅    |
-| Arch/package   | ✅    |        |    | ✅      | ✅     | 🆕 |    | ✅     | ✅   | 🆕   |
+| HTTP API decl  | ✅    | 🆕     | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | 🆕  | ✅    |
+| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  | ✅     | ✅   | ✅    |
+| Function calls | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  |       |     | ✅    |
+| Arch/package   | ✅    |        | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | ✅   | ✅    |
 | Real-world     | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |
 
 ### IDL stages
@@ -69,6 +69,7 @@ Gradle modules (by tier):
 
 // tier 1 model language
 ":chapi-ast-protobuf",
+":chapi-ast-thrift",
 
 // tier 2 languages
 ":chapi-ast-kotlin",
@@ -135,8 +136,8 @@ Add dependencies:
 
 ```groovy
 dependencies {
-    implementation "com.phodal.chapi:chapi-ast-java:2.3.6"
-    implementation "com.phodal.chapi:chapi-domain:2.3.6"
+    implementation "com.phodal.chapi:chapi-ast-java:2.5.2"
+    implementation "com.phodal.chapi:chapi-domain:2.5.2"
 }
 ```
 
