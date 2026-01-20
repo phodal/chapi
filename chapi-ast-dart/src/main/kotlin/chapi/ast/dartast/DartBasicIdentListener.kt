@@ -78,12 +78,46 @@ open class DartBasicIdentListener(private val filePath: String) : DartAstListene
         hasEnterClass = true
 
         val typeId = ctx?.typeIdentifier() ?: return
+        
+        // Determine class type based on modifiers (Dart 3 support)
+        val modifiers = ctx.classModifier()
+        val isAbstract = modifiers?.any { it.ABSTRACT_() != null } == true
+        val isSealed = modifiers?.any { it.SEALED_() != null } == true
+        val isBase = modifiers?.any { it.BASE_() != null } == true
+        val isInterface = modifiers?.any { it.INTERFACE_() != null } == true
+        val isFinal = modifiers?.any { it.FINAL_() != null } == true
+        val isMixinClass = modifiers?.any { it.MIXIN_() != null } == true
+
+        val classType = when {
+            isSealed -> DataStructType.CLASS  // sealed classes are still classes
+            isAbstract -> DataStructType.ABSTRACT_CLASS
+            isInterface -> DataStructType.INTERFACE
+            isMixinClass -> DataStructType.TRAIT  // mixin class is similar to trait
+            else -> DataStructType.CLASS
+        }
+
         currentNode = CodeDataStruct(
             NodeName = getTypeIdentifierText(typeId),
-            Type = if (ctx.ABSTRACT_() != null) DataStructType.ABSTRACT_CLASS else DataStructType.CLASS,
+            Type = classType,
             Package = codeContainer.PackageName,
             FilePath = filePath
         )
+        
+        // Store class modifiers as annotations for additional context
+        val modifierList = mutableListOf<String>()
+        if (isSealed) modifierList.add("sealed")
+        if (isBase) modifierList.add("base")
+        if (isInterface) modifierList.add("interface")
+        if (isFinal) modifierList.add("final")
+        if (isAbstract) modifierList.add("abstract")
+        if (isMixinClass) modifierList.add("mixin")
+        
+        if (modifierList.isNotEmpty()) {
+            currentNode.Annotations = modifierList.map { 
+                CodeAnnotation(Name = it) 
+            }
+        }
+        
         currentNode.Position = buildPosition(ctx)
 
         // Handle extends
@@ -116,12 +150,24 @@ open class DartBasicIdentListener(private val filePath: String) : DartAstListene
         hasEnterClass = true
 
         val typeId = ctx?.typeIdentifier() ?: return
+        
+        // Check for Dart 3 mixin modifiers (base, sealed)
+        val isBase = ctx.BASE_() != null
+        val isSealed = ctx.SEALED_() != null
+        
         currentNode = CodeDataStruct(
             NodeName = getTypeIdentifierText(typeId),
             Type = DataStructType.TRAIT, // Mixin is similar to trait
             Package = codeContainer.PackageName,
             FilePath = filePath
         )
+        
+        // Store mixin modifiers
+        val modifierList = mutableListOf<String>("mixin")
+        if (isBase) modifierList.add("base")
+        if (isSealed) modifierList.add("sealed")
+        currentNode.Annotations = modifierList.map { CodeAnnotation(Name = it) }
+        
         currentNode.Position = buildPosition(ctx)
 
         // Handle 'on' constraints (superclass constraints)
