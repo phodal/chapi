@@ -454,11 +454,10 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
      */
     private fun codeCallFromExprListWithPath(child: ParseTree, arguments: GoParser.ArgumentsContext, functionName: String, targetPath: String): List<CodeCall> {
         val calls = mutableListOf<CodeCall>()
-
-        val currentCall = CodeCall(NodeName = targetPath).apply {
-            Parameters = parseArguments(arguments)
-            FunctionName = functionName
-        }
+        
+        // Parse receiver expression and resolve type
+        var receiverExpr = targetPath
+        var resolvedNodeName = targetPath
 
         // Resolve local variables and receivers in the target path
         if (targetPath.isNotEmpty()) {
@@ -475,17 +474,22 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             if (resolvedFirst != null) {
                 // Replace first part with its resolved type
                 val remainingParts = parts.drop(1)
-                val resolvedPath = if (remainingParts.isNotEmpty()) {
+                resolvedNodeName = if (remainingParts.isNotEmpty()) {
                     "$resolvedFirst.${remainingParts.joinToString(".")}"
                 } else {
                     resolvedFirst
                 }
-                currentCall.NodeName = resolvedPath
-                currentCall.Package = wrapTarget(resolvedPath)
-            } else {
-                currentCall.Package = wrapTarget(targetPath)
             }
         }
+
+        val currentCall = CodeCall(
+            NodeName = resolvedNodeName,
+            FunctionName = functionName,
+            Parameters = parseArguments(arguments),
+            Package = wrapTarget(resolvedNodeName),
+            // New structured fields (Issue #41)
+            ReceiverExpr = receiverExpr
+        )
 
         calls.add(currentCall)
         return calls
@@ -776,7 +780,14 @@ class GoFullIdentListener(var fileName: String) : GoAstListener() {
             codeContainer.DataStructures += entry.value
         }
 
-        if (defaultNode.Functions.isNotEmpty()) {
+        // New: populate TopLevel structure (Issue #41 - P0 adaptation)
+        if (defaultNode.Functions.isNotEmpty() || defaultNode.Fields.isNotEmpty()) {
+            codeContainer.TopLevel = TopLevelScope(
+                Functions = defaultNode.Functions,
+                Fields = defaultNode.Fields
+            )
+            
+            // Legacy: also maintain default node for backward compatibility
             codeContainer.DataStructures += defaultNode
         }
 
