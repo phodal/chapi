@@ -413,4 +413,286 @@ internal class DartAnalyserTest {
         assertEquals(DataStructType.TRAIT, loggerMixin.Type)
         assertTrue(loggerMixin.Annotations.any { it.Name == "base" })
     }
+
+    // Additional coverage tests
+    @Test
+    fun shouldParseExports() {
+        val code = """
+            library mylib;
+            
+            export 'src/models.dart';
+            export 'src/utils.dart' show Helper, Utils;
+            
+            void main() {}
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "exports.dart")
+
+        assertNotNull(codeContainer.TopLevel)
+        val exports = codeContainer.TopLevel?.Exports ?: emptyList()
+        assertEquals(2, exports.size)
+        assertEquals("src/models.dart", exports[0].Name)
+        assertEquals("src/utils.dart", exports[1].Name)
+    }
+
+    @Test
+    fun shouldParseClassFields() {
+        val code = """
+            class User {
+              static const int maxAge = 120;
+              static final String defaultName = 'Unknown';
+              late String name;
+              final int age;
+              String? nickname;
+              
+              User(this.name, this.age);
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "fields.dart")
+
+        val userClass = codeContainer.DataStructures[0]
+        assertEquals("User", userClass.NodeName)
+        assertTrue(userClass.Fields.isNotEmpty())
+    }
+
+    @Test
+    fun shouldParseMethodParameters() {
+        val code = """
+            class Calculator {
+              int add(int a, int b) => a + b;
+              
+              void greet(String name, {int? age, bool isVip = false}) {
+                print('Hello name');
+              }
+              
+              void log([String message = 'default']) {
+                print(message);
+              }
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "params.dart")
+
+        val calcClass = codeContainer.DataStructures[0]
+        assertEquals("Calculator", calcClass.NodeName)
+        assertEquals(3, calcClass.Functions.size)
+        
+        val addMethod = calcClass.Functions.find { it.Name == "add" }
+        assertNotNull(addMethod)
+        assertEquals(2, addMethod!!.Parameters.size)
+    }
+
+    @Test
+    fun shouldParseTypedef() {
+        val code = """
+            typedef IntCallback = void Function(int value);
+            typedef JsonMap = Map<String, dynamic>;
+            typedef Compare<T> = int Function(T a, T b);
+            
+            void main() {}
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "typedef.dart")
+
+        // Typedefs are parsed as data structures
+        assertTrue(codeContainer.DataStructures.size >= 3)
+    }
+
+    @Test
+    fun shouldParseOperatorOverloading() {
+        val code = """
+            class Vector {
+              final int x, y;
+              
+              Vector(this.x, this.y);
+              
+              Vector operator +(Vector other) {
+                return Vector(x + other.x, y + other.y);
+              }
+              
+              bool operator ==(Object other) {
+                if (other is Vector) {
+                  return x == other.x && y == other.y;
+                }
+                return false;
+              }
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "operator.dart")
+
+        val vectorClass = codeContainer.DataStructures[0]
+        assertEquals("Vector", vectorClass.NodeName)
+        
+        val operators = vectorClass.Functions.filter { it.Name.startsWith("operator") }
+        assertTrue(operators.isNotEmpty())
+    }
+
+    @Test
+    fun shouldParseMixinWithConstraints() {
+        val code = """
+            mixin Musical on Performer {
+              void playInstrument() {}
+            }
+            
+            mixin Theatrical on Performer implements Actor {
+              void act() {}
+            }
+            
+            class Performer {}
+            abstract class Actor {}
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "mixin_constraints.dart")
+
+        val musicalMixin = codeContainer.DataStructures.find { it.NodeName == "Musical" }
+        assertNotNull(musicalMixin)
+        assertEquals(DataStructType.TRAIT, musicalMixin!!.Type)
+        assertTrue(musicalMixin.MultipleExtend.isNotEmpty())
+    }
+
+    @Test
+    fun shouldParseClassWithMixins() {
+        val code = """
+            mixin A {}
+            mixin B {}
+            class Base {}
+            
+            class Child extends Base with A, B {
+              void method() {}
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "with_mixins.dart")
+
+        val childClass = codeContainer.DataStructures.find { it.NodeName == "Child" }
+        assertNotNull(childClass)
+        assertEquals("Base", childClass!!.Extend)
+        assertTrue(childClass.MultipleExtend.isNotEmpty())
+    }
+
+    @Test
+    fun shouldParseImportHide() {
+        val code = """
+            import 'dart:math' hide Random;
+            
+            void main() {}
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "import_hide.dart")
+
+        assertEquals(1, codeContainer.Imports.size)
+        assertEquals("dart:math", codeContainer.Imports[0].Source)
+    }
+
+    @Test
+    fun shouldParseStaticMethods() {
+        val code = """
+            class Utils {
+              static void log(String message) {
+                print(message);
+              }
+              
+              static int parse(String value) => int.parse(value);
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "static.dart")
+
+        val utilsClass = codeContainer.DataStructures[0]
+        assertEquals(2, utilsClass.Functions.size)
+        assertTrue(utilsClass.Functions.all { it.Modifiers.contains("static") })
+    }
+
+    @Test
+    fun shouldParseAsyncMethods() {
+        val code = """
+            class ApiService {
+              Future<String> fetchData() async {
+                return 'data';
+              }
+              
+              Stream<int> countStream() async* {
+                for (var i = 0; i < 10; i++) {
+                  yield i;
+                }
+              }
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "async.dart")
+
+        val serviceClass = codeContainer.DataStructures[0]
+        assertEquals(2, serviceClass.Functions.size)
+    }
+
+    @Test
+    fun shouldParseGenericClass() {
+        val code = """
+            class Box<T> {
+              T? value;
+              
+              Box([this.value]);
+              
+              void set(T newValue) {
+                value = newValue;
+              }
+              
+              T? get() => value;
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "generic.dart")
+
+        val boxClass = codeContainer.DataStructures[0]
+        assertEquals("Box", boxClass.NodeName)
+        assertTrue(boxClass.Functions.isNotEmpty())
+    }
+
+    @Test
+    fun shouldParseAnonymousExtension() {
+        val code = """
+            extension on int {
+              bool get isEven => this % 2 == 0;
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "anon_ext.dart")
+
+        assertEquals(1, codeContainer.DataStructures.size)
+        val extension = codeContainer.DataStructures[0]
+        assertEquals("anonymous", extension.NodeName)
+        assertEquals("int", extension.Extend)
+    }
+
+    @Test
+    fun shouldParseTopLevelGetter() {
+        val code = """
+            String get appVersion => '1.0.0';
+            
+            set appConfig(String value) {
+              print('Setting config');
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "top_getter.dart")
+
+        assertNotNull(codeContainer.TopLevel)
+        val functions = codeContainer.TopLevel?.Functions ?: emptyList()
+        assertTrue(functions.any { it.Name.startsWith("get ") })
+        assertTrue(functions.any { it.Name.startsWith("set ") })
+    }
+
+    @Test
+    fun shouldParseComplexFileWithAssert() {
+        val code = this::class.java.getResource("/grammar/class_example.dart")?.readText()
+        assertNotNull(code, "Resource /grammar/class_example.dart not found")
+
+        val codeContainer = DartAnalyser().analysis(code!!, "class_example.dart")
+
+        assertEquals("example", codeContainer.PackageName)
+        assertTrue(codeContainer.Imports.isNotEmpty())
+        assertTrue(codeContainer.DataStructures.isNotEmpty())
+    }
 }
