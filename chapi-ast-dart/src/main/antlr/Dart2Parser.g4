@@ -163,11 +163,21 @@ catchPart
     : CATCH_ OP identifier (C identifier)? CP
     ;
 
+// Dart 3 class modifiers: sealed, base, interface, final, mixin
+classModifier
+    : ABSTRACT_
+    | SEALED_
+    | BASE_
+    | INTERFACE_
+    | FINAL_
+    | MIXIN_
+    ;
+
 classDeclaration
-    : ABSTRACT_? CLASS_ typeIdentifier typeParameters? superclass? interfaces? OBC (
+    : classModifier* CLASS_ typeIdentifier typeParameters? superclass? interfaces? OBC (
         metadata classMemberDeclaration
     )* CBC
-    | ABSTRACT_? CLASS_ mixinApplicationClass
+    | classModifier* CLASS_ mixinApplicationClass
     ;
 
 classMemberDeclaration
@@ -642,8 +652,9 @@ mixinApplicationClass
     : identifier typeParameters? EQ mixinApplication SC
     ;
 
+// Dart 3: base mixin, sealed mixin
 mixinDeclaration
-    : MIXIN_ typeIdentifier typeParameters? (ON_ typeNotVoidList)? interfaces? OBC (
+    : (BASE_ | SEALED_)? MIXIN_ typeIdentifier typeParameters? (ON_ typeNotVoidList)? interfaces? OBC (
         metadata classMemberDeclaration
     )* CBC
     ;

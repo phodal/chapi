@@ -140,6 +140,10 @@ PART_       : 'part';
 REQUIRED_   : 'required';
 RETHROW_    : 'rethrow';
 RETURN_     : 'return';
+// Dart 3 class modifiers
+SEALED_     : 'sealed';
+BASE_       : 'base';
+WHEN_       : 'when';
 SET_        : 'set';
 SHOW_       : 'show';
 STATIC_     : 'static';

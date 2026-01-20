@@ -307,4 +307,110 @@ internal class DartAnalyserTest {
         assertEquals(1, codeContainer.DataStructures.size)
         assertEquals("Simple", codeContainer.DataStructures[0].NodeName)
     }
+
+    // Dart 3 tests
+    @Test
+    fun shouldParseSealedClass() {
+        val code = """
+            sealed class Shape {}
+            
+            class Circle extends Shape {
+              double radius;
+            }
+            
+            class Square extends Shape {
+              double side;
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "sealed.dart")
+
+        assertEquals(3, codeContainer.DataStructures.size)
+        val shapeClass = codeContainer.DataStructures[0]
+        assertEquals("Shape", shapeClass.NodeName)
+        assertTrue(shapeClass.Annotations.any { it.Name == "sealed" })
+    }
+
+    @Test
+    fun shouldParseBaseClass() {
+        val code = """
+            base class Vehicle {
+              void move() {}
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "base.dart")
+
+        assertEquals(1, codeContainer.DataStructures.size)
+        val vehicleClass = codeContainer.DataStructures[0]
+        assertEquals("Vehicle", vehicleClass.NodeName)
+        assertTrue(vehicleClass.Annotations.any { it.Name == "base" })
+    }
+
+    @Test
+    fun shouldParseInterfaceClass() {
+        val code = """
+            interface class Flyable {
+              void fly();
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "interface.dart")
+
+        assertEquals(1, codeContainer.DataStructures.size)
+        val flyableClass = codeContainer.DataStructures[0]
+        assertEquals("Flyable", flyableClass.NodeName)
+        assertEquals(DataStructType.INTERFACE, flyableClass.Type)
+    }
+
+    @Test
+    fun shouldParseFinalClass() {
+        val code = """
+            final class Config {
+              final String name;
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "final.dart")
+
+        assertEquals(1, codeContainer.DataStructures.size)
+        val configClass = codeContainer.DataStructures[0]
+        assertEquals("Config", configClass.NodeName)
+        assertTrue(configClass.Annotations.any { it.Name == "final" })
+    }
+
+    @Test
+    fun shouldParseMixinClass() {
+        val code = """
+            mixin class Both {
+              void doSomething() {}
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "mixinclass.dart")
+
+        assertEquals(1, codeContainer.DataStructures.size)
+        val bothClass = codeContainer.DataStructures[0]
+        assertEquals("Both", bothClass.NodeName)
+        assertEquals(DataStructType.TRAIT, bothClass.Type)
+    }
+
+    @Test
+    fun shouldParseBaseMixin() {
+        val code = """
+            base mixin Logger {
+              void log(String message) {
+                print(message);
+              }
+            }
+        """.trimIndent()
+
+        val codeContainer = DartAnalyser().analysis(code, "basemixin.dart")
+
+        assertEquals(1, codeContainer.DataStructures.size)
+        val loggerMixin = codeContainer.DataStructures[0]
+        assertEquals("Logger", loggerMixin.NodeName)
+        assertEquals(DataStructType.TRAIT, loggerMixin.Type)
+        assertTrue(loggerMixin.Annotations.any { it.Name == "base" })
+    }
 }
