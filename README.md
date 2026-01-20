@@ -22,13 +22,13 @@ Chapi (pronounced /tʃɑpi/) can also be read as “XP” in Chinese if you pron
 
 ### Language stages
 
-| Feature        | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust |
-|----------------|------|--------|----|--------|-------|----|----|-------|-----|------|
-| HTTP API decl  | ✅    | 🆕     | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | 🆕  | ✅    |
-| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  | ✅     | ✅   | ✅    |
-| Function calls | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  |       |     | ✅    |
-| Arch/package   | ✅    |        | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | ✅   | ✅    |
-| Real-world     | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |
+| Feature        | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust | Swift |
+|----------------|------|--------|----|--------|-------|----|----|-------|-----|------|-------|
+| HTTP API decl  | ✅    | 🆕     | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | 🆕  | ✅    |       |
+| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  | ✅     | ✅   | ✅    | 🆕    |
+| Function calls | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  |       |     | ✅    |       |
+| Arch/package   | ✅    |        | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | ✅   | ✅    |       |
+| Real-world     | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |       |
 
 ### IDL stages
 
@@ -82,6 +82,7 @@ Gradle modules (by tier):
 ":chapi-ast-csharp",
 ":chapi-ast-c",
 ":chapi-ast-cpp",
+":chapi-ast-swift",
 
 // others
 ":chapi-parser-toml",

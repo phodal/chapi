@@ -22,6 +22,7 @@ include(
     ":chapi-ast-csharp",
     ":chapi-ast-c",
     ":chapi-ast-cpp",
+    ":chapi-ast-swift",
 
     // others
     ":chapi-parser-toml",
