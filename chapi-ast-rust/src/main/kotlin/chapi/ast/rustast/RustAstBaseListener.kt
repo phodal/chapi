@@ -58,6 +58,14 @@ open class RustAstBaseListener(private val fileName: String) : RustParserBaseLis
         val allStruct = structMap.values
         DataStructures = (buildDedicatedStructs() + allStruct)
         Imports = imports
+        
+        // New: populate TopLevel structure (Issue #41 - P0 adaptation)
+        if (individualFunctions.isNotEmpty() || individualFields.isNotEmpty()) {
+            TopLevel = TopLevelScope(
+                Functions = individualFunctions,
+                Fields = individualFields
+            )
+        }
     }
 
     override fun enterModule(ctx: RustParser.ModuleContext?) {

@@ -902,15 +902,114 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
 
         // For chained calls like axios(...).then(...).catch(...)
         if (callee is TypeScriptParser.MemberDotExpressionContext) {
-            val rawFn = buildCallChain(callee).ifBlank { callee.text }
+            val chainInfo = buildStructuredCallChain(callee)
+            val rawFn = chainInfo.legacyName.ifBlank { callee.text }
             val fn = normalizeMemberCallName(rawFn)
-            currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", fn, args)
+            
+            // Build structured CodeCall with new fields
+            currentFunc.FunctionCalls += CodeCall(
+                Type = CallType.FUNCTION,
+                FunctionName = fn,
+                Parameters = args,
+                // New structured fields (Issue #41)
+                ReceiverExpr = chainInfo.receiverExpr,
+                Chain = chainInfo.chain,
+                ChainArguments = chainInfo.chainArguments,
+                IsOptional = chainInfo.isOptional
+            )
             return
         }
 
         val calleeText = callee.text
         currentExprIdent = if (varName.isNotBlank()) varName else calleeText
         currentFunc.FunctionCalls += CodeCall("", CallType.FUNCTION, "", currentExprIdent, args)
+    }
+
+    /**
+     * Data class holding structured chain call information.
+     */
+    private data class ChainCallInfo(
+        val receiverExpr: String = "",
+        val firstMethod: String = "",
+        val chain: List<String> = listOf(),
+        val chainArguments: List<List<CodeProperty>> = listOf(),
+        val isOptional: Boolean = false,
+        val legacyName: String = "" // For backward compatibility
+    )
+
+    /**
+     * Builds structured chain call info from MemberDotExpression.
+     * Returns ChainCallInfo with receiver, chain methods, and their arguments.
+     */
+    private fun buildStructuredCallChain(expr: TypeScriptParser.MemberDotExpressionContext): ChainCallInfo {
+        val chainMethods = mutableListOf<String>()
+        val chainArgs = mutableListOf<List<CodeProperty>>()
+        var receiver = ""
+        var isOptional = false
+        
+        // Walk down the chain to collect all method names and arguments
+        fun walkChain(e: TypeScriptParser.SingleExpressionContext?) {
+            when (e) {
+                is TypeScriptParser.MemberDotExpressionContext -> {
+                    // Add current method name to the front
+                    chainMethods.add(0, e.identifierName().text)
+                    
+                    // Check for optional chaining (?.method)
+                    if (e.QuestionMark() != null) {
+                        isOptional = true
+                    }
+                    
+                    // Continue walking down
+                    walkChain(e.singleExpression())
+                }
+                is TypeScriptParser.ArgumentsExpressionContext -> {
+                    // Collect arguments for this call
+                    val args = buildArguments(e.arguments())
+                    chainArgs.add(0, args)
+                    walkChain(e.singleExpression())
+                }
+                is TypeScriptParser.GenericCallExpressionContext -> {
+                    receiver = e.identifierName().text
+                }
+                is IdentifierExpressionContext -> {
+                    receiver = e.identifierName().text
+                }
+                is TypeScriptParser.OptionalCallExpressionContext -> {
+                    isOptional = true
+                    walkChain(e.singleExpression())
+                }
+                else -> {
+                    // Try to extract identifier from raw text
+                    val raw = e?.text ?: ""
+                    val match = Regex("^[A-Za-z_$][A-Za-z0-9_$]*").find(raw)?.value
+                    if (!match.isNullOrBlank()) {
+                        receiver = match
+                    }
+                }
+            }
+        }
+        
+        walkChain(expr)
+        
+        // First method goes to FunctionName, rest go to Chain
+        val firstMethod = chainMethods.firstOrNull() ?: ""
+        val restChain = if (chainMethods.size > 1) chainMethods.drop(1) else listOf()
+        
+        // Build legacy name for backward compatibility
+        val legacyName = if (receiver.isNotBlank()) {
+            "$receiver->${chainMethods.joinToString("->")}"
+        } else {
+            chainMethods.joinToString("->")
+        }
+        
+        return ChainCallInfo(
+            receiverExpr = receiver,
+            firstMethod = firstMethod,
+            chain = restChain,
+            chainArguments = if (chainArgs.size > 1) chainArgs.drop(1) else listOf(),
+            isOptional = isOptional,
+            legacyName = legacyName
+        )
     }
 
     private fun normalizeMemberCallName(name: String): String {
@@ -1128,11 +1227,28 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         for (singleExprCtx in ctx.expressionSequence().singleExpression()) {
             when (singleExprCtx) {
                 is TypeScriptParser.ArgumentsExpressionContext -> {
+                    val nodeName = wrapTargetType(singleExprCtx)
+                    val funcName = buildFunctionName(singleExprCtx)
+                    
+                    // Check if this is a chained call (contains ->)
+                    val callee = singleExprCtx.singleExpression()
+                    val (receiverExpr, chain, chainArgs, isOptional) = if (callee is TypeScriptParser.MemberDotExpressionContext) {
+                        val info = buildStructuredCallChain(callee)
+                        Quadruple(info.receiverExpr, info.chain, info.chainArguments, info.isOptional)
+                    } else {
+                        Quadruple(nodeName, listOf<String>(), listOf<List<CodeProperty>>(), false)
+                    }
+                    
                     currentFunc.FunctionCalls += CodeCall(
                         Parameters = processArgumentList(singleExprCtx.arguments()?.argumentList()),
-                        FunctionName = buildFunctionName(singleExprCtx),
-                        NodeName = wrapTargetType(singleExprCtx),
-                        Position = buildPosition(ctx)
+                        FunctionName = funcName,
+                        NodeName = nodeName,
+                        Position = buildPosition(ctx),
+                        // New structured fields (Issue #41)
+                        ReceiverExpr = receiverExpr,
+                        Chain = chain,
+                        ChainArguments = chainArgs,
+                        IsOptional = isOptional
                     )
                 }
 
@@ -1156,6 +1272,9 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
 
         }
     }
+    
+    /** Simple quadruple data class for destructuring. */
+    private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
 
     private fun buildFunctionName(argsCtx: TypeScriptParser.ArgumentsExpressionContext): String {
         val name = functionNameFromArguments(argsCtx)
@@ -1404,16 +1523,21 @@ class TypeScriptFullIdentListener(val node: TSIdentify) : TypeScriptAstListener(
         }
 
         // for: `export const baseURL = '/api'`
-        val fieldOnly = defaultNode.Fields.isNotEmpty()
+        val hasFields = defaultNode.Fields.isNotEmpty()
         // for export default function
-        val functionOnly = defaultNode.Functions.isNotEmpty()
+        val hasFunctions = defaultNode.Functions.isNotEmpty()
+        // for exports
+        val hasExports = defaultNode.Exports.isNotEmpty()
 
-        if (functionOnly) {
-            defaultNode.NodeName = "default"
-            defaultNode.FilePath = codeContainer.FullName
-            defaultNode.Package = codeContainer.PackageName
-            codeContainer.DataStructures += defaultNode
-        } else if (fieldOnly) {
+        // New: populate TopLevel structure (Issue #41 - P0 adaptation)
+        if (hasFunctions || hasFields || hasExports) {
+            codeContainer.TopLevel = TopLevelScope(
+                Functions = defaultNode.Functions,
+                Fields = defaultNode.Fields,
+                Exports = defaultNode.Exports
+            )
+            
+            // Legacy: also maintain "default" node for backward compatibility
             defaultNode.NodeName = "default"
             defaultNode.FilePath = codeContainer.FullName
             defaultNode.Package = codeContainer.PackageName

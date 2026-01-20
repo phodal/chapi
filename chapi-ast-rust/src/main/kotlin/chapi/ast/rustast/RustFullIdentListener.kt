@@ -49,7 +49,9 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
             FunctionName = pureFuncName,
             OriginNodeName = nodeName,
             Parameters = buildParameters(ctx?.callParams()),
-            Position = buildPosition(ctx ?: return)
+            Position = buildPosition(ctx ?: return),
+            // New structured fields (Issue #41)
+            ReceiverExpr = nodeName
         )
     }
 
@@ -102,7 +104,9 @@ class RustFullIdentListener(fileName: String) : RustAstBaseListener(fileName) {
             OriginNodeName = instanceVar.ifEmpty { nodeName },
             FunctionName = functionName,
             Parameters = buildParameters(ctx?.callParams()),
-            Position = buildPosition(ctx ?: return)
+            Position = buildPosition(ctx ?: return),
+            // New structured fields (Issue #41)
+            ReceiverExpr = instanceVar.ifEmpty { nodeName }
         )
     }
 
