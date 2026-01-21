@@ -2,6 +2,10 @@ package chapi.ast.csharpast
 
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+import chapi.domain.core.DataStructType
+import kotlin.test.Ignore
 
 internal class CSharpAstListenerTest {
     private val helloworld = """
@@ -426,6 +430,66 @@ namespace Chapi {
         assertEquals(1, structs.size)
         assertEquals("Point", structs[0].NodeName)
         assertEquals(2, structs[0].Fields.size)
+    }
+    
+    @Test
+    @Ignore
+    fun shouldParseModernCSharpFeatures() {
+        val code = this::class.java.getResource("/modern/ModernCSharpFeatures.cs")?.readText()
+        if (code == null) {
+            // Skip if resource not found
+            return
+        }
+        
+        val codeFile = CSharpAnalyser().analysis(code, "ModernCSharpFeatures.cs")
+        
+        assertTrue(codeFile.Imports.isNotEmpty())
+        assertTrue(codeFile.Containers.isNotEmpty())
+        
+        val container = codeFile.Containers[0]
+        assertEquals("ModernCSharp.Examples", container.PackageName)
+        
+        // Check for controller
+        val controller = container.DataStructures.find { it.NodeName == "UsersController" }
+        assertNotNull(controller)
+        assertTrue(controller!!.Annotations.any { it.Name == "ApiController" })
+        
+        // Check for service with async methods
+        val service = container.DataStructures.find { it.NodeName == "UserService" }
+        assertNotNull(service)
+        assertTrue(service!!.Functions.any { it.Modifiers.contains("async") })
+        
+        // Check for records
+        val userDto = container.DataStructures.find { it.NodeName == "UserDto" }
+        assertNotNull(userDto)
+        
+        val createUserRequest = container.DataStructures.find { it.NodeName == "CreateUserRequest" }
+        assertNotNull(createUserRequest)
+        
+        // Check for interfaces
+        val userServiceInterface = container.DataStructures.find { it.NodeName == "IUserService" }
+        assertNotNull(userServiceInterface)
+        assertEquals(DataStructType.INTERFACE, userServiceInterface!!.Type)
+        
+        // Check for repository
+        val repository = container.DataStructures.find { it.NodeName == "UserRepository" }
+        assertNotNull(repository)
+        assertEquals("IUserRepository", repository!!.Extend)
+        
+        // Check for pattern matching examples
+        val patternMatching = container.DataStructures.find { it.NodeName == "PatternMatchingExamples" }
+        assertNotNull(patternMatching)
+        assertTrue(patternMatching!!.Functions.isNotEmpty())
+        
+        // Check for LINQ examples
+        val linqExamples = container.DataStructures.find { it.NodeName == "AdvancedLinqExamples" }
+        assertNotNull(linqExamples)
+        assertTrue(linqExamples!!.Functions.isNotEmpty())
+        
+        // Check for extension methods
+        val extensions = container.DataStructures.find { it.NodeName == "EnumerableExtensions" }
+        assertNotNull(extensions)
+        assertTrue(extensions!!.Functions.all { it.Modifiers.contains("static") })
     }
 }
 

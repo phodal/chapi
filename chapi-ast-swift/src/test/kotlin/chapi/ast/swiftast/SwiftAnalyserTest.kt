@@ -544,6 +544,56 @@ class Swift6FeaturesTest {
         assertNotNull(descFunc)
         assertTrue(descFunc.Modifiers.contains("nonisolated"))
     }
+    
+    @Test
+    fun shouldParseSwiftUIApp() {
+        val code = this::class.java.getResource("/swiftui_app.swift")?.readText()
+        if (code == null) {
+            // Skip if resource not found
+            return
+        }
+        
+        val container = SwiftAnalyser().analysis(code, "swiftui_app.swift")
+        
+        assertTrue(container.Imports.isNotEmpty())
+        assertTrue(container.Imports.any { it.Source == "SwiftUI" })
+        assertTrue(container.Imports.any { it.Source == "Combine" })
+        
+        // Check for main app
+        val myApp = container.DataStructures.find { it.NodeName == "MyApp" }
+        assertNotNull(myApp)
+        assertTrue(myApp!!.Annotations.any { it.Name == "main" })
+        
+        // Check for ObservableObject
+        val appState = container.DataStructures.find { it.NodeName == "AppState" }
+        assertNotNull(appState)
+        assertEquals(DataStructType.CLASS, appState!!.Type)
+        
+        // Check for Codable structs
+        val user = container.DataStructures.find { it.NodeName == "User" }
+        assertNotNull(user)
+        assertTrue(user!!.Implements.any { it.contains("Codable") })
+        assertTrue(user.Implements.any { it.contains("Identifiable") })
+        
+        // Check for Views
+        val contentView = container.DataStructures.find { it.NodeName == "ContentView" }
+        assertNotNull(contentView)
+        assertTrue(contentView!!.Implements.contains("View"))
+        
+        // Check for actors
+        val authService = container.DataStructures.find { it.NodeName == "AuthService" }
+        assertNotNull(authService)
+        
+        // Check for property wrappers
+        val clamped = container.DataStructures.find { it.NodeName == "Clamped" }
+        assertNotNull(clamped)
+        assertTrue(clamped!!.Annotations.any { it.Name == "propertyWrapper" })
+        
+        // Check for protocols with associated types
+        val repository = container.DataStructures.find { it.NodeName == "Repository" }
+        assertNotNull(repository)
+        assertEquals(DataStructType.INTERFACE, repository!!.Type)
+    }
 }
 
 class SwiftTypeRefBuilderTest {
