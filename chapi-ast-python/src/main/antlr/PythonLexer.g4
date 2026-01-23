@@ -73,6 +73,13 @@ EXEC               : 'exec';
 TRUE               : 'True';
 FALSE              : 'False';
 
+// Python 3.10+ soft keywords (can also be used as identifiers)
+MATCH              : 'match';
+CASE               : 'case';
+
+// Python 3.12+ soft keywords
+TYPE               : 'type';
+
 // Operators
 
 DOT                : '.';
@@ -118,7 +125,8 @@ RIGHT_SHIFT_ASSIGN : '>>=';
 POWER_ASSIGN       : '**=';
 IDIV_ASSIGN        : '//=';
 
-STRING             : ([uU] | [fF] [rR]? | [rR] [fF]?)? (SHORT_STRING | LONG_STRING)
+// String literals including Python 3.14 t-strings
+STRING             : ([uU] | [fF] [rR]? | [rR] [fF]? | [tT] [rR]? | [rR] [tT])? (SHORT_STRING | LONG_STRING)
                    | ([bB] [rR]? | [rR] [bB]) (SHORT_BYTES | LONG_BYTES)
                    ;
 
