@@ -64,6 +64,7 @@ compound_stmt
     | TRY COLON suite (except_clause+ else_clause? finally_clause? | finally_clause) #try_stmt
     | ASYNC? WITH with_item (COMMA with_item)* COLON suite                           #with_stmt
     | decorator* (classdef | funcdef)                                                #class_or_func_def_stmt
+    | match_stmt                                                                     #match_stmt_wrapper
     ;
 
 suite
@@ -87,6 +88,151 @@ finally_clause
     : FINALLY COLON suite
     ;
 
+// Python 3.10+ match statement (PEP 634)
+match_stmt
+    : MATCH subject_expr COLON LINE_BREAK INDENT case_block+ DEDENT
+    ;
+
+subject_expr
+    : star_named_expression COMMA star_named_expressions?
+    | named_expression
+    ;
+
+star_named_expressions
+    : (COMMA star_named_expression)+ COMMA?
+    ;
+
+star_named_expression
+    : STAR expr
+    | named_expression
+    ;
+
+named_expression
+    : name ASSIGN test
+    | test
+    ;
+
+case_block
+    : CASE pattern guard? COLON suite
+    ;
+
+guard
+    : IF test
+    ;
+
+// Pattern matching patterns
+pattern
+    : or_pattern
+    | as_pattern
+    ;
+
+as_pattern
+    : or_pattern AS pattern_capture_target
+    ;
+
+or_pattern
+    : closed_pattern (OR_OP closed_pattern)*
+    ;
+
+closed_pattern
+    : literal_pattern
+    | capture_pattern
+    | wildcard_pattern
+    | class_pattern
+    | sequence_pattern
+    | mapping_pattern
+    | group_pattern
+    ;
+
+literal_pattern
+    : MINUS? number
+    | STRING+
+    | NONE
+    | TRUE
+    | FALSE
+    ;
+
+capture_pattern
+    : pattern_capture_target
+    ;
+
+pattern_capture_target
+    : name
+    ;
+
+wildcard_pattern
+    : NAME  // Matches '_' specifically, handled semantically
+    ;
+
+class_pattern
+    : dotted_name OPEN_PAREN pattern_arguments? CLOSE_PAREN
+    ;
+
+pattern_arguments
+    : positional_patterns COMMA keyword_patterns COMMA?
+    | positional_patterns COMMA?
+    | keyword_patterns COMMA?
+    ;
+
+positional_patterns
+    : pattern (COMMA pattern)*
+    ;
+
+keyword_patterns
+    : keyword_pattern (COMMA keyword_pattern)*
+    ;
+
+keyword_pattern
+    : name ASSIGN pattern
+    ;
+
+sequence_pattern
+    : OPEN_BRACKET maybe_sequence_pattern? CLOSE_BRACKET
+    | OPEN_PAREN open_sequence_pattern? CLOSE_PAREN
+    ;
+
+open_sequence_pattern
+    : maybe_star_pattern COMMA maybe_sequence_pattern?
+    ;
+
+maybe_sequence_pattern
+    : maybe_star_pattern (COMMA maybe_star_pattern)* COMMA?
+    ;
+
+maybe_star_pattern
+    : star_pattern
+    | pattern
+    ;
+
+star_pattern
+    : STAR (pattern_capture_target | wildcard_pattern)
+    ;
+
+mapping_pattern
+    : OPEN_BRACE items_pattern? CLOSE_BRACE
+    ;
+
+items_pattern
+    : key_value_pattern (COMMA key_value_pattern)* COMMA?
+    ;
+
+key_value_pattern
+    : (literal_pattern | attr) COLON pattern
+    | double_star_pattern
+    ;
+
+double_star_pattern
+    : POWER pattern_capture_target
+    ;
+
+attr
+    : dotted_name
+    ;
+
+group_pattern
+    : OPEN_PAREN pattern CLOSE_PAREN
+    ;
+
 with_item
     // NB compile.c makes sure that the default except clause is last
     : test (AS expr)?
@@ -94,16 +240,47 @@ with_item
 
 // Python 2 : EXCEPT test COMMA name
 // Python 3 : EXCEPT test AS name
+// Python 3.14+ (PEP 758): EXCEPT test, test, test without parentheses (only WITHOUT AS clause)
 except_clause
     : EXCEPT (test ({CheckVersion(2)}? COMMA name {SetVersion(2);} | {CheckVersion(3)}? AS name {SetVersion(3);})?)? COLON suite
+    | EXCEPT except_types COLON suite  // Python 3.14+ without parentheses (no AS clause allowed)
+    ;
+
+// Python 3.14+ allows multiple exception types without parentheses
+except_types
+    : test (COMMA test)+
     ;
 
 classdef
-    : CLASS name (OPEN_PAREN arglist? CLOSE_PAREN)? COLON suite
+    : CLASS name type_params? (OPEN_PAREN arglist? CLOSE_PAREN)? COLON suite
     ;
 
 funcdef
-    : ASYNC? DEF name OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON suite
+    : ASYNC? DEF name type_params? OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON suite
+    ;
+
+// Python 3.12+ type parameter syntax (PEP 695)
+type_params
+    : OPEN_BRACKET type_param_list CLOSE_BRACKET
+    ;
+
+type_param_list
+    : type_param (COMMA type_param)* COMMA?
+    ;
+
+type_param
+    : name type_param_bound?                           // TypeVar: T, T: int
+    | STAR name                                         // TypeVarTuple: *Ts
+    | POWER name                                        // ParamSpec: **P
+    ;
+
+type_param_bound
+    : COLON test                                        // T: SomeType or T: (Type1, Type2)
+    ;
+
+// Python 3.12+ type alias statement (PEP 695)
+type_alias_stmt
+    : TYPE name type_params? ASSIGN test
     ;
 
 // python 3 paramters
@@ -159,6 +336,7 @@ small_stmt
     | {CheckVersion(2)}? EXEC expr (IN test (COMMA test)?)? {SetVersion(2);}          #exec_stmt     // Python 2
     | ASSERT test (COMMA test)?                                                       #assert_stmt
     | {CheckVersion(3)}? NONLOCAL name (COMMA name)* {SetVersion(3);}                 #nonlocal_stmt // Python 3
+    | type_alias_stmt                                                                 #type_stmt     // Python 3.12+
     ;
 
 import_dot_ellipsis : (DOT | ELLIPSIS) ;
@@ -313,6 +491,11 @@ name
     : NAME
     | TRUE
     | FALSE
+    // Python 3.10+ soft keywords (can be used as identifiers)
+    | MATCH
+    | CASE
+    // Python 3.12+ soft keywords
+    | TYPE
     ;
 
 number
