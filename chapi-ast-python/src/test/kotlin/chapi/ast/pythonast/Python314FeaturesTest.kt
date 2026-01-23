@@ -453,4 +453,205 @@ class Python314FeaturesTest {
             assertEquals("get_type", func.Name)
         }
     }
+
+    // ==================== PythonVersion Tests ====================
+    
+    @Nested
+    inner class PythonVersionTests {
+        
+        @Test
+        fun `should support pattern matching for Python310 and above`() {
+            val version310 = chapi.ast.antlr.PythonVersion.Python310
+            val version312 = chapi.ast.antlr.PythonVersion.Python312
+            val version314 = chapi.ast.antlr.PythonVersion.Python314
+            val version3 = chapi.ast.antlr.PythonVersion.Python3
+            val autodetect = chapi.ast.antlr.PythonVersion.Autodetect
+            
+            assertTrue(version310.supportsPatternMatching())
+            assertTrue(version312.supportsPatternMatching())
+            assertTrue(version314.supportsPatternMatching())
+            assertTrue(version3.supportsPatternMatching())
+            assertTrue(autodetect.supportsPatternMatching())
+            
+            val version2 = chapi.ast.antlr.PythonVersion.Python2
+            assertFalse(version2.supportsPatternMatching())
+        }
+        
+        @Test
+        fun `should support type parameters for Python312 and above`() {
+            val version312 = chapi.ast.antlr.PythonVersion.Python312
+            val version314 = chapi.ast.antlr.PythonVersion.Python314
+            val autodetect = chapi.ast.antlr.PythonVersion.Autodetect
+            
+            assertTrue(version312.supportsTypeParameters())
+            assertTrue(version314.supportsTypeParameters())
+            assertTrue(autodetect.supportsTypeParameters())
+            
+            val version310 = chapi.ast.antlr.PythonVersion.Python310
+            val version3 = chapi.ast.antlr.PythonVersion.Python3
+            val version2 = chapi.ast.antlr.PythonVersion.Python2
+            assertFalse(version310.supportsTypeParameters())
+            assertFalse(version3.supportsTypeParameters())
+            assertFalse(version2.supportsTypeParameters())
+        }
+        
+        @Test
+        fun `should support Python314 features only for Python314`() {
+            val version314 = chapi.ast.antlr.PythonVersion.Python314
+            val autodetect = chapi.ast.antlr.PythonVersion.Autodetect
+            
+            assertTrue(version314.supportsPython314Features())
+            assertTrue(autodetect.supportsPython314Features())
+            
+            val version312 = chapi.ast.antlr.PythonVersion.Python312
+            val version310 = chapi.ast.antlr.PythonVersion.Python310
+            val version3 = chapi.ast.antlr.PythonVersion.Python3
+            val version2 = chapi.ast.antlr.PythonVersion.Python2
+            assertFalse(version312.supportsPython314Features())
+            assertFalse(version310.supportsPython314Features())
+            assertFalse(version3.supportsPython314Features())
+            assertFalse(version2.supportsPython314Features())
+        }
+        
+        @Test
+        fun `should return correct value for each version`() {
+            assertEquals(0, chapi.ast.antlr.PythonVersion.Autodetect.getValue())
+            assertEquals(2, chapi.ast.antlr.PythonVersion.Python2.getValue())
+            assertEquals(3, chapi.ast.antlr.PythonVersion.Python3.getValue())
+            assertEquals(310, chapi.ast.antlr.PythonVersion.Python310.getValue())
+            assertEquals(312, chapi.ast.antlr.PythonVersion.Python312.getValue())
+            assertEquals(314, chapi.ast.antlr.PythonVersion.Python314.getValue())
+        }
+    }
+
+    // ==================== Additional Edge Cases ====================
+    
+    @Nested
+    inner class EdgeCaseTests {
+        
+        @Test
+        fun `should parse match with nested patterns`() {
+            val code = """
+                def process_data(data):
+                    match data:
+                        case {"items": [{"id": x, "value": y}]}:
+                            return (x, y)
+                        case {"items": []}:
+                            return None
+            """.trimIndent()
+            
+            val codeFile = PythonAnalyser().analysis(code, "test.py")
+            val func = codeFile.DataStructures[0].Functions[0]
+            
+            assertEquals("process_data", func.Name)
+        }
+        
+        @Test
+        fun `should parse match with as pattern`() {
+            val code = """
+                def process_point(point):
+                    match point:
+                        case (x, y) as coord:
+                            return f"Coordinate: {coord}"
+                        case _:
+                            return "Unknown"
+            """.trimIndent()
+            
+            val codeFile = PythonAnalyser().analysis(code, "test.py")
+            val func = codeFile.DataStructures[0].Functions[0]
+            
+            assertEquals("process_point", func.Name)
+        }
+        
+        @Test
+        fun `should parse complex type parameter with multiple bounds`() {
+            val code = """
+                class Processor[T: (int, str), U: float]:
+                    def process(self, item: T, value: U) -> T:
+                        return item
+            """.trimIndent()
+            
+            val codeFile = PythonAnalyser().analysis(code, "test.py")
+            val cls = codeFile.DataStructures[0]
+            
+            assertEquals("Processor", cls.NodeName)
+        }
+        
+        @Test
+        fun `should parse type alias with type parameters`() {
+            val code = """
+                type Result[T, E] = tuple[T, E] | None
+                
+                def create_result[T, E](value: T, error: E) -> Result[T, E]:
+                    return (value, error)
+            """.trimIndent()
+            
+            val codeFile = PythonAnalyser().analysis(code, "test.py")
+            assertNotNull(codeFile)
+        }
+        
+        @Test
+        fun `should parse match with star pattern`() {
+            val code = """
+                def process_list(items):
+                    match items:
+                        case [first, *rest]:
+                            return (first, rest)
+                        case []:
+                            return None
+            """.trimIndent()
+            
+            val codeFile = PythonAnalyser().analysis(code, "test.py")
+            val func = codeFile.DataStructures[0].Functions[0]
+            
+            assertEquals("process_list", func.Name)
+        }
+        
+        @Test
+        fun `should parse match with double star pattern`() {
+            val code = """
+                def process_dict(data):
+                    match data:
+                        case {"name": name, **rest}:
+                            return (name, rest)
+                        case _:
+                            return None
+            """.trimIndent()
+            
+            val codeFile = PythonAnalyser().analysis(code, "test.py")
+            val func = codeFile.DataStructures[0].Functions[0]
+            
+            assertEquals("process_dict", func.Name)
+        }
+        
+        @Test
+        fun `should parse t-string with nested f-string like syntax`() {
+            val code = """
+                def format_message(user, count):
+                    return t"User {user.name} has {count} items"
+            """.trimIndent()
+            
+            val codeFile = PythonAnalyser().analysis(code, "test.py")
+            val func = codeFile.DataStructures[0].Functions[0]
+            
+            assertEquals("format_message", func.Name)
+        }
+        
+        @Test
+        fun `should parse except with except star`() {
+            val code = """
+                def handle_errors():
+                    try:
+                        risky_operation()
+                    except* ValueError:
+                        handle_value_error()
+                    except* TypeError, KeyError:
+                        handle_type_or_key_error()
+            """.trimIndent()
+            
+            // Note: except* is not yet in our grammar, but we should handle gracefully
+            val codeFile = PythonAnalyser().analysis(code, "test.py")
+            assertNotNull(codeFile)
+        }
+    }
 }
