@@ -141,6 +141,9 @@ SEMI   : ';';
 COMMA  : ',';
 DOT    : '.';
 
+// Java 22+ (preview, continued into later releases): unnamed variables / patterns
+UNDERSCORE : '_';
+
 // Operators
 
 ASSIGN   : '=';

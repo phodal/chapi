@@ -255,7 +255,13 @@ variableDeclarator
     ;
 
 variableDeclaratorId
-    : identifier ('[' ']')*
+    : (identifier | UNDERSCORE) ('[' ']')*
+    ;
+
+// Java 22+ (preview, continued into later releases): unnamed variables / patterns
+variableName
+    : identifier
+    | UNDERSCORE
     ;
 
 variableInitializer
@@ -310,7 +316,7 @@ lambdaLVTIList
     ;
 
 lambdaLVTIParameter
-    : variableModifier* VAR identifier
+    : variableModifier* VAR (identifier | UNDERSCORE)
     ;
 
 qualifiedName
@@ -474,7 +480,7 @@ blockStatement
     ;
 
 localVariableDeclaration
-    : variableModifier* (VAR identifier '=' expression | typeType variableDeclarators)
+    : variableModifier* (VAR (identifier | UNDERSCORE) '=' expression | typeType variableDeclarators)
     ;
 
 identifier
@@ -539,7 +545,7 @@ statement
     ;
 
 catchClause
-    : CATCH '(' variableModifier* catchType identifier ')' block
+    : CATCH '(' variableModifier* catchType (identifier | UNDERSCORE) ')' block
     ;
 
 catchType
@@ -559,7 +565,7 @@ resources
     ;
 
 resource
-    : variableModifier* (classOrInterfaceType variableDeclaratorId | VAR identifier) '=' expression
+    : variableModifier* (classOrInterfaceType variableDeclaratorId | VAR (identifier | UNDERSCORE)) '=' expression
     | qualifiedName
     ;
 
@@ -574,7 +580,7 @@ switchLabel
     : CASE (
         constantExpression = expression
         | enumConstantName = IDENTIFIER
-        | typeType varName = identifier
+        | typeType varName = variableName
     )
     | DEFAULT
     ;
@@ -697,8 +703,9 @@ lambdaExpression
 
 lambdaParameters
     : identifier
+    | UNDERSCORE
     | '(' formalParameterList? ')'
-    | '(' identifier (',' identifier)* ')'
+    | '(' (identifier | UNDERSCORE) (',' (identifier | UNDERSCORE))* ')'
     | '(' lambdaLVTIList? ')'
     ;
 
