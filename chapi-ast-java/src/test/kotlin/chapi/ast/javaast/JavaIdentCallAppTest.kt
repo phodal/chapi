@@ -22,6 +22,25 @@ internal class JavaIdentCallAppTest {
         JavaAnalyser().identFullInfo(code, "AllInOne8.java")
     }
 
+    @Test
+    fun shouldNotCrashForJava24UnnamedVariablesAndPatterns() {
+        val code = """
+public class Java24Unnamed {
+  public void test(Object o) {
+    // unnamed pattern variable (Java 22+)
+    switch (o) {
+      case String _ -> { }
+      default -> { }
+    }
+    
+    // unnamed lambda parameter (Java 22+)
+    Runnable r = (_) -> { };
+  }
+}
+        """
+        JavaAnalyser().identFullInfo(code, "Java24Unnamed.java")
+    }
+
     private val helloworld = """
 public class HelloWorld {
     public static void main(String []args) {
