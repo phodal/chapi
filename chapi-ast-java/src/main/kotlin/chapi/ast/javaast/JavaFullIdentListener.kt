@@ -36,7 +36,8 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
 
     private var imports: MutableList<CodeImport> = mutableListOf()
     // Index for fast import lookup by class name (O(1) instead of O(n))
-    private var importsByClassName: MutableMap<String, CodeImport> = mutableMapOf()
+    // Using MutableList to handle import collisions (same class name from different packages)
+    private var importsByClassName: MutableMap<String, MutableList<CodeImport>> = mutableMapOf()
     private var importsByFullSource: MutableMap<String, CodeImport> = mutableMapOf()
 
     private var lastNode = CodeDataStruct()
@@ -101,12 +102,20 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         codeContainer.Imports += codeImport
         
         // Build import indexes for fast lookup
-        val className = fullSource.substringAfterLast('.')
-        importsByClassName[className] = codeImport
         importsByFullSource[fullSource] = codeImport
-        // Also index by source for static imports
+        
         if (isStatic) {
+            // For static imports, index by the declaring class name (from Source),
+            // not by the static member name
+            val sourceClassName = codeImport.Source.substringAfterLast('.')
+            importsByClassName.getOrPut(sourceClassName) { mutableListOf() }.add(codeImport)
+            // Also index by source for static imports (fully-qualified class name)
             importsByFullSource[codeImport.Source] = codeImport
+        } else if (!isWildcard) {
+            // For non-static, non-wildcard imports, index by the imported class name
+            // Skip wildcard imports as they cannot be efficiently indexed
+            val className = fullSource.substringAfterLast('.')
+            importsByClassName.getOrPut(className) { mutableListOf() }.add(codeImport)
         }
     }
 
@@ -535,9 +544,11 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         // second, parse from import using index (O(1) lookup)
         val pureTargetType = buildPureTargetType(targetType)
         if (pureTargetType.isNotEmpty()) {
-            // Fast lookup using index
-            val importByClassName = importsByClassName[pureTargetType]
-            if (importByClassName != null) {
+            // Fast lookup using index - check if there are any imports for this class name
+            val importsByName = importsByClassName[pureTargetType]
+            if (importsByName != null && importsByName.isNotEmpty()) {
+                // Use the first matching import (consistent with original behavior)
+                val importByClassName = importsByName[0]
                 val isStatic = importByClassName.UsageName.isNotEmpty() && importByClassName.UsageName.contains(pureTargetType)
                 return JavaTargetType(
                     targetType = importByClassName.Source,
@@ -558,10 +569,10 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
 
         // others, may be from parent
         if (pureTargetType == "super" || pureTargetType == "this") {
-            val importByExtend = importsByClassName[currentClzExtend]
-            if (importByExtend != null) {
+            val importsByExtend = importsByClassName[currentClzExtend]
+            if (importsByExtend != null && importsByExtend.isNotEmpty()) {
                 return JavaTargetType(
-                    targetType = importByExtend.Source,
+                    targetType = importsByExtend[0].Source,
                     callType = CallType.SUPER
                 )
             }
