@@ -12,8 +12,10 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
             Language = "java",
             Kind = ContainerKind.SOURCE_FILE
         )
-    private var classNodes: List<CodeDataStruct> = listOf()
-    private var imports: List<CodeImport> = listOf()
+    private var classNodes: MutableList<CodeDataStruct> = mutableListOf()
+    private var imports: MutableList<CodeImport> = mutableListOf()
+    // Index for fast import lookup by class name
+    private var importsByClassName: MutableMap<String, CodeImport> = mutableMapOf()
 
     private var currentNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
@@ -58,8 +60,12 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         
         codeImport.PathSegments = fullSource.split(".")
 
-        imports += codeImport
+        imports.add(codeImport)
         codeContainer.Imports += codeImport
+        
+        // Build import index
+        val className = fullSource.substringAfterLast('.')
+        importsByClassName[className] = codeImport
     }
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
@@ -83,9 +89,14 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     }
 
     override fun exitClassBodyDeclaration(ctx: JavaParser.ClassBodyDeclarationContext?) {
+        // Class members are handled in their own enter/exit callbacks.
+        // Finalizing the class here would duplicate nodes (one per member) and miss empty classes.
+    }
+
+    override fun exitClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
         hasEnterClass = false
         if (currentNode.NodeName != "") {
-            classNodes += currentNode
+            classNodes.add(currentNode)
         }
         currentNode = CodeDataStruct()
     }
@@ -93,17 +104,20 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     open fun buildImplements(ctx: JavaParser.ClassDeclarationContext): List<String> {
         return ctx.typeList()
             .map { it.text }
-            .filter { imports.containsType(it) }
+            .filter { containsType(it) }
     }
 
-    private fun <T> List<T>.containsType(it: String?): Boolean {
-        return imports.filter { imp -> imp.Source.endsWith(".$it") }.toTypedArray().isNotEmpty()
+    private fun containsType(typeName: String?): Boolean {
+        if (typeName == null) return false
+        // Fast lookup using index
+        return importsByClassName.containsKey(typeName) || 
+               imports.any { imp -> imp.Source.endsWith(".$typeName") }
     }
 
     open fun buildImplements(ctx: JavaParser.EnumDeclarationContext): List<String> {
         val typeText = ctx.typeList().text
         return when {
-            imports.containsType(typeText) -> listOf(typeText)
+            containsType(typeText) -> listOf(typeText)
             else -> listOf()
         }
     }
@@ -120,7 +134,7 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     override fun exitInterfaceDeclaration(ctx: JavaParser.InterfaceDeclarationContext?) {
         hasEnterClass = false
         if (currentNode.NodeName != "") {
-            classNodes += currentNode
+            classNodes.add(currentNode)
         }
     }
 
@@ -236,14 +250,13 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     override fun exitEnumBodyDeclarations(ctx: JavaParser.EnumBodyDeclarationsContext?) {
         hasEnterClass = false
         if (currentNode.NodeName != "") {
-            classNodes += currentNode
+            classNodes.add(currentNode)
         }
         currentNode = CodeDataStruct()
     }
 
     fun getNodeInfo(): CodeContainer {
-        codeContainer.DataStructures = classNodes
+        codeContainer.DataStructures = classNodes.toList()
         return codeContainer
     }
 }
-

@@ -11,12 +11,12 @@ data class JavaTargetType(var targetType: String = "", var callType: CallType = 
 
 open class JavaFullIdentListener(fileName: String, val classes: List<String>) : JavaAstListener() {
     private var isEnterFunction: Boolean = false
-    private var currentAnnotations: List<CodeAnnotation> = listOf()
+    private var currentAnnotations: MutableList<CodeAnnotation> = mutableListOf()
 
     private var currentCreatorNode: CodeDataStruct = CodeDataStruct()
     private var isOverrideMethod: Boolean = false
-    private var fields = listOf<CodeField>()
-    private var methodCalls = listOf<CodeCall>()
+    private var fields: MutableList<CodeField> = mutableListOf()
+    private var methodCalls: MutableList<CodeCall> = mutableListOf()
     private var methodMap = mutableMapOf<String, CodeFunction>()
     private var creatorMethodMap = mutableMapOf<String, CodeFunction>()
     private var localVars = mutableMapOf<String, String>()
@@ -27,14 +27,17 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
 
     private var currentClzExtend: String = ""
     private var hasEnterClass: Boolean = false
-    private var classNodes: List<CodeDataStruct> = listOf()
+    private var classNodes: MutableList<CodeDataStruct> = mutableListOf()
 
     private var innerNode: CodeDataStruct = CodeDataStruct()
     private var classNodeStack = Stack<CodeDataStruct>()
 
-    private var methodQueue: List<CodeFunction> = listOf()
+    private var methodQueue: MutableList<CodeFunction> = mutableListOf()
 
-    private var imports: List<CodeImport> = listOf()
+    private var imports: MutableList<CodeImport> = mutableListOf()
+    // Index for fast import lookup by class name (O(1) instead of O(n))
+    private var importsByClassName: MutableMap<String, CodeImport> = mutableMapOf()
+    private var importsByFullSource: MutableMap<String, CodeImport> = mutableMapOf()
 
     private var lastNode = CodeDataStruct()
     private var currentNode = CodeDataStruct()
@@ -94,8 +97,17 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         
         codeImport.PathSegments = fullSource.split(".")
 
-        imports += codeImport
+        imports.add(codeImport)
         codeContainer.Imports += codeImport
+        
+        // Build import indexes for fast lookup
+        val className = fullSource.substringAfterLast('.')
+        importsByClassName[className] = codeImport
+        importsByFullSource[fullSource] = codeImport
+        // Also index by source for static imports
+        if (isStatic) {
+            importsByFullSource[codeImport.Source] = codeImport
+        }
     }
 
     override fun enterClassDeclaration(ctx: JavaParser.ClassDeclarationContext?) {
@@ -173,10 +185,10 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
     }
 
     private fun exitBody() {
-        currentNode.Fields = fields
+        currentNode.Fields = fields.toList()
         currentNode.setMethodsFromMap(methodMap)
 
-        classNodes += currentNode
+        classNodes.add(currentNode)
         initClass()
     }
 
@@ -186,8 +198,8 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         currentFunction = CodeFunction(IsConstructor = false)
 
         methodMap = mutableMapOf()
-        methodCalls = listOf()
-        fields = listOf()
+        methodCalls = mutableListOf()
+        fields = mutableListOf()
         isOverrideMethod = false
     }
 
@@ -248,8 +260,9 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
     }
 
     private fun buildMethodParameters(params: JavaParser.FormalParametersContext?): List<CodeProperty> {
-        var methodParams = listOf<CodeProperty>()
-        if (params == null) return methodParams
+        if (params == null) return emptyList()
+        
+        val methodParams = mutableListOf<CodeProperty>()
         
         // New grammar structure: formalParameters can contain formalParameter directly
         // and/or formalParameterList
@@ -269,7 +282,7 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
                     TypeType = paramType,
                     TypeRef = JavaTypeRefBuilder.build(formalParam.typeType())
                 )
-                methodParams += parameter
+                methodParams.add(parameter)
             }
         }
         
@@ -287,7 +300,7 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
                         TypeType = paramType,
                         TypeRef = JavaTypeRefBuilder.build(param.typeType())
                     )
-                    methodParams += parameter
+                    methodParams.add(parameter)
                 }
             }
         }
@@ -297,7 +310,7 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
 
     override fun exitMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
         this.isEnterFunction = false
-        this.currentAnnotations = listOf()
+        this.currentAnnotations = mutableListOf()
         if (localVars.isNotEmpty()) {
             addLocalVarsToFunction()
         }
@@ -352,7 +365,7 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
     }
 
     private fun sendResultToMethodCallMap(codeCall: CodeCall) {
-        methodCalls += codeCall
+        methodCalls.add(codeCall)
 
         val currentMethodName = getMethodMapName(currentFunction)
         val method = methodMap[currentMethodName]
@@ -486,7 +499,7 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
             creatorMethodMap[getMethodMapName(codeFunction)] = codeFunction
         } else {
             currentFunction = codeFunction
-            methodQueue += currentFunction
+            methodQueue.add(currentFunction)
             methodMap[getMethodMapName(codeFunction)] = codeFunction
         }
     }
@@ -497,7 +510,7 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
             name = methodQueue[methodQueue.size - 1].Name
         }
 
-        return codeContainer.PackageName + "." + currentClz + "." + name + ":" + method.Position.StartLine.toString()
+        return "${codeContainer.PackageName}.${currentClz}.${name}:${method.Position.StartLine}"
     }
 
     private fun buildExtend(extendName: String): String {
@@ -514,26 +527,22 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
         val callType: CallType = CallType.FUNCTION
         if (currentClz == targetType) {
             return JavaTargetType(
-                targetType = codeContainer.PackageName + "." + targetType,
+                targetType = "${codeContainer.PackageName}.${targetType}",
                 callType = CallType.SELF
             )
         }
 
-        // second, parse from import
+        // second, parse from import using index (O(1) lookup)
         val pureTargetType = buildPureTargetType(targetType)
-        if (pureTargetType != "") {
-            for (imp in imports) {
-                if (imp.Source.endsWith(pureTargetType)) {
-                    return JavaTargetType(
-                        targetType = imp.Source,
-                        callType = CallType.CHAIN
-                    )
-                } else if (imp.UsageName.isNotEmpty() && imp.UsageName.contains(pureTargetType)) {
-                    return JavaTargetType(
-                        targetType = imp.Source,
-                        callType = CallType.STATIC
-                    )
-                }
+        if (pureTargetType.isNotEmpty()) {
+            // Fast lookup using index
+            val importByClassName = importsByClassName[pureTargetType]
+            if (importByClassName != null) {
+                val isStatic = importByClassName.UsageName.isNotEmpty() && importByClassName.UsageName.contains(pureTargetType)
+                return JavaTargetType(
+                    targetType = importByClassName.Source,
+                    callType = if (isStatic) CallType.STATIC else CallType.CHAIN
+                )
             }
         }
 
@@ -549,13 +558,12 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
 
         // others, may be from parent
         if (pureTargetType == "super" || pureTargetType == "this") {
-            for (imp in imports) {
-                if (imp.Source.endsWith(currentClzExtend)) {
-                    return JavaTargetType(
-                        targetType = imp.Source,
-                        callType = CallType.SUPER
-                    )
-                }
+            val importByExtend = importsByClassName[currentClzExtend]
+            if (importByExtend != null) {
+                return JavaTargetType(
+                    targetType = importByExtend.Source,
+                    callType = CallType.SUPER
+                )
             }
         }
 
@@ -619,15 +627,15 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
                 typeValue,
                 typeKey,
                 Modifiers = listOf(),
-                Annotations = this.currentAnnotations,
+                Annotations = this.currentAnnotations.toList(),
                 TypeRef = typeRef
             )
-            fields += field
+            fields.add(field)
 
             buildFieldCall(typeTypeText, ctx)
         }
 
-        this.currentAnnotations = listOf()
+        this.currentAnnotations = mutableListOf()
     }
 
     private fun buildFieldCall(typeType: String, ctx: JavaParser.FieldDeclarationContext) {
@@ -699,7 +707,7 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
                 currentNode.Annotations += annotation
             }
         } else {
-            currentAnnotations += this.buildAnnotation(ctx)
+            currentAnnotations.add(this.buildAnnotation(ctx))
         }
     }
 
@@ -888,13 +896,11 @@ open class JavaFullIdentListener(fileName: String, val classes: List<String>) : 
     }
 
     open fun buildEnumImplements(ctx: JavaParser.EnumDeclarationContext): List<String> {
-        var implements = listOf<String>()
         val type = ctx.typeList()
         var target = this.warpTargetFullType(type.text).targetType
         if (target == "") {
             target = type.text
         }
-        implements += target
-        return implements
+        return listOf(target)
     }
 }

@@ -11,6 +11,11 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 open class JavaAnalyser : TwoStepAnalyser() {
+    companion object {
+        // Reuse ParseTreeWalker instance to reduce object creation
+        private val walker = ParseTreeWalker()
+    }
+
     override fun analysis(code: String, filePath: String, parseMode: ParseMode): CodeContainer {
         return when (parseMode) {
             ParseMode.Basic -> identBasicInfo(code, filePath)
@@ -27,7 +32,7 @@ open class JavaAnalyser : TwoStepAnalyser() {
         val context = this.parse(str).compilationUnit()
         val listener = JavaFullIdentListener(fileName, classes)
 
-        ParseTreeWalker().walk(listener, context)
+        walker.walk(listener, context)
         return listener.getNodeInfo()
     }
 
@@ -35,7 +40,7 @@ open class JavaAnalyser : TwoStepAnalyser() {
         val context = this.parse(str).compilationUnit()
         val listener = JavaBasicIdentListener(fileName)
 
-        ParseTreeWalker().walk(listener, context)
+        walker.walk(listener, context)
 
         return listener.getNodeInfo()
     }
@@ -43,8 +48,13 @@ open class JavaAnalyser : TwoStepAnalyser() {
     open fun parse(str: String): JavaParser {
         val fromString = CharStreams.fromString(str)
         val lexer = JavaLexer(fromString)
+        // Remove default error listeners to reduce I/O overhead
+        lexer.removeErrorListeners()
+        
         val tokenStream = CommonTokenStream(lexer)
         val parser = JavaParser(tokenStream)
+        // Remove default error listeners
+        parser.removeErrorListeners()
         return parser
     }
 }
