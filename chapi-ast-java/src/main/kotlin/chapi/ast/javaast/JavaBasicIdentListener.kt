@@ -15,7 +15,8 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private var classNodes: MutableList<CodeDataStruct> = mutableListOf()
     private var imports: MutableList<CodeImport> = mutableListOf()
     // Index for fast import lookup by class name
-    private var importsByClassName: MutableMap<String, CodeImport> = mutableMapOf()
+    // Using MutableList to handle import collisions
+    private var importsByClassName: MutableMap<String, MutableList<CodeImport>> = mutableMapOf()
 
     private var currentNode = CodeDataStruct()
     private var currentFunction = CodeFunction(IsConstructor = false)
@@ -63,9 +64,11 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
         imports.add(codeImport)
         codeContainer.Imports += codeImport
         
-        // Build import index
-        val className = fullSource.substringAfterLast('.')
-        importsByClassName[className] = codeImport
+        // Build import index for non-wildcard imports only
+        if (!isWildcard) {
+            val className = fullSource.substringAfterLast('.')
+            importsByClassName.getOrPut(className) { mutableListOf() }.add(codeImport)
+        }
     }
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
@@ -110,8 +113,12 @@ open class JavaBasicIdentListener(fileName: String) : JavaAstListener() {
     private fun containsType(typeName: String?): Boolean {
         if (typeName == null) return false
         // Fast lookup using index
-        return importsByClassName.containsKey(typeName) || 
-               imports.any { imp -> imp.Source.endsWith(".$typeName") }
+        val importsByName = importsByClassName[typeName]
+        if (importsByName != null && importsByName.isNotEmpty()) {
+            return true
+        }
+        // Fallback to linear search for wildcard imports
+        return imports.any { imp -> imp.Source.endsWith(".$typeName") }
     }
 
     open fun buildImplements(ctx: JavaParser.EnumDeclarationContext): List<String> {
