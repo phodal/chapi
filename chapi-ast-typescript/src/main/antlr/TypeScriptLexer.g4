@@ -224,6 +224,21 @@ Abstract: 'abstract';
 
 Is: 'is';
 
+// TypeScript 4.9+ keywords
+Satisfies: 'satisfies';
+Accessor: 'accessor';
+Override: 'override';
+
+// TypeScript 5.0+ keywords
+Infer: 'infer';
+Asserts: 'asserts';
+
+// TypeScript 5.2+ explicit resource management
+Using: 'using';
+
+// TypeScript 5.4+ NoInfer utility type keyword (contextual)
+Out: 'out';
+
 //
 // Ext.2 Additions to 1.8: Decorators
 //
