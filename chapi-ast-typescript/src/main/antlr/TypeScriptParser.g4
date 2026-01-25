@@ -62,7 +62,8 @@ typeParameterList
 
 typeParameter
     // Compatibility with old grammar: support both constraint and default type
-    : identifierName constraint? ('=' type_)? 
+    // TypeScript 5.0+: const type parameters <const T>
+    : Const? (In | Out)? identifierName constraint? ('=' type_)? 
     | typeParameters
     ;
 
@@ -372,6 +373,7 @@ statement
     | generatorFunctionDeclaration
     | typeAliasDeclaration //ADDED
     | enumDeclaration      //ADDED
+    | usingStatement       // TypeScript 5.2+ explicit resource management
     ;
 
 block
@@ -568,6 +570,11 @@ debuggerStatement
     : Debugger eos
     ;
 
+// TypeScript 5.2+ explicit resource management
+usingStatement
+    : Await? Using identifier typeAnnotation? '=' singleExpression eos
+    ;
+
 functionDeclaration
     : Async? Function_ '*'? identifierName callSignature (('{' functionBody '}') | SemiColon)
     ;
@@ -617,10 +624,13 @@ propertyMemberDeclaration
     | propertyMemberBase propertyName callSignature (('{' functionBody '}') | SemiColon) # MethodDeclarationExpression
     | propertyMemberBase (getAccessor | setAccessor)                                     # GetterSetterDeclarationExpression
     | abstractDeclaration                                                                # AbstractMemberDeclaration
+    // TypeScript 4.9+ auto-accessors
+    | propertyMemberBase Accessor propertyName ('?' | '!')? typeAnnotation? initializer? SemiColon # AutoAccessorDeclaration
     ;
 
 propertyMemberBase
-    : accessibilityModifier? Async? Static? ReadOnly?
+    // TypeScript 4.3+ override modifier
+    : accessibilityModifier? Override? Async? Static? ReadOnly?
     ;
 
 indexMemberDeclaration
@@ -807,6 +817,8 @@ singleExpression
     | singleExpression As asExpression                                # CastAsExpression
 // TypeScript v2.0
     | singleExpression '!'                                            # NonNullAssertionExpression
+// TypeScript v4.9+
+    | singleExpression Satisfies type_                                # SatisfiesExpression
     ;
 
 asExpression
@@ -929,6 +941,16 @@ identifier
     | Constructor
     | Namespace
     | Abstract
+    // TypeScript 4.9+ contextual keywords
+    | Satisfies
+    | Accessor
+    | Override
+    // TypeScript 5.0+ contextual keywords
+    | Infer
+    | Asserts
+    | Out
+    // TypeScript 5.2+ contextual keywords
+    | Using
     ;
 
 identifierOrKeyWord
