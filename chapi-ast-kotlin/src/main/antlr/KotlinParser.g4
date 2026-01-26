@@ -91,10 +91,11 @@ delegationSpecifier
     | explicitDelegation
     | userType
     | functionType
+    | SUSPEND NL* functionType
     ;
 
 constructorInvocation
-    : userType valueArguments
+    : userType NL* valueArguments
     ;
 
 annotatedDelegationSpecifier
@@ -139,7 +140,7 @@ anonymousInitializer
     ;
 
 companionObject
-    : modifiers? COMPANION NL* OBJECT
+    : modifiers? COMPANION NL* DATA? NL* OBJECT
       (NL* simpleIdentifier)?
       (NL* COLON NL* delegationSpecifiers)?
       (NL* classBody)?
@@ -247,7 +248,7 @@ enumEntry
 // SECTION: types
 
 type
-    : typeModifiers? (parenthesizedType | nullableType | typeReference | functionType)
+    : typeModifiers? (functionType | parenthesizedType | nullableType | typeReference | definitelyNonNullableType)
     ;
 
 typeReference
@@ -304,6 +305,10 @@ receiverType
 
 parenthesizedUserType
     : LPAREN NL* (userType | parenthesizedUserType) NL* RPAREN
+    ;
+
+definitelyNonNullableType
+    : typeModifiers? (userType | parenthesizedUserType) NL* AMP NL* typeModifiers? (userType | parenthesizedUserType)
     ;
 
 // SECTION: statements
@@ -412,7 +417,7 @@ infixFunctionCall
 
 // range
 rangeExpression
-    : additiveExpression (RANGE NL* additiveExpression)*
+    : additiveExpression ((RANGE | RANGE_UNTIL) NL* additiveExpression)*
     ;
 
 // +
@@ -589,7 +594,8 @@ lambdaParameter
     ;
 
 anonymousFunction
-    : FUN
+    : SUSPEND? NL*
+      FUN
       (NL* type NL* DOT)?
       NL* parametersWithOptionalType
       (NL* COLON NL* type)?
@@ -603,7 +609,7 @@ functionLiteral
     ;
 
 objectLiteral
-    : OBJECT (NL* COLON NL* delegationSpecifiers NL*)? (NL* classBody)?
+    : DATA? NL* OBJECT (NL* COLON NL* delegationSpecifiers NL*)? (NL* classBody)?
     ;
 
 thisExpression
