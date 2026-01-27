@@ -180,7 +180,7 @@ fun analysisByFile(file: File): List<CodeDataStruct> {
 }
 ```
 
-## Examples
+### Examples Input & Output
 
 Java source:
 
@@ -304,89 +304,6 @@ code_property
 // method call information
 code_call
 ```
-
-## Development（中文）
-
-环境：IntelliJ IDEA、JDK 11+
-
-1. 克隆代码：`git clone https://github.com/phodal/chapi`
-2. 构建：`./gradlew build`
-
-### 参与开发
-
-为了尽可能降低 bug 的出现概率，项目采用 TDD 的方式进行：先编写对应的语法测试，再实现代码。通过尽可能高的测试覆盖率，来降低回归风险。
-
-项目主要由 domain + 各语言 AST + application 构建：
-
-- domain：统一代码模型
-- 各语言 AST：把源码转换为统一的层次抽象模型
-- application：对外暴露的简易 API
-
-每个 AST 项目的入口是 `xxAnalyser`，返回的是一个 `CodeContainer`（代码容器）。在非 C# 语言中，它等同于 `CodeFile`（代码文件）。
-
-`CodeContainer` 内对应的领域模型如下所示：
-
-```
-// class-first or function-first
-code_data_struct // 类、struct、interface 等
-code_function    // 函数。如果是头等函数语言（first-class function），会用 NodeName = "default" 包在 code_data_struct 模型里
-
-// function or class detail
-code_annotation  // 注解
-code_field       // 全局变量
-code_import      // 包依赖
-code_member      // 保留字段
-code_position    // 位置信息
-code_property    // 参数相关
-
-// method call information
-code_call        // 函数调用，如 fmt.Println
-```
-
-### 加入开发
-
-1. 寻找感兴趣的语言 / 添加新的语言 AST。
-
-通过 TDD 的方式逐步实现下面这些能力（推荐按顺序），示例可参考
-[JavaFullIdentListenerTest.kt](https://github.com/phodal/chapi/blob/master/chapi-ast-java/src/test/kotlin/chapi/ast/javaast/JavaFullIdentListenerTest.kt)：
-
-1. package name
-2. import name
-3. class / data struct
-    1. struct name
-    2. struct parameters
-    3. function name
-    4. return types
-    5. function parameters
-4. function
-    1. function name
-    2. return types
-    3. function parameters
-5. method call
-    1. new instance call
-    2. parameter call
-    3. field call
-    4. other calls...
-
-### 提交信息格式
-
-发布时使用标准的 [CHANGELOG.md](CHANGELOG.md)。
-
-提交信息格式：`<type>[Language]: <message>`
-
-示例：`feat(java): <grammars> init python & go grammars Phodal Huang 2020/2/2, 5:01 PM`
-
-type 列表：
-
-- build: 影响构建系统或外部依赖关系的更改（示例范围：gulp，broccoli，npm）
-- ci: 更改持续集成文件和脚本（示例范围：Travis，Circle，BrowserStack，SauceLabs）
-- docs: 仅文档更改
-- feat: 新功能
-- fix: 修复错误
-- perf: 性能优化
-- refactor: 代码重构（不修复 bug 也不添加功能）
-- style: 不影响代码含义的变化（空白、格式化、缺少分号等）
-- test: 添加缺失测试或更正现有测试
 
 ## License
 
