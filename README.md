@@ -276,33 +276,53 @@ Syntax parsing identification rules:
 
 ### Data structures
 
-```
-// for multiple project analysis
-code_project
-code_module
+```mermaid
+classDiagram
+direction TB
 
-// for package dependency analysis
-code_package_info
-code_dependency
+%% project/module/package
+CodeProject "1" o-- "*" CodeModule : Modules
+CodeModule "1" o-- "*" CodePackage : Packages
+CodeModule "1" o-- "1" CodePackageInfo : packageInfo
+CodePackageInfo "1" o-- "*" CodeDependency : Dependencies
 
-// package or file as dependency analysis
-code_package
-code_container
+%% package/container
+CodePackage "1" o-- "*" CodeContainer : codeContainers
+CodePackage "1" o-- "*" CodePackage : Packages
+CodeContainer "1" o-- "*" CodeImport : Imports
+CodeContainer "1" o-- "*" CodeMember : Members
+CodeContainer "1" o-- "*" CodeDataStruct : DataStructures
+CodeContainer "1" o-- "*" CodeField : Fields
+CodeContainer "1" o-- "*" CodeContainer : Containers
+CodeContainer "0..1" o-- "1" TopLevelScope : TopLevel
 
-// class-first or function-first
-code_data_struct
-code_function
+%% core data structures
+CodeDataStruct "1" o-- "*" CodeField : Fields
+CodeDataStruct "1" o-- "*" CodeFunction : Functions
+CodeDataStruct "1" o-- "*" CodeDataStruct : InnerStructures
+CodeDataStruct "1" o-- "*" CodeAnnotation : Annotations
+CodeDataStruct "1" o-- "*" CodeCall : FunctionCalls
+CodeDataStruct "1" o-- "*" CodeImport : Imports
+CodeDataStruct "1" o-- "1" CodePosition : Position
 
-// function or class detail
-code_annotation
-code_field
-code_import
-code_member
-code_position
-code_property
+CodeFunction "1" o-- "*" CodeProperty : Parameters
+CodeFunction "1" o-- "*" CodeProperty : MultipleReturns
+CodeFunction "1" o-- "*" CodeCall : FunctionCalls
+CodeFunction "1" o-- "*" CodeAnnotation : Annotations
+CodeFunction "1" o-- "*" CodeDataStruct : InnerStructures
+CodeFunction "1" o-- "*" CodeFunction : InnerFunctions
+CodeFunction "1" o-- "1" CodePosition : Position
 
-// method call information
-code_call
+CodeField "1" o-- "*" CodeAnnotation : Annotations
+CodeField "1" o-- "*" CodeCall : Calls
+CodeField "1" o-- "*" CodeField : ArrayValue
+
+CodeCall "1" o-- "*" CodeProperty : Parameters
+CodeCall "1" o-- "1" CodePosition : Position
+
+CodeMember "1" o-- "*" CodeDataStruct : StructureNodes
+CodeMember "1" o-- "*" CodeFunction : FunctionNodes
+CodeMember "1" o-- "1" CodePosition : Position
 ```
 
 ## License
