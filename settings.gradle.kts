@@ -3,6 +3,7 @@ rootProject.name = "chapi"
 include(
     ":chapi-domain",
     ":chapi-helper",
+    ":chapi-streaming",
     // tier 1 languages
     ":chapi-ast-java",
     ":chapi-ast-typescript",
@@ -29,4 +30,3 @@ include(
     ":chapi-parser-toml",
     ":chapi-parser-cmake",
 )
-

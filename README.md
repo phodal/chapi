@@ -50,6 +50,12 @@ Chapi (pronounced /tʃɑpi/) can also be read as “XP” in Chinese if you pron
 
 PS: PRs are welcome — feel free to add your project here.
 
+## Kafka streaming API
+
+The `chapi-streaming` module consumes keyed code-change events and publishes raw AST, project-resolved AST, and
+diagnostic events through Kafka. Its changelog-backed state stores provide two-pass same-package resolution and
+`eventId` idempotency. See the [streaming API schema and runbook](chapi-streaming/README.md).
+
 ## Language information
 
 Tested language versions:
@@ -86,6 +92,7 @@ Gradle modules (by tier):
 ":chapi-ast-swift",
 
 // others
+":chapi-streaming",
 ":chapi-parser-toml",
 ":chapi-parser-cmake",
 ```
