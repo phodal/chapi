@@ -8,12 +8,17 @@ classes so ArkTS changes cannot alter TypeScript parsing behavior.
 
 The current focused test suite covers:
 
-- normal, `@ohos`, `@kit`, and `import lazy` imports;
+- default, named, namespace, type-only, side-effect, `@ohos`, `@kit`, and `import lazy` imports;
 - ArkTS `struct` and `@interface` declarations;
 - decorators on structs, fields, methods, functions, and classes;
 - ArkUI component blocks, nested component calls, modifiers, and `@Extend` leading-dot calls;
 - fields, methods, top-level functions, types, source positions, and representative `CodeCall` extraction;
 - explicit lexer/parser diagnostics through `analysisWithDiagnostics`.
+
+The test suite also includes a 689-line Chapi-owned `AllInOne.ets` regression contract covering module forms,
+language declarations and control flow, custom annotations, inheritance and generics, top-level functions, nested
+ArkUI components, state decorators, builders, lifecycle methods, events, bindings, conditional rendering, and
+`ForEach` callbacks. Focused tests protect the individual grammar areas and nested function-ownership behavior.
 
 Use `ArkTSAnalyser.analysis(code, filePath)` for the standard Chapi `CodeContainer`, or
 `analysisWithDiagnostics(code, filePath)` when syntax diagnostics must be checked:

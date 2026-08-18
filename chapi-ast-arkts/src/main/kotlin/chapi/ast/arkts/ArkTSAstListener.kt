@@ -2,6 +2,7 @@ package chapi.ast.arkts
 
 import chapi.ast.antlr.ArkTSParser
 import chapi.ast.antlr.ArkTSParserBaseListener
+import chapi.domain.core.AnnotationKeyValue
 import chapi.domain.core.CodeAnnotation
 import chapi.domain.core.CodePosition
 import chapi.domain.core.CodeProperty
@@ -149,6 +150,9 @@ open class ArkTSAstListener : ArkTSParserBaseListener() {
         if (callExpression != null) {
             val member = callExpression.decoratorMemberExpression()
             annotation.Name = member.identifier()?.text ?: ""
+            annotation.KeyValues = callExpression.arguments().argumentList()?.argument()?.map { argument ->
+                AnnotationKeyValue(Key = "value", Value = argument.text)
+            } ?: listOf()
         }
 
         return annotation

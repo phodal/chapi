@@ -408,7 +408,7 @@ abstractDeclaration
     ;
 
 importStatement
-    : Import Lazy? (fromBlock | importFromBlock | importAliasDeclaration | importAll)
+    : Import (TypeAlias | Lazy)? (fromBlock | importFromBlock | importAliasDeclaration | importAll)
     ;
 
 importFromBlock

@@ -1,6 +1,7 @@
 package chapi.ast.arkts
 
 import chapi.domain.core.DataStructType
+import chapi.domain.core.ImportKind
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -99,6 +100,137 @@ class ArkTSAnalyserTest {
         assertTrue(result.diagnostics.isNotEmpty())
     }
 
+    @Test
+    fun shouldParseAllInOneRegressionFixture() {
+        val result = analyser.analysisWithDiagnostics(
+            resource("/fixtures/AllInOne.ets"),
+            "src/main/ets/pages/AllInOne.ets"
+        )
+
+        assertNoDiagnostics(result)
+
+        val imports = result.container.Imports.groupBy { it.Source }
+        assertEquals(ImportKind.DEFAULT, imports.getValue("@ohos.app.ability.UIAbility").single().Kind)
+        assertTrue(imports.getValue("@kit.AbilityKit").map { it.Kind }.containsAll(listOf(ImportKind.NAMED, ImportKind.NAMESPACE)))
+        assertEquals(ImportKind.TYPE_ONLY, imports.getValue("./types").single().Kind)
+        assertTrue(imports.getValue("./types").single().Specifiers.all { it.IsTypeOnly })
+        assertEquals("lazy", imports.getValue("./lazy-feature").single().Scope)
+        assertEquals(ImportKind.SIDE_EFFECT, imports.getValue("./bootstrap").single().Kind)
+
+        val structures = result.container.DataStructures.associateBy { it.NodeName }
+        val expectedStructures = setOf(
+            "FeatureMeta", "AnnotatedService", "DefaultArkTSService", "BaseEntity", "TodoItem", "Box",
+            "InMemoryRepository", "BuilderState", "TodoRow", "CustomPanel", "StorageCard", "ThemeConsumer",
+            "ArkTSAllInOnePage"
+        )
+        assertTrue(structures.keys.containsAll(expectedStructures), structures.keys.toString())
+        assertEquals(DataStructType.INTERFACE, structures.getValue("FeatureMeta").Type)
+        assertEquals(DataStructType.STRUCT, structures.getValue("TodoRow").Type)
+
+        val serviceAnnotation = structures.getValue("AnnotatedService").Annotations.single { it.Name == "FeatureMeta" }
+        assertTrue(serviceAnnotation.KeyValues.single().Value.contains("all-in-one"))
+
+        val todoRow = structures.getValue("TodoRow")
+        assertEquals(listOf("Reusable", "Component"), todoRow.Annotations.map { it.Name })
+        assertEquals(listOf("Require", "Prop"), todoRow.Fields.single { it.TypeKey == "title" }.Annotations.map { it.Name })
+        assertEquals("() => void".replace(" ", ""), todoRow.Fields.single { it.TypeKey == "actions" }.TypeType)
+
+        val page = structures.getValue("ArkTSAllInOnePage")
+        assertEquals("src/main/ets/pages/AllInOne.ets", page.FilePath)
+        assertTrue(page.Position.StartLine > 0)
+        assertEquals(listOf("Entry", "Component"), page.Annotations.map { it.Name })
+        assertTrue(
+            page.Functions.map { it.Name }.containsAll(
+                listOf("aboutToAppear", "aboutToDisappear", "onPageShow", "onPageHide", "header", "emptyState", "pageStyle", "build")
+            )
+        )
+
+        val buildCalls = page.Functions.single { it.Name == "build" }.FunctionCalls.map { it.FunctionName }
+        assertSubsequence(
+            buildCalls,
+            listOf("Column", "header", "GlobalSectionTitle", "EditableLabel", "CustomPanel", "TextInput", "ForEach", "TodoRow", "Divider", "Button", "Toggle", "ThemeConsumer", "StorageCard", "Text", "pageStyle")
+        )
+
+        val allCalls = result.container.DataStructures
+            .flatMap { it.Functions }
+            .flatMap { it.FunctionCalls }
+            .map { it.FunctionName }
+        assertTrue(
+            allCalls.containsAll(listOf("Row", "Text", "onClick", "fontSize", "headline", "globalCardStyle")),
+            allCalls.toString()
+        )
+
+        val topLevel = assertNotNull(result.container.TopLevel)
+        assertEquals(3, topLevel.Functions.count { it.Name == "formatValue" })
+        assertTrue(topLevel.Functions.map { it.Name }.containsAll(listOf("GlobalSectionTitle", "EditableLabel", "loadTodo")))
+        assertTrue(topLevel.Exports.any { it.Name == "logger" && it.FromSource == "./logger" })
+        assertTrue(topLevel.Exports.any { it.Name == "*" && it.FromSource == "./shared" })
+    }
+
+    @Test
+    fun shouldParseFocusedLanguageDeclarationsAndControlFlow() {
+        val source = """
+            import type { DTO } from './types';
+
+            export enum State { Idle, Ready = 1 }
+            export type Result<T> = T | null;
+
+            abstract class Base<T> {
+              protected value: T;
+              constructor(value: T) { this.value = value; }
+              get current(): T { return this.value; }
+              abstract run(input?: T): Promise<T | null>;
+            }
+
+            class Service extends Base<string> {
+              override async run(input: string = 'default'): Promise<string | null> {
+                for (let index: number = 0; index < 1; index++) {
+                  if (input.length > 0) return await Promise.resolve(input);
+                }
+                return null;
+              }
+            }
+
+            export function format(value: number): string;
+            export function format(value: string): string;
+            export function format(value: number | string): string { return `${'$'}{value}`; }
+        """.trimIndent()
+
+        val result = analyser.analysisWithDiagnostics(source, "LanguageForms.ets")
+        assertNoDiagnostics(result)
+        assertEquals(ImportKind.TYPE_ONLY, result.container.Imports.single().Kind)
+        val structures = result.container.DataStructures.associateBy { it.NodeName }
+        assertTrue(structures.keys.containsAll(listOf("Base", "Service")))
+        assertTrue(structures.getValue("Base").Functions.map { it.Name }.containsAll(listOf("constructor", "get", "run")))
+        assertEquals(3, assertNotNull(result.container.TopLevel).Functions.count { it.Name == "format" })
+    }
+
+    @Test
+    fun shouldKeepBuildOwnershipWithNestedArkUIArrowCallbacks() {
+        val source = """
+            @Component
+            struct NestedPage {
+              private items: string[] = ['one'];
+
+              build() {
+                ForEach(this.items, (item: string) => {
+                  Button(item)
+                    .onClick(() => {
+                      console.info(item)
+                    })
+                })
+              }
+            }
+        """.trimIndent()
+
+        val result = analyser.analysisWithDiagnostics(source, "NestedPage.ets")
+        assertNoDiagnostics(result)
+        val page = result.container.DataStructures.single { it.NodeName == "NestedPage" }
+        val build = page.Functions.single { it.Name == "build" }
+        assertTrue(build.FunctionCalls.map { it.FunctionName }.containsAll(listOf("ForEach", "Button", "onClick", "info")))
+        assertTrue(result.container.TopLevel?.Functions.orEmpty().none { it.Name.isBlank() || it.Name == "build" })
+    }
+
     private fun resource(path: String): String =
         requireNotNull(this::class.java.getResource(path)) { "Missing test resource: $path" }.readText()
 
@@ -107,5 +239,14 @@ class ArkTSAnalyserTest {
             result.diagnostics.isEmpty(),
             result.diagnostics.joinToString("\n") { "${it.line}:${it.column} ${it.message}" }
         )
+    }
+
+    private fun assertSubsequence(actual: List<String>, expected: List<String>) {
+        var offset = 0
+        expected.forEach { item ->
+            val relativeIndex = actual.subList(offset, actual.size).indexOf(item)
+            assertTrue(relativeIndex >= 0, "Missing $item after index $offset in $actual")
+            offset += relativeIndex + 1
+        }
     }
 }

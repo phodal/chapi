@@ -14,7 +14,6 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
     private var filePath: String = node.filePath
 
     private var exitArrowCount: Int = 0
-    private var isCallbackOrAnonymousFunction: Boolean = false
     private var hasAnnotation: Boolean = false
     private var hasEnterClass = false
     private var currentExprIdent: String = ""
@@ -37,6 +36,7 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
     private var currentAnnotations = listOf<CodeAnnotation>()
 
     private var funcsStackForCount = Stack<CodeFunction>()
+    private var arrowFunctionScopeStack = Stack<Boolean>()
 
     private var classNodeStack = Stack<CodeDataStruct>()
 
@@ -574,7 +574,11 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
             codeImport.UsageName += ctx.Lodash().text
         }
 
+        if (ctx.moduleItems() == null && ctx.importNamespace() == null) {
+            codeImport.Kind = ImportKind.SIDE_EFFECT
+        }
         codeImport.Specifiers = specifiers
+        applyArkTSImportQualifier(codeImport, ctx.parent as? ArkTSParser.ImportStatementContext)
         codeContainer.Imports += codeImport
     }
 
@@ -587,6 +591,9 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
             ?: ctx.StringLiteral()?.text
             ?: return
         val codeImport = CodeImport(Source = unQuote(source))
+        if (ctx.importFrom() == null && ctx.StringLiteral() != null) {
+            codeImport.Kind = ImportKind.SIDE_EFFECT
+        }
         val specifiers = mutableListOf<ImportSpecifier>()
 
         // Handle module items: import { A, B } from 'module'
@@ -656,7 +663,21 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
         }
 
         codeImport.Specifiers = specifiers
+        applyArkTSImportQualifier(codeImport, ctx.parent as? ArkTSParser.ImportStatementContext)
         codeContainer.Imports += codeImport
+    }
+
+    private fun applyArkTSImportQualifier(
+        codeImport: CodeImport,
+        statement: ArkTSParser.ImportStatementContext?
+    ) {
+        when {
+            statement?.TypeAlias() != null -> {
+                codeImport.Kind = ImportKind.TYPE_ONLY
+                codeImport.Specifiers.forEach { it.IsTypeOnly = true }
+            }
+            statement?.Lazy() != null -> codeImport.Scope = "lazy"
+        }
     }
 
     private fun unQuote(text: String): String = text.replace("[\"']".toRegex(), "")
@@ -702,7 +723,6 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
         func.Position = this.buildPosition(ctx)
         func.Annotations = ctx.decoratorList()?.decorator()?.map(::buildAnnotation) ?: listOf()
 
-        isCallbackOrAnonymousFunction = false
         processingNewArrowFunc(func)
     }
 
@@ -713,13 +733,11 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
 
     // see also in function declaration
     override fun enterArrowFunctionDeclaration(ctx: ArkTSParser.ArrowFunctionDeclarationContext?) {
-        isCallbackOrAnonymousFunction = false
-
         // Try to find VariableDeclarationContext in parent chain (up to 5 levels)
         val varDecl = findParentOfType<ArkTSParser.VariableDeclarationContext>(ctx, 5)
         val argCtx = findParentOfType<ArkTSParser.ArgumentContext>(ctx, 5)
         val exprSeqCtx = findParentOfType<ArkTSParser.ExpressionSequenceContext>(ctx, 3)
-
+        var ownsFunctionScope = false
 
         when {
             // for: const blabla = () => { }
@@ -735,28 +753,22 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
                     func.MultipleReturns += buildReturnTypeByType(ctx.typeAnnotation())
                 }
 
-                isCallbackOrAnonymousFunction = false
                 processingNewArrowFunc(func)
+                ownsFunctionScope = true
             }
 
             argCtx != null -> {
                 // todo: add arg ctx
-                isCallbackOrAnonymousFunction = true
                 currentFunc.FunctionCalls += CodeCall(FunctionName = currentExprIdent, Type = CallType.ARROW)
             }
             // such as: `(e) => e.stopPropagation()`
-            exprSeqCtx != null && varDecl == null -> {
-                val func = CodeFunction(FilePath = filePath, Name = "")
-
-                isCallbackOrAnonymousFunction = true
-                processingNewArrowFunc(func)
+            exprSeqCtx != null -> {
+                // Callback expression: calls stay attached to the enclosing function.
             }
-            // Handle any other arrow functions (e.g., inside JSX attributes)
-            // Mark as callback to prevent stack mismatch on exit
-            else -> {
-                isCallbackOrAnonymousFunction = true
-            }
+            // Other arrow functions are callbacks and do not own a Chapi function scope.
+            else -> Unit
         }
+        arrowFunctionScopeStack.push(ownsFunctionScope)
 
         if (ctx?.arrowFunctionBody() == null) return
 
@@ -777,10 +789,6 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
     }
 
     private fun processingNewArrowFunc(func: CodeFunction) {
-        if (isCallbackOrAnonymousFunction) {
-            return
-        }
-
         if (funcsStackForCount.count() != 0) {
             currentFunc.InnerFunctions += func
         }
@@ -790,15 +798,10 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
     }
 
     override fun exitArrowFunctionDeclaration(ctx: ArkTSParser.ArrowFunctionDeclarationContext?) {
-        handleFuncDeclExit()
+        handleFuncDeclExit(arrowFunctionScopeStack.pop() ?: false)
     }
 
     private fun finishCurrentFunction(owner: CodeDataStruct?) {
-        if (isCallbackOrAnonymousFunction) {
-            isCallbackOrAnonymousFunction = false
-            return
-        }
-
         val finished = funcsStackForCount.pop() ?: return
         if (funcsStackForCount.count() != 0) {
             currentFunc = funcsStackForCount.peek()!!
@@ -811,7 +814,6 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
             currentFunc = CodeFunction()
         }
         exitArrowCount = funcsStackForCount.count()
-        isCallbackOrAnonymousFunction = false
     }
 
     override fun enterArkUILeadingDotStatement(ctx: ArkTSParser.ArkUILeadingDotStatementContext?) {
@@ -827,19 +829,17 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
         }
     }
 
-    private fun handleFuncDeclExit() {
-        if (!isCallbackOrAnonymousFunction) {
-            val pop = funcsStackForCount.pop()
-            if (pop != null) {
-                if (funcsStackForCount.count() != 0) {
-                    currentFunc = funcsStackForCount.peek()!!
-                }
-            }
+    private fun handleFuncDeclExit(ownsFunctionScope: Boolean) {
+        if (!ownsFunctionScope) return
 
-            exitArrowCount = funcsStackForCount.count()
+        val pop = funcsStackForCount.pop()
+        if (pop != null) {
+            if (funcsStackForCount.count() != 0) {
+                currentFunc = funcsStackForCount.peek()!!
+            }
         }
 
-        isCallbackOrAnonymousFunction = false
+        exitArrowCount = funcsStackForCount.count()
         if (funcsStackForCount.count() == 0) {
             // Normalize: sometimes chained call parsing can emit an empty call name.
             // If we already have a chain name (contains "->"), reuse it for blank entries.
@@ -1340,12 +1340,8 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
 
                     // Check if this is a chained call (contains ->)
                     val callee = singleExprCtx.singleExpression()
-                    val (receiverExpr, chain, chainArgs, isOptional) = if (callee is ArkTSParser.MemberDotExpressionContext) {
-                        val info = buildStructuredCallChain(callee)
-                        Quadruple(info.receiverExpr, info.chain, info.chainArguments, info.isOptional)
-                    } else {
-                        Quadruple(nodeName, listOf<String>(), listOf<List<CodeProperty>>(), false)
-                    }
+                    val chainInfo = (callee as? ArkTSParser.MemberDotExpressionContext)?.let(::buildStructuredCallChain)
+                    val modifierChain = chainInfo?.let { listOf(it.firstMethod) + it.chain }?.filter { it.isNotBlank() } ?: listOf()
 
                     currentFunc.FunctionCalls += CodeCall(
                         Parameters = processArgumentList(singleExprCtx.arguments()?.argumentList()),
@@ -1353,24 +1349,54 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
                         NodeName = nodeName,
                         Position = buildPosition(ctx),
                         // New structured fields (Issue #41)
-                        ReceiverExpr = receiverExpr,
-                        Chain = chain,
-                        ChainArguments = chainArgs,
-                        IsOptional = isOptional
+                        ReceiverExpr = chainInfo?.receiverExpr ?: nodeName,
+                        Chain = modifierChain,
+                        ChainArguments = chainInfo?.chainArguments ?: listOf(),
+                        IsOptional = chainInfo?.isOptional ?: false
                     )
+
+                    // ArkUI modifier calls are useful as standalone calls to downstream UI-flow analysis.
+                    // Only expand chains whose receiver is itself a call (for example Text().fontSize()),
+                    // not ordinary member calls such as console.info().
+                    if (chainInfo != null && hasArgumentsReceiver(callee)) {
+                        modifierChain.forEach { modifier ->
+                            currentFunc.FunctionCalls += CodeCall(
+                                Type = CallType.FUNCTION,
+                                FunctionName = modifier,
+                                ReceiverExpr = nodeName,
+                                Position = buildPosition(ctx)
+                            )
+                        }
+                    }
                 }
 
                 is ArkTSParser.IdentifierExpressionContext -> {
-                    val params = when (val child = singleExprCtx.singleExpression()) {
+                    val child = singleExprCtx.singleExpression()
+                    val params = when (child) {
                         is ParenthesizedExpressionContext -> parseParenthesizedExpression(child)
                         else -> listOf()
                     }
+                    val chainedArguments = child as? ArkTSParser.ArgumentsExpressionContext
+                    val memberExpression = chainedArguments?.singleExpression() as? ArkTSParser.MemberDotExpressionContext
+                    val chainInfo = memberExpression?.let(::buildStructuredCallChain)
+                    val modifierChain = chainInfo?.let { listOf(it.firstMethod) + it.chain }?.filter { it.isNotBlank() } ?: listOf()
                     currentFunc.FunctionCalls += CodeCall(
                         Parameters = params,
                         FunctionName = singleExprCtx.identifierName().text,
                         NodeName = "",
-                        Position = buildPosition(ctx)
+                        Position = buildPosition(ctx),
+                        ReceiverExpr = singleExprCtx.identifierName().text,
+                        Chain = modifierChain,
+                        ChainArguments = chainInfo?.chainArguments ?: listOf()
                     )
+                    modifierChain.forEach { modifier ->
+                        currentFunc.FunctionCalls += CodeCall(
+                            Type = CallType.FUNCTION,
+                            FunctionName = modifier,
+                            ReceiverExpr = singleExprCtx.identifierName().text,
+                            Position = buildPosition(ctx)
+                        )
+                    }
                 }
 
                 else -> {
@@ -1381,8 +1407,12 @@ class ArkTSFullIdentListener(val node: ArkTSIdentify) : ArkTSAstListener() {
         }
     }
 
-    /** Simple quadruple data class for destructuring. */
-    private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
+    private fun hasArgumentsReceiver(expression: ArkTSParser.SingleExpressionContext?): Boolean =
+        when (expression) {
+            is ArkTSParser.ArgumentsExpressionContext -> true
+            is ArkTSParser.MemberDotExpressionContext -> hasArgumentsReceiver(expression.singleExpression())
+            else -> false
+        }
 
     private fun buildFunctionName(argsCtx: ArkTSParser.ArgumentsExpressionContext): String {
         val name = functionNameFromArguments(argsCtx)
