@@ -60,6 +60,8 @@ public abstract class ArkTSLexerBase extends Lexer
     /**
      * {@code true} iff the cursor is inside a template string
      *  method name starts with upper case latter: see {@link #ArkTSLexerBase}
+     *
+     * @return whether the lexer is currently inside a template string
      */
     public boolean IsInTemplateString() {
         return this.templateDepth > 0;
@@ -134,6 +136,8 @@ public abstract class ArkTSLexerBase extends Lexer
 
     /**
      * Returns {@code true} if the lexer can match a regex literal.
+     *
+     * @return whether a regex literal is possible at the current position
      */
     protected boolean IsRegexPossible() {
 

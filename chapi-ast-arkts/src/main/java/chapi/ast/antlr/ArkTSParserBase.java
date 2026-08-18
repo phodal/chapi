@@ -32,13 +32,19 @@ public abstract class ArkTSParserBase extends Parser
 
     /**
      * Short form for prev(String str)
+     *
+     * @param str token text to compare
+     * @return whether the previous token has the requested text
      */
     protected boolean p(String str) {
         return prev(str);
     }
 
     /**
-     * Whether the previous token value equals to @param str
+     * Whether the previous token value equals {@code str}.
+     *
+     * @param str token text to compare
+     * @return whether the previous token has the requested text
      */
     protected boolean prev(String str) {
         return _input.LT(-1).getText().equals(str);
@@ -46,13 +52,19 @@ public abstract class ArkTSParserBase extends Parser
 
     /**
      * Short form for next(String str)
+     *
+     * @param str token text to compare
+     * @return whether the next token has the requested text
      */
     protected boolean n(String str) {
         return next(str);
     }
 
     /**
-     * Whether the next token value equals to @param str
+     * Whether the next token value equals {@code str}.
+     *
+     * @param str token text to compare
+     * @return whether the next token has the requested text
      */
     protected boolean next(String str) {
         return _input.LT(1).getText().equals(str);
