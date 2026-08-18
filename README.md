@@ -22,13 +22,13 @@ Chapi (pronounced /tʃɑpi/) can also be read as “XP” in Chinese if you pron
 
 ### Language stages
 
-| Feature        | Java | Python | Go | Kotlin | TS/JS | C  | C# | Scala | C++ | Rust | Swift |
-|----------------|------|--------|----|--------|-------|----|----|-------|-----|------|-------|
-| HTTP API decl  | ✅    | 🆕     | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | 🆕  | ✅    |       |
-| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  | ✅     | ✅   | ✅    | ✅     |
-| Function calls | ✅    | ✅      | ✅  | ✅      | ✅     | ✅  | ✅  |       |     | ✅    | ✅     |
-| Arch/package   | ✅    |        | ✅  | ✅      | ✅     | 🆕 | ✅  | ✅     | ✅   | ✅    | ✅     |
-| Real-world     | ✅    |        |    | ✅      | ✅     |    |    |       |     |      |       |
+| Feature        | Java | Python | Go | Kotlin | TS/JS | ArkTS | C  | C# | Scala | C++ | Rust | Swift |
+|----------------|------|--------|----|--------|-------|-------|----|----|-------|-----|------|-------|
+| HTTP API decl  | ✅    | 🆕     | ✅  | ✅      | ✅     |       | 🆕 | ✅  | ✅     | 🆕  | ✅    |       |
+| Syntax parsing | ✅    | ✅      | ✅  | ✅      | ✅     | 🆕    | ✅  | ✅  | ✅     | ✅   | ✅    | ✅     |
+| Function calls | ✅    | ✅      | ✅  | ✅      | ✅     | 🆕    | ✅  | ✅  |       |     | ✅    | ✅     |
+| Arch/package   | ✅    |        | ✅  | ✅      | ✅     | 🆕    | 🆕 | ✅  | ✅     | ✅   | ✅    | ✅     |
+| Real-world     | ✅    |        |    | ✅      | ✅     |       |    |    |       |     |      |       |
 
 ### IDL stages
 
@@ -62,6 +62,7 @@ Tested language versions:
 
 - Java: 8, 11, 17
 - TypeScript/JavaScript
+- ArkTS: focused `.ets` and ArkUI application syntax (not compiler or type-checker parity)
 - Kotlin
 - Rust: v1.60.0
 - Python: 2, 3
@@ -90,6 +91,7 @@ Gradle modules (by tier):
 ":chapi-ast-c",
 ":chapi-ast-cpp",
 ":chapi-ast-swift",
+":chapi-ast-arkts",
 
 // others
 ":chapi-streaming",
@@ -120,6 +122,13 @@ Chapi scans **twice** to improve cross-file resolution.
 1. `PackageName` uses the resolved path. For example, `src/grammar/blbla.ts` becomes `@.grammar`.
 2. Top-level functions in a file use `default` as `DataStructure.Name`.
 3. `export default Object` uses `default` as `FunctionName` and belongs to the `default` data structure.
+
+### ArkTS
+
+The experimental `chapi-ast-arkts` module uses a separate ANTLR grammar derived from the TypeScript module. It
+supports the common ArkTS application subset, including `struct`, decorators, `@interface`, `import lazy`, ArkUI
+component blocks, and modifier calls. See [the module README](chapi-ast-arkts/README.md) for its tested scope and
+known limitations.
 
 ### C# notes
 

@@ -1,0 +1,20 @@
+{
+  "fixtures": [
+    {
+      "path": "tree-sitter/decorated-struct.ets",
+      "upstream": "https://github.com/harmony-contrib/tree-sitter-arkts/blob/a16e9d2d5c63a1cd02aa5edd4c4b2309f4da16fa/test/corpus/arkts.txt",
+      "commit": "a16e9d2d5c63a1cd02aa5edd4c4b2309f4da16fa",
+      "license": "MIT",
+      "expected": "positive",
+      "features": ["decorator", "export-declare-struct", "state-field", "method-signature"]
+    },
+    {
+      "path": "openharmony/StructTest1.ets",
+      "upstream": "https://github.com/openharmony/arkcompiler_ets_frontend/blob/862c79486f3d7cdff6e5605b7949a02ef3162de1/ets2panda/test/ast/parser/ets/StructTest1.ets",
+      "commit": "862c79486f3d7cdff6e5605b7949a02ef3162de1",
+      "license": "Apache-2.0",
+      "expected": "positive-syntax",
+      "features": ["struct", "typed-field", "constructor-call"]
+    }
+  ]
+}

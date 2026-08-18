@@ -7,7 +7,7 @@ include(
     // tier 1 languages
     ":chapi-ast-java",
     ":chapi-ast-typescript",
-    
+
     // tier 1 model language
     ":chapi-ast-protobuf",
     ":chapi-ast-thrift",
@@ -25,6 +25,7 @@ include(
     ":chapi-ast-cpp",
     ":chapi-ast-swift",
     ":chapi-ast-dart",
+    ":chapi-ast-arkts",
 
     // others
     ":chapi-parser-toml",

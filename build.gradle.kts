@@ -176,6 +176,7 @@ dependencies {
     jacocoAggregation(project(":chapi-domain"))
     jacocoAggregation(project(":chapi-ast-java"))
     jacocoAggregation(project(":chapi-ast-typescript"))
+    jacocoAggregation(project(":chapi-ast-arkts"))
     jacocoAggregation(project(":chapi-ast-go"))
     jacocoAggregation(project(":chapi-ast-python"))
     jacocoAggregation(project(":chapi-ast-c"))
