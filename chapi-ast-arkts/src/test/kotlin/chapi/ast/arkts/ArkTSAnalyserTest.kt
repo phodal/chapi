@@ -231,6 +231,45 @@ class ArkTSAnalyserTest {
         assertTrue(result.container.TopLevel?.Functions.orEmpty().none { it.Name.isBlank() || it.Name == "build" })
     }
 
+    @Test
+    fun shouldParseAmbientDeclarations() {
+        val result = analyser.analysisWithDiagnostics(resource("/fixtures/Ambient.d.ets"), "types/Ambient.d.ets")
+        assertNoDiagnostics(result)
+        val service = result.container.DataStructures.single { it.NodeName == "AmbientService" }
+        assertEquals(listOf("constructor", "run"), service.Functions.map { it.Name })
+        assertEquals("types/Ambient.d.ets", service.FilePath)
+        assertTrue(assertNotNull(result.container.TopLevel).Functions.any { it.Name == "createService" })
+    }
+
+    @Test
+    fun shouldParseVersionSensitiveArkUIV2Decorators() {
+        val result = analyser.analysisWithDiagnostics(resource("/fixtures/ArkUIV2.ets"), "ArkUIV2.ets")
+        assertNoDiagnostics(result)
+        val counter = result.container.DataStructures.single { it.NodeName == "V2Counter" }
+        assertEquals(listOf("ComponentV2"), counter.Annotations.map { it.Name })
+        assertEquals(listOf("Local"), counter.Fields.single { it.TypeKey == "localCount" }.Annotations.map { it.Name })
+        assertEquals("theme", counter.Fields.single { it.TypeKey == "theme" }.Annotations.single().KeyValues.single().Value.trim('\''))
+        assertTrue(counter.Functions.map { it.Name }.containsAll(listOf("onLocalCountChanged", "build")))
+    }
+
+    @Test
+    fun shouldParseConcurrencyDecorators() {
+        val result = analyser.analysisWithDiagnostics(resource("/fixtures/Concurrency.ets"), "Concurrency.ets")
+        assertNoDiagnostics(result)
+        val item = result.container.DataStructures.single { it.NodeName == "WorkItem" }
+        assertEquals(listOf("Sendable"), item.Annotations.map { it.Name })
+        val functions = assertNotNull(result.container.TopLevel).Functions
+        assertEquals(listOf("Concurrent"), functions.single { it.Name == "doubleValue" }.Annotations.map { it.Name })
+        assertTrue(functions.any { it.Name == "execute" })
+    }
+
+    @Test
+    fun shouldReportDiagnosticsForMalformedArkUIAndLeadingDotChains() {
+        val result = analyser.analysisWithDiagnostics(resource("/fixtures/Negative.ets"), "Negative.ets")
+        assertTrue(result.diagnostics.isNotEmpty())
+        assertTrue(result.diagnostics.all { it.line > 0 && it.column >= 0 && it.message.isNotBlank() })
+    }
+
     private fun resource(path: String): String =
         requireNotNull(this::class.java.getResource(path)) { "Missing test resource: $path" }.readText()
 

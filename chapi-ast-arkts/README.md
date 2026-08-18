@@ -32,9 +32,10 @@ val container = result.container
 ## Compatibility boundary
 
 This is syntax and Chapi-domain extraction support, not parity with the official ArkTS compiler, type checker, or
-linter. Version-specific ArkUI V2 decorators, declaration-only forms, concurrency extensions, and the complete
-upstream parser corpus are not yet certified. ArkUI's declarative component body is represented through ordinary
-function and call models because `chapi-domain` does not currently define a dedicated UI tree.
+linter. Focused fixtures exercise declaration-only `.d.ets` forms, ArkUI V2 decorators, and concurrency decorators,
+but these version-sensitive lanes and the complete upstream parser corpus are not yet certified against a specific
+HarmonyOS SDK release. ArkUI's declarative component body is represented through ordinary function and call models
+because `chapi-domain` does not currently define a dedicated UI tree.
 
 ## Grammar and fixture provenance
 
